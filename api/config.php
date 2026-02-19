@@ -1,11 +1,11 @@
 <?php
 // MCSManager API 配置
-define('MCSM_API_URL', 'https://mcpanel.eqmemory.cn/mcs/api'); // MCSManager API 地址
-define('MCSM_API_KEY', '1c02a955c9314814ae1fc0b8419c41fb'); // API 密钥
+define('MCSM_API_URL', 'https://xxx.xxxxx.xx/api'); // MCSManager API 地址
+define('MCSM_API_KEY', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // API 密钥
 
 // 服务器状态 API 配置
 define('MCSTATUS_API_URL', 'http://mcstatus.goldenapplepie.xyz/api'); // 服务器状态 API 地址
-define('MC_SERVER_IP', 'mc.eqmemory.cn'); // 服务器 IP 地址
+define('MC_SERVER_IP', 'xx.xxxxx.xx'); // 服务器 IP 地址
 define('MC_SERVER_PORT', 25565); // 服务器端口
 
 // 确保数据目录存在
