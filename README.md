@@ -14,7 +14,7 @@
 
 ## 项目简介
 
-**万驹同源（PonyConsanguinity）官网**是一个专属于万驹同源 Minecraft 服务器官网，致力于为广大玩家提供优质的社区环境，拥有以下功能：
+**万驹同源（PonyConsanguinity）官网**是一个专属于万驹同源 Minecraft 服务器官网，致力于为服务器玩家提供优质的社区环境，拥有以下功能：
 
 - **服务器介绍**：详细的服务器信息和玩法介绍
 - **论坛系统**：支持 Markdown 格式的帖子发布和回复；也包含服务器规则、公告等内容
@@ -1015,9 +1015,13 @@ config.php会自动检查并创建必要的目录和文件：
 #### 功能说明
 数据库查询组件允许管理员通过网页界面直接查看Minecraft服务器的MySQL数据库，包括表结构、表数据等信息。
 
+备注：状态页的黄金券（万驹同源服务器通用稀有货币的名称）排行榜就是基于此完成的，采用的是playerpoints插件的数据库查询功能，更多配置请参考playerpoints插件的文档。
+
 #### 配置文件
 - **文件路径**：`api/db_test.php`
 - **前端页面**：`pages/db_test.html`
+
+备注：db_test仅提供了数据库查询功能，不支持数据库操作（如插入、更新、删除），如有其他功能需求，请自行修改代码。
 
 #### 配置项
 
@@ -1377,12 +1381,84 @@ API 基础地址: http://localhost:8000/api
 ================
 ```
 
-#### 优势
+### 卫星地图配置
 
-1. **环境自动检测**：无需手动切换配置
-2. **统一管理**：所有配置集中在一个文件中
-3. **部署友好**：生产环境部署时无需修改其他文件
-4. **易于维护**：修改配置只需编辑一个文件
-5. **向后兼容**：配置文件加载失败时会使用默认配置
+#### 功能说明
+卫星地图页面（`pages/map.html`）集成了 Minecraft 服务器的实时地图功能，使用 **Dynmap 插件**实现。页面具有以下特性：
+
+- **科技感加载动画**：卫星、流星、星星等太空元素
+- **智能加载检测**：自动检测地图加载状态
+- **错误处理机制**：连接失败时显示科技感错误界面
+- **响应式设计**：适配不同屏幕尺寸
+
+#### 配置文件
+- **文件路径**：`pages/map.html`
+
+#### 配置项
+
+##### 1. Dynmap 服务器地址
+
+**位置**：`pages/map.html` 第 825 行
+
+```html
+<iframe 
+    src="http://115.231.176.218:11823/" 
+    allowfullscreen 
+    onload="onIframeLoad()"
+    onerror="onIframeError()"
+></iframe>
+```
+
+**修改方法**：
+将 `src` 属性的值修改为你的 Dynmap 服务器地址：
+```html
+src="http://你的服务器IP:端口/"
+```
+
+**常见 Dynmap 默认端口**：
+- 标准端口：`8123`
+- 自定义端口：根据服务器配置而定
 
 
+**位置**：`pages/map.html` 第 828-872 行
+
+**错误信息**：
+```html
+<div class="error-title">连接失败</div>
+<div class="error-message">无法连接到卫星数据服务器</div>
+<div class="error-details">
+    <div class="error-detail-item">
+        <span class="error-detail-label">服务器地址</span>
+        <span class="error-detail-value">115.231.176.218:11823</span>
+    </div>
+    <div class="error-detail-item">
+        <span class="error-detail-label">错误代码</span>
+        <span class="error-detail-value">CONNECTION_TIMEOUT</span>
+    </div>
+</div>
+```
+
+**修改方法**：
+- 修改 `error-title` 改变错误标题
+- 修改 `error-message` 改变错误描述
+- 修改 `error-detail-value` 改变服务器地址和错误代码
+
+#### Dynmap 插件配置
+
+##### 服务器端配置
+
+1. **安装 Dynmap 插件**
+   - 下载适用于你 Minecraft 服务器的 Dynmap 版本
+   - 将插件放入服务器的 `plugins` 目录
+   - 重启服务器
+
+2. **配置 Dynmap**
+   - 编辑 `plugins/dynmap/configuration.txt`
+   - 设置 Web 端口（默认 8123）
+   - 配置地图渲染参数
+
+3. **开放端口**
+   - 在服务器防火墙中开放 Dynmap 端口
+   - 确保外网可以访问
+
+更多配置请参考 [Dynmap 官方文档](https://github.com/webbukkit/dynmap/wiki)
