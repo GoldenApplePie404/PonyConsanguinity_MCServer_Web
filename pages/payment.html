@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>充值中心 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.19">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <style>
+        /* 背景动画效果 */
+        .vip-section {
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Banner美化 - 金黄色渐变 */
+        .subpage-banner {
+            position: relative;
+            padding: 40px 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFE8A1 25%, #FFD98E 50%, #FFCC99 75%, #FFE0B2 100%);
+        }
+
+        .subpage-banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent 100%);
+        }
+
+        /* 金币雨效果 */
+        .coin-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .coin {
+            position: absolute;
+            font-size: 20px;
+            animation: fall linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .subpage-banner-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #333;
+        }
+
+        .subpage-banner-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2),
+                         0 0 40px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .subpage-banner-subtitle {
+            font-size: 1.3rem;
+            color: #555;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.5);
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .vip-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.05) 50%, transparent 100%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 重要通知样式 */
+        .important-notice {
+            margin-bottom: 30px;
+            padding: 0;
+        }
+
+        .notice-content {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            }
+            50% {
+                box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+            }
+            100% {
+                box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            }
+        }
+
+        .notice-content h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .notice-content p {
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+
+        .vip-main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .vip-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 480px;
+        }
+
+        .vip-card .vip-features {
+            flex: 1;
+        }
+
+        .vip-card .btn-vip {
+            margin-top: auto;
+        }
+
+        /* VIP卡片容器 - 横向排列 */
+        .vip-levels {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+            overflow-x: auto;
+            padding: 20px 20px;
+            scrollbar-width: none;
+            justify-content: center;
+            align-items: stretch;
+            flex-wrap: nowrap;
+            background: linear-gradient(135deg, #e8f4f8 0%, #f3e8ff 100%);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
+        }
+
+        /* 隐藏滚动条但保留滚动功能 */
+        .vip-levels {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .vip-levels::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 1200px) {
+            .vip-card {
+                flex: 0 0 300px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .vip-levels {
+                justify-content: flex-start;
+                padding: 20px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .vip-card {
+                flex: 0 0 280px;
+                padding: 30px 20px;
+            }
+            
+            .vip-levels {
+                padding: 20px 20px;
+            }
+        }
+
+
+
+        /* VIP卡片样式 */
+        .vip-card {
+            flex: 0 0 320px;
+            background: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 600px;
+        }
+
+        .vip-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102,126,234,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .vip-card:hover::before {
+            left: 100%;
+        }
+
+        .vip-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.25);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .vip-card.featured {
+            border: 3px solid var(--accent-color);
+        }
+
+        .vip-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .vip-badge.gold {
+            background-color: #ffd700;
+            color: #333;
+        }
+
+        .vip-badge.diamond {
+            background-color: #b9f2ff;
+            color: #333;
+        }
+
+        .vip-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .vip-icon-img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .vip-icon-img:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .vip-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .vip-price {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 3px;
+        }
+
+        .vip-period {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .vip-features {
+            text-align: left;
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .vip-features ul {
+            list-style: none;
+        }
+
+        .vip-features li {
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .vip-features li::before {
+            content: '✓';
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        /* 权限下拉功能 */
+        .vip-permissions-list {
+            max-height: 100px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .vip-permissions-list.expanded {
+            max-height: 250px;
+        }
+
+        .vip-permissions-more {
+            display: none;
+        }
+
+        .vip-permissions-list.expanded .vip-permissions-more {
+            display: block;
+        }
+
+        .vip-permissions-toggle {
+            margin-top: 12px;
+            background: none;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .vip-permissions-toggle:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .vip-permissions-toggle.expanded {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .vip-note {
+            margin: 12px 0;
+            padding: 8px;
+            background-color: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid #dc3545;
+            border-radius: 4px;
+        }
+
+        .vip-note p {
+            margin: 0;
+            font-style: italic;
+            color: #dc3545;
+            font-size: 0.85rem;
+        }
+
+        /* 价格容器样式 */
+        .vip-price-container {
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .vip-original-price {
+            font-size: 1.2rem;
+            color: #666;
+            text-decoration: line-through;
+            margin-bottom: 5px;
+        }
+
+        .vip-discount-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .vip-discount-label {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .btn-vip {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-vip::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+            z-index: -1;
+        }
+
+        .btn-vip:hover::before {
+            left: 100%;
+        }
+
+        .btn-vip-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-vip-gold {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+        }
+
+        .btn-vip-diamond {
+            background: linear-gradient(135deg, #b9f2ff 0%, #76ddff 100%);
+            color: #333;
+        }
+
+        .btn-vip:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-vip:active {
+            transform: scale(0.98);
+        }
+
+        .payment-methods {
+            padding: 80px 0;
+            background-color: var(--light-bg);
+            position: relative;
+        }
+
+        .payment-methods::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .payment-method {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary-color);
+            background-color: #f0fff0;
+        }
+
+        .payment-method.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .payment-method.active:hover {
+            transform: translateY(-8px);
+        }
+
+        .payment-method.disabled {
+            background: #f8f9fa;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .payment-method.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: transparent;
+        }
+
+        .payment-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .payment-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .payment-status {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .payment-status.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .payment-status.disabled {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        /* VIP暂未开通提示窗口 */
+        .vip-not-available-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .vip-not-available-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .vip-not-available-content h3 {
+            color: #dc3545;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .vip-not-available-content p {
+            margin-bottom: 15px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .vip-not-available-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .faq-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0e6ff 50%, #e0f2fe 100%);
+            position: relative;
+        }
+
+        .faq-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .faq-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .faq-grid {
+            max-width: 1000px;
+            margin: 40px auto 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
+        }
+
+        .faq-question {
+            font-weight: bold;
+            font-size: 1.15rem;
+            margin-bottom: 12px;
+            color: var(--primary-color);
+        }
+
+        .faq-answer {
+            color: #666;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .notice-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe8a1 100%);
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 40px auto;
+            max-width: 800px;
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.2);
+        }
+
+        .notice-box h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .notice-box ul {
+            color: #856404;
+            padding-left: 20px;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .notice-box li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .vip-price {
+                font-size: 2rem;
+            }
+
+            .vip-levels {
+                grid-template-columns: 1fr;
+            }
+
+            .vip-card {
+                padding: 30px 20px;
+            }
+
+            .vip-icon {
+                font-size: 3rem;
+            }
+
+            .vip-icon-img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .vip-title {
+                font-size: 1.5rem;
+            }
+
+            .payment-methods-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .faq-section {
+                padding: 40px 0;
+            }
+
+            .notice-box {
+                margin: 20px;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .vip-section {
+                padding: 40px 0;
+            }
+
+            .payment-methods-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+
+            .btn-vip {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+</head>
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 充值页面Banner区域 -->
+    <section class="subpage-banner">
+        <div class="coin-rain" id="coinRain"></div>
+        <div class="container">
+            <div class="subpage-banner-content">
+                <h1 class="subpage-banner-title">充值中心</h1>
+                <p class="subpage-banner-subtitle">开通会员 · 享受特权 · 尊享服务</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 会员等级 -->
+    <section class="vip-section">
+        <div class="container">
+            <h2 class="section-title fade-in">会员套餐</h2>
+            
+            
+            <div class="vip-levels">
+                <!-- 黄金券充值 - 第一位 -->
+                <div class="vip-card featured fade-in-delay-1">
+                    <div class="vip-badge diamond">推荐</div>
+                    <div class="vip-icon"><img src="../assets/img/gt.png" alt="黄金券" class="vip-icon-img"></div>
+                    <h3 class="vip-title">黄金券充值</h3>
+                    <div class="vip-price-container">
+                        <div class="vip-discount-price">¥5.00</div>
+                    </div>
+                    <div class="vip-period">= 500黄金券</div>
+                    <div class="vip-features">
+                        <ul>
+                            <li>用于购买VIP会员以及其它物品</li>
+                            <li>2分钟内到账</li>
+                            <li>支持七天内退款</li>
+                            <li>每人每天限购5次</li>
+                            
+                        </ul>
+                    </div>
+                    <button class="btn-vip btn-vip-diamond" onclick="selectPackage('golden_ticket')">立即充值</button>
+                </div>
+
+                <!-- VIP月卡 -->
+                <div class="vip-card fade-in-delay-2">
+                    <div class="vip-icon"><img src="../assets/img/vip.png" alt="VIP月卡" class="vip-icon-img"></div>
+                    <h3 class="vip-title">生存服：VIP月卡</h3>
+                    <div class="vip-price">¥5.00</div>
+                    <div class="vip-period">= 30天</div>
+                    <div class="vip-features">
+                        <ul class="vip-permissions-list">
+                            <li>称号 [会员]Steve</li>
+                            <li>全服飞行 指令：/fly</li>
+                            <li>死亡不掉落</li>
+                            <li>粒子特效编辑功能</li>
+                            <li class="vip-permissions-more">恢复生命值/饥饿值 指令：/heal /feed</li>
+                            <li class="vip-permissions-more">随身工作台/随身铁砧 指令：/workbench /anvil</li>
+                            <li class="vip-permissions-more">佩戴物品至头部 指令：/head</li>
+                            <li class="vip-permissions-more">传送免冷却/传送免等待</li>
+                            <li class="vip-permissions-more">每日签到额外奖励</li>
+                            <li class="vip-permissions-more">领地大小500*500 上限30个 价格打5折</li>
+                        </ul>
+                        <button class="vip-permissions-toggle" onclick="togglePermissions(this)">查看更多权限 ▼</button>
+                    </div>
+                    <button class="btn-vip btn-vip-primary" onclick="selectPackage('vip_month')">立即购买</button>
+                </div>
+
+                <!-- VIP年卡 -->
+                <div class="vip-card fade-in-delay-3">
+                    <div class="vip-icon"><img src="../assets/img/vip.png" alt="VIP年卡" class="vip-icon-img"></div>
+                    <h3 class="vip-title">生存服：VIP年卡</h3>
+                    <div class="vip-price">¥20.00</div>
+                    <div class="vip-period">= 365天</div>
+                    <div class="vip-features">
+                        <ul class="vip-permissions-list">
+                            <li>称号 [会员]Steve</li>
+                            <li>全服飞行 指令：/fly</li>
+                            <li>死亡不掉落</li>
+                            <li>粒子特效编辑功能</li>
+                            <li class="vip-permissions-more">恢复生命值/饥饿值 指令：/heal /feed</li>
+                            <li class="vip-permissions-more">随身工作台/随身铁砧 指令：/workbench /anvil</li>
+                            <li class="vip-permissions-more">佩戴物品至头部 指令：/head</li>
+                            <li class="vip-permissions-more">传送免冷却/传送免等待</li>
+                            <li class="vip-permissions-more">每日签到额外奖励</li>
+                            <li class="vip-permissions-more">领地大小500*500 上限30个 价格打5折</li>
+                        </ul>
+                        <button class="vip-permissions-toggle" onclick="togglePermissions(this)">查看更多权限 ▼</button>
+                    </div>
+                    <button class="btn-vip btn-vip-gold" onclick="selectPackage('vip_year')">立即购买</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- 充值说明 -->
+    <div class="container">
+        <div class="notice-box">
+            <h3>⚠️ 充值须知</h3>
+            <ul>
+                <li>1.请玩家们理性消费;</li>
+                <li>2.请从官方渠道进行付款;</li>
+                <li>3.请勿使用未经授权的第三方平台或来源进行付款;</li>
+                <li>4.支持七天内（从到账时间开始计时）退款，若需退款，请及时与服主联系；</li>
+                <li>5.支付方式：支付宝/微信支付</li>
+                <li>6.到账时间：24小时内。若超时未到款，请联系服主！</li>
+                <li>7.未及时到款赔偿：全额退款，并额外赠送1000点券。</li>
+                <li>8.充值过程中，不要轻易泄露个人账户信息或支付密码。</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 常见问题 -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">常见问题</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">Q: 充值后多久到账？</div>
+                    <div class="faq-answer">A: 正常情况下，充值成功后5分钟内到账。如超过30分钟未到账，请联系客服。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 会员可以叠加购买吗？</div>
+                    <div class="faq-answer">A: 不可以。购买新的会员时长不会叠加到现有有效期上。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 会员期间服务器关闭怎么办？</div>
+                    <div class="faq-answer">A: 会员有效期不受服务器关闭影响，重新开放后继续计算。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 如何联系客服？</div>
+                    <div class="faq-answer">A: QQ：2522576044 或 发送邮件至 czhdqqyx6044@qq.com</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.4"></script>
+    <script>
+        let selectedPackage = null;
+        let selectedPayment = null;
+
+        function selectPackage(pkg) {
+            const packageName = {
+                'vip_month': 'VIP月卡',
+                'vip_year': 'VIP年卡',
+                'golden_ticket': '黄金券充值'
+            }[pkg];
+
+            if (pkg === 'golden_ticket') {
+                showQuantityModal();
+            } else {
+                showVipNotAvailable();
+            }
+        }
+
+        function showQuantityModal() {
+            const existingModal = document.getElementById('quantityModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            const modal = document.createElement('div');
+            modal.id = 'quantityModal';
+            
+            Object.assign(modal.style, {
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                zIndex: '999999',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                margin: '0',
+                padding: '0'
+            });
+            
+            modal.innerHTML = `
+                <div style="
+                    background: white;
+                    padding: 40px;
+                    border-radius: 15px;
+                    text-align: center;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                    max-width: 400px;
+                    width: 90%;
+                    position: relative;
+                ">
+                    <h3 style="color: #667eea; margin: 0 0 20px 0; font-size: 1.5rem;">🪙 黄金券充值</h3>
+                    <p style="margin: 0 0 20px 0; color: #666;">请选择购买数量</p>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: bold;">购买数量：</label>
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                            <button id="decreaseBtn" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #667eea; background: white; font-size: 1.5rem; cursor: pointer; color: #667eea;">-</button>
+                            <span id="quantityDisplay" style="font-size: 2rem; font-weight: bold; min-width: 60px; text-align: center;">1</span>
+                            <button id="increaseBtn" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #667eea; background: white; font-size: 1.5rem; cursor: pointer; color: #667eea;">+</button>
+                        </div>
+                        <p id="totalPrice" style="margin: 15px 0 5px 0; font-size: 1.2rem; color: #667eea;">总价：¥5.00</p>
+                        <p id="totalPoints" style="margin: 5px 0 0 0; font-size: 1rem; color: #666;">= 500黄金券</p>
+                    </div>
+                    
+                    <div style="display: flex; gap: 20px; justify-content: center;">
+                        <button id="cancelBtn" style="flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">取消</button>
+                        <button id="confirmBtn" style="flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; background: linear-gradient(135deg, #b9f2ff 0%, #76ddff 100%); color: #333;">确认购买</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            document.getElementById('decreaseBtn').addEventListener('click', function() {
+                changeQuantity(-1);
+            });
+            
+            document.getElementById('increaseBtn').addEventListener('click', function() {
+                changeQuantity(1);
+            });
+            
+            document.getElementById('cancelBtn').addEventListener('click', function() {
+                closeQuantityModal();
+            });
+            
+            document.getElementById('confirmBtn').addEventListener('click', function() {
+                confirmPurchase();
+            });
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        let selectedQuantity = 1;
+
+        function changeQuantity(delta) {
+            selectedQuantity += delta;
+            if (selectedQuantity < 1) selectedQuantity = 1;
+            if (selectedQuantity > 5) selectedQuantity = 5;
+            
+            document.getElementById('quantityDisplay').textContent = selectedQuantity;
+            document.getElementById('totalPrice').textContent = '总价：¥' + (selectedQuantity * 5).toFixed(2);
+            document.getElementById('totalPoints').textContent = '= ' + (selectedQuantity * 500) + '黄金券';
+        }
+
+        function closeQuantityModal() {
+            const modal = document.getElementById('quantityModal');
+            if (modal) {
+                modal.remove();
+                document.body.style.overflow = '';
+            }
+            // 不重置selectedQuantity，保持用户选择的数量
+        }
+
+        function confirmPurchase() {
+            const quantity = selectedQuantity;
+            closeQuantityModal();
+            showToast('正在跳转到爱发电黄金券充值页面...', 'success');
+            
+            const skuId = '56dec4ea115d11f182fe52540025c377';
+            const planId = '6cbd10c848ab11ee946a5254001e7c00';
+            
+            const skuData = JSON.stringify([{sku_id: skuId, count: quantity}]);
+            const encodedSkuData = encodeURIComponent(skuData);
+            
+            const url = `https://ifdian.net/order/create?product_type=1&plan_id=${planId}&sku=${encodedSkuData}&viokrz_ex=0`;
+            
+            setTimeout(() => {
+                window.open(url, '_blank');
+                // 开始轮询检查订单状态
+                startOrderStatusPolling();
+            }, 1000);
+        }
+        
+        // 轮询检查订单状态
+        let orderStatusPollingInterval = null;
+        let pollingCount = 0;
+        const MAX_POLLING_COUNT = 30; // 最多轮询30次（约5分钟）
+        
+        function startOrderStatusPolling() {
+            // 清除之前的轮询
+            if (orderStatusPollingInterval) {
+                clearInterval(orderStatusPollingInterval);
+            }
+            
+            pollingCount = 0;
+            
+            // 显示提示
+            showToast('支付完成后，系统会自动更新黄金券数量...', 'info');
+            
+            // 每10秒检查一次
+            orderStatusPollingInterval = setInterval(() => {
+                checkOrderStatus();
+                
+                pollingCount++;
+                if (pollingCount >= MAX_POLLING_COUNT) {
+                    clearInterval(orderStatusPollingInterval);
+                    showToast('订单检查已完成，黄金券数量已更新', 'success');
+                }
+            }, 10000);
+        }
+        
+        // 检查订单状态
+        function checkOrderStatus() {
+            fetch('/api/aifadian/api/api.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'process_orders'
+                })
+            })
+            .then(response => {
+                // 检查响应状态
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                // 检查响应类型
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error(`Invalid content type: ${contentType}`);
+                }
+                
+                return response.json();
+            })
+            .then(data => {
+                if (data.ec === 200 && data.data && data.data.processed_count > 0) {
+                    // 有新订单被处理
+                    showToast(`成功处理 ${data.data.processed_count} 个订单，黄金券已更新`, 'success');
+                    
+                    // 清除轮询
+                    if (orderStatusPollingInterval) {
+                        clearInterval(orderStatusPollingInterval);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('检查订单状态失败:', error);
+                // 不显示错误提示，避免频繁打扰用户
+            });
+        }
+
+        function showVipNotAvailable() {
+            // 创建提示窗口
+            const modal = document.createElement('div');
+            modal.className = 'vip-not-available-modal';
+            modal.innerHTML = `
+                <div class="vip-not-available-content">
+                    <h3>⚠️ 暂未开通</h3>
+                    <p>VIP月卡/年卡暂未开通充值</p>
+                    <p>请先充值黄金券，后续将开放直接充值VIP功能</p>
+                    <div class="vip-not-available-actions">
+                        <button onclick="closeVipNotAvailable()" class="btn-vip btn-vip-primary">我知道了</button>
+                        <button onclick="redirectToGoldenTicket()" class="btn-vip btn-vip-diamond">去充值黄金券</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVipNotAvailable() {
+            const modal = document.querySelector('.vip-not-available-modal');
+            if (modal) {
+                modal.remove();
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectToGoldenTicket() {
+            closeVipNotAvailable();
+            showToast('正在跳转到爱发电黄金券充值页面...', 'success');
+            setTimeout(() => {
+                window.location.href = 'https://afdian.com/item/6cbd10c848ab11ee946a5254001e7c00';
+            }, 1000);
+        }
+
+        function togglePermissions(button) {
+            const permissionsList = button.previousElementSibling;
+            const isExpanded = permissionsList.classList.contains('expanded');
+            
+            if (isExpanded) {
+                permissionsList.classList.remove('expanded');
+                button.textContent = '查看更多权限 ▼';
+                button.classList.remove('expanded');
+            } else {
+                permissionsList.classList.add('expanded');
+                button.textContent = '收起权限 ▲';
+                button.classList.add('expanded');
+            }
+        }
+
+        // 金币雨效果
+        function createCoinRain() {
+            const coinRain = document.getElementById('coinRain');
+            const coinTypes = ['🪙'];
+            const bannerHeight = document.querySelector('.subpage-banner').offsetHeight;
+            
+            setInterval(() => {
+                const coin = document.createElement('div');
+                coin.className = 'coin';
+                coin.textContent = coinTypes[Math.floor(Math.random() * coinTypes.length)];
+                
+                // 随机位置
+                coin.style.left = Math.random() * 100 + '%';
+                
+                // 随机动画时长
+                const duration = 3 + Math.random() * 4;
+                coin.style.animationDuration = duration + 's';
+                
+                // 随机大小
+                const size = 16 + Math.random() * 12;
+                coin.style.fontSize = size + 'px';
+                
+                // 随机延迟
+                coin.style.animationDelay = Math.random() * 2 + 's';
+                
+                coinRain.appendChild(coin);
+                
+                // 清理已完成的金币
+                setTimeout(() => {
+                    if (coin.parentNode) {
+                        coin.parentNode.removeChild(coin);
+                    }
+                }, duration * 1000);
+            }, 300);
+        }
+
+        // 页面加载完成后启动金币雨
+        window.addEventListener('load', createCoinRain);
+    </script>
+
+    <!-- ========== Sidebar音乐播放器（模块化版本）========== -->
+
+
+
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    
+    <!-- 组件加载器 -->
+    <script src="../components/loader.js?v=3.0"></script>
+    
+    <!-- 导航栏 -->
+    <script src="../js/navbar.js?v=1.0"></script>
+
+</body>
+</html>
+
+
+

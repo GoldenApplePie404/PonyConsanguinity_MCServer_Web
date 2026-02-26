@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告详情 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <script src="../lib/marked.min.js"></script>
+    <style>
+        .announcement-detail-page {
+            padding: 60px 0;
+        }
+
+        .detail-header {
+            background: linear-gradient(135deg, #4facfe 0%, #946dff 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+            margin-top: -70px;
+            padding-top: 150px;
+        }
+
+        .detail-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .detail-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .detail-meta {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .detail-meta span {
+            margin: 0 15px;
+        }
+
+        .detail-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .detail-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #4facfe 0%, #9578ff 100%);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .detail-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .detail-content h1, 
+        .detail-content h2, 
+        .detail-content h3 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .detail-content h1 {
+            font-size: 2rem;
+            border-bottom: 3px solid #4facfe;
+            padding-bottom: 15px;
+        }
+
+        .detail-content h2 {
+            font-size: 1.6rem;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .detail-content h3 {
+            font-size: 1.3rem;
+        }
+
+        .detail-content p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: #5a6c7d;
+        }
+
+        .detail-content ul, 
+        .detail-content ol {
+            margin-bottom: 20px;
+            padding-left: 30px;
+        }
+
+        .detail-content li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #5a6c7d;
+        }
+
+        .detail-content blockquote {
+            border-left: 4px solid #4facfe;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .detail-content code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #e74c3c;
+        }
+
+        .detail-content pre {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .detail-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #333;
+        }
+
+        .detail-actions {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .back-button:hover::before {
+            left: 100%;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.45);
+            color: white;
+            text-decoration: none !important;
+        }
+
+        .back-button:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .back-button i {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .detail-title {
+                font-size: 1.8rem;
+            }
+
+            .detail-content {
+                padding: 30px 20px;
+            }
+
+            .detail-content h1 {
+                font-size: 1.6rem;
+            }
+
+            .detail-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .detail-content h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 公告详情页面 -->
+    <div class="announcement-detail-page">
+        <!-- 详情头部 -->
+        <div class="detail-header">
+            <div class="container">
+                <h1 class="detail-title" id="announcement-title">加载中...</h1>
+                <p class="detail-meta" id="announcement-meta">加载中...</p>
+            </div>
+        </div>
+
+        <!-- 详情内容 -->
+        <div class="container">
+            <div class="detail-content" id="announcement-content">
+                <div style="text-align: center; padding: 100px 0;">
+                    <div class="loader"></div>
+                    <p style="margin-top: 20px; color: #7f8c8d;">加载公告内容中...</p>
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="detail-actions">
+                <a href="announcement.html" class="back-button">
+                    ← 返回公告列表
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <!-- 回到顶部 -->
+    <div id="app-back-to-top"></div>
+
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+
+    <!-- 引入脚本 -->
+    <script src="../js/api.js"></script>
+    <script src="../js/main.js?v=3.5"></script>
+    <script src="../js/back-to-top.js?v=1.0"></script>
+    <script src="../js/navbar.js?v=1.0"></script>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+
+    <script>
+        // 获取URL参数
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            const announcementId = getUrlParameter('id');
+            if (announcementId) {
+                loadAnnouncementDetail(announcementId);
+            } else {
+                showToast('公告ID无效', 'error');
+                setTimeout(() => {
+                    window.location.href = 'announcement.html';
+                }, 1500);
+            }
+            updateLoginButton();
+        });
+
+        // 加载公告详情
+        async function loadAnnouncementDetail(announcementId) {
+            try {
+                // 加载所有公告数据
+                const response = await fetch('../data/announcements.json');
+                const result = await response.json();
+                
+                if (result && result.announcements) {
+                    let announcements = result.announcements;
+                    let announcement = null;
+                    
+                    if (Array.isArray(announcements)) {
+                        // 如果是数组，使用 find 方法
+                        announcement = announcements.find(a => a.id === announcementId);
+                    } else if (typeof announcements === 'object') {
+                        // 如果是对象，遍历查找
+                        for (let key in announcements) {
+                            if (announcements.hasOwnProperty(key) && announcements[key].id === announcementId) {
+                                announcement = announcements[key];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (announcement) {
+                        // 加载公告内容
+                        try {
+                            const contentResponse = await fetch(`../data/content/announcements/${announcement.content_file}`);
+                            const markdownContent = await contentResponse.text();
+                            const htmlContent = marked.parse(markdownContent);
+                            
+                            // 更新页面内容
+                            document.getElementById('announcement-title').textContent = announcement.title;
+                            document.getElementById('announcement-meta').innerHTML = `
+                                <span><i class="fas fa-user"></i> ${announcement.author}</span>
+                                <span><i class="fas fa-eye"></i> ${announcement.views}</span>
+                                <span><i class="fas fa-calendar-alt"></i> ${announcement.created_at}</span>
+                            `;
+                            document.getElementById('announcement-content').innerHTML = htmlContent;
+                            
+                            // 更新页面标题
+                            document.title = `${announcement.title} - 万驹同源`;
+                            
+                            // 重新初始化代码块复制功能，因为代码块是动态生成的
+                            if (typeof initCodeBlockCopy === 'function') {
+                                initCodeBlockCopy();
+                            }
+                        } catch (contentError) {
+                            console.error('加载公告内容失败:', contentError);
+                            document.getElementById('announcement-content').innerHTML = `
+                                <div style="text-align: center; padding: 100px 0;">
+                                    <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #e74c3c; margin-bottom: 20px;"></i>
+                                    <h3 style="margin-bottom: 10px;">公告内容加载失败</h3>
+                                    <p style="color: #7f8c8d;">请稍后重试或联系管理员</p>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        document.getElementById('announcement-content').innerHTML = `
+                            <div style="text-align: center; padding: 100px 0;">
+                                <i class="fas fa-search" style="font-size: 48px; color: #95a5a6; margin-bottom: 20px;"></i>
+                                <h3 style="margin-bottom: 10px;">公告不存在</h3>
+                                <p style="color: #7f8c8d;">未找到ID为 ${announcementId} 的公告</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    document.getElementById('announcement-content').innerHTML = `
+                        <div style="text-align: center; padding: 100px 0;">
+                            <i class="fas fa-database" style="font-size: 48px; color: #e74c3c; margin-bottom: 20px;"></i>
+                            <h3 style="margin-bottom: 10px;">数据加载失败</h3>
+                            <p style="color: #7f8c8d;">无法加载公告数据，请稍后重试</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('加载公告失败:', error);
+                document.getElementById('announcement-content').innerHTML = `
+                    <div style="text-align: center; padding: 100px 0;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #f39c12; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">加载失败</h3>
+                        <p style="color: #7f8c8d;">网络错误，请检查网络连接后重试</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+</body>
+</html>

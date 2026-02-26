@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帖子详情 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <link rel="stylesheet" href="../css/modal.css?v=1.0">
+    <link rel="stylesheet" href="../css/forum.css?v=1.0">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <script src="../lib/marked.min.js"></script>
+    <style>
+        /* 覆盖全局表格行悬停效果，禁用右移动画 */
+        .post-content table tr:hover {
+            transform: none !important;
+        }
+
+        .post-content table tr {
+            transition: background-color 0.3s ease;
+        }
+
+        /* 帖子布局 - 左右布局 */
+        .post-layout {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        /* 左侧目录侧边栏 */
+        .toc-sidebar {
+            flex-shrink: 0;
+            width: 280px;
+            position: sticky;
+            top: 80px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        /* 右侧主要内容 */
+        .post-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* 目录样式 */
+        .toc-container {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .toc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .toc-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .toc-toggle {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .toc-toggle:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .toc-content {
+            max-height: 400px;
+            overflow-y: auto;
+            transition: max-height 0.3s ease;
+        }
+
+        .toc-content.collapsed {
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-item {
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .toc-item:hover {
+            background: #e8f4f8;
+            border-left-color: var(--primary-color);
+        }
+
+        .toc-item.active {
+            background: #e8f4f8;
+            border-left-color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .toc-level-1 {
+            padding-left: 12px;
+            font-size: 0.95rem;
+        }
+
+        .toc-level-2 {
+            padding-left: 24px;
+            font-size: 0.9rem;
+        }
+
+        .toc-level-3 {
+            padding-left: 36px;
+            font-size: 0.85rem;
+        }
+
+        .toc-link {
+            color: #333;
+            text-decoration: none;
+            display: block;
+        }
+
+        .toc-link:hover {
+            color: var(--primary-color);
+        }
+
+        .toc-empty {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .post-layout {
+                flex-direction: column;
+            }
+
+            .toc-sidebar {
+                width: 100%;
+                position: static;
+                max-height: none;
+                margin-bottom: 20px;
+            }
+
+            .toc-content {
+                max-height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .post-layout {
+                gap: 15px;
+            }
+
+            .toc-container {
+                padding: 15px;
+            }
+
+            .toc-title {
+                font-size: 1rem;
+            }
+
+            .toc-level-1 {
+                padding-left: 8px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* 返回按钮样式 */
+        .back-to-forum {
+            position: fixed;
+            right: 20px;
+            bottom: 90px;
+            z-index: 999;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .back-to-forum-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-to-forum-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: left 0.7s;
+            left: -100%;
+        }
+
+        .back-to-forum-btn:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .back-to-forum-btn:hover::before {
+            left: 100%;
+        }
+
+        .back-to-forum-btn:active {
+            transform: scale(0.95);
+        }
+
+        .back-to-forum-btn .icon {
+            position: relative;
+            z-index: 1;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-forum-btn .icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* 滚动到评论区按钮样式 */
+        .scroll-to-replies {
+            position: fixed;
+            left: 20px;
+            bottom: 90px;
+            z-index: 999;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .scroll-to-replies-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-to-replies-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: left 0.7s;
+            left: -100%;
+        }
+
+        .scroll-to-replies-btn:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .scroll-to-replies-btn:hover::before {
+            left: 100%;
+        }
+
+        .scroll-to-replies-btn:active {
+            transform: scale(0.95);
+        }
+
+        .scroll-to-replies-btn .icon {
+            position: relative;
+            z-index: 1;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scroll-to-replies-btn .icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* 覆盖回到顶部按钮位置（仅本页面） */
+        .back-to-top {
+            bottom: 90px !important;
+        }
+
+        /* 覆盖滚动到评论区按钮位置 */
+        .scroll-to-replies {
+            bottom: 20px !important;
+        }
+    </style>
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 返回论坛按钮 -->
+    <div class="back-to-forum">
+        <button class="back-to-forum-btn" onclick="window.location.href='forum.html'">
+            <span class="icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </span>
+        </button>
+    </div>
+
+    <!-- 滚动到评论区按钮 -->
+    <div class="scroll-to-replies">
+        <button class="scroll-to-replies-btn" onclick="scrollToReplies()">
+            <span class="icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                </svg>
+            </span>
+        </button>
+    </div>
+
+    <!-- 帖子详情区域 -->
+    <div class="section">
+        <div class="container">
+            <!-- 帖子内容容器（左右布局） -->
+            <div class="post-layout" id="post-layout">
+                <!-- 左侧目录 -->
+                <div class="toc-sidebar" id="toc-sidebar" style="display: none;">
+                    <div class="toc-container">
+                        <div class="toc-header">
+                            <h3 class="toc-title">目录</h3>
+                            <button class="toc-toggle" id="toc-toggle" onclick="toggleTOC()">收起</button>
+                        </div>
+                        <div class="toc-content" id="toc-content">
+                            <ul class="toc-list" id="toc-list">
+                                <!-- 目录项将在这里动态生成 -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧内容 -->
+                <div class="post-main">
+                    <div class="card fade-in" id="post-detail">
+                        <div class="card-header">
+                            <h2 id="post-title">加载中...</h2>
+                        </div>
+                        <div class="card-body">
+                            <p class="post-meta" id="post-meta">加载中...</p>
+                            <div class="post-content-container">
+                                <div id="post-content" class="post-content">加载中...</div>
+                            </div>
+                            <div class="post-actions" id="post-actions">
+                                <!-- 操作按钮将在这里显示 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 回复区域 -->
+                    <div class="card fade-in-delay-1" style="margin-top: 30px;" id="replies-section">
+                        <div class="card-header">
+                            <h2>回复列表</h2>
+                        </div>
+                        <div class="card-body">
+                            <!-- 回复表单 -->
+                            <div class="reply-form" id="reply-form"
+                                style="margin-bottom: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 5px;">
+                                <h3 style="margin: 0 0 15px 0;">发表回复</h3>
+                                <div class="form-group">
+                                    <textarea id="reply-content" rows="5" placeholder="请输入回复内容（最多500字）" maxlength="500"
+                                        style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; resize: vertical;"></textarea>
+                                    <div style="text-align: right; margin-top: 5px; color: #666; font-size: 0.9rem;">
+                                        <span id="reply-char-count">0</span>/500
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="submitReply()">提交回复</button>
+                            </div>
+
+                            <!-- 回复列表 -->
+                            <div id="replies-list">
+                                <p style="color: #666; text-align: center; padding: 20px;">加载回复中...</p>
+                            </div>
+                            <!-- 回复分页控件 -->
+                            <div id="replies-pagination" class="pagination"
+                                style="margin-top: 20px; text-align: center;">
+                                <!-- 分页按钮将在这里动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑帖子模态框 -->
+    <div class="modal" id="edit-post-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>编辑帖子</h2>
+                <button class="modal-close" onclick="closeModal('edit-post-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>标题</label>
+                    <input type="text" id="edit-post-title" placeholder="请输入帖子标题（最多50字）" maxlength="50">
+                    <div style="text-align: right; margin-top: 5px; color: #666; font-size: 0.9rem;">
+                        <span id="edit-title-char-count">0</span>/50
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>内容</label>
+                    <div class="content-wrapper">
+                        <div class="content-editor">
+                            <textarea id="edit-post-content" rows="15" placeholder="请输入帖子内容（支持Markdown格式）"></textarea>
+                            <div style="text-align: right; margin-top: 5px; color: #666; font-size: 0.9rem;">
+                                <span id="edit-content-char-count">0</span>/5000
+                            </div>
+                        </div>
+                        <div class="content-preview">
+                            <div class="preview-label">预览</div>
+                            <div id="edit-markdown-preview" class="markdown-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('edit-post-modal')">取消</button>
+                <button class="btn btn-primary" onclick="submitEditPost()">保存修改</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <!-- 回到顶部 -->
+    <div id="app-back-to-top"></div>
+
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+
+    <!-- 引入脚本 -->
+    <script src="../js/api.js"></script>
+    <script src="../js/main.js?v=3.5"></script>
+    <script src="../js/back-to-top.js?v=1.0"></script>
+    <script src="../js/navbar.js?v=1.0"></script>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+
+    <script>
+        // 全局变量
+        let currentReplyPage = 1;
+        const repliesPerPage = 10;
+        let allReplies = [];
+        let tocCollapsed = false;
+        let tocItems = [];
+
+        // 获取URL参数
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            const postId = getUrlParameter('id');
+            if (postId) {
+                loadPostDetail(postId);
+                loadReplies(postId);
+            } else {
+                showToast('帖子ID无效', 'error');
+                setTimeout(() => {
+                    window.location.href = 'forum.html';
+                }, 1500);
+            }
+            updateLoginButton();
+            initReplyCharCount();
+        });
+
+        // 初始化回复字数统计
+        function initReplyCharCount() {
+            const replyContent = document.getElementById('reply-content');
+            const charCount = document.getElementById('reply-char-count');
+
+            if (replyContent && charCount) {
+                replyContent.addEventListener('input', function () {
+                    const currentLength = this.value.length;
+                    const maxLength = 500;
+                    charCount.textContent = currentLength;
+
+                    if (currentLength >= maxLength) {
+                        charCount.style.color = '#e74c3c';
+                    } else {
+                        charCount.style.color = '#666';
+                    }
+                });
+            }
+        }
+
+        // 加载帖子详情
+        async function loadPostDetail(postId) {
+            try {
+                // 加载所有帖子
+                const response = await fetch('../api/forum.php');
+                const result = await response.json();
+
+                if (result.success) {
+                    const posts = result.data.posts || [];
+                    const post = posts.find(p => p.id === postId);
+
+                    if (post) {
+                        // 加载帖子内容
+                        try {
+                            const contentResponse = await fetch(`../data/content/${post.content_file}`);
+                            const markdownContent = await contentResponse.text();
+                            const htmlContent = marked.parse(markdownContent);
+
+                            document.getElementById('post-title').textContent = post.title;
+                            document.getElementById('post-meta').textContent = `作者: ${post.author} | 浏览: ${post.views} | ${post.created_at}`;
+                            document.getElementById('post-content').innerHTML = htmlContent;
+
+                            // 为标题添加锚点ID
+                            addHeadingAnchors();
+
+                            // 生成目录
+                            generateTOC(markdownContent);
+
+                            // 初始化滚动监听
+                            initScrollSpy();
+
+                            // 重新初始化代码块复制功能，因为代码块是动态生成的
+                            if (typeof initCodeBlockCopy === 'function') {
+                                initCodeBlockCopy();
+                            }
+
+                            // 显示操作按钮
+                            const currentUser = getCurrentUser();
+                            const isAdmin = currentUser && currentUser.role === 'admin';
+                            const isAuthor = currentUser && currentUser.username === post.author;
+
+                            let actionsHtml = '<button class="btn btn-sm btn-outline" onclick="window.location.href=\'forum.html\'">返回论坛</button>';
+                            if (isAuthor) {
+                                actionsHtml += `<button class="btn btn-sm btn-outline" style="color: #3498db; margin-left: 10px;" onclick="openEditPostModal('${post.id}', '${post.title}')">编辑</button>`;
+                            }
+                            if (isAdmin || isAuthor) {
+                                actionsHtml += `<button class="btn btn-sm btn-outline" style="color: #e74c3c; margin-left: 10px;" onclick="deletePost('${post.id}', '${post.author}')">删除</button>`;
+                            }
+                            document.getElementById('post-actions').innerHTML = actionsHtml;
+
+                        } catch (error) {
+                            console.error('加载帖子内容失败:', error);
+                            document.getElementById('post-content').textContent = '内容加载失败';
+                        }
+                    } else {
+                        showToast('帖子不存在', 'error');
+                        setTimeout(() => {
+                            window.location.href = 'forum.html';
+                        }, 1500);
+                    }
+                }
+            } catch (error) {
+                console.error('加载帖子详情失败:', error);
+                showToast('加载失败，请重试', 'error');
+            }
+        }
+
+        // 加载回复列表
+        async function loadReplies(postId) {
+            try {
+                const response = await fetch(`../api/forum.php?action=get_replies&postId=${postId}`);
+                const result = await response.json();
+
+                const repliesContainer = document.getElementById('replies-list');
+
+                if (result.success) {
+                    allReplies = result.data.replies || [];
+
+                    // 重置当前页码
+                    currentReplyPage = 1;
+
+                    // 显示当前页回复
+                    displayReplies(postId);
+                    // 生成分页控件
+                    generateRepliesPagination();
+                } else {
+                    repliesContainer.innerHTML = '<p style="color: #e74c3c; text-align: center; padding: 20px;">回复加载失败</p>';
+                }
+            } catch (error) {
+                console.error('加载回复失败:', error);
+                const repliesContainer = document.getElementById('replies-list');
+                if (repliesContainer) {
+                    repliesContainer.innerHTML = '<p style="color: #e74c3c; text-align: center; padding: 20px;">回复加载失败</p>';
+                }
+            }
+        }
+
+        // 显示回复列表
+        function displayReplies(postId) {
+            const repliesContainer = document.getElementById('replies-list');
+            if (!repliesContainer) return;
+
+            // 计算当前页的回复
+            const startIndex = (currentReplyPage - 1) * repliesPerPage;
+            const endIndex = startIndex + repliesPerPage;
+            const currentReplies = allReplies.slice(startIndex, endIndex);
+
+            if (currentReplies.length === 0) {
+                if (allReplies.length === 0) {
+                    repliesContainer.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">暂无回复</p>';
+                } else {
+                    repliesContainer.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">当前页没有回复</p>';
+                }
+                return;
+            }
+
+            repliesContainer.innerHTML = '';
+
+            currentReplies.forEach(reply => {
+                const replyElement = document.createElement('div');
+                replyElement.className = 'reply-item';
+                replyElement.style = 'padding: 15px; border-bottom: 1px solid #f0f0f0; background-color: #f9f9f9; border-radius: 5px; margin-bottom: 10px;';
+                const replyHtmlContent = marked.parse(reply.content);
+
+                // 检查是否显示删除按钮
+                const currentUser = getCurrentUser();
+                const userRole = currentUser ? (currentUser.role || 'user') : 'user';
+                const canDelete = currentUser && (userRole === 'admin' || currentUser.username === reply.author);
+                const deleteButton = canDelete ?
+                    `<button onclick="deleteReply('${postId}', '${reply.id}', '${reply.author}')" 
+                            style="margin-left: 10px; padding: 4px 8px; font-size: 12px; 
+                                   background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        删除
+                    </button>` : '';
+
+                // 创建临时元素获取纯文本内容长度
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = replyHtmlContent;
+                const plainText = tempDiv.textContent || tempDiv.innerText || '';
+                const maxLength = 150;
+                const isLongContent = plainText.length > maxLength;
+
+                // 创建内容元素
+                const contentElement = document.createElement('div');
+                contentElement.className = 'reply-content';
+                contentElement.style = 'margin: 0 0 10px 0; line-height: 1.5; word-wrap: break-word; word-break: break-word; overflow-wrap: break-word; white-space: normal;';
+
+                if (isLongContent) {
+                    // 截断内容
+                    const tempDiv2 = document.createElement('div');
+                    tempDiv2.innerHTML = replyHtmlContent;
+                    const truncatedHtml = tempDiv2.textContent.substring(0, maxLength) + '...';
+                    contentElement.innerHTML = truncatedHtml;
+
+                    // 添加展开按钮
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.className = 'btn btn-sm btn-outline';
+                    toggleBtn.style = 'margin-top: 5px;';
+                    toggleBtn.textContent = '展开详情';
+                    toggleBtn.onclick = function () {
+                        if (toggleBtn.textContent === '展开详情') {
+                            contentElement.innerHTML = replyHtmlContent;
+                            toggleBtn.textContent = '收起';
+                            // 展开后初始化代码块复制功能
+                            if (typeof initCodeBlockCopy === 'function') {
+                                initCodeBlockCopy();
+                            }
+                        } else {
+                            contentElement.innerHTML = truncatedHtml;
+                            toggleBtn.textContent = '展开详情';
+                        }
+                    };
+
+                    replyElement.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div>
+                                <strong style="color: var(--primary-color);">${reply.author}</strong>
+                                <span style="font-size: 0.9em; color: #999;">${reply.created_at}</span>
+                                ${deleteButton}
+                            </div>
+                        </div>
+                    `;
+                    replyElement.appendChild(contentElement);
+                    replyElement.appendChild(toggleBtn);
+                } else {
+                    // 完整显示内容
+                    contentElement.innerHTML = replyHtmlContent;
+                    replyElement.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div>
+                                <strong style="color: var(--primary-color);">${reply.author}</strong>
+                                <span style="font-size: 0.9em; color: #999;">${reply.created_at}</span>
+                                ${deleteButton}
+                            </div>
+                        </div>
+                    `;
+                    replyElement.appendChild(contentElement);
+                }
+
+                repliesContainer.appendChild(replyElement);
+            });
+
+            // 初始化回复内容中的代码块复制功能
+            if (typeof initCodeBlockCopy === 'function') {
+                initCodeBlockCopy();
+            }
+        }
+
+        // 生成回复分页控件
+        function generateRepliesPagination() {
+            const paginationContainer = document.getElementById('replies-pagination');
+            if (!paginationContainer) return;
+
+            const totalPages = Math.ceil(allReplies.length / repliesPerPage);
+
+            // 清空现有分页
+            paginationContainer.innerHTML = '';
+
+            if (totalPages <= 1) {
+                paginationContainer.innerHTML = '<p style="color: #666;">共 1 页</p>';
+                return;
+            }
+
+            // 生成分页按钮
+            let paginationHTML = '<div style="display: flex; justify-content: center; align-items: center; gap: 5px;">';
+
+            // 上一页按钮
+            if (currentReplyPage > 1) {
+                paginationHTML += `<button class="btn btn-sm btn-outline" onclick="changeReplyPage(${currentReplyPage - 1})">&laquo; 上一页</button>`;
+            }
+
+            // 页码按钮
+            const startPage = Math.max(1, currentReplyPage - 2);
+            const endPage = Math.min(totalPages, startPage + 4);
+
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentReplyPage) {
+                    paginationHTML += `<button class="btn btn-sm btn-primary">${i}</button>`;
+                } else {
+                    paginationHTML += `<button class="btn btn-sm btn-outline" onclick="changeReplyPage(${i})">${i}</button>`;
+                }
+            }
+
+            // 下一页按钮
+            if (currentReplyPage < totalPages) {
+                paginationHTML += `<button class="btn btn-sm btn-outline" onclick="changeReplyPage(${currentReplyPage + 1})">下一页 &raquo;</button>`;
+            }
+
+            paginationHTML += '</div>';
+            paginationHTML += `<p style="margin-top: 10px; color: #666;">共 ${totalPages} 页，当前第 ${currentReplyPage} 页</p>`;
+
+            paginationContainer.innerHTML = paginationHTML;
+        }
+
+        // 切换回复页码
+        function changeReplyPage(page) {
+            currentReplyPage = page;
+            displayReplies();
+            generateRepliesPagination();
+            // 滚动到回复列表顶部
+            document.getElementById('replies-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // 提交回复
+        async function submitReply() {
+            const postId = getUrlParameter('id');
+            const content = document.getElementById('reply-content').value.trim();
+
+            if (!content) {
+                showToast('请输入回复内容', 'error');
+                return;
+            }
+
+            try {
+                const currentUser = getCurrentUser();
+                if (!currentUser) {
+                    showToast('请先登录', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 1500);
+                    return;
+                }
+
+                const response = await fetch('../api/forum.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'reply',
+                        postId: postId,
+                        content: content,
+                        author: currentUser.username
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('回复成功！', 'success');
+                    document.getElementById('reply-content').value = '';
+                    loadReplies(postId);
+                } else {
+                    showToast(result.message || '回复失败', 'error');
+                }
+            } catch (error) {
+                console.error('提交回复失败:', error);
+                showToast('回复失败，请重试', 'error');
+            }
+        }
+
+        // 删除回复
+        async function deleteReply(postId, replyId, replyAuthor) {
+            const currentUser = getCurrentUser();
+
+            if (!currentUser) {
+                showToast('请先登录', 'error');
+                return;
+            }
+
+            // 检查权限
+            const userRole = currentUser.role || 'user';
+            if (userRole !== 'admin' && currentUser.username !== replyAuthor) {
+                showToast('无权限删除此回复', 'error');
+                return;
+            }
+
+            // 确认删除
+            if (!confirm('确定要删除这条回复吗？')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('../api/forum.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: JSON.stringify({
+                        action: 'delete_reply',
+                        postId: postId,
+                        replyId: replyId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('删除成功', 'success');
+                    // 重新加载回复
+                    loadReplies(postId);
+                } else {
+                    showToast(result.message || '删除失败', 'error');
+                }
+            } catch (error) {
+                console.error('删除回复失败:', error);
+                showToast('删除失败，请重试', 'error');
+            }
+        }
+
+        let currentEditingPostId = null;
+
+        async function openEditPostModal(postId, currentTitle) {
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                showToast('请先登录', 'error');
+                return;
+            }
+
+            currentEditingPostId = postId;
+
+            try {
+                const response = await fetch(`../data/content/${postId}.md`);
+                const markdownContent = await response.text();
+
+                document.getElementById('edit-post-title').value = currentTitle;
+                document.getElementById('edit-post-content').value = markdownContent;
+
+                updateEditCharCount();
+
+                const contentInput = document.getElementById('edit-post-content');
+                contentInput.addEventListener('input', updateEditCharCount);
+
+                openModal('edit-post-modal');
+            } catch (error) {
+                console.error('加载帖子内容失败:', error);
+                showToast('加载帖子内容失败', 'error');
+            }
+        }
+
+        function updateEditCharCount() {
+            const titleInput = document.getElementById('edit-post-title');
+            const contentInput = document.getElementById('edit-post-content');
+            const titleCharCount = document.getElementById('edit-title-char-count');
+            const contentCharCount = document.getElementById('edit-content-char-count');
+            const markdownPreview = document.getElementById('edit-markdown-preview');
+
+            if (titleInput && titleCharCount) {
+                titleCharCount.textContent = titleInput.value.length;
+                if (titleInput.value.length >= 50) {
+                    titleCharCount.style.color = '#e74c3c';
+                } else {
+                    titleCharCount.style.color = '#666';
+                }
+            }
+
+            if (contentInput && contentCharCount && markdownPreview) {
+                contentCharCount.textContent = contentInput.value.length;
+                if (contentInput.value.length >= 5000) {
+                    contentCharCount.style.color = '#e74c3c';
+                } else {
+                    contentCharCount.style.color = '#666';
+                }
+
+                if (typeof marked !== 'undefined') {
+                    markdownPreview.innerHTML = marked.parse(contentInput.value);
+                }
+            }
+        }
+
+        async function submitEditPost() {
+            const title = document.getElementById('edit-post-title').value.trim();
+            const content = document.getElementById('edit-post-content').value.trim();
+
+            if (!title) {
+                showToast('请输入帖子标题', 'error');
+                return;
+            }
+
+            if (!content) {
+                showToast('请输入帖子内容', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('../api/forum.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: JSON.stringify({
+                        action: 'edit_post',
+                        postId: currentEditingPostId,
+                        title: title,
+                        content: content
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('修改成功！', 'success');
+                    closeModal('edit-post-modal');
+                    loadPostDetail(currentEditingPostId);
+                } else {
+                    showToast(result.message || '修改失败', 'error');
+                }
+            } catch (error) {
+                console.error('修改帖子失败:', error);
+                showToast('修改失败，请重试', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const titleInput = document.getElementById('edit-post-title');
+            const contentInput = document.getElementById('edit-post-content');
+
+            if (titleInput) {
+                titleInput.addEventListener('input', updateEditCharCount);
+            }
+
+            if (contentInput) {
+                contentInput.addEventListener('input', updateEditCharCount);
+            }
+        });
+
+        // 删除帖子
+        async function deletePost(postId, postAuthor) {
+            try {
+                const currentUser = getCurrentUser();
+                if (!currentUser) {
+                    showToast('请先登录', 'error');
+                    return;
+                }
+
+                const isAdmin = currentUser.role === 'admin';
+                const isAuthor = currentUser.username === postAuthor;
+
+                if (!isAdmin && !isAuthor) {
+                    showToast('权限不足，只能删除自己的帖子', 'error');
+                    return;
+                }
+
+                if (!confirm('确定要删除这个帖子吗？')) {
+                    return;
+                }
+
+                const response = await fetch('../api/forum.php', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ postId: postId })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('删除成功！', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'forum.html';
+                    }, 1000);
+                } else {
+                    showToast(result.message || '删除失败', 'error');
+                }
+            } catch (error) {
+                console.error('删除帖子失败:', error);
+                showToast('删除失败，请重试', 'error');
+            }
+        }
+
+        // 生成目录
+        function generateTOC(markdownContent) {
+            const tocSidebar = document.getElementById('toc-sidebar');
+            const tocList = document.getElementById('toc-list');
+
+            if (!tocSidebar || !tocList) return;
+
+            // 提取Markdown标题
+            const headingRegex = /^(#{1,3})\s+(.+)$/gm;
+            const matches = [...markdownContent.matchAll(headingRegex)];
+
+            if (matches.length === 0) {
+                tocSidebar.style.display = 'none';
+                return;
+            }
+
+            tocItems = [];
+            tocList.innerHTML = '';
+
+            matches.forEach((match, index) => {
+                const level = match[1].length;
+                const text = match[2].trim();
+                const anchorId = `heading-${index}`;
+
+                tocItems.push({
+                    id: anchorId,
+                    text: text,
+                    level: level
+                });
+
+                const li = document.createElement('li');
+                li.className = `toc-item toc-level-${Math.min(level, 3)}`;
+                li.innerHTML = `<a href="#${anchorId}" class="toc-link" onclick="scrollToHeading('${anchorId}')">${text}</a>`;
+                tocList.appendChild(li);
+            });
+
+            tocSidebar.style.display = 'block';
+        }
+
+        // 切换目录显示/隐藏
+        function toggleTOC() {
+            const tocContent = document.getElementById('toc-content');
+            const tocToggle = document.getElementById('toc-toggle');
+
+            if (!tocContent || !tocToggle) return;
+
+            tocCollapsed = !tocCollapsed;
+
+            if (tocCollapsed) {
+                tocContent.classList.add('collapsed');
+                tocToggle.textContent = '展开';
+            } else {
+                tocContent.classList.remove('collapsed');
+                tocToggle.textContent = '收起';
+            }
+        }
+
+        // 滚动到标题
+        function scrollToHeading(anchorId) {
+            const element = document.getElementById(anchorId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // 更新URL但不刷新页面
+                history.pushState(null, null, `#${anchorId}`);
+            }
+        }
+
+        // 为标题添加锚点ID
+        function addHeadingAnchors() {
+            const postContent = document.getElementById('post-content');
+            if (!postContent) return;
+
+            const headings = postContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
+
+            headings.forEach((heading, index) => {
+                if (!heading.id) {
+                    heading.id = `heading-${index}`;
+                }
+            });
+        }
+
+        // 监听滚动事件，高亮当前章节
+        function initScrollSpy() {
+            const postContent = document.getElementById('post-content');
+            if (!postContent) return;
+
+            const headings = postContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
+
+            if (headings.length === 0) return;
+
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY + 100;
+
+                tocItems.forEach((item, index) => {
+                    const element = document.getElementById(item.id);
+                    const tocItem = document.querySelector(`.toc-item:nth-child(${index + 1})`);
+
+                    if (element && tocItem) {
+                        const elementTop = element.getBoundingClientRect().top + window.scrollY;
+
+                        if (scrollPosition >= elementTop) {
+                            tocItem.classList.add('active');
+                        } else {
+                            tocItem.classList.remove('active');
+                        }
+                    }
+                });
+            });
+        }
+
+        // 获取分类名称
+        function getCategoryName(category) {
+            const categoryNames = {
+                'all': '全部',
+                'general': '综合讨论',
+                'guide': '攻略分享',
+                'report': '举报反馈'
+            };
+            return categoryNames[category] || category;
+        }
+
+        // 滚动到评论区
+        function scrollToReplies() {
+            const repliesSection = document.getElementById('replies-section');
+            if (repliesSection) {
+                repliesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // 获取分类颜色
+        function getCategoryColor(category) {
+            const categoryColors = {
+                'general': '#3498db',
+                'guide': '#2ecc71',
+                'report': '#e74c3c'
+            };
+            return categoryColors[category] || '#95a5a6';
+        }
+    </script>
+
+</body>
+
+</html>

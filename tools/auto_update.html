@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱发电订单自动更新</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .status-section {
+            margin-bottom: 30px;
+        }
+
+        .status-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-card h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .status-value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .status-info {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-start {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-start:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-stop {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-stop:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .btn-manual {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-manual:hover {
+            background: #0b7dda;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .log-section {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .log-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .log-entry {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            border-left: 4px solid #667eea;
+        }
+
+        .log-entry.success {
+            background: #e8f5e9;
+            border-left-color: #4CAF50;
+        }
+
+        .log-entry.error {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+
+        .log-entry.info {
+            background: #e3f2fd;
+            border-left-color: #2196F3;
+        }
+
+        .log-time {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .log-message {
+            color: #333;
+        }
+
+        .config-section {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .config-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .config-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .config-value {
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .badge-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .badge-error {
+            background: #f44336;
+            color: white;
+        }
+
+        .badge-info {
+            background: #2196F3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 爱发电订单自动更新</h1>
+
+        <div class="status-section">
+            <div class="status-card">
+                <h2>自动更新状态</h2>
+                <div class="status-value" id="statusText">已停止</div>
+                <div class="status-info" id="statusInfo">点击"开始自动更新"按钮启动</div>
+            </div>
+        </div>
+
+        <div class="config-section">
+            <h3>⚙️ 配置信息</h3>
+            <div class="config-item">
+                <span class="config-label">更新间隔</span>
+                <span class="config-value">2分钟</span>
+            </div>
+            <div class="config-item">
+                <span class="config-label">订单更新模式</span>
+                <span class="config-value">API</span>
+            </div>
+            <div class="config-item">
+                <span class="config-label">最后更新时间</span>
+                <span class="config-value" id="lastUpdateTime">未更新</span>
+            </div>
+            <div class="config-item">
+                <span class="config-label">下次更新倒计时</span>
+                <span class="config-value" id="countdown">--</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-start" id="startBtn" onclick="startAutoUpdate()">开始自动更新</button>
+            <button class="btn-stop" id="stopBtn" onclick="stopAutoUpdate()" disabled>停止自动更新</button>
+            <button class="btn-manual" id="manualBtn" onclick="manualUpdate()">立即更新</button>
+        </div>
+
+        <div class="log-section">
+            <h3>📋 更新日志</h3>
+            <div id="logContainer">
+                <div class="log-entry info">
+                    <div class="log-time">系统</div>
+                    <div class="log-message">准备就绪，等待启动...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let updateInterval = null;
+        let countdownInterval = null;
+        let remainingTime = 120; // 2分钟 = 120秒
+        const UPDATE_INTERVAL = 120; // 2分钟
+
+        function startAutoUpdate() {
+            if (updateInterval) {
+                return;
+            }
+
+            updateInterval = setInterval(() => {
+                executeUpdate();
+            }, UPDATE_INTERVAL * 1000);
+
+            countdownInterval = setInterval(() => {
+                remainingTime--;
+                updateCountdown();
+                
+                if (remainingTime <= 0) {
+                    remainingTime = UPDATE_INTERVAL;
+                }
+            }, 1000);
+
+            updateStatus(true);
+            addLog('info', '自动更新已启动，每2分钟执行一次');
+            
+            // 立即执行一次更新
+            executeUpdate();
+        }
+
+        function stopAutoUpdate() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+            }
+
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+
+            remainingTime = UPDATE_INTERVAL;
+            updateCountdown();
+            updateStatus(false);
+            addLog('info', '自动更新已停止');
+        }
+
+        function manualUpdate() {
+            addLog('info', '手动触发订单更新...');
+            executeUpdate();
+        }
+
+        async function executeUpdate() {
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch('/api/aifadian/auto_update.php');
+                const result = await response.json();
+                
+                const executionTime = ((Date.now() - startTime) / 1000).toFixed(2);
+                
+                if (result.success) {
+                    addLog('success', `更新成功！处理订单: ${result.data.processed_count}个, 更新玩家: ${result.data.updated_players.length}个, 执行时间: ${executionTime}秒`);
+                    updateLastUpdateTime();
+                    
+                    if (result.data.updated_players.length > 0) {
+                        result.data.updated_players.forEach(player => {
+                            addLog('success', `玩家 ${player.username}: ${player.old_points} → ${player.new_points} (+${player.added_points})`);
+                        });
+                    }
+                } else {
+                    addLog('error', `更新失败: ${result.message}`);
+                }
+            } catch (error) {
+                addLog('error', `更新出错: ${error.message}`);
+            }
+        }
+
+        function updateStatus(isRunning) {
+            const statusText = document.getElementById('statusText');
+            const statusInfo = document.getElementById('statusInfo');
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+
+            if (isRunning) {
+                statusText.textContent = '运行中';
+                statusInfo.textContent = '自动更新正在运行中...';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            } else {
+                statusText.textContent = '已停止';
+                statusInfo.textContent = '点击"开始自动更新"按钮启动';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        }
+
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleString('zh-CN');
+            document.getElementById('lastUpdateTime').textContent = timeStr;
+        }
+
+        function updateCountdown() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            const countdownStr = `${minutes}分${seconds}秒`;
+            document.getElementById('countdown').textContent = countdownStr;
+        }
+
+        function addLog(type, message) {
+            const logContainer = document.getElementById('logContainer');
+            const now = new Date();
+            const timeStr = now.toLocaleString('zh-CN');
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.innerHTML = `
+                <div class="log-time">${timeStr}</div>
+                <div class="log-message">${message}</div>
+            `;
+            
+            logContainer.insertBefore(logEntry, logContainer.firstChild);
+            
+            // 限制日志数量，最多保留50条
+            while (logContainer.children.length > 50) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+        }
+
+        // 页面加载时初始化
+        window.onload = function() {
+            updateCountdown();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayerPoints测试 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <style>
+        .db-test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .table-list {
+            margin-bottom: 30px;
+        }
+        .table-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .table-item:hover {
+            background-color: #f5f5f5;
+            transform: translateY(-2px);
+        }
+        .table-details {
+            margin-top: 30px;
+        }
+        .structure-table, .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .structure-table th, .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        .structure-table td, .data-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .structure-table tr:nth-child(even), .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #e74c3c;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .success {
+            text-align: center;
+            padding: 20px;
+            color: #28a745;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin: 20px 0;
+        }
+        .pagination button {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            background-color: white;
+            cursor: pointer;
+        }
+        .pagination button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- PlayerPoints测试区域 -->
+    <div class="section">
+        <div class="container">
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h2>PlayerPoints测试</h2>
+                    <p>查看玩家点数相关的表结构和数据</p>
+                </div>
+                <div class="card-body">
+                    <!-- 数据库信息 -->
+                    <div id="db-info" class="success" style="display: block;">
+                        <h3>数据库连接成功</h3>
+                        <p>数据库: mcsqlserver</p>
+                    </div>
+                    
+                    <!-- 表列表 -->
+                    <div class="table-list">
+                        <h3>PlayerPoints相关表</h3>
+                        <div id="tables-container">
+                            <div class="table-item" onclick="loadTableDetails('playerpoints_migrations')">
+                                <h4>playerpoints_migrations</h4>
+                                <p>数据库迁移记录</p>
+                            </div>
+                            <div class="table-item" onclick="loadTableDetails('playerpoints_points')">
+                                <h4>playerpoints_points</h4>
+                                <p>玩家点数记录</p>
+                            </div>
+                            <div class="table-item" onclick="loadTableDetails('playerpoints_username_cache')">
+                                <h4>playerpoints_username_cache</h4>
+                                <p>玩家用户名缓存</p>
+                            </div>
+                            <div class="table-item" onclick="loadCombinedData()" style="background-color: #f0f8ff;">
+                                <h4>组合数据（推荐）</h4>
+                                <p>玩家名 + UUID + 点数</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 表详情 -->
+                    <div class="table-details" id="table-details" style="display: none;">
+                        <h3 id="current-table"></h3>
+                        
+                        <!-- 表结构 -->
+                        <div class="table-structure">
+                            <h4>表结构</h4>
+                            <div id="structure-container" class="loading">
+                                加载表结构中...
+                            </div>
+                        </div>
+                        
+                        <!-- 表数据 -->
+                        <div class="table-data">
+                            <h4>表数据 (前10条)</h4>
+                            <div id="data-container" class="loading">
+                                加载表数据中...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 组合数据 -->
+                    <div class="table-details" id="combined-data" style="display: none;">
+                        <h3>组合数据：玩家名 + UUID + 点数</h3>
+                        <p>按点数降序排列</p>
+                        
+                        <div id="combined-container" class="loading">
+                            加载组合数据中...
+                        </div>
+                        
+                        <!-- 分页控件 -->
+                        <div id="pagination" class="pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <!-- 引入脚本 -->
+    <script src="../js/main.js?v=3.5"></script>
+    <script src="../js/navbar.js?v=1.0"></script>
+
+    <script>
+        // 当前页码
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化完成
+        });
+
+        // 加载表详情
+        async function loadTableDetails(tableName) {
+            // 隐藏其他区域
+            document.getElementById('table-details').style.display = 'block';
+            document.getElementById('combined-data').style.display = 'none';
+            
+            // 设置当前表名
+            document.getElementById('current-table').textContent = tableName;
+            
+            try {
+                // 加载表结构
+                const structureResponse = await fetch(`../api/playerpoints.php?action=get_table_structure&table=${tableName}`);
+                const structureResult = await structureResponse.json();
+                
+                if (structureResult.success) {
+                    displayTableStructure(structureResult.data.structure);
+                } else {
+                    document.getElementById('structure-container').innerHTML = `<div class="error">${structureResult.message}</div>`;
+                }
+                
+                // 加载表数据
+                const dataResponse = await fetch(`../api/playerpoints.php?action=get_table_data&table=${tableName}`);
+                const dataResult = await dataResponse.json();
+                
+                if (dataResult.success) {
+                    displayTableData(dataResult.data.data);
+                } else {
+                    document.getElementById('data-container').innerHTML = `<div class="error">${dataResult.message}</div>`;
+                }
+            } catch (error) {
+                console.error('加载失败:', error);
+                document.getElementById('structure-container').innerHTML = `<div class="error">加载失败: ${error.message}</div>`;
+                document.getElementById('data-container').innerHTML = `<div class="error">加载失败: ${error.message}</div>`;
+            }
+        }
+
+        // 加载组合数据
+        async function loadCombinedData(page = 1) {
+            // 隐藏其他区域
+            document.getElementById('table-details').style.display = 'none';
+            document.getElementById('combined-data').style.display = 'block';
+            
+            // 更新当前页码
+            currentPage = page;
+            
+            try {
+                const response = await fetch(`../api/playerpoints.php?action=get_combined_data&page=${page}&limit=${itemsPerPage}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayCombinedData(result.data);
+                    generatePagination(result.data.total);
+                } else {
+                    document.getElementById('combined-container').innerHTML = `<div class="error">${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('加载组合数据失败:', error);
+                document.getElementById('combined-container').innerHTML = `<div class="error">加载失败: ${error.message}</div>`;
+            }
+        }
+
+        // 显示表结构
+        function displayTableStructure(structure) {
+            const container = document.getElementById('structure-container');
+            
+            if (structure.length === 0) {
+                container.innerHTML = '<div class="error">表结构为空</div>';
+                return;
+            }
+            
+            let html = `
+                <table class="structure-table">
+                    <thead>
+                        <tr>
+                            <th>字段名</th>
+                            <th>类型</th>
+                            <th>是否为空</th>
+                            <th>默认值</th>
+                            <th>额外信息</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            structure.forEach(column => {
+                html += `
+                    <tr>
+                        <td>${column.Field}</td>
+                        <td>${column.Type}</td>
+                        <td>${column.Null}</td>
+                        <td>${column.Default || '-'}</td>
+                        <td>${column.Extra || '-'}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // 显示表数据
+        function displayTableData(data) {
+            const container = document.getElementById('data-container');
+            
+            if (data.length === 0) {
+                container.innerHTML = '<div class="error">表中没有数据</div>';
+                return;
+            }
+            
+            // 获取表头
+            const headers = Object.keys(data[0]);
+            
+            let html = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+            `;
+            
+            // 添加表头
+            headers.forEach(header => {
+                html += `<th>${header}</th>`;
+            });
+            
+            html += `
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // 添加数据行
+            data.forEach(row => {
+                html += '<tr>';
+                headers.forEach(header => {
+                    html += `<td>${row[header] || '-'}</td>`;
+                });
+                html += '</tr>';
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // 显示组合数据
+        function displayCombinedData(data) {
+            const container = document.getElementById('combined-container');
+            
+            if (data.data.length === 0) {
+                container.innerHTML = '<div class="error">没有玩家点数数据</div>';
+                return;
+            }
+            
+            let html = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>玩家名</th>
+                            <th>UUID</th>
+                            <th>点数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            data.data.forEach(item => {
+                html += `
+                    <tr>
+                        <td>${item.username || '未知'}</td>
+                        <td>${item.uuid}</td>
+                        <td>${item.points}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                <p style="text-align: right; margin-top: 10px;">共 ${data.total} 条记录</p>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // 生成分页控件
+        function generatePagination(total) {
+            const paginationContainer = document.getElementById('pagination');
+            const totalPages = Math.ceil(total / itemsPerPage);
+            
+            let html = '';
+            
+            // 上一页按钮
+            html += `<button onclick="loadCombinedData(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>&laquo;</button>`;
+            
+            // 页码按钮
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, startPage + 4);
+            
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button onclick="loadCombinedData(${i})" ${i === currentPage ? 'class="active"' : ''}>${i}</button>`;
+            }
+            
+            // 下一页按钮
+            html += `<button onclick="loadCombinedData(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>&raquo;</button>`;
+            
+            paginationContainer.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
+
+

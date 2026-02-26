@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开发日志 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.21">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <style>
+        .logs-page {
+            padding: 40px 0;
+        }
+
+        .log-timeline {
+            position: relative;
+            padding-left: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .log-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+        }
+
+        .log-year {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .log-item {
+            position: relative;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+        }
+
+        .log-item::before {
+            content: '';
+            position: absolute;
+            left: -48px;
+            top: 5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 1);
+        }
+
+        .log-date {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .log-content {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .log-content h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .log-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .log-content li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+
+        .tag.survival {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .tag.game {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .tag.space {
+            background: #e8eaf6;
+            color: #3f51b5;
+        }
+
+        .tag.rpg {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .tag.ui {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .tag.bugfix {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        @media (max-width: 768px) {
+            .log-timeline {
+                padding-left: 30px;
+            }
+
+            .log-item::before {
+                left: -40px;
+                width: 14px;
+                height: 14px;
+            }
+
+            .log-year {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+
+
+
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 开发日志Banner区域 -->
+    <section class="logs-banner">
+        <div class="logs-banner-bg"></div>
+        <div class="logs-banner-particles"></div>
+        <div class="container">
+            <div class="logs-banner-content">
+                <h1 class="logs-banner-title">开发日志</h1>
+                <p class="logs-banner-subtitle">记录成长 · 分享技术 · 持续进化</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 开发日志内容区 -->
+    <div class="section logs-page">
+        <div class="container">
+            <div class="log-timeline fade-in">
+                <div class="log-year">2026年</div>
+                <div class="log-item">
+                    <div class="log-date">2026.2.16</div>
+                    <div class="log-content">
+                        <p>生存服添加了卫星云图</p>
+                        <p>增加了QQ机器人互联服务器(测试)</p>
+                    </div>
+                </div>
+                <div class="log-item">
+                    <div class="log-date">2026.2.7</div>
+                    <div class="log-content">
+                        <p>修复了生存服点歌系统失效的问题</p>
+                    </div>
+                </div>
+                <div class="log-item">
+                    <div class="log-date">2026.2.3</div>
+                    <div class="log-content">
+                        <p>修复了生存服掉落物无法被垃圾桶回收的问题</p>
+                    </div>
+                </div>
+                <div class="log-item">
+                    <div class="log-date">2026.2.2</div>
+                    <div class="log-content">
+                        <p>进一步完善了登录服，并为其添加了无尽跑酷</p>
+                        <p>暂时移除掉SpecMobs、himboss、armorsetbonuses数据包</p>
+                    </div>
+                </div>
+                <div class="log-item">
+                    <div class="log-date">2026.1.30</div>
+                    <div class="log-content">
+                        <p>重构了登录服，添加了全新的菜单系统</p>
+                        <p>修复了登录服版本过低无法进入的问题</p>
+                    </div>
+                </div>
+                <div class="log-item">
+                    <div class="log-date">2026.1.29</div>
+                    <div class="log-content">
+                        <p>生存服加入了基于下界合金装备特殊条纹装饰的套装效果系统</p>
+                        <p>生存服粘液科技商店价格进行了调整</p>
+                    </div>
+                </div>
+                <div class="log-item">
+                    <div class="log-date">2026.1.28</div>
+                    <div class="log-content">
+                        <p>创造服初步创建了家园扩容商店，目前仅支持到11级</p>
+                    </div>
+                </div>
+                <div class="log-item">
+                    <div class="log-date">2026.1.27</div>
+                    <div class="log-content">
+                        <p>实现了创造服与生存服黄金券数据互通共享</p>
+                        <p>改善了网络连接，修复了延迟过高的问题</p>
+                    </div>
+                </div>
+                <div class="log-item">
+                    <div class="log-date">2026.1.26</div>
+                    <div class="log-content">
+                        <p>万驹同源官网上线测试</p>
+                    </div>
+                </div>
+                <div class="log-year">2025年</div>
+                <div class="log-item">
+                    <div class="log-date">2025.1.22</div>
+                    <div class="log-content">
+                        <p>万驹同源举行烟花派对</p>
+                    </div>
+                </div>
+                <div class="log-item">
+                    <div class="log-date">2025.1.18</div>
+                    <div class="log-content">
+                        <p>稍微修改了烟花派对的游戏逻辑，并通过测试</p>
+                    </div>
+                </div>
+                <div class="log-item">
+                    <div class="log-date">2025.1.1</div>
+                    <div class="log-content">
+                        <p>万驹同源v3.4发布</p>
+                    </div>
+                </div>
+                <div class="log-year">2024年</div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.12.10</div>
+                    <div class="log-content">
+                        <p>太空服限时回归！</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.12.6</div>
+                    <div class="log-content">
+                        <p>生存服：修复了部分粘液科技附属无法运行的问题</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.11.27</div>
+                    <div class="log-content">
+                        <p>生存服：部分粘液科技附属无法运行</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.10.25</div>
+                    <div class="log-content">
+                        <p>修复了无法进入登录服的问题</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.7.27</div>
+                    <div class="log-content">
+                        <p>成功举行"躲猫猫挑战赛"</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.7.26</div>
+                    <div class="log-content">
+                        <p>开放测试躲猫猫游戏活动服</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.7.18</div>
+                    <div class="log-content">
+                        <p>修复了小游戏服中躲猫猫地图出现的空置错误区块</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.7.10</div>
+                    <div class="log-content">
+                        <p>万驹同源v3.3正式上线</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.7.9</div>
+                    <div class="log-content">
+                        <p>生存服（测试）修复了主城无法使用食物、主手拿取物品无法交互的问题</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.7.8</div>
+                    <div class="log-content">
+                        <p>生存服（测试）下界迷宫活动升级测试完毕，新添活动奖品兑换渠道</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.7.7</div>
+                    <div class="log-content">
+                        <p>生存服（测试）添加新BOSS：Herobrine；丰富了末影龙的战斗机制：添加了更多的技能、特效</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.7.6</div>
+                    <div class="log-content">
+                        <p>生存服（测试）：在原版怪物的基础上添加了更多的怪物类型（20+），同时加入更多武器（15+）。在下界创建了一个用于挑战的迷宫，待整改。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.7.5</div>
+                    <div class="log-content">
+                        <p>小游戏服：美化了大厅，添加了必要的全息字；同时加入了趣味道具、签到、经济、邮箱等功能（demo）</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.6.30</div>
+                    <div class="log-content">
+                        <p>完善了小游戏服的基础设施，如菜单、权限等相关配置；同时进行了一轮内测。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.6.29</div>
+                    <div class="log-content">
+                        <p>小游戏服添加了新游戏："城堡躲猫猫"</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.6.28</div>
+                    <div class="log-content">
+                        <p>小游戏服添加了新游戏："抢羊大赛"</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.6.27</div>
+                    <div class="log-content">
+                        <p>开始开发小游戏服</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.6.18</div>
+                    <div class="log-content">
+                        <p>在本地测试了BlueMap插件，成功构建卫星云图网站</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.6.17</div>
+                    <div class="log-content">
+                        <p>新添万驹同源服务器状态查询界面：http://mcstatus.goldenapplepie.xyz/pc/</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.6.15</div>
+                    <div class="log-content">
+                        <p>万驹同源服务器进行了一次玩家数据互通的测试：选用PlayerPoints插件，并利用其数据库存储模块进行数据存储，实现了创造服和生存服玩家黄金券互通。由于使用了数据库存储，插件本地存储的数据已经失效，意味着玩家的黄金券全部清零，目前没找到同步方法。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.6.8</div>
+                    <div class="log-content">
+                        <p>进行了一次QQ机器人对接测试，本地成功通过测试</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.5.25</div>
+                    <div class="log-content">
+                        <p>生存服：主城部分全息字因插件更新而被清除，现已修复</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.5.11</div>
+                    <div class="log-content">
+                        <p>万驹同源版本向上兼容到了1.20.4</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.4.24</div>
+                    <div class="log-content">
+                        <p>太空服停止内测，接下来将会根据内测时出现的问题进行修改</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.4.3</div>
+                    <div class="log-content">
+                        <p>万驹同源添加太空服玩法，并对太空服开展了一次内测</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.3.13</div>
+                    <div class="log-content">
+                        <p>生存服：点歌功能已修复</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.3.7</div>
+                    <div class="log-content">
+                        <p>生存服：梦幻卡池重新设定了6种卡池</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2024.3.5</div>
+                    <div class="log-content">
+                        <p>生存服：1.移除了粘液科技附属："星系"的玩法；2.微调了主城商店物品的价格。</p>
+                    </div>
+                </div>
+
+                <div class="log-year">2023年</div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.12.31</div>
+                    <div class="log-content">
+                        <p>RPG服：修复了资源包无法正常加载的问题。<br>生存服：1.粘液科技商店添加了更多的商品；2.每日任务增添了更多的任务类型；3.调整各类商店物品的价格。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.12.20</div>
+                    <div class="log-content">
+                        <p>生存服：1.修复了无法进入资源世界的问题；2.修复了主城水会破坏农作物的问题。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.12.12</div>
+                    <div class="log-content">
+                        <p>RPG服：由于原先RPG服的游戏难度较难，于是计划更换一个全新的RPG服。全新的RPG服正挂在小马梦幻城服务器内测中。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.12.10</div>
+                    <div class="log-content">
+                        <p>RPG服：由于出现了一些问题，于是决定暂时离线RPG服。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.12.7</div>
+                    <div class="log-content">
+                        <p>生存服：主城新增NPC："金苹果派"，此NPC除了可以进行简单的预设对话外，还有AI对话、商店的功能（后续上线）</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.30</div>
+                    <div class="log-content">
+                        <p>BUG：生存服：打开带有占位符的菜单界面，后台会持续报错（[12:15:01 ERROR]: [java.net.CookieManager] Invalid cookie for
+                            http://127.0.0.1:65398/https/api.mojang.com/users/profiles/minecraft/GoldenApplePie:）；创造服：有时进服时会掉入虚空，或者直接卡退；登录服：玩家列表显示异常。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.29</div>
+                    <div class="log-content">
+                        <p>生存服：添加了"梦幻卡池"玩法。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.28</div>
+                    <div class="log-content">
+                        <p>生存服；增加可翻页全息公告</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.25</div>
+                    <div class="log-content">
+                        <p>生存服：粘液科技兑换商店(试运行)已上线</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.20</div>
+                    <div class="log-content">
+                        <p>生存服：1.修复了每日任务无法领取奖励的问题；2.新增了每日任务商店；3.每日任务移除了领取总奖励，并将每日任务从四个改成了五个。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.19</div>
+                    <div class="log-content">
+                        <p>生存服：1.修复了传送、落地水会受伤的问题；2.移除了充值系统。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.14</div>
+                    <div class="log-content">
+                        <p>创造服：创造服基本完工，并将核心升级到了1.20版本。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.13</div>
+                    <div class="log-content">
+                        <p>生存服：修复了重生点异常的bug</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.11</div>
+                    <div class="log-content">
+                        <p>生存服：1.调整VIP权限组，移除随身末影箱权限；2.添加了盔甲架编辑器玩法。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.9</div>
+                    <div class="log-content">
+                        <p>生存服：粘液科技：添加了星系、量子光学、化学工程、无尽贪婪、网络、蓬松机器、异域花园拓展玩法。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.8</div>
+                    <div class="log-content">
+                        <p>生存服：1.添加了更多药水拓展玩法；2.给主城做了点小美化，添加了动态彩虹信标</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.11.7</div>
+                    <div class="log-content">
+                        <p>生存服：升级并美化了菜单系统，并开放了举报、提议、公告功能；</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.9.9</div>
+                    <div class="log-content">
+                        <p>生存服：1.将MyPet、LiteSignIn、QuickShop、AifadianPay插件升级到了最新版本；2.修复了死亡无法在主城出生点出生的问题；3.修复每日礼包无法领取的问题。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.9.7</div>
+                    <div class="log-content">
+                        <p>生存服；1.修改了兑换商店里的黄金券兑换数量；2.修复抽卡区全息字无法触发指令的问题。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.9.6</div>
+                    <div class="log-content">
+                        <p>生存服：1.开放了兑换系统，玩家可以通过公布的兑换码兑换礼包；2.开放了邮箱系统，玩家可以通过邮箱领取物品；3.升级了礼包系统，开放了每日、每月礼包，移除了原先的新手礼包NPC；4.更换了每日抽奖模型，移除了原先的NPC；5.移除了菜单NPC；6.开放了活动中心，玩家可以通过活动中心查询、参与活服务器活动；7.开放宝箱抽卡区，玩家可以利用梦幻之钥来开启梦幻宝箱以抽取奖品。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.9.2</div>
+                    <div class="log-content">
+                        <p>生存服：1.开放了兑换商店，玩家可以用点券兑换游戏币、经验、礼包等；2.货币改名：梦幻币（游戏币）、黄金券（点券）。</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.9.1</div>
+                    <div class="log-content">
+                        <p>生存服：1.充值系统已开通，玩家可以通过充值获取点券；</p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.8.27</div>
+                    <div class="log-content">
+                        <p>生存服：1.开放了点歌菜单；2.解决普通权限玩家可以破坏主城的方块的问题；3.由于Mirai的封控问题，暂时移除了QQ管理机器人。4.已添加管理员菜单，管理员可以通过此菜单配置部分插件，以及更改游戏模式、天气、时间。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="log-item">
+                    <div class="log-date">2023.8.23</div>
+                    <div class="log-content">
+                        <p>生存服：1.菜单已添加，并且优化了界面；2.添加了每日任务系统，玩家可以通过每日任务获取点券；3.修复了清理掉落物会将商店展示物清理掉的问题；4.修复刷怪笼无法交互方块的问题；5.美化了tab玩家列表；
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.5"></script>
+
+    <!-- ========== Sidebar音乐播放器（模块化版本）========== -->
+
+
+
+    <!-- 导航栏 -->
+    <script src="../js/navbar.js?v=1.0"></script>
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+
+</body>
+
+</html>

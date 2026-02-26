@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录/注册 - 万驹同源 | Minecraft 服务器官网</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.18">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    
+    <link rel="preload" href="../assets/img/bg.png" as="image">
+    <style>
+        .auth-container {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background-image: url('../assets/img/bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /*background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%);*/
+            z-index: 1;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .auth-sidebar {
+            background: linear-gradient(135deg, #667eeaaf 0%, #764ba2af 100%);
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-sidebar h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .auth-sidebar p {
+            opacity: 0.9;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .auth-features {
+            list-style: none;
+        }
+
+        .auth-features li {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth-features li::before {
+            content: '#';
+            font-weight: bold;
+        }
+
+        .auth-form-section {
+            padding: 50px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #666;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .auth-tab:hover {
+            color: var(--primary-color);
+        }
+
+        .auth-tab.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .form-actions label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .terms-link {
+            color: var(--secondary-color);
+            text-decoration: none;
+            margin: 0 2px;
+        }
+
+        .terms-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-auth:hover {
+            background: var(--primary-dark);
+        }
+
+        .social-login {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .social-login p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .social-btn:hover {
+            background: #f8f8f8;
+        }
+
+        .form-content {
+            display: none;
+        }
+
+        .form-content.active {
+            display: block;
+        }
+
+        .test-credentials {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .test-credentials h4 {
+            color: #856404;
+            margin-bottom: 5px;
+        }
+
+        .test-credentials code {
+            display: block;
+            margin: 5px 0;
+            padding: 5px;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .auth-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-sidebar {
+                display: none;
+            }
+
+            .auth-form-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+
+</head>
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-layout">
+                <div class="auth-sidebar">
+                    <h2>欢迎回来</h2>
+                    <p>登录你的账户，继续你的冒险之旅。还没有账户？立即注册，加入我们的社区！</p>
+                    <ul class="auth-features">
+                        <li>注：由于用户系统仍在开发中，安全性尚未完全保障，请勿在创建账户时使用隐私密码！</li>
+                        <!--<li>访问所有游戏功能</li>
+                        <li>参与社区讨论</li>
+                        <li>充值和购买会员</li>
+                        <li>享受专属特权</li>-->
+                    </ul>
+                </div>
+
+                <div class="auth-form-section">
+                    <div class="auth-header">
+                        <h1>万驹同源服务器</h1>
+                        <p>登录 / 注册</p>
+                    </div>
+
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
+                        <button class="auth-tab" onclick="switchAuthTab('register')">注册</button>
+                    </div>
+
+                    <!-- 登录表单 -->
+                    <div id="login-form" class="form-content active">
+                        <form onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label for="login-username">用户名</label>
+                                <input type="text" id="login-username" placeholder="请输入用户名" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password">密码</label>
+                                <input type="password" id="login-password" placeholder="请输入密码" required>
+                            </div>
+                            <div class="form-actions">
+                                <label>
+                                    <input type="checkbox" id="remember">
+                                    记住我
+                                </label>
+                                <!--<a href="#" class="forgot-link">忘记密码？</a>-->
+                            </div>
+                            <button type="submit" class="btn-auth">登录</button>
+                        </form>
+
+                        <!--<div class="test-credentials">
+                            <h4>测试账号（管理员）：</h4>
+                            <code>用户名：admin</code>
+                            <code>密码：admin123</code>
+                        </div>-->
+
+                        <div class="social-login">
+                            <p>或使用社交账号登录</p>
+                            <div class="social-buttons">
+                                <button class="social-btn" onclick="showToast('此功能开发中……', 'info')">EYPA</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 注册表单 -->
+                    <div id="register-form" class="form-content">
+                        <form onsubmit="handleRegister(event)">
+                            <div class="form-group">
+                                <label for="reg-username">用户名</label>
+                                <input type="text" id="reg-username" placeholder="请输入用户名" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-email">邮箱</label>
+                                <input type="email" id="reg-email" placeholder="请输入邮箱" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-password">密码</label>
+                                <input type="password" id="reg-password" placeholder="请输入密码（至少6位）" required minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-confirm">确认密码</label>
+                                <input type="password" id="reg-confirm" placeholder="请再次输入密码" required>
+                            </div>
+                            <div class="form-actions">
+                                <label>
+                                    <input type="checkbox" id="agree" required>
+                                    我已阅读并同意 <a href="user-agreement.html" target="_blank" class="terms-link">用户协议</a> 和 <a href="privacy-policy.html" target="_blank" class="terms-link">隐私政策</a>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn-auth">注册</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.3"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
+
+            if (tab === 'login') {
+                document.querySelector('.auth-tab:first-child').classList.add('active');
+                document.getElementById('login-form').classList.add('active');
+            } else {
+                document.querySelector('.auth-tab:last-child').classList.add('active');
+                document.getElementById('register-form').classList.add('active');
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await loginUser(username, password);
+
+                if (response.success) {
+                    window.isLoggedIn = true;
+                    window.currentUser = response.data.user;
+                    showMessage('登录成功！欢迎回来，' + response.data.user.username, 'success');
+                    setTimeout(() => {
+                        window.location.href = 'profile.html';
+                    }, 1000);
+                } else {
+                    showMessage(response.message || '登录失败', 'error');
+                }
+            } catch (error) {
+                console.error('登录错误:', error);
+                showMessage('登录过程中发生错误', 'error');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const confirm = document.getElementById('reg-confirm').value;
+
+            if (password !== confirm) {
+                showMessage('两次输入的密码不一致', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('密码长度不能少于6位', 'error');
+                return;
+            }
+
+            try {
+                const response = await registerUser(username, email, password);
+
+                if (response.success) {
+                    showMessage('注册成功！请登录', 'success');
+                    switchAuthTab('login');
+                } else {
+                    showMessage(response.message || '注册失败', 'error');
+                }
+            } catch (error) {
+                console.error('注册错误:', error);
+                showMessage('注册过程中发生错误', 'error');
+            }
+        }
+    </script>
+
+    <!-- ========== Sidebar音乐播放器（模块化版本）========== -->
+
+
+
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    
+    <!-- 组件加载器 -->
+    <script src="../components/loader.js?v=3.0"></script>
+    
+    <!-- 导航栏 -->
+    <script src="../js/navbar.js?v=1.0"></script>
+
+</body>
+</html>
+
+

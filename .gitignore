@@ -1,0 +1,35 @@
+# 日志文件
+logs/
+*.log
+
+# 数据库文件
+*.db
+*.sqlite
+
+# 配置文件（包含敏感信息）
+api/aifadian/config.php
+api/config.php
+
+# 测试文件
+test/
+
+# 临时文件
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDE配置
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 备份文件
+*.bak
+*.backup
