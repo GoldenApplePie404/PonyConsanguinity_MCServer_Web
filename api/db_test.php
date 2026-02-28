@@ -1,15 +1,31 @@
 <?php
-// 数据库连接配置
-$config = array(
-    'hostname' => '115.231.176.218', // 数据库主机名
-    'port' => 3306, // 数据库端口
-    'database' => 'mcsqlserver', // 数据库名称
-    'username' => 'mcsqlserver', // 数据库用户名
-    'password' => 'gapmcsql_2026' // 数据库密码
-);
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 
-// 连接数据库
-$conn = mysqli_connect(
+header('Content-Type: application/json; charset=utf-8');
+
+try {
+    require_once dirname(__DIR__) . '/config/config.php';
+} catch (Exception $e) {
+    echo json_encode(array(
+        'success' => false,
+        'message' => '配置加载失败: ' . $e->getMessage()
+    ));
+    exit;
+}
+
+if (!function_exists('get_db_config')) {
+    echo json_encode(array(
+        'success' => false,
+        'message' => 'get_db_config 函数未定义'
+    ));
+    exit;
+}
+
+$config = get_db_config();
+
+$conn = @mysqli_connect(
     $config['hostname'],
     $config['username'],
     $config['password'],
@@ -17,57 +33,59 @@ $conn = mysqli_connect(
     $config['port']
 );
 
-// 检查连接
 if (!$conn) {
-    die(json_encode(array(
+    echo json_encode(array(
         'success' => false,
         'message' => '数据库连接失败: ' . mysqli_connect_error()
-    )));
+    ));
+    exit;
 }
 
-// 设置字符集
 mysqli_set_charset($conn, 'utf8mb4');
 
-// 获取数据库表结构
 function getTables($conn) {
     $tables = array();
     $result = mysqli_query($conn, 'SHOW TABLES');
     
-    while ($row = mysqli_fetch_row($result)) {
-        $tableName = $row[0];
-        $tables[] = $tableName;
+    if ($result) {
+        while ($row = mysqli_fetch_row($result)) {
+            $tables[] = $row[0];
+        }
     }
     
     return $tables;
 }
 
-// 获取表结构
 function getTableStructure($conn, $tableName) {
     $columns = array();
-    $result = mysqli_query($conn, "DESCRIBE $tableName");
+    $tableName = mysqli_real_escape_string($conn, $tableName);
+    $result = mysqli_query($conn, "DESCRIBE `$tableName`");
     
-    while ($row = mysqli_fetch_assoc($result)) {
-        $columns[] = $row;
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $columns[] = $row;
+        }
     }
     
     return $columns;
 }
 
-// 获取表数据
 function getTableData($conn, $tableName, $page = 1, $limit = 10) {
     $offset = ($page - 1) * $limit;
     $data = array();
-    $result = mysqli_query($conn, "SELECT * FROM $tableName LIMIT $limit OFFSET $offset");
+    $tableName = mysqli_real_escape_string($conn, $tableName);
     
-    while ($row = mysqli_fetch_assoc($result)) {
-        $data[] = $row;
+    $result = mysqli_query($conn, "SELECT * FROM `$tableName` LIMIT $limit OFFSET $offset");
+    
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $data[] = $row;
+        }
     }
     
-    // 获取总记录数
-    $countQuery = "SELECT COUNT(*) as total FROM $tableName";
-    $countResult = mysqli_query($conn, $countQuery);
+    $countResult = mysqli_query($conn, "SELECT COUNT(*) as total FROM `$tableName`");
     $countRow = mysqli_fetch_assoc($countResult);
-    $total = $countRow['total'];
+    $total = $countRow ? $countRow['total'] : 0;
     
     return array(
         'data' => $data,
@@ -77,7 +95,6 @@ function getTableData($conn, $tableName, $page = 1, $limit = 10) {
     );
 }
 
-// 处理API请求
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
     
@@ -92,8 +109,7 @@ if (isset($_GET['action'])) {
             
         case 'get_table_structure':
             if (isset($_GET['table'])) {
-                $tableName = $_GET['table'];
-                $structure = getTableStructure($conn, $tableName);
+                $structure = getTableStructure($conn, $_GET['table']);
                 echo json_encode(array(
                     'success' => true,
                     'data' => array('structure' => $structure)
@@ -108,10 +124,9 @@ if (isset($_GET['action'])) {
             
         case 'get_table_data':
             if (isset($_GET['table'])) {
-                $tableName = $_GET['table'];
                 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
                 $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
-                $data = getTableData($conn, $tableName, $page, $limit);
+                $data = getTableData($conn, $_GET['table'], $page, $limit);
                 echo json_encode(array(
                     'success' => true,
                     'data' => $data
@@ -132,7 +147,6 @@ if (isset($_GET['action'])) {
             break;
     }
 } else {
-    // 默认返回数据库信息
     $tables = getTables($conn);
     echo json_encode(array(
         'success' => true,
@@ -143,6 +157,5 @@ if (isset($_GET['action'])) {
     ));
 }
 
-// 关闭连接
 mysqli_close($conn);
 ?>

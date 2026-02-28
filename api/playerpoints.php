@@ -1,15 +1,31 @@
 <?php
-// 数据库连接配置
-$config = array(
-    'hostname' => '115.231.176.218',
-    'port' => 3306,
-    'database' => 'mcsqlserver',
-    'username' => 'mcsqlserver',
-    'password' => 'gapmcsql_2026'
-);
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 
-// 连接数据库
-$conn = mysqli_connect(
+header('Content-Type: application/json; charset=utf-8');
+
+try {
+    require_once dirname(__DIR__) . '/config/config.php';
+} catch (Exception $e) {
+    echo json_encode(array(
+        'success' => false,
+        'message' => '配置加载失败: ' . $e->getMessage()
+    ));
+    exit;
+}
+
+if (!function_exists('get_db_config')) {
+    echo json_encode(array(
+        'success' => false,
+        'message' => 'get_db_config 函数未定义'
+    ));
+    exit;
+}
+
+$config = get_db_config();
+
+$conn = @mysqli_connect(
     $config['hostname'],
     $config['username'],
     $config['password'],
@@ -17,42 +33,44 @@ $conn = mysqli_connect(
     $config['port']
 );
 
-// 检查连接
 if (!$conn) {
-    die(json_encode(array(
+    echo json_encode(array(
         'success' => false,
         'message' => '数据库连接失败: ' . mysqli_connect_error()
-    )));
+    ));
+    exit;
 }
 
-// 设置字符集
 mysqli_set_charset($conn, 'utf8mb4');
 
-// 获取表结构
 function getTableStructure($conn, $tableName) {
     $columns = array();
-    $result = mysqli_query($conn, "DESCRIBE $tableName");
+    $tableName = mysqli_real_escape_string($conn, $tableName);
+    $result = mysqli_query($conn, "DESCRIBE `$tableName`");
     
-    while ($row = mysqli_fetch_assoc($result)) {
-        $columns[] = $row;
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $columns[] = $row;
+        }
     }
     
     return $columns;
 }
 
-// 获取表数据
 function getTableData($conn, $tableName, $limit = 10) {
     $data = array();
-    $result = mysqli_query($conn, "SELECT * FROM $tableName LIMIT $limit");
+    $tableName = mysqli_real_escape_string($conn, $tableName);
+    $result = mysqli_query($conn, "SELECT * FROM `$tableName` LIMIT $limit");
     
-    while ($row = mysqli_fetch_assoc($result)) {
-        $data[] = $row;
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $data[] = $row;
+        }
     }
     
     return $data;
 }
 
-// 获取组合的playerpoints数据
 function getCombinedPlayerPoints($conn, $page = 1, $limit = 10) {
     $offset = ($page - 1) * $limit;
     $data = array();
@@ -73,15 +91,16 @@ function getCombinedPlayerPoints($conn, $page = 1, $limit = 10) {
     
     $result = mysqli_query($conn, $query);
     
-    while ($row = mysqli_fetch_assoc($result)) {
-        $data[] = $row;
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $data[] = $row;
+        }
     }
     
-    // 获取总记录数
     $countQuery = "SELECT COUNT(*) as total FROM playerpoints_points";
     $countResult = mysqli_query($conn, $countQuery);
     $countRow = mysqli_fetch_assoc($countResult);
-    $total = $countRow['total'];
+    $total = $countRow ? $countRow['total'] : 0;
     
     return array(
         'data' => $data,
@@ -91,15 +110,13 @@ function getCombinedPlayerPoints($conn, $page = 1, $limit = 10) {
     );
 }
 
-// 处理API请求
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
     
     switch ($action) {
         case 'get_table_structure':
             if (isset($_GET['table'])) {
-                $tableName = $_GET['table'];
-                $structure = getTableStructure($conn, $tableName);
+                $structure = getTableStructure($conn, $_GET['table']);
                 echo json_encode(array(
                     'success' => true,
                     'data' => array('structure' => $structure)
@@ -114,8 +131,7 @@ if (isset($_GET['action'])) {
             
         case 'get_table_data':
             if (isset($_GET['table'])) {
-                $tableName = $_GET['table'];
-                $data = getTableData($conn, $tableName);
+                $data = getTableData($conn, $_GET['table']);
                 echo json_encode(array(
                     'success' => true,
                     'data' => array('data' => $data)
@@ -146,7 +162,6 @@ if (isset($_GET['action'])) {
             break;
     }
 } else {
-    // 默认返回三个表的基本信息
     $tables = array('playerpoints_migrations', 'playerpoints_points', 'playerpoints_username_cache');
     $tableInfo = array();
     
@@ -168,6 +183,5 @@ if (isset($_GET['action'])) {
     ));
 }
 
-// 关闭连接
 mysqli_close($conn);
 ?>

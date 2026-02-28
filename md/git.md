@@ -370,6 +370,56 @@ git remote remove origin
 - 上传二进制文件
 - 创建版本标签
 
+### 9.6 GitHub Pages（网站部署）
+- **免费托管**：完全免费的静态网站托管服务
+- **自动部署**：每次推送到指定分支时自动构建和部署
+- **自定义域名**：支持使用自己的域名
+- **HTTPS支持**：自动提供HTTPS证书
+- **全球CDN**：访问速度快
+
+#### 部署步骤
+1. **访问GitHub仓库设置**：https://github.com/用户名/仓库名/settings
+2. **选择Pages**：点击左侧菜单中的「Pages」
+3. **配置源**：选择分支（通常是main）和文件夹（通常是/）
+4. **保存设置**：点击「Save」按钮
+5. **等待部署**：GitHub会自动构建和部署网站
+6. **访问网站**：部署完成后会显示网站URL，格式为 `https://用户名.github.io/仓库名`
+
+#### 自动化部署示例（使用GitHub Actions）
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+```
+
+#### 注意事项
+- **适用范围**：静态网站（HTML、CSS、JavaScript）
+- **不支持**：PHP、ASP.NET等服务器端语言
+- **限制**：存储空间1GB，每月带宽100GB
+- **最佳实践**：使用.gitignore忽略不需要部署的文件
+
 ## 10. 安全建议
 
 ### 10.1 保护敏感信息

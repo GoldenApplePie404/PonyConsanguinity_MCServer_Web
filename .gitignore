@@ -1,35 +1,32 @@
-# 日志文件
-logs/
-*.log
-
-# 数据库文件
-*.db
-*.sqlite
-
 # 配置文件（包含敏感信息）
-api/aifadian/config.php
-api/config.php
+config/config.php
 
-# 测试文件
-test/
+# 日志文件
+logs/*.log
 
 # 临时文件
 *.tmp
 *.temp
-.DS_Store
-Thumbs.db
-
-# IDE配置
-.vscode/
-.idea/
 *.swp
 *.swo
+*~
 
 # 操作系统文件
 .DS_Store
 Thumbs.db
 desktop.ini
 
+# IDE 配置
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
 # 备份文件
 *.bak
 *.backup
+*~
+
+run.bat
+test/aifadian
+test/mysql

@@ -1,4 +1,7 @@
 <?php
+// 引入统一配置文件
+require_once dirname(__DIR__) . '/../config/config.php';
+
 // 数据库连接和配置模块
 
 class Database {
@@ -7,13 +10,7 @@ class Database {
     
     // 构造函数
     public function __construct() {
-        $this->config = array(
-            'hostname' => '115.231.176.218',
-            'port' => 3306,
-            'database' => 'mcsqlserver',
-            'username' => 'mcsqlserver',
-            'password' => 'gapmcsql_2026'
-        );
+        $this->config = get_db_config();
         $this->connect();
     }
     
