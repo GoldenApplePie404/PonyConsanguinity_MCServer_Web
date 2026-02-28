@@ -30,3 +30,4 @@ desktop.ini
 run.bat
 test/aifadian
 test/mysql
+md/*.md
