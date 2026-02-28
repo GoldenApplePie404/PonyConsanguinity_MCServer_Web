@@ -141,6 +141,8 @@ PC_Web/
 - **Chart.js**：数据可视化图表库
 - **Font Awesome**：图标字体库
 - **Marked**：Markdown解析库
+- **Highlight.js**：代码块语法高亮库，支持行号显示和折叠展开功能 
+- **PowerShell.js**：PowerShell样式代码块高亮
 
 
 ---

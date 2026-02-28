@@ -563,7 +563,7 @@ function initCodeBlockCopy() {
             // 创建复制按钮
             const copyBtn = document.createElement('button');
             copyBtn.className = 'copy-btn';
-            copyBtn.textContent = '复制';
+            copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
             
             // 添加到代码块
             block.appendChild(copyBtn);
@@ -577,7 +577,7 @@ function initCodeBlockCopy() {
                     // 使用现代的 Clipboard API
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(codeText).then(() => {
-                            showCopySuccess(copyBtn);
+                            showCodeCopySuccess(copyBtn);
                         }).catch(err => {
                             console.error('Clipboard API 失败:', err);
                             // 如果现代API失败，使用fallback方法
@@ -606,7 +606,7 @@ function fallbackCopyCode(text, btn) {
     try {
         const successful = document.execCommand('copy');
         if (successful) {
-            showCopySuccess(btn);
+            showCodeCopySuccess(btn);
         } else {
             console.error('复制失败');
         }
@@ -618,13 +618,13 @@ function fallbackCopyCode(text, btn) {
 }
 
 // 显示复制代码成功
-function showCopySuccess(btn) {
+function showCodeCopySuccess(btn) {
     btn.classList.add('copied');
-    btn.textContent = '已复制!';
+    btn.innerHTML = '<i class="fa-solid fa-check"></i>';
 
     setTimeout(() => {
         btn.classList.remove('copied');
-        btn.textContent = '复制';
+        btn.innerHTML = '<i class="fa-regular fa-copy"></i>';
     }, 2000);
 }
 

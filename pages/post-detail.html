@@ -12,8 +12,17 @@
     <link rel="stylesheet" href="../css/forum.css?v=1.0">
     <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
     <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <link rel="stylesheet" href="../lib/atom-one-dark.min.css">
     <script src="../lib/marked.min.js"></script>
+    <script src="../lib/highlight.min.js"></script>
+    <script src="../lib/powershell.min.js"></script>
     <style>
+        /* 增加文章内容区域宽度 */
+        .container {
+            max-width: 1400px;
+        }
+
         /* 覆盖全局表格行悬停效果，禁用右移动画 */
         .post-content table tr:hover {
             transform: none !important;
@@ -337,6 +346,129 @@
         .scroll-to-replies {
             bottom: 20px !important;
         }
+
+        /* 代码块样式 */
+        .code-block-wrapper {
+            position: relative;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #282c34;
+        }
+
+        .code-block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #21252b;
+            border-bottom: 1px solid #3e4451;
+        }
+
+        .code-language {
+            font-size: 12px;
+            color: #abb2bf;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .code-block-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .code-block-btn {
+            background: transparent;
+            border: 1px solid #5c6370;
+            color: #abb2bf;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+
+        .code-block-btn:hover {
+            background: #3e4451;
+            border-color: #abb2bf;
+        }
+
+        .code-block-content {
+            position: relative;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .code-block-content.collapsed {
+            max-height: 200px;
+        }
+
+        .code-block-content.expanded {
+            max-height: none;
+        }
+
+        .code-with-line-numbers {
+            display: flex;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .line-numbers {
+            flex-shrink: 0;
+            padding: 15px 10px 15px 15px;
+            background: #21252b;
+            border-right: 1px solid #3e4451;
+            color: #5c6370;
+            text-align: right;
+            user-select: none;
+            font-size: 13px;
+        }
+
+        .line-numbers span {
+            display: block;
+            min-width: 20px;
+        }
+
+        .code-content {
+            flex: 1;
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            margin: 0;
+            background: transparent !important;
+            padding: 0 !important;
+        }
+
+        .code-content code {
+            background: transparent !important;
+            padding: 0 !important;
+        }
+
+        .code-block-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(transparent, #282c34);
+            pointer-events: none;
+        }
+
+        .code-block-content.collapsed .code-block-overlay {
+            display: block;
+        }
+
+        .code-block-content.expanded .code-block-overlay {
+            display: none;
+        }
     </style>
 </head>
 
@@ -511,6 +643,20 @@
 
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', () => {
+            // 配置 marked.js 使用 highlight.js 进行代码高亮
+            marked.setOptions({
+                highlight: function(code, lang) {
+                    if (lang && hljs.getLanguage(lang)) {
+                        try {
+                            return hljs.highlight(code, { language: lang }).value;
+                        } catch (err) {
+                            console.error('Highlight.js 错误:', err);
+                        }
+                    }
+                    return hljs.highlightAuto(code).value;
+                }
+            });
+
             const postId = getUrlParameter('id');
             if (postId) {
                 loadPostDetail(postId);
@@ -567,6 +713,9 @@
                             document.getElementById('post-meta').textContent = `作者: ${post.author} | 浏览: ${post.views} | ${post.created_at}`;
                             document.getElementById('post-content').innerHTML = htmlContent;
 
+                            // 处理渲染后的内容（高亮 + 增强代码块）
+                            processRenderedContent();
+
                             // 为标题添加锚点ID
                             addHeadingAnchors();
 
@@ -575,11 +724,6 @@
 
                             // 初始化滚动监听
                             initScrollSpy();
-
-                            // 重新初始化代码块复制功能，因为代码块是动态生成的
-                            if (typeof initCodeBlockCopy === 'function') {
-                                initCodeBlockCopy();
-                            }
 
                             // 显示操作按钮
                             const currentUser = getCurrentUser();
@@ -708,10 +852,8 @@
                         if (toggleBtn.textContent === '展开详情') {
                             contentElement.innerHTML = replyHtmlContent;
                             toggleBtn.textContent = '收起';
-                            // 展开后初始化代码块复制功能
-                            if (typeof initCodeBlockCopy === 'function') {
-                                initCodeBlockCopy();
-                            }
+                            // 展开后处理代码块
+                            processRenderedContent();
                         } else {
                             contentElement.innerHTML = truncatedHtml;
                             toggleBtn.textContent = '展开详情';
@@ -747,10 +889,8 @@
                 repliesContainer.appendChild(replyElement);
             });
 
-            // 初始化回复内容中的代码块复制功能
-            if (typeof initCodeBlockCopy === 'function') {
-                initCodeBlockCopy();
-            }
+            // 处理渲染后的内容（高亮 + 增强代码块）
+            processRenderedContent();
         }
 
         // 生成回复分页控件
@@ -962,6 +1102,8 @@
 
                 if (typeof marked !== 'undefined') {
                     markdownPreview.innerHTML = marked.parse(contentInput.value);
+                    // 处理渲染后的内容（高亮 + 增强代码块）
+                    processRenderedContent();
                 }
             }
         }
@@ -1206,6 +1348,145 @@
                 'report': '#e74c3c'
             };
             return categoryColors[category] || '#95a5a6';
+        }
+
+        // 增强代码块：添加行号和折叠功能
+        function enhanceCodeBlocks() {
+            const codeBlocks = document.querySelectorAll('.post-content pre, .reply-content pre, #markdown-preview pre, #edit-markdown-preview pre');
+
+            codeBlocks.forEach(pre => {
+                // 如果已经处理过，跳过
+                if (pre.closest('.code-block-wrapper')) return;
+
+                const code = pre.querySelector('code');
+                if (!code) return;
+
+                // 保存原始父节点引用
+                const originalParent = pre.parentNode;
+                const nextSibling = pre.nextSibling;
+
+                // 获取语言
+                const languageClass = code.className.match(/language-(\w+)/);
+                const language = languageClass ? languageClass[1] : 'text';
+
+                // 获取代码内容
+                const codeText = code.textContent || '';
+                const lines = codeText.split('\n');
+                const lineCount = lines.length;
+
+                // 创建行号 HTML
+                let lineNumbersHtml = '';
+                for (let i = 1; i <= lineCount; i++) {
+                    lineNumbersHtml += `<span>${i}</span>`;
+                }
+
+                // 判断是否需要折叠（超过15行）
+                const needsCollapse = lineCount > 15;
+
+                // 创建包装元素
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-wrapper';
+
+                // 创建头部
+                const header = document.createElement('div');
+                header.className = 'code-block-header';
+                header.innerHTML = `
+                    <span class="code-language">${language}</span>
+                    <div class="code-block-actions">
+                        ${needsCollapse ? `<button class="code-block-btn toggle-btn" onclick="toggleCodeBlock(this)" title="展开"><i class="fa-solid fa-chevron-down"></i></button>` : ''}
+                        <button class="code-block-btn copy-btn" onclick="copyCodeBlock(this)" title="复制"><i class="fa-regular fa-copy"></i></button>
+                    </div>
+                `;
+
+                // 创建内容区域
+                const content = document.createElement('div');
+                content.className = `code-block-content ${needsCollapse ? 'collapsed' : 'expanded'}`;
+
+                // 创建带行号的代码区域
+                const codeWithLines = document.createElement('div');
+                codeWithLines.className = 'code-with-line-numbers';
+                codeWithLines.innerHTML = `
+                    <div class="line-numbers">${lineNumbersHtml}</div>
+                    <div class="code-content"></div>
+                `;
+
+                // 将原始 pre 移动到 code-content 中
+                const codeContent = codeWithLines.querySelector('.code-content');
+                codeContent.appendChild(pre);
+
+                content.appendChild(codeWithLines);
+
+                // 添加渐变遮罩（用于折叠时）
+                const overlay = document.createElement('div');
+                overlay.className = 'code-block-overlay';
+                content.appendChild(overlay);
+
+                // 组装
+                wrapper.appendChild(header);
+                wrapper.appendChild(content);
+
+                // 替换原始 pre - 使用保存的引用
+                if (nextSibling) {
+                    originalParent.insertBefore(wrapper, nextSibling);
+                } else {
+                    originalParent.appendChild(wrapper);
+                }
+            });
+        }
+
+        // 切换代码块展开/折叠
+        function toggleCodeBlock(btn) {
+            const wrapper = btn.closest('.code-block-wrapper');
+            const content = wrapper.querySelector('.code-block-content');
+
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                btn.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
+                btn.title = '收起';
+            } else {
+                content.classList.remove('expanded');
+                content.classList.add('collapsed');
+                btn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+                btn.title = '展开';
+                // 滚动到代码块顶部
+                wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // 复制代码块内容
+        function copyCodeBlock(btn) {
+            const wrapper = btn.closest('.code-block-wrapper');
+            const code = wrapper.querySelector('code');
+            const text = code.textContent || code.innerText;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                btn.style.background = '#2ecc71';
+                btn.style.borderColor = '#2ecc71';
+
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                    btn.style.borderColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            });
+        }
+
+        // 修改 marked.js 渲染后的处理函数
+        function processRenderedContent() {
+            // 先进行高亮
+            hljs.highlightAll();
+            // 然后增强代码块
+            enhanceCodeBlocks();
         }
     </script>
 
