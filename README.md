@@ -1,6 +1,11 @@
 # 万驹同源服务器官网
 
 <p align="center">
+  <img src="../assets/img/pc_logo1.png" alt="万驹同源" width="800" style="max-width: 100%; height: auto;">
+</p>
+
+
+<p align="center">
   <img src="https://img.shields.io/badge/PHP-8.0+-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP Version">
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3">
@@ -26,6 +31,7 @@
 
 ## 项目简介
 
+
 **万驹同源（PonyConsanguinity）官网**是一个专属于万驹同源 Minecraft 服务器官网，致力于为广大玩家提供优质的社区环境，拥有以下功能：
 
 <p align="center">
@@ -37,46 +43,30 @@
 </p>
 
 - **服务器介绍**：详细的服务器信息和玩法介绍
-- **论坛系统**：支持 Markdown 格式的帖子发布和回复；也包含服务器规则、公告等内容
+- **论坛系统**：支持Markdown格式的帖子发布和回复；也包含服务器规则、公告等内容
 - **用户系统**：注册、登录和个人中心，同时分为管理员和普通用户
 - **服务器状态**：实时服务器状态监控，包含性能数据图表
 - **性能监控**：记录和展示服务器性能数据（玩家人数、CPU、内存使用率）
-- **音乐播放器**：内置音乐播放器，支持进度控制（闲着没事加上去的x）
+- **音乐播放器**：内置音乐播放器（闲着没事加上去的x）
 
 ---
 
-## 功能特性
-
-### 服务器功能
+## 功能
 
 - **实时状态监控**：查看服务器在线人数、CPU、内存使用情况
 - **性能数据图表**：通过 MCSManager API展示服务器性能变化趋势
 - **玩家经济排行**：展示玩家经济排行
-
-### 社区功能
-
 - **论坛系统**：支持 Markdown 格式的帖子发布和回复
 - **帖子分类**：支持帖子分类标签，方便内容组织
 - **用户系统**：注册、登录、个人中心
 - **公告系统**：管理员可发布和管理公告
-
-### 娱乐功能
-
 - **音乐播放器**：内置音乐播放器，支持进度控制
 - **图片画廊**：展示服务器风采
-
-### 游戏功能
-
 - **卫星地图**：实时查看服务器卫星地图，支持玩家位置追踪
-- **皮肤站**：自定义玩家皮肤和披风（这边建议采用[Blessing Skin Server](https://github.com/bs-community/blessing-skin-server)进行搭建）
+- **皮肤站**：自定义玩家皮肤
 - **充值系统**：爱发电支付集成，支持黄金券自动充值功能
 - **邮箱验证系统**：支持邮箱验证功能
 
-### 界面特性
-
-- **响应式设计**：适配不同设备屏幕
-- **动画效果**：流畅的页面过渡和交互动画
-- **统一风格**：所有页面保持一致的设计风格
 
 ```
 PC_Web/
@@ -94,10 +84,8 @@ PC_Web/
 │   ├── navbar.html    # 导航栏
 │   ├── footer.html    # 页脚
 │   └── sidebar-player.html # 音乐播放器
-├── config/            # 配置文件目录 ⭐ v5.6+ 新增
-│   ├── config.php     # 统一配置文件（所有配置集中在此）
-│   ├── apache.htaccess.example # Apache 安全配置示例
-│   └── nginx.conf.example      # Nginx 安全配置示例
+├── config/            # 配置文件目录 
+│   └── config.php     # 统一配置文件
 ├── css/               # 样式文件
 │   ├── style.css      # 主样式
 │   └── ...            # 其他样式文件
@@ -142,7 +130,7 @@ PC_Web/
 - **Chart.js**：数据可视化图表库
 - **Font Awesome**：图标字体库
 - **Marked**：Markdown解析库
-- **Highlight.js**：代码块语法高亮库，支持行号显示和折叠展开功能 
+- **Highlight.js**：代码块语法高亮库
 - **PowerShell.js**：PowerShell样式代码块高亮
 
 
@@ -155,6 +143,8 @@ PC_Web/
 - **本地开发**：任意静态文件服务器
 - **生产部署**：支持 PHP 的 Web 服务器（如 Apache、Nginx）
 - **浏览器**：现代浏览器（Chrome、Firefox、Edge 等）
+
+**注意**：请配置好php.ini，开启各种扩展，如openssl、mysqli等。你可以参考目录`config/`下的示例配置文件。
 
 ### 本地开发
 
@@ -173,7 +163,7 @@ PC_Web/
      php -S localhost:8000
      ```
 
-   - 或使用其他静态文件服务器（如 VS Code Live Server 扩展）
+   - 或使用其他静态文件服务器（如 VS Code的Live Server 扩展，这边不推荐使用vs code的live server，因为它会导致一些问题，如果你刚好有python环境，建议使用python的http.server模块）
 
 3. **访问网站**
 
@@ -198,7 +188,7 @@ PC_Web/
    - 生产环境会自动使用相对路径 `/api`，无需手动修改配置
    - 如需自定义配置，可编辑 `js/config.js` 文件中的相关配置项
 
-   **后端配置（v5.6+ 重要更新）**：
+   **后端配置**：
    - 所有后端配置已迁移到 `config/config.php`
    - 编辑 `config/config.php` 配置数据库、API 密钥等信息
    - 详细配置说明请参考「系统配置指南」部分
@@ -238,16 +228,24 @@ if (!defined('ACCESS_ALLOWED')) {
     exit;
 }
 
-return [
-    'GoldenApplePie' => [
-        'id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
-        'username' => 'GoldenApplePie',
-        'password' => 'gap12345',
-        'email' => 'czhdqqyx6044@qq.com',
-        'created_at' => '2026-01-26 09:35:23',
-        'role' => 'admin'
-    ],
-];
+return array (
+  'GoldenApplePie' => 
+  array (
+    'id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
+    'username' => 'GoldenApplePie',
+    'password' => '$2y$10$0Fg81IaiXfzMiypsdMd/EODV57XXU3YBsfttxHT2Pnc13dnLWv1LW',
+    'email' => '2928433540@qq.com',
+    'email_verified' => true,
+    'verify_token' => '330f9684be73e4ec17668bc2533c3eecf4979320b1fd666b113c3c7317eebe61',
+    'verify_expires' => '2026-03-02 09:12:46',
+    'verify_sent_at' => '2026-03-01 09:12:46',
+    'verify_resend_count' => 23,
+    'created_at' => '2026-03-01 07:57:21',
+    'role' => 'admin',
+    'login_attempts' => 0,
+    'lock_until' => NULL,
+  ),
+);
 ?>
 ```
 
@@ -434,17 +432,7 @@ secureWriteData(SESSIONS_FILE, $sessions);
 
 #### 4. 目录保护
 
-**保护机制**：在`data/`目录下创建`index.php`文件。
-
-**实现代码**：
-
-```php
-<?php
-header('HTTP/1.1 403 Forbidden');
-header('Status: 403 Forbidden');
-echo 'Access Denied';
-exit;
-```
+**保护机制**：在`data/`目录下创建了`index.php`文件。
 
 **安全效果**：
 
@@ -747,13 +735,6 @@ if ($lastSuccess['ip'] !== $currentIP) {
 ```bash
 php safe_test/scanner.php
 ```
-
-### 安全建议
-
-1. **定期更换密码**：建议用户每 3-6 个月更换一次密码
-2. **使用强密码**：避免使用常见密码（如 123456、password 等）
-3. **注意登录环境**：在公共设备上使用后及时注销
-4. **关注安全告警**：如收到异常登录提醒，及时修改密码
 
 ---
 
@@ -1139,7 +1120,7 @@ emailVerification: {
 
 1. 登录QQ邮箱，点击“设置” -> “账户”
 2. 找到“SMTP服务”，开启SMTP服务并获取授权码
-3. 配置SMTP服务器信息：
+3. 在config/config.php配置SMTP服务器信息：
    - 主机：`smtp.qq.com`
    - 端口：`465`（SSL）或`587`（TLS）
    - 用户名：你的QQ邮箱地址
@@ -1161,8 +1142,8 @@ emailVerification: {
 
 ##### 游戏功能页面
 
-- **pages/map.html** - 卫星地图页面，实时查看服务器地图和玩家位置
-- **pages/skin.html** - 皮肤站页面，自定义玩家皮肤和披风
+- **pages/map.html** - 卫星地图页面，实时查看服务器地图和玩家位置(使用[Dynmap](https://github.com/webbukkit/dynmap)插件实现)
+- **pages/skin.html** - 皮肤站页面，自定义玩家皮肤和披风（这边建议采用[Blessing Skin Server](https://github.com/bs-community/blessing-skin-server)进行搭建）
 - **pages/survival.html** - 生存服页面，介绍生存玩法和特色功能
 - **pages/playerpoints.html** - playerpoints插件数据库连接测试，已弃用
 
@@ -1197,12 +1178,6 @@ emailVerification: {
 - **pages/404.html** - 404错误页面，页面未找到提示
 - **pages/db_test.html** - 数据库测试页面
 - **pages/template-example.html** - 页面模板示例
-
-#### 页面导航
-
-- 通过首页导航栏可以快速访问主要页面
-- 论坛、公告等页面提供返回按钮
-- 侧边栏提供快捷访问入口
 
 ### 性能优化
 
@@ -1467,61 +1442,6 @@ const config = {
 - 组件ID必须与脚本中的选择器匹配
 - 组件加载顺序可能影响功能，请按正确顺序引入
 
-### JavaScript模块化
-
-#### 概述
-
-项目采用JavaScript模块化设计，将脚本文件按功能拆分为多个独立的模块，提高代码的可维护性和可读性。
-
-#### JavaScript文件结构
-
-- **main.js** - 主脚本文件，包含全局功能和初始化代码
-- **config.js** - 配置文件，包含项目配置和环境检测
-- **api.js** - API接口文件，封装所有API请求
-- **navbar.js** - 导航栏脚本，处理导航栏交互
-- **sidebar-player.js** - 侧边栏播放器脚本，处理音乐播放功能
-- **hero-banner.js** - 首页横幅脚本，处理横幅动画和交互
-- **back-to-top.js** - 返回顶部按钮脚本，处理返回顶部功能
-- **mcsm-api.js** - MCSManager API脚本，处理服务器管理API
-
-#### 模块化优势
-
-- **代码组织**：按功能模块划分，便于查找和维护
-- **性能优化**：按需加载JavaScript文件，减少不必要的脚本加载
-- **团队协作**：多人协作时减少代码冲突
-- **易于扩展**：添加新功能时只需创建新的JavaScript模块
-
-#### 使用方式
-
-在HTML文件中按需引入JavaScript模块：
-
-```html
-<script src="../js/config.js?v=1.0"></script>
-<script src="../js/api.js?v=1.0"></script>
-<script src="../js/main.js?v=1.0"></script>
-```
-
-#### 配置管理
-
-项目使用统一的配置文件 `js/config.js`，自动根据环境检测并设置正确的API地址：
-
-```javascript
-const CONFIG = {
-    isLocal: window.location.hostname === 'localhost' || 
-              window.location.hostname === '127.0.0.1',
-    apiBase: window.location.hostname === 'localhost' ? 
-             'http://localhost:8000' : '/api',
-    // 其他配置...
-};
-```
-
-#### 注意事项
-
-- 使用版本号参数（?v=x.x）避免浏览器缓存问题
-- 保持JavaScript命名规范，避免全局污染
-- 使用模块模式或ES6模块进行代码封装
-- 避免在全局作用域中定义变量和函数
-
 ---
 
 ## 开发指导
@@ -1580,11 +1500,11 @@ const CONFIG = {
 
 #### 文件位置
 
-模板文件位于：`templates/page-template.html`
+模板文件位于：`pages/template-example.html`
 
 #### 使用方法
 
-1. 复制 `templates/page-template.html` 到 `pages/` 目录
+1. 复制 `pages/template-example.html` 到 `pages/` 目录
 2. 重命名为合适的文件名，如 `new-page.html`
 3. 根据需要修改内容
 
@@ -1735,95 +1655,6 @@ const CONFIG = {
 <!-- 小按钮 -->
 <button class="btn btn-sm btn-primary">小按钮</button>
 ```
-
-#### 常见页面类型示例
-
-##### 1. 简单信息页
-
-```html
-<div class="section">
-    <div class="container">
-        <div class="card fade-in">
-            <div class="card-header">
-                <h2>页面标题</h2>
-            </div>
-            <div class="card-body">
-                <p>页面内容...</p>
-            </div>
-        </div>
-    </div>
-</div>
-```
-
-##### 2. 列表页（如公告页）
-
-```html
-<div class="section announcement-page">
-    <div class="container">
-        <div class="announcement-list">
-            <!-- 列表项 -->
-            <div class="announcement-item fade-in">
-                <div class="announcement-header">
-                    <h2 class="announcement-title">标题</h2>
-                    <div class="announcement-meta">
-                        <span class="announcement-type update">类型</span>
-                        <span class="announcement-date">日期</span>
-                    </div>
-                </div>
-                <div class="announcement-content">
-                    <p>内容...</p>
-                </div>
-                <div class="announcement-actions">
-                    <a href="#" class="announcement-link">查看详情 →</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-```
-
-##### 3. 表单页
-
-```html
-<div class="section">
-    <div class="container">
-        <div class="card fade-in">
-            <div class="card-header">
-                <h2>表单标题</h2>
-            </div>
-            <div class="card-body">
-                <form>
-                    <div class="form-group">
-                        <label>标签</label>
-                        <input type="text" placeholder="请输入内容">
-                    </div>
-                    <div class="form-group">
-                        <label>标签</label>
-                        <textarea rows="5" placeholder="请输入内容"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">提交</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-```
-
-#### 注意事项
-
-1. **路径问题**：确保CSS和JS文件的路径正确（通常使用`../`返回上一级目录）
-2. **版本号**：在CSS和JS文件名后添加版本号（如`?v=3.22`）以避免缓存问题
-3. **响应式设计**：使用已有的CSS类确保页面在不同设备上正常显示
-4. **组件顺序**：严格按照模板中的顺序引入JavaScript文件
-5. **动画效果**：合理使用动画效果，避免过度使用
-
-#### 示例页面
-
-参考以下页面了解实际应用：
-
-- `pages/announcement.html` - 列表页示例
-- `pages/post-detail.html` - 详情页示例
-- `pages/forum.html` - 交互页示例
 
 ### 音乐播放器开发指导
 
@@ -2006,59 +1837,6 @@ set_security_headers();
 - 确保 logs 目录存在
 - 如果用户、会话、帖子或通知文件不存在，会自动创建
 
-#### 安全保护
-
-##### 1. Git 保护
-
-`.gitignore` 文件已配置，防止敏感文件被提交：
-
-```gitignore
-# 配置文件（包含敏感信息）
-config/config.php
-.env
-
-# 日志文件
-logs/
-*.log
-
-# 数据文件
-data/*.json
-```
-
-##### 2. Web 服务器保护
-
-提供了 Apache 和 Nginx 的配置示例：
-
-**Apache** (`config/apache.htaccess.example`)：
-```apache
-<FilesMatch "\.php$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-<Directory "config/">
-    Order allow,deny
-    Deny from all
-</Directory>
-```
-
-**Nginx** (`config/nginx.conf.example`)：
-```nginx
-location ~ ^/config/ {
-    deny all;
-    return 404;
-}
-```
-
-#### 安全提示
-
-⚠️ **重要**：
-
-1. **保护配置文件**：`config/config.php` 包含敏感信息，已添加到 `.gitignore`，请勿提交到代码仓库
-2. **设置文件权限**：建议设置 `chmod 600 config/config.php`
-3. **定期更换密钥**：定期更换数据库密码和 API 密钥以增强安全性
-4. **配置 Web 服务器**：使用提供的 Apache/Nginx 配置示例保护配置目录
-5. **备份配置**：定期备份 `config/config.php` 文件
 
 #### 修改配置
 
@@ -2069,7 +1847,7 @@ location ~ ^/config/ {
 
 ---
 
-### 旧版配置文件 (api/config.php) ⚠️ 已弃用
+### 旧版配置文件 (api/config.php) ⚠️ 已变更
 
 #### 说明
 
@@ -2137,14 +1915,6 @@ define('DB_PASS', 'password');
 - **前端页面**：`/pages/db_test.html`（使用统一配置自动适配环境）
 - **后端API**：`/api/db_test.php`（使用统一配置自动适配环境）
 
-#### 安全提示
-
-⚠️ **重要**：数据库查询组件包含敏感的数据库凭证，请确保：
-
-1. 不要将配置文件提交到公共代码仓库
-2. 在生产环境中使用强密码
-3. 限制访问权限，只有管理员可以访问此页面
-4. 定期更换数据库密码
 
 ### 弹幕系统配置
 
@@ -2586,6 +2356,15 @@ function getCategoryColor(category) {
 
 我们欢迎所有形式的贡献！在提交代码之前，请务必阅读以下指南。
 
+### 你可以做的贡献
+
+- 🐛 **修复问题**：发现任何bug，欢迎提交PR
+- 🚀 **新增功能**：有新想法或需求，可以提出Issue讨论后实现
+- 📝 **文档改进**：优化README或其他文档内容
+- ✏️ **代码风格调整**：统一代码格式和命名规范
+- 🌐 **国际化支持**：添加多语言翻译文件
+- 🔧 **性能优化**：提升现有功能的效率与响应速度
+
 ### 🔐 配置文件安全规范（重要）
 
 **⚠️ 请务必遵守以下规则，防止敏感信息泄露：**
@@ -2668,15 +2447,35 @@ function getCategoryColor(category) {
 
 6. **创建 Pull Request**
 
-### 🔒 安全检查清单
+### 注意规范
 
-提交代码前，请确认：
+- 所有贡献都必须符合项目的代码规范
+- 提交的代码必须通过所有测试
+- 文档更新必须包含必要的说明
+- 新增功能必须有相应的测试用例
+- 请勿提交包含敏感信息的文件
+- 请勿将此项目用于任何商业用途
+- 贡献的代码必须遵循MIT许可证
 
-- [ ] `config/config.php` 未被包含在提交中
-- [ ] 没有硬编码的密码、密钥或敏感信息
-- [ ] 没有提交用户数据或日志文件
-- [ ] 新增配置项已同步到 `config/config.php.example`
-- [ ] 敏感操作有适当的权限验证
+
+### 提交问题
+
+方法：
+
+1. 点击仓库顶部的 "Issues" 标签
+2. 点击 "New Issue" 按钮
+3. 选择合适的问题模板（如果有）
+4. 填写问题描述，包括复现步骤和预期行为
+5. 包含相关的日志或错误信息（如果有）
+6. 点击 "Submit new issue" 按钮
+
+注意事项：
+
+- 请先搜索是否已存在相同问题
+- 提供详细的问题描述，包括复现步骤和预期行为
+- 包含相关的日志或错误信息（如果有）
+- 请勿用不适的语言提交问题（如“这个项目有问题（无详细描述）”、“这个还不如xxx”等）
+
 
 ---
 

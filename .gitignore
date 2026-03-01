@@ -6,6 +6,4 @@ run.bat
 test/aifadian
 test/mysql
 *.log
-safe_test/*.php
-safe_test/*.md
 md_files/*
