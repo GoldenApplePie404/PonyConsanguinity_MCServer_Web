@@ -5,75 +5,40 @@ if (!defined('ACCESS_ALLOWED')) {
 }
 
 return array (
-  '4e3f97b2-0fbd-470a-8574-354ff3a9f2c4' => 
+  '8be71781-54cc-4252-a3d1-8fb13297e205' => 
   array (
-    'user_id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-02-14 11:57:14',
+    'user_id' => 'a264f108-9187-472a-a66e-e24cac5a5be5',
+    'username' => 'gap',
+    'role' => 'user',
+    'created_at' => '2026-03-01 07:39:49',
   ),
-  '4dc0ef4e-b1e0-40f6-8014-b504cc0b5915' => 
+  '71c81f8c-e011-4739-9b27-1d08b27d5377' => 
   array (
-    'user_id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
+    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
     'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-02-19 08:08:55',
+    'role' => 'user',
+    'created_at' => '2026-03-01 07:57:27',
   ),
-  '0fc18112-d81b-467b-926b-20cf27b97a1b' => 
+  '4ae58eb5-f7f0-49f4-b497-352b0051cc5d' => 
   array (
-    'user_id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
+    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
     'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-02-22 15:18:39',
+    'role' => 'user',
+    'created_at' => '2026-03-01 08:02:55',
   ),
-  'ee366a07-c192-4056-a7b0-d5b2fa8997c4' => 
+  '8b0096f8-722e-4d9f-afb0-cb1426f79284' => 
   array (
-    'user_id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
+    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
     'username' => 'GoldenApplePie',
     'role' => 'admin',
-    'created_at' => '2026-02-23 02:46:23',
+    'created_at' => '2026-03-01 08:03:41',
   ),
-  'e955c540-474e-4f76-8a42-5ab8823285f1' => 
+  'da2ee0d4-48b1-4f3a-9ede-f6eb3abd5e78' => 
   array (
-    'user_id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
+    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
     'username' => 'GoldenApplePie',
     'role' => 'admin',
-    'created_at' => '2026-02-23 04:10:16',
-  ),
-  '5969cce1-b6ee-4d05-b0e3-1273533f9fbd' => 
-  array (
-    'user_id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-02-23 04:10:35',
-  ),
-  '7a808c77-80c0-487a-a968-4330dea2af5a' => 
-  array (
-    'user_id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-02-23 04:13:24',
-  ),
-  'e067f7ee-fcd6-4e5f-b197-e73d3ac48842' => 
-  array (
-    'user_id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-02-23 04:27:45',
-  ),
-  '5bbb2fb6-cfda-4e3a-8da2-bc066fa460bf' => 
-  array (
-    'user_id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-02-23 04:56:12',
-  ),
-  '3bf80149-0ad6-4839-b97d-818b5ea3c536' => 
-  array (
-    'user_id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-02-23 11:42:21',
+    'created_at' => '2026-03-01 08:06:14',
   ),
 );
 ?>

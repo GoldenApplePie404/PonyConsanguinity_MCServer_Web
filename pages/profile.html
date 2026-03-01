@@ -15,6 +15,138 @@
             --secondary-color: #764ba2;
         }
 
+        /* 邮箱验证提示条 */
+        .email-verification-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
+        .alert-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .alert-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .alert-message {
+            flex: 1;
+            font-size: 14px;
+            color: #721c24;
+        }
+
+        .alert-message strong {
+            display: block;
+            font-weight: bold;
+        }
+
+        .alert-message span {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #721c24;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a161e;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.3);
+            color: #721c24;
+            border: 1px solid rgba(114, 28, 36, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 邮箱验证状态样式 */
+        .verification-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .verification-status.verified {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .verification-status.unverified {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .alert-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .alert-actions {
+                align-self: flex-end;
+            }
+        }
+
         .profile-container {
             padding: 40px 0;
         }
@@ -285,7 +417,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.6s ease;
         }
 
@@ -586,37 +718,45 @@
             }
         }
     </style>
-    
+
     <script src="../js/config.js"></script>
     <script src="../js/api.js?v=1.0"></script>
     <script src="../js/main.js?v=3.3"></script>
-    
+
     <link rel="icon" type="image/png" href="../assets/img/m.png">
     <link rel="shortcut icon" href="../assets/img/m.png">
 </head>
 
 <body data-components="sidebarPlayer,backToTop,navbar,footer">
 
+
+
     <!-- 导航栏组件 -->
     <div id="app-navbar"></div>
 
     <div class="container profile-container">
+
         <div style="height: 80px;"></div>
+        <!-- 邮箱验证提示条 -->
+        <div id="emailVerificationAlert"></div>
         <div class="profile-layout">
             <aside class="profile-sidebar">
                 <div class="user-card">
                     <div class="user-avatar-large">
-                        <img src="../assets/img/user.png" alt="用户头像" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto;">
+                        <img src="../assets/img/user.png" alt="用户头像"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto;">
                     </div>
                     <div class="user-name" id="profile-username">玩家名称</div>
                     <span class="user-role" id="profile-role">普通用户</span>
+
+
                     <div class="user-stats-grid">
                         <div class="stat-box-small">
-                            <div class="stat-value">114514</div>
+                            <div class="stat-value">NaN</div>
                             <div class="stat-label">等级</div>
                         </div>
                         <div class="stat-box-small">
-                            <div class="stat-value">114514</div>
+                            <div class="stat-value">NaN</div>
                             <div class="stat-label">积分</div>
                         </div>
                     </div>
@@ -635,7 +775,6 @@
                 <div class="profile-tabs">
                     <button class="profile-tab active" onclick="switchProfileTab('overview')">概览</button>
                     <button class="profile-tab" onclick="switchProfileTab('notifications')">通知</button>
-                    <button class="profile-tab" onclick="switchProfileTab('settings')">设置</button>
                 </div>
 
                 <!-- 概览 -->
@@ -648,13 +787,14 @@
                                 onclick="window.open('https://mcpanel.eqmemory.cn/mcs/', '_blank')">🖥️
                                 MCSManager</button>
 
-                            <button class="admin-btn"
-                                onclick="window.open(PATH_CONFIG.dbTest, '_blank')">📊
+                            <button class="admin-btn" onclick="window.open(PATH_CONFIG.dbTest, '_blank')">📊
                                 数据库查询</button>
                             <!--<button class="admin-btn" onclick="alert('此功能开发中')">🤖 QQ机器人管理</button>-->
                             <button class="admin-btn" onclick="openSendNotificationModal()">📢 发送通知</button>
-                            <button class="admin-btn" onclick="window.open('../tools/announcement-manager.html', '_blank')">📝 公告管理</button>
-                            <button class="admin-btn" onclick="window.open('../tools/auto_update.html', '_blank')">🔄 订单更新</button>
+                            <button class="admin-btn"
+                                onclick="window.open('../tools/announcement-manager.html', '_blank')">📝 公告管理</button>
+                            <button class="admin-btn" onclick="window.open('../tools/auto_update.html', '_blank')">🔄
+                                订单更新</button>
                             <!--<button class="admin-btn" onclick="alert('此功能开发中')">⚙️ 网站后台</button>
                             <button class="admin-btn" onclick="alert('此功能开发中')">👥 用户管理</button>-->
                         </div>
@@ -662,8 +802,30 @@
 
                     <div class="info-grid">
                         <div class="info-card">
-                            <span class="info-value" id="profile-level">暂无内容</span>
-
+                            <h3>📧 邮箱验证</h3>
+                            <div class="info-item">
+                                <span class="info-label">验证状态</span>
+                                <span class="info-value" id="emailVerifyStatus">
+                                    <span class="verification-status unverified">加载中...</span>
+                                </span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">操作</span>
+                                <span class="info-value">
+                                    <button id="verifyEmailBtnInfo" class="btn btn-primary btn-sm"
+                                        style="display: none;">发送验证邮件</button>
+                                    <span id="verifiedText" style="display: none; color: #28a745;">✓ 已完成验证</span>
+                                </span>
+                            </div>
+                            <p class="note" style="font-size: 12px; color: #666; margin-top: 10px; margin-bottom: 0;">
+                                验证邮箱后可使用全部功能
+                            </p>
+                        </div>
+                        <div class="info-card">
+                            <h3>签到</h3>
+                            <div class="info-item">
+                                <span class="info-label">暂未开放</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -690,22 +852,195 @@
         console.log('API_CONFIG:', typeof API_CONFIG !== 'undefined' ? API_CONFIG : '未定义');
         console.log('================');
 
+        // 邮箱验证功能
+        function initEmailVerification() {
+            const token = localStorage.getItem('authToken');
+            console.log('初始化邮箱验证，token:', token ? '存在' : '不存在');
+
+            if (!token) {
+                console.log('未登录，跳过验证检查');
+                // 更新为未登录状态
+                const emailVerifyStatus = document.getElementById('emailVerifyStatus');
+                if (emailVerifyStatus) {
+                    emailVerifyStatus.innerHTML = '<span class="verification-status unverified">请先登录</span>';
+                }
+                return;
+            }
+
+            // 检查验证状态
+            fetch('../api/check_verify_status.php', {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .then(response => {
+                    console.log('验证状态API响应:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('验证状态数据:', data);
+                    if (data.success) {
+                        // 更新顶部验证状态显示
+                        const statusElement = document.getElementById('verificationStatus');
+                        // 更新 info-card 中的验证状态
+                        const emailVerifyStatus = document.getElementById('emailVerifyStatus');
+                        const verifyBtnInfo = document.getElementById('verifyEmailBtnInfo');
+                        const verifiedText = document.getElementById('verifiedText');
+
+                        if (data.email_verified) {
+                            if (statusElement) {
+                                statusElement.className = 'verification-status verified';
+                                statusElement.textContent = '已验证';
+                            }
+                            if (emailVerifyStatus) {
+                                emailVerifyStatus.innerHTML = '<span class="verification-status verified">已验证</span>';
+                            }
+                            if (verifyBtnInfo) verifyBtnInfo.style.display = 'none';
+                            if (verifiedText) verifiedText.style.display = 'inline';
+                        } else {
+                            if (statusElement) {
+                                statusElement.className = 'verification-status unverified';
+                                statusElement.textContent = '未验证';
+                            }
+                            if (emailVerifyStatus) {
+                                emailVerifyStatus.innerHTML = '<span class="verification-status unverified">未验证</span>';
+                            }
+                            if (verifyBtnInfo) {
+                                verifyBtnInfo.style.display = 'inline-block';
+                                verifyBtnInfo.addEventListener('click', resendVerificationEmail);
+                            }
+                            if (verifiedText) verifiedText.style.display = 'none';
+
+                            // 显示验证提示条
+                            showVerificationAlert();
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error('检查验证状态失败:', err);
+                    // 更新为错误状态
+                    const emailVerifyStatus = document.getElementById('emailVerifyStatus');
+                    if (emailVerifyStatus) {
+                        emailVerifyStatus.innerHTML = '<span class="verification-status unverified">检查失败</span>';
+                    }
+                });
+        }
+
+        function showVerificationAlert() {
+            const alertContainer = document.getElementById('emailVerificationAlert');
+            if (!alertContainer) return;
+
+            alertContainer.innerHTML = `
+                <div class="alert-content">
+                    <div class="alert-icon">⚠️</div>
+                    <div class="alert-message">
+                        <strong>您的邮箱尚未验证</strong>
+                        <span>部分功能受限，请验证邮箱以使用全部功能</span>
+                    </div>
+                    <div class="alert-actions">
+                        <button id="verifyEmailBtn" class="btn btn-primary">立即验证</button>
+                        <button id="dismissAlertBtn" class="btn btn-secondary">稍后</button>
+                    </div>
+                </div>
+            `;
+
+            alertContainer.className = 'email-verification-alert';
+
+            // 添加事件监听器
+            document.getElementById('verifyEmailBtn').addEventListener('click', resendVerificationEmail);
+            document.getElementById('dismissAlertBtn').addEventListener('click', function () {
+                // 添加关闭动画
+                alertContainer.style.animation = 'slideUp 0.3s ease-in forwards';
+                
+                // 动画完成后隐藏
+                setTimeout(function() {
+                    alertContainer.style.display = 'none';
+                    // 存储用户选择（30天内不再提示）
+                    localStorage.setItem('dismissedEmailAlert', 'true');
+                    localStorage.setItem('dismissedEmailAlertTime', Date.now());
+                }, 300);
+            });
+        }
+
+        function resendVerificationEmail() {
+            console.log('点击发送验证邮件按钮');
+            const token = localStorage.getItem('authToken');
+            console.log('获取到的token:', token ? '存在' : '不存在');
+
+            if (!token) {
+                alert('请先登录');
+                return;
+            }
+
+            // 显示发送中状态
+            const btn = document.getElementById('verifyEmailBtnInfo');
+            if (btn) {
+                btn.textContent = '发送中...';
+                btn.disabled = true;
+            }
+
+            fetch('../api/resend_verify_email.php', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    console.log('API响应状态:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('API响应数据:', data);
+
+                    // 恢复按钮状态
+                    if (btn) {
+                        btn.textContent = '发送验证邮件';
+                        btn.disabled = false;
+                    }
+
+                    if (data.success) {
+                        // 根据环境配置决定显示方式
+                        if (APP_CONFIG.emailVerification.useManualVerification && data.verify_link) {
+                            // 开发环境：显示验证链接
+                            alert(data.message + '\n\n验证链接（可复制到浏览器）:\n' + data.verify_link);
+                        } else {
+                            // 生产环境：只显示成功消息
+                            alert(data.message || '验证邮件已发送');
+                        }
+                    } else {
+                        alert('发送失败: ' + (data.message || '请稍后重试'));
+                    }
+                })
+                .catch(err => {
+                    console.error('发送验证邮件失败:', err);
+
+                    // 恢复按钮状态
+                    if (btn) {
+                        btn.textContent = '发送验证邮件';
+                        btn.disabled = false;
+                    }
+
+                    alert('网络错误，请稍后重试');
+                });
+        }
+
         // 兼容性检查函数
         function checkCompatibility() {
             const compatibility = {
                 localStorage: typeof localStorage !== 'undefined',
                 fetch: typeof fetch !== 'undefined',
                 Promise: typeof Promise !== 'undefined',
-                asyncAwait: typeof (async function() {}) === 'function'
+                asyncAwait: typeof (async function () { }) === 'function'
             };
-            
+
             console.log('=== 浏览器兼容性检查 ===');
             console.log('localStorage 可用:', compatibility.localStorage);
             console.log('fetch API 可用:', compatibility.fetch);
             console.log('Promise 可用:', compatibility.Promise);
             console.log('async/await 可用:', compatibility.asyncAwait);
             console.log('=====================');
-            
+
             return compatibility;
         }
 
@@ -725,7 +1060,7 @@
                 try {
                     // 计算过期时间
                     const expiresAt = Date.now() + (expiresIn * 1000);
-                    
+
                     // 优先使用 sessionStorage，提高安全性
                     sessionStorage.setItem('authToken', token);
                     sessionStorage.setItem('authTokenExpiresAt', expiresAt.toString());
@@ -735,7 +1070,7 @@
                     try {
                         // 计算过期时间
                         const expiresAt = Date.now() + (expiresIn * 1000);
-                        
+
                         localStorage.setItem('authToken', token);
                         localStorage.setItem('authTokenExpiresAt', expiresAt.toString());
                         return true;
@@ -805,7 +1140,7 @@
             try {
                 console.log('Refreshing token...');
                 const API_BASE_URL = typeof API_CONFIG !== 'undefined' ? API_CONFIG.baseUrl : '/api';
-                
+
                 // 检查 refresh_token.php 文件是否存在
                 const response = await makeRequest(`${API_BASE_URL}/refresh_token.php`, {
                     method: 'POST',
@@ -815,7 +1150,7 @@
                     body: JSON.stringify({}),
                     timeout: 10000
                 });
-                
+
                 if (!response.ok) {
                     // 如果是 404 错误，说明 refresh_token.php 文件不存在，返回 true，这样系统就不会清除 token
                     if (response.status === 404) {
@@ -824,10 +1159,10 @@
                     }
                     throw new Error('Token refresh failed with status: ' + response.status);
                 }
-                
+
                 const result = await response.json();
                 console.log('Token refresh result:', result);
-                
+
                 if (result.success && result.token) {
                     // 存储新 token
                     storeToken(result.token, result.expires_in || 3600);
@@ -846,7 +1181,7 @@
             if (!token) {
                 return null;
             }
-            
+
             if (isTokenExpired()) {
                 console.log('Token expired, trying to refresh...');
                 const refreshed = await refreshToken();
@@ -860,7 +1195,7 @@
                     return token;
                 }
             }
-            
+
             console.log('Token is valid, using existing token');
             return token;
         }
@@ -868,34 +1203,34 @@
         // 通用请求函数（支持 fetch 和 XMLHttpRequest）
         function makeRequest(url, options) {
             const compatibility = checkCompatibility();
-            
+
             // 如果支持 fetch API，使用 fetch
             if (compatibility.fetch && compatibility.Promise) {
                 return fetch(url, options);
             }
-            
+
             // 否则使用 XMLHttpRequest 作为备用
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 const xhr = new XMLHttpRequest();
                 xhr.open(options.method || 'GET', url, true);
-                
+
                 // 设置请求头
                 if (options.headers) {
-                    Object.keys(options.headers).forEach(function(key) {
+                    Object.keys(options.headers).forEach(function (key) {
                         xhr.setRequestHeader(key, options.headers[key]);
                     });
                 }
-                
-                xhr.onload = function() {
+
+                xhr.onload = function () {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         try {
                             const response = {
                                 ok: true,
                                 status: xhr.status,
-                                json: function() {
+                                json: function () {
                                     return Promise.resolve(JSON.parse(xhr.responseText));
                                 },
-                                text: function() {
+                                text: function () {
                                     return Promise.resolve(xhr.responseText);
                                 }
                             };
@@ -911,16 +1246,16 @@
                         resolve(response);
                     }
                 };
-                
-                xhr.onerror = function() {
+
+                xhr.onerror = function () {
                     reject(new Error('网络错误'));
                 };
-                
+
                 xhr.timeout = options.timeout || 10000;
-                xhr.ontimeout = function() {
+                xhr.ontimeout = function () {
                     reject(new Error('请求超时'));
                 };
-                
+
                 if (options.body) {
                     xhr.send(options.body);
                 } else {
@@ -932,28 +1267,28 @@
         // 确保 getNotifications 函数存在
         if (typeof getNotifications === 'undefined') {
             console.warn('getNotifications 函数未定义，使用备用实现');
-            window.getNotifications = async function() {
+            window.getNotifications = async function () {
                 try {
                     // 直接调用 API
                     const API_BASE_URL = typeof API_CONFIG !== 'undefined' ? API_CONFIG.baseUrl : '/api';
                     const headers = {
                         'Content-Type': 'application/json'
                     };
-                    
+
                     // 添加认证头
                     const token = await getValidToken();
                     if (token) {
                         headers['Authorization'] = `Bearer ${token}`;
                     }
-                    
+
                     console.log('使用备用实现调用 API:', API_BASE_URL + '/notification.php?action=list');
-                    
+
                     const response = await makeRequest(`${API_BASE_URL}/notification.php?action=list`, {
                         method: 'GET',
                         headers: headers,
                         timeout: 10000
                     });
-                    
+
                     if (!response.ok) {
                         // 如果是 401 错误，可能是 token 过期，尝试刷新 token 后重试
                         if (response.status === 401) {
@@ -969,11 +1304,11 @@
                                         headers: headers,
                                         timeout: 10000
                                     });
-                                    
+
                                     if (!retryResponse.ok) {
                                         throw new Error('API 请求失败，状态码: ' + retryResponse.status);
                                     }
-                                    
+
                                     const retryResult = await retryResponse.json();
                                     console.log('备用实现 API 响应（重试）:', retryResult);
                                     return retryResult;
@@ -986,7 +1321,7 @@
                         }
                         throw new Error('API 请求失败，状态码: ' + response.status);
                     }
-                    
+
                     const result = await response.json();
                     console.log('备用实现 API 响应:', result);
                     return result;
@@ -1005,26 +1340,26 @@
         // 确保 markNotificationAsRead 函数存在
         if (typeof markNotificationAsRead === 'undefined') {
             console.warn('markNotificationAsRead 函数未定义，使用备用实现');
-            window.markNotificationAsRead = async function(notificationId) {
+            window.markNotificationAsRead = async function (notificationId) {
                 try {
                     const API_BASE_URL = typeof API_CONFIG !== 'undefined' ? API_CONFIG.baseUrl : '/api';
                     const headers = {
                         'Content-Type': 'application/json'
                     };
-                    
+
                     // 添加认证头
                     const token = await getValidToken();
                     if (token) {
                         headers['Authorization'] = `Bearer ${token}`;
                     }
-                    
+
                     const response = await makeRequest(`${API_BASE_URL}/notification.php?action=mark_read`, {
                         method: 'POST',
                         headers: headers,
                         body: JSON.stringify({ notification_id: notificationId }),
                         timeout: 10000
                     });
-                    
+
                     if (!response.ok) {
                         // 如果是 401 错误，可能是 token 过期，尝试刷新 token 后重试
                         if (response.status === 401) {
@@ -1041,11 +1376,11 @@
                                         body: JSON.stringify({ notification_id: notificationId }),
                                         timeout: 10000
                                     });
-                                    
+
                                     if (!retryResponse.ok) {
                                         throw new Error('API 请求失败，状态码: ' + retryResponse.status);
                                     }
-                                    
+
                                     const retryResult = await retryResponse.json();
                                     console.log('备用实现 API 响应（重试）:', retryResult);
                                     return retryResult;
@@ -1058,7 +1393,7 @@
                         }
                         throw new Error('API 请求失败，状态码: ' + response.status);
                     }
-                    
+
                     const result = await response.json();
                     return result;
                 } catch (error) {
@@ -1074,10 +1409,10 @@
         function switchProfileTab(tab) {
             // 移除所有标签的active类
             document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
-            
+
             // 获取所有内容标签
             const allTabs = document.querySelectorAll('.tab-content');
-            
+
             // 先隐藏所有标签页
             allTabs.forEach(c => {
                 c.style.opacity = '0';
@@ -1089,20 +1424,20 @@
             // 激活当前标签
             event.target.classList.add('active');
             const tabElement = document.getElementById('tab-' + tab);
-            
+
             // 等待一小段时间后显示新标签页，触发动画
             setTimeout(() => {
                 // 显示新标签页
                 tabElement.style.display = 'block';
-                
+
                 // 触发重排
                 tabElement.offsetHeight;
-                
+
                 // 添加active类和动画
                 tabElement.classList.add('active');
                 tabElement.style.opacity = '1';
                 tabElement.style.transform = 'translateY(0)';
-                
+
                 // 加载通知
                 if (tab === 'notifications') {
                     loadNotifications();
@@ -1183,10 +1518,10 @@
             pageNotifications.forEach(notification => {
                 const item = document.createElement('div');
                 item.className = 'notification-item ' + (notification.read ? 'read' : 'unread');
-                
+
                 const bgColor = notification.read ? '#f9f9f9' : '#f0f4ff';
                 const borderColor = notification.read ? '#ccc' : '#667eea';
-                
+
                 item.style.cssText = `
                     background: ${bgColor};
                     padding: 20px;
@@ -1194,7 +1529,7 @@
                     border-radius: 8px;
                     border-left: 4px solid ${borderColor};
                 `;
-                
+
                 const header = document.createElement('div');
                 header.className = 'notification-header';
                 header.style.cssText = `
@@ -1203,7 +1538,7 @@
                     align-items: center;
                     margin-bottom: 10px;
                 `;
-                
+
                 const title = document.createElement('div');
                 title.className = 'notification-title';
                 title.textContent = notification.title;
@@ -1212,16 +1547,16 @@
                     font-weight: bold;
                     margin: 0;
                 `;
-                
+
                 const time = document.createElement('span');
                 time.className = 'notification-time';
-                
+
                 // 直接处理时间格式化
                 const timestamp = notification.created_at;
-                
+
                 // 手动解析时间
                 const parts = timestamp.split(/[- :]/);
-                
+
                 // 检查是否有足够的部分
                 if (parts.length >= 6) {
                     const year = parseInt(parts[0]);
@@ -1230,20 +1565,20 @@
                     const hour = parseInt(parts[3]);
                     const minute = parseInt(parts[4]);
                     const second = parseInt(parts[5]);
-                    
+
                     // 手动格式化
                     const formatted = `${year}/${String(month + 1).padStart(2, '0')}/${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
-                    
+
                     time.textContent = formatted;
                 } else {
                     time.textContent = timestamp;
                 }
-                
+
                 time.style.cssText = `
                     color: #999;
                     font-size: 12px;
                 `;
-                
+
                 header.appendChild(title);
                 header.appendChild(time);
 
@@ -1276,13 +1611,13 @@
                         box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
                     `;
                     button.textContent = '标记为已读';
-                    button.onclick = function() {
+                    button.onclick = function () {
                         // 添加点击动画
                         button.style.opacity = '0.7';
                         button.style.transform = 'scale(0.95)';
                         button.style.boxShadow = '0 1px 2px rgba(102, 126, 234, 0.2)';
                         button.disabled = true;
-                        
+
                         setTimeout(() => {
                             markAsRead(notification.id);
                         }, 200);
@@ -1323,19 +1658,19 @@
         function changePage(page) {
             const totalPages = Math.ceil(allNotifications.length / itemsPerPage);
             if (page < 1 || page > totalPages) return;
-            
+
             const container = document.getElementById('notification-list');
-            
+
             // 添加淡出动画
             container.style.opacity = '0';
             container.style.transform = 'translateY(10px)';
             container.style.transition = 'all 0.3s ease';
-            
+
             // 等待动画结束后更新内容
             setTimeout(() => {
                 currentPage = page;
                 displayNotifications();
-                
+
                 // 添加淡入动画
                 container.style.opacity = '1';
                 container.style.transform = 'translateY(0)';
@@ -1403,7 +1738,7 @@
                 align-items: center;
                 z-index: 9999;
             `;
-            
+
             const dialogContent = document.createElement('div');
             dialogContent.style.cssText = `
                 background-color: white;
@@ -1413,7 +1748,7 @@
                 max-width: 400px;
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             `;
-            
+
             dialogContent.innerHTML = `
                 <h3 style="margin-top: 0; color: #333;">注销账户</h3>
                 <p style="margin-bottom: 20px; color: #666;">您确定要注销您的账户吗？此操作不可恢复，所有数据将被永久删除。</p>
@@ -1448,10 +1783,10 @@
                     ">确认注销</button>
                 </div>
             `;
-            
+
             dialog.appendChild(dialogContent);
             document.body.appendChild(dialog);
-            
+
             // 存储对话框引用
             window.deleteAccountDialog = dialog;
         }
@@ -1466,20 +1801,20 @@
         // 确保 deleteAccount 函数存在
         if (typeof deleteAccount === 'undefined') {
             console.warn('deleteAccount 函数未定义，使用备用实现');
-            window.deleteAccount = async function(password) {
+            window.deleteAccount = async function (password) {
                 try {
                     // 直接调用 API
                     const API_BASE_URL = typeof API_CONFIG !== 'undefined' ? API_CONFIG.baseUrl : '/api';
                     const headers = {
                         'Content-Type': 'application/json'
                     };
-                    
+
                     // 添加认证头
                     const token = getStoredToken();
                     if (token) {
                         headers['Authorization'] = `Bearer ${token}`;
                     }
-                    
+
                     console.log('使用备用实现调用 API:', API_BASE_URL + '/delete_account.php');
                     const response = await makeRequest(`${API_BASE_URL}/delete_account.php`, {
                         method: 'POST',
@@ -1487,11 +1822,11 @@
                         body: JSON.stringify({ password: password }),
                         timeout: 10000
                     });
-                    
+
                     if (!response.ok) {
                         throw new Error('API 请求失败，状态码: ' + response.status);
                     }
-                    
+
                     const result = await response.json();
                     console.log('备用实现 API 响应:', result);
                     return result;
@@ -1508,19 +1843,19 @@
         async function submitDeleteAccount() {
             const passwordInput = document.getElementById('delete-account-password');
             const password = passwordInput.value.trim();
-            
+
             if (!password) {
                 alert('请输入密码');
                 return;
             }
-            
+
             try {
                 // 使用 window.deleteAccount 确保函数存在
                 const result = await window.deleteAccount(password);
-                
+
                 if (result.success) {
                     closeDeleteAccountDialog();
-                    
+
                     // 创建假刷新对话框
                     const loadingDialog = document.createElement('div');
                     loadingDialog.className = 'loading-dialog';
@@ -1536,7 +1871,7 @@
                         align-items: center;
                         z-index: 9999;
                     `;
-                    
+
                     const loadingContent = document.createElement('div');
                     loadingContent.style.cssText = `
                         background-color: white;
@@ -1547,7 +1882,7 @@
                         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
                         text-align: center;
                     `;
-                    
+
                     loadingContent.innerHTML = `
                         <div style="font-size: 3rem; margin-bottom: 20px;">🔄</div>
                         <h3 style="margin-top: 0; color: #333; margin-bottom: 15px;">正在注销账户</h3>
@@ -1557,10 +1892,10 @@
                         </div>
                         <p class="loading-text" style="color: #999; margin-top: 10px; font-size: 0.9rem;">正在清理数据...</p>
                     `;
-                    
+
                     loadingDialog.appendChild(loadingContent);
                     document.body.appendChild(loadingDialog);
-                    
+
                     // 模拟加载过程
                     let progress = 0;
                     const loadingBar = loadingContent.querySelector('.loading-bar');
@@ -1571,7 +1906,7 @@
                         '正在清除会话...',
                         '注销成功，正在跳转...'
                     ];
-                    
+
                     const interval = setInterval(() => {
                         progress += 10;
                         if (progress <= 100) {
@@ -1582,7 +1917,7 @@
                             clearInterval(interval);
                         }
                     }, 300);
-                    
+
                     // 3秒后完成注销
                     setTimeout(() => {
                         // 清除本地存储
@@ -1605,7 +1940,7 @@
             console.log('getNotifications 最终状态:', typeof getNotifications !== 'undefined' ? '已定义' : '未定义');
             console.log('loadNotifications 函数定义:', typeof loadNotifications !== 'undefined' ? '已定义' : '未定义');
             console.log('================================');
-            
+
             const storedUser = localStorage.getItem('currentUser');
             if (storedUser && storedUser !== 'undefined' && storedUser !== 'null') {
                 try {
@@ -1628,10 +1963,13 @@
                     document.getElementById('admin-section').style.display = 'block';
                 }
             }
-                
+
             // 预加载通知数据，确保切换标签时能立即显示
             console.log('开始预加载通知数据...');
             loadNotifications();
+
+            // 初始化邮箱验证功能
+            initEmailVerification();
         });
 
         // 发送通知功能
@@ -1727,11 +2065,10 @@
     <!-- 音乐播放器 -->
     <div id="app-sidebar-player"></div>
     <script src="../js/sidebar-player.js?v=3.0"></script>
-    
+
     <!-- 组件加载器 -->
     <script src="../components/loader.js?v=3.0"></script>
 
 </body>
 
 </html>
-

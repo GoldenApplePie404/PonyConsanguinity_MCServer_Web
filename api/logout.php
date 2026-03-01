@@ -2,6 +2,9 @@
 require_once 'config.php';
 require_once 'helper.php';
 require_once 'secure_data.php';
+require_once __DIR__ . '/../includes/security_logger.php';
+
+$securityLog = SecurityLogger::getInstance();
 
 // 设置 CORS 和安全头
 set_cors_headers();
@@ -22,8 +25,12 @@ if (empty($token)) {
 // 删除会话
 $sessions = secureReadData(SESSIONS_FILE);
 if (isset($sessions[$token])) {
+    $username = $sessions[$token]['username'] ?? 'unknown';
     unset($sessions[$token]);
     secureWriteData(SESSIONS_FILE, $sessions);
+    
+    // 记录注销日志
+    $securityLog->logLogout($username);
 }
 
 json_response(true, '登出成功', null, 200);

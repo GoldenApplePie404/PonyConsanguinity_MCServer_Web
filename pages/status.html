@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <link rel="icon" type="image/png" href="../assets/img/m.png">
     <link rel="shortcut icon" href="../assets/img/m.png">
@@ -67,8 +68,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* 下拉菜单样式 */
@@ -199,14 +207,30 @@
 
         /* 状态文本动画 */
         @keyframes textPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
         }
 
         /* 成功脉冲动画 */
         @keyframes successPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
         }
 
         /* 状态徽章容器 */
@@ -281,130 +305,226 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
         }
 
         @keyframes satelliteFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(5deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(5deg);
+            }
         }
 
         @keyframes orbitRotate {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
         }
 
         @keyframes starTwinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.5); }
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
         }
 
         @keyframes dataFlow {
-            0% { top: -100%; }
-            100% { top: 100%; }
+            0% {
+                top: -100%;
+            }
+
+            100% {
+                top: 100%;
+            }
         }
 
         @keyframes glowPulse {
-            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
         }
 
         @keyframes satelliteOrbit {
-            0% { transform: translateX(-50%) rotate(0deg) translateX(400px) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg) translateX(400px) rotate(-360deg); }
+            0% {
+                transform: translateX(-50%) rotate(0deg) translateX(400px) rotate(0deg);
+            }
+
+            100% {
+                transform: translateX(-50%) rotate(360deg) translateX(400px) rotate(-360deg);
+            }
         }
 
         @keyframes signalWave {
-            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(2.5);
+                opacity: 0;
+            }
         }
 
         @keyframes radarScan {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes iconGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.2); }
-            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.4); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(102, 126, 234, 0.4);
+            }
         }
 
         @keyframes statusPulse {
-            0%, 100% { 
+
+            0%,
+            100% {
                 box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7),
-                            0 0 0 4px rgba(0, 255, 136, 0.3),
-                            0 0 15px rgba(0, 255, 136, 0.5);
+                    0 0 0 4px rgba(0, 255, 136, 0.3),
+                    0 0 15px rgba(0, 255, 136, 0.5);
             }
-            50% { 
+
+            50% {
                 box-shadow: 0 0 0 0 rgba(0, 255, 136, 1),
-                            0 0 0 8px rgba(0, 255, 136, 0.5),
-                            0 0 25px rgba(0, 255, 136, 0.8);
+                    0 0 0 8px rgba(0, 255, 136, 0.5),
+                    0 0 25px rgba(0, 255, 136, 0.8);
             }
         }
 
         @keyframes techPulse {
-            0%, 100% { 
-                opacity: 1; 
+
+            0%,
+            100% {
+                opacity: 1;
                 transform: scale(1);
                 box-shadow: 0 0 15px #00ff88, 0 0 30px #00ff88;
             }
-            50% { 
-                opacity: 0.7; 
+
+            50% {
+                opacity: 0.7;
                 transform: scale(1.2);
                 box-shadow: 0 0 25px #00ff88, 0 0 50px #00ff88, 0 0 75px #00ff88;
             }
         }
 
         @keyframes particleFloat {
-            0%, 100% { 
-                transform: translateY(0) scale(1); 
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
                 opacity: 0.3;
             }
-            50% { 
-                transform: translateY(-20px) scale(1.5); 
+
+            50% {
+                transform: translateY(-20px) scale(1.5);
                 opacity: 0.8;
             }
         }
 
         @keyframes gearRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes codePulse {
-            0%, 100% { 
-                opacity: 1; 
+
+            0%,
+            100% {
+                opacity: 1;
                 transform: translate(-50%, -50%) scale(1);
             }
-            50% { 
-                opacity: 0.6; 
+
+            50% {
+                opacity: 0.6;
                 transform: translate(-50%, -50%) scale(1.1);
             }
         }
 
         @keyframes progressGlow {
-            0%, 100% { 
+
+            0%,
+            100% {
                 box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
             }
-            50% { 
+
+            50% {
                 box-shadow: 0 0 20px rgba(102, 126, 234, 0.8), 0 0 30px rgba(118, 75, 162, 0.6);
             }
         }
 
         @keyframes progressShine {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
         }
 
         @keyframes devPulse {
-            0%, 100% { 
-                opacity: 1; 
+
+            0%,
+            100% {
+                opacity: 1;
                 transform: scale(1);
                 box-shadow: 0 0 15px #ffc107, 0 0 30px #ffc107;
             }
-            50% { 
-                opacity: 0.7; 
+
+            50% {
+                opacity: 0.7;
                 transform: scale(1.2);
                 box-shadow: 0 0 25px #ffc107, 0 0 50px #ffc107;
             }
@@ -521,7 +641,7 @@
                 grid-template-columns: 1fr;
             }
         }
-        
+
         /* 财富排行榜样式 */
         .ranking-table {
             width: 100%;
@@ -530,8 +650,9 @@
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+
         .ranking-table th {
             background-color: #ffd700;
             color: #333;
@@ -539,14 +660,17 @@
             text-align: center;
             font-weight: bold;
         }
+
         .ranking-table td {
             padding: 12px;
             text-align: center;
             border-bottom: 1px solid #eee;
         }
+
         .ranking-table tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+
         .ranking-table tr:hover {
             background-color: #f5f5f5;
             transform: none !important;
@@ -555,23 +679,29 @@
         .ranking-table tr {
             transition: background-color 0.3s ease;
         }
+
         .rank-number {
             font-weight: bold;
             font-size: 1.1rem;
         }
+
         .rank-1 {
             color: #ffd700;
         }
+
         .rank-2 {
             color: #c0c0c0;
         }
+
         .rank-3 {
             color: #cd7f32;
         }
+
         .points {
             font-weight: bold;
             color: #ff6b6b;
         }
+
         .pagination {
             display: flex;
             justify-content: center;
@@ -579,6 +709,7 @@
             gap: 5px;
             margin: 20px 0;
         }
+
         .pagination button {
             padding: 8px 15px;
             border: 1px solid #ddd;
@@ -587,23 +718,28 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .pagination button:hover {
             background-color: #f0f0f0;
         }
+
         .pagination button.active {
             background-color: #ffd700;
             color: #333;
             border-color: #ffd700;
         }
+
         .pagination button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
+
         .loading {
             text-align: center;
             padding: 40px;
             color: #666;
         }
+
         .error {
             text-align: center;
             padding: 20px;
@@ -613,15 +749,18 @@
             border-radius: 5px;
             margin: 20px 0;
         }
+
         .no-data {
             text-align: center;
             padding: 40px;
             color: #666;
         }
+
         @media (max-width: 768px) {
             .ranking-table {
                 font-size: 0.9rem;
             }
+
             .ranking-table th,
             .ranking-table td {
                 padding: 10px;
@@ -635,11 +774,11 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: 
+            background:
                 radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 0%, transparent 20%),
                 radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.6) 0%, transparent 15%),
                 linear-gradient(135deg, #1e90ff 0%, #0066cc 30%, #004080 60%, #00264d 100%);
-            box-shadow: 
+            box-shadow:
                 0 4px 15px rgba(30, 144, 255, 0.4),
                 0 0 0 2px rgba(255, 255, 255, 0.3) inset,
                 0 0 20px rgba(30, 144, 255, 0.3) inset,
@@ -661,7 +800,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 40%, rgba(34, 139, 34, 0.4) 0%, transparent 30%),
                 radial-gradient(circle at 80% 60%, rgba(34, 139, 34, 0.3) 0%, transparent 25%),
                 radial-gradient(circle at 50% 80%, rgba(34, 139, 34, 0.35) 0%, transparent 20%);
@@ -676,7 +815,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 40%),
                 linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
             border-radius: 50%;
@@ -686,7 +825,7 @@
 
         .satellite-toggle:hover {
             transform: translateY(-5px) scale(1.15);
-            box-shadow: 
+            box-shadow:
                 0 10px 30px rgba(30, 144, 255, 0.6),
                 0 0 50px rgba(30, 144, 255, 0.4),
                 0 0 0 3px rgba(255, 255, 255, 0.4) inset,
@@ -695,7 +834,7 @@
 
         .satellite-toggle:active {
             transform: translateY(-2px) scale(1.05);
-            box-shadow: 
+            box-shadow:
                 0 4px 15px rgba(30, 144, 255, 0.5),
                 0 0 20px rgba(30, 144, 255, 0.3),
                 0 0 0 2px rgba(255, 255, 255, 0.3) inset,
@@ -724,6 +863,7 @@
             0% {
                 transform: rotate(0deg);
             }
+
             100% {
                 transform: rotate(360deg);
             }
@@ -733,22 +873,29 @@
             0% {
                 transform: rotate(0deg);
             }
+
             100% {
                 transform: rotate(360deg);
             }
         }
 
         @keyframes satelliteFloat {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-3px);
             }
         }
     </style>
 
-<link rel="icon" type="image/png" href="../assets/img/m.png"><link rel="shortcut icon" href="../assets/img/m.png"></head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+</head>
+
 <body data-components="sidebarPlayer,backToTop,footer">
 
     <!-- 导航栏组件 -->
@@ -801,7 +948,8 @@
 
                     <!-- 服务器信息页面 -->
                     <div class="tab-content active" id="server-info">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border-color);">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border-color);">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <h2 style="margin: 0;">服务器信息</h2>
                                 <div class="status-badge loading">
@@ -809,7 +957,8 @@
                                     <span class="status-text-small" id="status-text">加载中</span>
                                 </div>
                             </div>
-                            <button id="refresh-btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            <button id="refresh-btn"
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
                                 刷新数据
                             </button>
                         </div>
@@ -848,16 +997,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="margin-top: 20px; text-align: center; color: #666; font-size: 0.9rem;">
+                        <div style="margin-top: 20px; text-align: center; color: #66666685; font-size: 0.9rem;">
                             <p>* 数据每30秒自动更新一次</p>
                         </div>
                     </div>
 
                     <!-- 监控统计页面 -->
                     <div class="tab-content" id="monitoring">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border-color);">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border-color);">
                             <h2 style="margin: 0;">服务器性能监控</h2>
-                            <button id="refresh-chart-btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            <button id="refresh-chart-btn"
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
                                 刷新数据
                             </button>
                         </div>
@@ -885,15 +1036,16 @@
                             </div>
                         </div>
 
-                        <div style="margin-top: 10px; text-align: center; color: #666; font-size: 0.9rem;">
+                        <div style="margin-top: 10px; text-align: center; color: #6666667a; font-size: 0.9rem;">
                             <p>* 数据每5分钟自动更新一次，显示最近30分钟的趋势，且保留50个数据点</p>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- 黄金券排行榜 -->
                 <div class="status-card fade-in-delay-2">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border-color);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border-color);">
                         <h2 style="margin: 0;">黄金券排行榜</h2>
                         <div style="display: flex; align-items: center;">
                             <span id="last-updated" style="color: #666; font-size: 0.9rem;">
@@ -901,18 +1053,19 @@
                             </span>
                         </div>
                     </div>
-                    <div style="text-align: center; padding: 20px;">
-                        <p style="color: #666; margin-bottom: 20px;">服务器财富排行榜 - 每12小时自动刷新</p>
-                    </div>
-                    
+
+
                     <!-- 排行榜表格 -->
                     <div id="ranking-container" class="loading">
                         <div class="spinner"></div>
                         <p>加载中...</p>
                     </div>
-                    
+
                     <!-- 分页 -->
                     <div id="ranking-pagination" class="pagination"></div>
+                    <div style="text-align: center; padding: 20px;">
+                        <p style="color: #66666686; margin-bottom: 20px;font-family: 'Courier New', Courier, monospace;">服务器财富排行榜 - 每12小时自动刷新</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -940,10 +1093,10 @@
         function initStatusPage() {
             // 初始化分页标签功能
             initTabSwitching();
-            
+
             // 初始化图表选择下拉菜单
             initChartSelector();
-            
+
             // 确保只初始化一次图表
             if (!performanceChart) {
                 initPerformanceChart();
@@ -951,7 +1104,7 @@
             if (!playersChart) {
                 initPlayersChart();
             }
-            
+
             loadServerStatus();
             loadSystemResources();
             initRanking();
@@ -1054,7 +1207,7 @@
 
                     // 隐藏所有图表容器
                     chartContainers.forEach(container => container.classList.remove('active'));
-                    
+
                     // 显示选中的图表容器
                     const targetContainer = document.getElementById('chart-' + selectedChart);
                     if (targetContainer) {
@@ -1069,10 +1222,10 @@
             const indicator = document.getElementById('status-indicator');
             const statusText = document.getElementById('status-text');
             const statusBadge = indicator.parentElement;
-            
+
             statusBadge.className = 'status-badge loading';
             statusText.textContent = '加载中';
-            
+
             try {
                 const response = await fetch(API_BASE_URL + '/mcstatus.php');
                 const data = await response.json();
@@ -1150,12 +1303,12 @@
         // 初始化性能监控图表
         function initPerformanceChart() {
             const ctx = document.getElementById('performance-chart').getContext('2d');
-            
+
             // 销毁已存在的图表
             if (performanceChart) {
                 performanceChart.destroy();
             }
-            
+
             performanceChart = new Chart(ctx, {
                 type: 'line',
                 data: performanceData,
@@ -1201,12 +1354,12 @@
         // 初始化玩家人数图表
         function initPlayersChart() {
             const ctx = document.getElementById('players-chart').getContext('2d');
-            
+
             // 销毁已存在的图表
             if (playersChart) {
                 playersChart.destroy();
             }
-            
+
             playersChart = new Chart(ctx, {
                 type: 'line',
                 data: playersData,
@@ -1261,34 +1414,34 @@
         async function updatePerformanceData() {
             try {
                 console.log('开始更新性能监控数据...');
-                
+
                 // 首先记录新的数据
                 console.log('记录新的性能数据...');
                 await recordPerformanceData();
-                
+
                 // 然后获取最新的数据
                 console.log('获取性能数据...');
                 const response = await fetch(API_BASE_URL + '/get_performance.php');
-                
+
                 if (!response.ok) {
                     throw new Error('网络响应错误: ' + response.status);
                 }
-                
+
                 const result = await response.json();
                 console.log('获取到的性能数据:', result);
-                
+
                 if (result.success) {
                     const chartData = result.data;
-                    
+
                     // 更新CPU和内存图表
                     performanceData.labels = chartData.labels || [];
                     performanceData.datasets[0].data = chartData.cpu || [];
                     performanceData.datasets[1].data = chartData.memory || [];
-                    
+
                     // 更新玩家人数图表
                     playersData.labels = chartData.labels || [];
                     playersData.datasets[0].data = chartData.players || [];
-                    
+
                     // 如果没有数据，添加默认数据点
                     if (performanceData.labels.length === 0) {
                         const now = new Date();
@@ -1296,16 +1449,16 @@
                         performanceData.labels = [timeLabel];
                         performanceData.datasets[0].data = [0];
                         performanceData.datasets[1].data = [0];
-                        
+
                         playersData.labels = [timeLabel];
                         playersData.datasets[0].data = [0];
                     }
-                    
+
                     // 更新两个图表
                     performanceChart.update();
                     playersChart.update();
                     console.log('图表更新成功');
-                    
+
                     return true;
                 } else {
                     console.error('API返回失败:', result.message);
@@ -1313,7 +1466,7 @@
                 }
             } catch (error) {
                 console.error('更新性能监控数据失败:', error);
-                
+
                 // 出错时显示默认数据
                 if (performanceData.labels.length === 0) {
                     const now = new Date();
@@ -1321,14 +1474,14 @@
                     performanceData.labels = [timeLabel];
                     performanceData.datasets[0].data = [0];
                     performanceData.datasets[1].data = [0];
-                    
+
                     playersData.labels = [timeLabel];
                     playersData.datasets[0].data = [0];
-                    
+
                     performanceChart.update();
                     playersChart.update();
                 }
-                
+
                 return false;
             }
         }
@@ -1383,15 +1536,15 @@
         async function loadRankingData(page = 1) {
             // 更新当前页码
             rankingCurrentPage = page;
-            
+
             try {
                 const response = await fetch(API_BASE_URL + '/golden-ticket.php?action=get_ranking&page=' + page + '&limit=' + rankingItemsPerPage);
                 const result = await response.json();
-                
+
                 const container = document.getElementById('ranking-container');
                 // 移除loading类，停止旋转动画
                 container.classList.remove('loading');
-                
+
                 if (result.success) {
                     displayRankingData(result.data);
                     generateRankingPagination(result.data.total);
@@ -1411,15 +1564,15 @@
         // 显示排行榜数据
         function displayRankingData(data) {
             const container = document.getElementById('ranking-container');
-            
+
             // 移除loading类，停止旋转动画
             container.classList.remove('loading');
-            
+
             if (data.data.length === 0) {
                 container.innerHTML = '<div class="no-data">暂无黄金券数据</div>';
                 return;
             }
-            
+
             let html = `
                 <table class="ranking-table">
                     <thead>
@@ -1431,14 +1584,14 @@
                     </thead>
                     <tbody>
             `;
-            
+
             data.data.forEach((item, index) => {
                 const rank = (rankingCurrentPage - 1) * rankingItemsPerPage + index + 1;
                 let rankClass = '';
                 if (rank === 1) rankClass = 'rank-1';
                 else if (rank === 2) rankClass = 'rank-2';
                 else if (rank === 3) rankClass = 'rank-3';
-                
+
                 html += `
                     <tr>
                         <td class="rank-number ${rankClass}">${rank}</td>
@@ -1447,13 +1600,13 @@
                     </tr>
                 `;
             });
-            
+
             html += `
                     </tbody>
                 </table>
                 <p style="text-align: right; margin-top: 10px; color: #666;">共 ${data.total} 名玩家</p>
             `;
-            
+
             container.innerHTML = html;
         }
 
@@ -1461,28 +1614,28 @@
         function generateRankingPagination(total) {
             const paginationContainer = document.getElementById('ranking-pagination');
             const totalPages = Math.ceil(total / rankingItemsPerPage);
-            
+
             if (totalPages <= 1) {
                 paginationContainer.innerHTML = '';
                 return;
             }
-            
+
             let html = '';
-            
+
             // 上一页按钮
             html += `<button onclick="loadRankingData(${rankingCurrentPage - 1})" ${rankingCurrentPage === 1 ? 'disabled' : ''}>&laquo; 上一页</button>`;
-            
+
             // 页码按钮
             const startPage = Math.max(1, rankingCurrentPage - 2);
             const endPage = Math.min(totalPages, startPage + 4);
-            
+
             for (let i = startPage; i <= endPage; i++) {
                 html += `<button onclick="loadRankingData(${i})" ${i === rankingCurrentPage ? 'class="active"' : ''}>${i}</button>`;
             }
-            
+
             // 下一页按钮
             html += `<button onclick="loadRankingData(${rankingCurrentPage + 1})" ${rankingCurrentPage === totalPages ? 'disabled' : ''}>下一页 &raquo;</button>`;
-            
+
             paginationContainer.innerHTML = html;
         }
 
@@ -1503,10 +1656,10 @@
         // 初始化排行榜
         function initRanking() {
             loadRankingData();
-            
+
             // 检查是否需要刷新（每天中午12点和晚上零点）
             checkRefreshTime();
-            
+
             // 每分钟检查一次时间
             setInterval(checkRefreshTime, 60000);
         }
@@ -1516,7 +1669,7 @@
             const now = new Date();
             const hours = now.getHours();
             const minutes = now.getMinutes();
-            
+
             // 每天中午12点和晚上零点刷新
             if ((hours === 12 && minutes === 0) || (hours === 0 && minutes === 0)) {
                 loadRankingData(rankingCurrentPage);
@@ -1541,6 +1694,5 @@
     </a>
 
 </body>
+
 </html>
-
-

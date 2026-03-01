@@ -1,7 +1,11 @@
 config/config.php
 logs/*.log
+logs/security/*.log
+logs/security/*.json
 run.bat
 test/aifadian
 test/mysql
-md/*.md
 *.log
+safe_test/*.php
+safe_test/*.md
+md_files/*

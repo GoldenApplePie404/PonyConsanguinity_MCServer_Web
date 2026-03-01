@@ -3,6 +3,9 @@
 require_once 'config.php';
 require_once 'helper.php';
 require_once 'secure_data.php';
+require_once __DIR__ . '/../includes/security_logger.php';
+
+$securityLog = SecurityLogger::getInstance();
 
 // 设置 CORS 和安全头
 set_cors_headers();
@@ -47,9 +50,13 @@ if (!isset($users[$username])) {
 }
 
 $userData = $users[$username];
-if ($userData['password'] !== $password) {
+if (!password_verify($password, $userData['password'])) {
+    $securityLog->logLoginFailure($username, '删除账户时密码验证失败');
     json_response(false, '密码错误', null, 401);
 }
+
+// 记录账户删除日志（在删除前记录）
+$securityLog->logAccountDeletion($username);
 
 // 删除用户数据
 unset($users[$username]);

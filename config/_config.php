@@ -70,6 +70,27 @@ define('AFDIAN_LOG_DIR', dirname(__DIR__) . '/logs');
 define('AFDIAN_LOG_LEVEL', 'info');
 define('AFDIAN_LOG_MODULE', 'aifadian');
 
+// ==================== 邮件 SMTP 配置 ====================
+// 是否启用邮箱验证功能
+define('EMAIL_VERIFICATION_ENABLED', true);
+
+// SMTP 服务器配置
+define('SMTP_HOST', 'smtp.qq.com');           // SMTP服务器地址
+define('SMTP_PORT', 465);                      // SMTP端口（SSL: 465, TLS: 587, 非加密: 25）
+define('SMTP_USERNAME', 'your-email@qq.com');  // 发件人邮箱
+define('SMTP_PASSWORD', 'your-auth-code');     // 邮箱授权码（不是登录密码）
+define('SMTP_ENCRYPTION', 'ssl');              // 加密方式：ssl、tls 或空字符串（非加密）
+define('SMTP_AUTH', true);                     // 是否启用SMTP认证
+
+// 发件人信息
+define('MAIL_FROM_EMAIL', 'your-email@qq.com');
+define('MAIL_FROM_NAME', '万驹同源服务器');
+
+// 验证邮件配置
+define('VERIFY_TOKEN_EXPIRY', 86400);          // 验证令牌有效期（秒）默认24小时
+define('VERIFY_RESEND_INTERVAL', 600);         // 重新发送间隔（秒）默认10分钟
+define('VERIFY_MAX_RESEND', 3);                // 每小时最大重发次数
+
 // ==================== 辅助函数 ====================
 
 // 设置 CORS 头
@@ -133,6 +154,30 @@ function get_afdian_config() {
             'log_dir' => AFDIAN_LOG_DIR,
             'log_level' => AFDIAN_LOG_LEVEL,
             'module' => AFDIAN_LOG_MODULE
+        ]
+    ];
+}
+
+// 获取邮箱验证配置数组（用于向后兼容）
+function get_email_verification_config() {
+    return [
+        'enabled' => EMAIL_VERIFICATION_ENABLED,
+        'smtp' => [
+            'host' => SMTP_HOST,
+            'port' => SMTP_PORT,
+            'username' => SMTP_USERNAME,
+            'password' => SMTP_PASSWORD,
+            'encryption' => SMTP_ENCRYPTION,
+            'auth' => SMTP_AUTH
+        ],
+        'from' => [
+            'email' => MAIL_FROM_EMAIL,
+            'name' => MAIL_FROM_NAME
+        ],
+        'verification' => [
+            'token_expiry' => VERIFY_TOKEN_EXPIRY,
+            'resend_interval' => VERIFY_RESEND_INTERVAL,
+            'max_resend' => VERIFY_MAX_RESEND
         ]
     ];
 }

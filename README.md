@@ -70,6 +70,7 @@
 - **卫星地图**：实时查看服务器卫星地图，支持玩家位置追踪
 - **皮肤站**：自定义玩家皮肤和披风（这边建议采用[Blessing Skin Server](https://github.com/bs-community/blessing-skin-server)进行搭建）
 - **充值系统**：爱发电支付集成，支持黄金券自动充值功能
+- **邮箱验证系统**：支持邮箱验证功能
 
 ### 界面特性
 
@@ -595,6 +596,167 @@ curl -H "Authorization: Bearer {token}" \
 
 ---
 
+## 认证系统安全增强
+
+### 概述
+
+项目对注册登录系统进行了全面的安全加强，实现了现代 Web 应用的安全标准。
+
+### 安全特性
+
+#### 1. 密码安全存储
+
+**技术**：使用 PHP `password_hash()` 函数（bcrypt 算法）
+
+**实现**：
+- 用户密码使用 bcrypt 算法哈希存储
+- 自动处理盐值，每次哈希结果不同
+- 使用 `password_verify()` 验证密码
+
+**安全效果**：
+- 即使数据库泄露，攻击者也无法直接获取明文密码
+- 彩虹表攻击无效
+- 符合现代安全标准
+
+#### 2. 登录失败限制
+
+**机制**：账户锁定策略
+
+**配置**：
+- 最大尝试次数：5 次
+- 锁定时间：15 分钟
+
+**实现**：
+```php
+// 验证密码
+if (!password_verify($password, $user['password'])) {
+    // 记录失败次数
+    $users[$username]['login_attempts'] = ($users[$username]['login_attempts'] ?? 0) + 1;
+    
+    // 超过5次锁定15分钟
+    if ($users[$username]['login_attempts'] >= 5) {
+        $users[$username]['lock_until'] = date('Y-m-d H:i:s', time() + 900);
+    }
+}
+```
+
+**安全效果**：
+- 防止暴力破解攻击
+- 防止字典攻击
+- 保护弱密码用户
+
+#### 3. 密码复杂度要求
+
+**规则**：
+- 最小长度：8 位
+- 必须包含：大写字母、小写字母、数字
+- 可选：特殊字符
+
+**实现**：
+```php
+if (strlen($password) < 8) {
+    return '密码长度至少为8位';
+}
+if (!preg_match('/[A-Z]/', $password)) {
+    return '密码必须包含大写字母';
+}
+if (!preg_match('/[a-z]/', $password)) {
+    return '密码必须包含小写字母';
+}
+if (!preg_match('/[0-9]/', $password)) {
+    return '密码必须包含数字';
+}
+```
+
+**安全效果**：
+- 提高密码强度
+- 减少被猜测风险
+
+#### 4. 安全日志系统
+
+**功能**：记录所有认证相关事件
+
+**日志内容**：
+- 登录成功/失败
+- 用户注册
+- 用户注销
+- 账户删除
+- 账户锁定
+- 安全告警
+
+**日志信息**：
+- 时间戳
+- IP 地址
+- 设备信息（浏览器、操作系统）
+- 事件详情
+
+**日志文件**：`logs/security/auth_YYYYMMDD.log`
+
+**示例日志**：
+```
+[2026-03-01 10:30:15] [info] [登录成功] 用户: xxx | 角色: admin | IP: 127.0.0.1 | 设备: Chrome/Windows/Desktop
+[2026-03-01 10:31:20] [warning] [登录失败] 用户: xxx | IP: 127.0.0.1 | 原因: 密码错误 | 设备: Chrome/Windows
+[2026-03-01 10:32:00] [error] [账户锁定] 用户: xxx | IP: 127.0.0.1 | 原因: 连续登录失败 5 次
+```
+
+**安全效果**：
+- 审计追踪
+- 异常检测
+- 安全分析
+
+#### 5. 异常登录检测
+
+**检测项**：
+- 频繁登录失败（1小时内超过3次）
+- IP 地址变化
+
+**实现**：
+```php
+// 检测频繁登录失败
+if ($recentFailures >= 3) {
+    $this->logSecurityAlert($username, '频繁登录失败', [
+        'failures_in_hour' => $recentFailures
+    ]);
+}
+
+// 检测IP变化
+if ($lastSuccess['ip'] !== $currentIP) {
+    $this->logSecurityAlert($username, 'IP地址变化', [
+        'previous_ip' => $lastSuccess['ip'],
+        'current_ip' => $currentIP
+    ]);
+}
+```
+
+**安全效果**：
+- 及时发现可疑登录
+- 预警潜在攻击
+
+### 安全测试
+
+项目包含安全测试工具，位于 `safe_test/` 目录：
+
+| 工具 | 功能 |
+|------|------|
+| `scanner.php` | 安全漏洞扫描 |
+| `test_brute_force.php` | 暴力破解测试 |
+| `test_sql_injection.php` | SQL 注入测试 |
+| `test_xss.php` | XSS 漏洞测试 |
+
+**运行测试**：
+```bash
+php safe_test/scanner.php
+```
+
+### 安全建议
+
+1. **定期更换密码**：建议用户每 3-6 个月更换一次密码
+2. **使用强密码**：避免使用常见密码（如 123456、password 等）
+3. **注意登录环境**：在公共设备上使用后及时注销
+4. **关注安全告警**：如收到异常登录提醒，及时修改密码
+
+---
+
 ## 使用指南
 
 ### 论坛系统
@@ -832,7 +994,158 @@ https://your-domain.com/api/aifadian/api/webhook.php
 - 爱发电平台：[https://afdian.com/](https://afdian.com/)
 - 爱发电开发者功能汇总：[https://afdian.com/p/010ff078177211eca44f52540025c377](https://afdian.com/p/010ff078177211eca44f52540025c377)
 
+### 邮箱验证系统配置
 
+#### 功能说明
+
+邮箱验证系统实现了用户邮箱验证功能，支持两种运行模式：
+- **本地开发模式**：直接返回验证链接，方便开发和测试
+- **生产部署模式**：使用 SMTP 发送真实验证邮件
+
+系统会自动检测运行环境并选择合适的模式。
+
+#### 配置文件
+
+**后端配置**：`config/config.php`
+
+```php
+// ==================== 邮件 SMTP 配置 ====================
+// 是否启用邮箱验证功能
+define('EMAIL_VERIFICATION_ENABLED', true);
+
+// SMTP 服务器配置
+define('SMTP_HOST', 'smtp.qq.com');           // SMTP服务器地址
+define('SMTP_PORT', 465);                      // SMTP端口（SSL: 465, TLS: 587）
+define('SMTP_USERNAME', 'your-email@qq.com');  // 发件人邮箱
+define('SMTP_PASSWORD', 'your-auth-code');     // 邮箱授权码（不是登录密码）
+define('SMTP_ENCRYPTION', 'ssl');              // 加密方式：ssl、tls 或空字符串
+define('SMTP_AUTH', true);                     // 是否启用SMTP认证
+
+// 发件人信息
+define('MAIL_FROM_EMAIL', 'your-email@qq.com');
+define('MAIL_FROM_NAME', '万驹同源服务器');
+
+// 验证邮件配置
+define('VERIFY_TOKEN_EXPIRY', 86400);          // 验证令牌有效期（秒）默认24小时
+define('VERIFY_RESEND_INTERVAL', 600);         // 重新发送间隔（秒）默认10分钟
+define('VERIFY_MAX_RESEND', 3);                // 每小时最大重发次数
+```
+
+**前端配置**：`js/config.js`
+
+```javascript
+emailVerification: {
+    // 本地开发环境：使用手动验证链接（方便测试）
+    // 生产环境：使用真实邮件发送
+    useManualVerification: ENV.isLocalhost,
+    
+    // 验证邮件发送间隔（秒）
+    resendInterval: 60,
+    
+    // 验证令牌有效期（秒）
+    tokenExpiry: 86400
+}
+```
+
+#### 运行模式
+
+##### 本地开发模式
+
+**环境检测**：访问地址为 `localhost` 或 `127.0.0.1`
+
+**特点**：
+- 不发送真实邮件
+- 直接返回验证链接
+- 用户手动复制链接到浏览器验证
+- 适合开发和测试
+
+**流程**：
+1. 用户点击"发送验证邮件"
+2. 系统生成验证令牌并保存
+3. 返回验证链接（通过弹窗显示）
+4. 用户复制链接到浏览器
+5. 完成验证
+
+如果你想在本地模式下测试邮箱发送功能，可以利用test/mail/test_email.php脚本。
+
+##### 生产部署模式
+
+**环境检测**：访问地址为其他域名
+
+**特点**：
+- 使用 SMTP 发送真实邮件
+- 用户通过邮件中的按钮验证
+- 需要配置正确的 SMTP 服务器
+- 适合生产环境
+
+**流程**：
+1. 用户点击"发送验证邮件"
+2. 系统生成验证令牌并保存
+3. 使用 PHPMailer 发送验证邮件
+4. 用户收到邮件，点击验证按钮
+5. 完成验证
+
+#### 邮件模板
+
+邮件模板文件：`includes/email_templates/verify_email.html`
+
+**模板变量**：
+- `{site_name}` - 站点名称
+- `{username}` - 用户名
+- `{verify_url}` - 验证链接
+- `{expiry_hours}` - 过期小时数
+
+**自定义模板**：
+1. 编辑 `includes/email_templates/verify_email.html`
+2. 保留变量占位符
+3. 修改样式和内容
+
+#### 相关页面
+
+- **个人中心**：`pages/profile.html` - 显示验证状态，发送验证邮件
+- **验证结果页**：`pages/verify.html` - 显示验证结果，自动跳转
+
+#### 相关 API
+
+- **发送验证邮件**：`api/resend_verify_email.php`
+- **验证令牌**：`api/verify_email.php`
+- **检查验证状态**：`api/check_verify_status.php`
+
+#### 用户数据结构
+
+验证相关字段存储在 `data/users.php` 中：
+
+```php
+'username' => [
+    'email' => 'user@example.com',
+    'email_verified' => false,              // 验证状态
+    'verify_token' => '64位随机令牌',        // 验证令牌
+    'verify_expires' => '2026-03-02 09:12:46',  // 过期时间
+    'verify_sent_at' => '2026-03-01 09:12:46',  // 发送时间
+    'verify_resend_count' => 1,             // 重发次数
+]
+```
+
+#### 安全特性
+
+1. **令牌安全**：64位随机令牌，24小时有效期
+2. **频率限制**：60秒内只能发送一次验证邮件
+3. **一次性使用**：验证成功后令牌立即失效
+4. **数据保护**：使用 `secureReadData` 和 `secureWriteData` 安全读写
+
+#### 如何配置SMTP
+
+我们以QQ邮箱为例，配置SMTP服务器如下：
+
+1. 登录QQ邮箱，点击“设置” -> “账户”
+2. 找到“SMTP服务”，开启SMTP服务并获取授权码
+3. 配置SMTP服务器信息：
+   - 主机：`smtp.qq.com`
+   - 端口：`465`（SSL）或`587`（TLS）
+   - 用户名：你的QQ邮箱地址
+   - 密码：SMTP授权码
+   - 加密：`ssl`或`tls`
+   - 认证：`true`
 
 ### 页面列表
 
@@ -871,6 +1184,7 @@ https://your-domain.com/api/aifadian/api/webhook.php
 - **pages/logs.html** - 开发日志页，查看项目开发历程
 - **pages/rules.html** - 服务器规则页，查看游戏规则
 - **pages/payment.html** - 充值中心页，黄金券充值功能（已开发，集成爱发电支付）
+- **pages/verify.html** - 邮箱验证结果页，显示验证成功/失败状态
 
 ##### 法律页面
 
@@ -1775,17 +2089,6 @@ location ~ ^/config/ {
 // 旧代码仍然可以正常工作
 require_once 'config.php';  // 这会加载 api/config.php，它会自动引入 config/config.php
 ```
-
-#### 迁移指南
-
-如果你正在从旧版本升级：
-
-1. **备份旧配置**：备份 `api/config.php` 中的配置信息
-2. **创建新配置**：将配置信息复制到 `config/config.php`
-3. **使用新格式**：使用 `define()` 形式定义配置常量
-4. **测试验证**：确保所有功能正常工作
-
-详细迁移说明请参考 `CONFIG_MIGRATION.md` 文件。
 
 ### 数据库查询配置
 

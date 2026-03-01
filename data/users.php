@@ -7,21 +7,19 @@ if (!defined('ACCESS_ALLOWED')) {
 return array (
   'GoldenApplePie' => 
   array (
-    'id' => 'c361cebb-3a36-4799-b094-46bc1d81f0f5',
+    'id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
     'username' => 'GoldenApplePie',
-    'password' => 'gap25225',
-    'email' => 'czhdqqyx6044@qq.com',
-    'created_at' => '2026-01-26 09:35:23',
+    'password' => '$2y$10$0Fg81IaiXfzMiypsdMd/EODV57XXU3YBsfttxHT2Pnc13dnLWv1LW',
+    'email' => '2928433540@qq.com',
+    'email_verified' => true,
+    'verify_token' => '330f9684be73e4ec17668bc2533c3eecf4979320b1fd666b113c3c7317eebe61',
+    'verify_expires' => '2026-03-02 09:12:46',
+    'verify_sent_at' => '2026-03-01 09:12:46',
+    'verify_resend_count' => 23,
+    'created_at' => '2026-03-01 07:57:21',
     'role' => 'admin',
-  ),
-  'GoldenApplePiee' => 
-  array (
-    'id' => '0d01959c-561e-49f1-bc86-48f2c929535f',
-    'username' => 'GoldenApplePiee',
-    'password' => '123456',
-    'email' => '12345678@qq.com',
-    'created_at' => '2026-01-26 09:38:12',
-    'role' => 'user',
+    'login_attempts' => 0,
+    'lock_until' => NULL,
   ),
 );
 ?>

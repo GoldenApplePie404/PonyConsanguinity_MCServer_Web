@@ -44,7 +44,20 @@ const APP_CONFIG = {
     apiTimeout: 3000,
     
     // 是否启用调试模式
-    debugMode: ENV.isLocalhost
+    debugMode: ENV.isLocalhost,
+    
+    // 邮件验证配置
+    emailVerification: {
+        // 本地开发环境：使用手动验证链接（方便测试）
+        // 生产环境：使用真实邮件发送
+        useManualVerification: ENV.isLocalhost,
+        
+        // 验证邮件发送间隔（秒）
+        resendInterval: 60,
+        
+        // 验证令牌有效期（秒）
+        tokenExpiry: 86400
+    }
 };
 
 // 导出配置（兼容性）
@@ -59,5 +72,6 @@ if (typeof window !== 'undefined') {
     console.log('当前环境:', ENV.isLocalhost ? '本地开发环境' : '生产环境');
     console.log('API 基础地址:', API_CONFIG.baseUrl);
     console.log('完整 URL:', API_CONFIG.fullUrl);
+    console.log('邮件验证模式:', APP_CONFIG.emailVerification.useManualVerification ? '手动验证（开发模式）' : '邮件发送（生产模式）');
     console.log('================');
 }
