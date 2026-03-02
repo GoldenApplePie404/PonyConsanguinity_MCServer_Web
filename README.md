@@ -1,7 +1,7 @@
 # 万驹同源服务器官网
 
 <p align="center">
-  <img src="/assets/img/pc_logo1.png" alt="万驹同源" width="800" style="max-width: 100%; height: auto;">
+  <img src="/assets/img/pc_logo2.png" alt="万驹同源" width="800" style="max-width: 100%; height: auto;">
 </p>
 
 
