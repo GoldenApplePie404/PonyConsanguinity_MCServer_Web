@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告管理工具 - 万驹同源</title>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .tab-content {
+            padding: 30px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .announcement-list {
+            list-style: none;
+        }
+
+        .announcement-item {
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .announcement-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .announcement-item h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .announcement-item-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .announcement-item-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .preview-container {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+            margin-top: 20px;
+        }
+
+        .preview-container h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .preview-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            min-height: 200px;
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 768px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            .tab {
+                font-size: 1rem;
+                padding: 12px;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+        }
+    </style>
+    <script src="../lib/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>公告管理工具</h1>
+            <p>万驹同源服务器公告管理系统</p>
+        </div>
+
+        <div class="main-content">
+            <!-- 标签页导航 -->
+            <div class="tabs">
+                <button class="tab active" data-tab="list">公告列表</button>
+                <button class="tab" data-tab="add">添加公告</button>
+                <button class="tab" data-tab="edit">编辑公告</button>
+                <button class="tab" data-tab="preview">预览公告</button>
+                <button class="tab" data-tab="settings">设置</button>
+            </div>
+
+            <!-- 标签页内容 -->
+            <div class="tab-content">
+                <!-- 公告列表 -->
+                <div class="tab-panel active" id="list">
+                    <div class="section">
+                        <h2>公告列表</h2>
+                        <div id="statusMessage"></div>
+                        <ul class="announcement-list" id="announcementList">
+                            <li style="text-align: center; padding: 50px; color: #7f8c8d;">
+                                加载公告列表中...
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 添加公告 -->
+                <div class="tab-panel" id="add">
+                    <div class="section">
+                        <h2>添加新公告</h2>
+                        <div id="addStatusMessage"></div>
+                        <form id="addForm">
+                            <div class="form-group">
+                                <label for="addId">公告ID</label>
+                                <input type="text" id="addId" placeholder="例如: v3.6, event-summer" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="addTitle">公告标题</label>
+                                <input type="text" id="addTitle" placeholder="输入公告标题" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="addType">公告类型</label>
+                                <select id="addType" required>
+                                    <option value="update">版本更新</option>
+                                    <option value="event">活动</option>
+                                    <option value="notice">通知</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="addAuthor">作者</label>
+                                <input type="text" id="addAuthor" placeholder="输入作者名称" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="addDate">发布日期</label>
+                                <input type="date" id="addDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="addSummary">公告摘要</label>
+                                <textarea id="addSummary" placeholder="输入公告摘要"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="addContent">公告内容 (Markdown)</label>
+                                <textarea id="addContent" placeholder="使用Markdown格式输入公告内容"></textarea>
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn btn-primary">保存公告</button>
+                                <button type="button" class="btn btn-secondary" onclick="resetAddForm()">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 编辑公告 -->
+                <div class="tab-panel" id="edit">
+                    <div class="section">
+                        <h2>编辑公告</h2>
+                        <div id="editStatusMessage"></div>
+                        <div class="form-group">
+                            <label for="editSelect">选择公告</label>
+                            <select id="editSelect">
+                                <option value="">-- 选择公告 --</option>
+                            </select>
+                        </div>
+                        <form id="editForm" style="display: none;">
+                            <div class="form-group">
+                                <label for="editId">公告ID</label>
+                                <input type="text" id="editId" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="editTitle">公告标题</label>
+                                <input type="text" id="editTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editType">公告类型</label>
+                                <select id="editType" required>
+                                    <option value="update">版本更新</option>
+                                    <option value="event">活动</option>
+                                    <option value="notice">通知</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editAuthor">作者</label>
+                                <input type="text" id="editAuthor" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editDate">发布日期</label>
+                                <input type="date" id="editDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editSummary">公告摘要</label>
+                                <textarea id="editSummary"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="editContent">公告内容 (Markdown)</label>
+                                <textarea id="editContent"></textarea>
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn btn-primary">保存修改</button>
+                                <button type="button" class="btn btn-danger" onclick="deleteAnnouncement()">删除公告</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 预览公告 -->
+                <div class="tab-panel" id="preview">
+                    <div class="section">
+                        <h2>预览公告</h2>
+                        <div class="form-group">
+                            <label for="previewContent">Markdown内容</label>
+                            <textarea id="previewContent" placeholder="输入Markdown内容进行预览"></textarea>
+                        </div>
+                        <div class="button-group">
+                            <button type="button" class="btn btn-primary" onclick="previewMarkdown()">预览</button>
+                            <button type="button" class="btn btn-secondary" onclick="clearPreview()">清空</button>
+                        </div>
+                        <div class="preview-container">
+                            <h3>预览效果</h3>
+                            <div id="previewResult" class="preview-content">
+                                预览效果将显示在这里...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 设置 -->
+                <div class="tab-panel" id="settings">
+                    <div class="section">
+                        <h2>系统设置</h2>
+                        <div class="form-group">
+                            <label for="dataPath">数据文件路径</label>
+                            <input type="text" id="dataPath" value="../data/announcements.json" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="contentPath">内容文件路径</label>
+                            <input type="text" id="contentPath" value="../data/content/announcements/" readonly>
+                        </div>
+                        <div class="button-group">
+                            <button type="button" class="btn btn-primary" onclick="loadAnnouncements()">重新加载数据</button>
+                            <button type="button" class="btn btn-secondary" onclick="exportData()">导出数据</button>
+                            <button type="button" class="btn btn-secondary" onclick="importData()">导入数据</button>
+                        </div>
+                        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                            <h3>使用说明</h3>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>此工具用于管理服务器公告</li>
+                                <li>公告内容使用Markdown格式编写</li>
+                                <li>公告ID必须唯一，建议使用小写字母和连字符</li>
+                                <li>保存公告后会自动创建对应的Markdown文件</li>
+                                <li>请确保有足够的文件读写权限</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 公告管理工具 -->
+    <script>
+        // 全局变量
+        let announcementsData = {
+            announcements: []
+        };
+        
+        // API配置
+        const API = {
+            baseUrl: '../api/announcement.php'
+        };
+        
+        // 获取当前用户
+        function getCurrentUser() {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser && storedUser !== 'undefined' && storedUser !== 'null') {
+                try {
+                    return JSON.parse(storedUser);
+                } catch (error) {
+                    console.error('解析用户数据失败:', error);
+                    localStorage.removeItem('currentUser');
+                    return null;
+                }
+            }
+            return null;
+        }
+        
+        // 检查管理员权限
+        function checkAdminPermission() {
+            const currentUser = getCurrentUser();
+            
+            if (!currentUser) {
+                alert('请先登录');
+                window.location.href = '../pages/login.html';
+                return false;
+            }
+            
+            if (currentUser.role !== 'admin') {
+                alert('权限不足，只有管理员才能访问此页面');
+                window.location.href = '../index.html';
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查管理员权限
+            if (!checkAdminPermission()) {
+                return;
+            }
+            
+            // 初始化标签页切换
+            initTabs();
+            
+            // 设置默认日期为今天
+            document.getElementById('addDate').valueAsDate = new Date();
+            
+            // 加载公告数据
+            loadAnnouncements();
+        });
+
+        // 初始化标签页切换
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 更新标签页状态
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 更新内容面板状态
+                    const panels = document.querySelectorAll('.tab-panel');
+                    panels.forEach(panel => {
+                        panel.classList.remove('active');
+                    });
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // 如果切换到编辑标签页，更新公告选择列表
+                    if (tabId === 'edit') {
+                        updateEditSelect();
+                    }
+                });
+            });
+        }
+
+        // 加载公告数据
+        function loadAnnouncements() {
+            fetch(API.baseUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('加载数据失败');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // 确保数据结构正确
+                        if (data.data && Array.isArray(data.data.announcements)) {
+                            announcementsData = data.data;
+                        } else {
+                            announcementsData = { announcements: [] };
+                        }
+                        renderAnnouncementList();
+                        updateEditSelect();
+                        showStatus('success', '公告数据加载成功');
+                    } else {
+                        throw new Error(data.message || '加载数据失败');
+                    }
+                })
+                .catch(error => {
+                    console.error('加载公告数据失败:', error);
+                    showStatus('error', '加载公告数据失败: ' + error.message);
+                    // 重置数据结构，避免后续操作出错
+                    announcementsData = { announcements: [] };
+                    renderAnnouncementList();
+                    updateEditSelect();
+                });
+        }
+
+        // 渲染公告列表
+        function renderAnnouncementList() {
+            const listElement = document.getElementById('announcementList');
+            
+            // 确保 announcements 是数组
+            const announcements = Array.isArray(announcementsData.announcements) ? announcementsData.announcements : [];
+            
+            if (announcements.length === 0) {
+                listElement.innerHTML = '<li style="text-align: center; padding: 50px; color: #7f8c8d;">暂无公告</li>';
+                return;
+            }
+            
+            listElement.innerHTML = '';
+            
+            announcements.forEach(announcement => {
+                const li = document.createElement('li');
+                li.className = 'announcement-item';
+                li.innerHTML = `
+                    <h3>${announcement.title}</h3>
+                    <div class="announcement-item-meta">
+                        <span>ID: ${announcement.id}</span>
+                        <span>类型: ${announcement.type}</span>
+                        <span>作者: ${announcement.author}</span>
+                        <span>日期: ${announcement.created_at}</span>
+                        <span>浏览: ${announcement.views}</span>
+                    </div>
+                    <p>${announcement.summary || '无摘要'}</p>
+                    <div class="announcement-item-actions">
+                        <button class="btn btn-secondary" onclick="editAnnouncement('${announcement.id}')">编辑</button>
+                        <button class="btn btn-danger" onclick="confirmDelete('${announcement.id}')">删除</button>
+                        <button class="btn btn-secondary" onclick="previewAnnouncement('${announcement.id}')">预览</button>
+                    </div>
+                `;
+                listElement.appendChild(li);
+            });
+        }
+
+        // 更新编辑选择列表
+        function updateEditSelect() {
+            const select = document.getElementById('editSelect');
+            select.innerHTML = '<option value="">-- 选择公告 --</option>';
+            
+            // 确保 announcements 是数组
+            const announcements = Array.isArray(announcementsData.announcements) ? announcementsData.announcements : [];
+            
+            announcements.forEach(announcement => {
+                const option = document.createElement('option');
+                option.value = announcement.id;
+                option.textContent = `${announcement.title} (${announcement.id})`;
+                select.appendChild(option);
+            });
+            
+            // 添加选择事件
+            select.onchange = function() {
+                const selectedId = this.value;
+                if (selectedId) {
+                    loadAnnouncementForEdit(selectedId);
+                } else {
+                    document.getElementById('editForm').style.display = 'none';
+                }
+            };
+        }
+
+        // 加载公告用于编辑
+        function loadAnnouncementForEdit(id) {
+            fetch(`${API.baseUrl}?id=${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('加载公告失败');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        const announcement = data.data;
+                        document.getElementById('editId').value = announcement.id;
+                        document.getElementById('editTitle').value = announcement.title;
+                        document.getElementById('editType').value = announcement.type;
+                        document.getElementById('editAuthor').value = announcement.author;
+                        document.getElementById('editDate').value = announcement.created_at;
+                        document.getElementById('editSummary').value = announcement.summary || '';
+                        document.getElementById('editContent').value = announcement.content || '';
+                        document.getElementById('editForm').style.display = 'block';
+                    } else {
+                        throw new Error(data.message || '加载公告失败');
+                    }
+                })
+                .catch(error => {
+                    console.error('加载公告失败:', error);
+                    showStatus('error', '加载公告失败: ' + error.message);
+                });
+        }
+
+        // 编辑公告
+        function editAnnouncement(id) {
+            // 切换到编辑标签页
+            document.querySelector('[data-tab="edit"]').click();
+            // 选择对应的公告
+            document.getElementById('editSelect').value = id;
+            // 触发change事件
+            document.getElementById('editSelect').onchange();
+        }
+
+        // 预览公告
+        function previewAnnouncement(id) {
+            fetch(`${API.baseUrl}?id=${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('加载公告失败');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // 切换到预览标签页
+                        document.querySelector('[data-tab="preview"]').click();
+                        // 设置预览内容
+                        document.getElementById('previewContent').value = data.data.content || '';
+                        previewMarkdown();
+                    } else {
+                        throw new Error(data.message || '加载公告失败');
+                    }
+                })
+                .catch(error => {
+                    console.error('加载公告失败:', error);
+                    showStatus('error', '加载公告失败: ' + error.message);
+                });
+        }
+
+        // 确认删除公告
+        function confirmDelete(id) {
+            if (confirm('确定要删除这个公告吗？此操作不可恢复。')) {
+                deleteAnnouncement(id);
+            }
+        }
+
+        // 删除公告
+        function deleteAnnouncement(id) {
+            fetch(`${API.baseUrl}?id=${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('删除公告失败');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showStatus('success', '公告删除成功');
+                    loadAnnouncements(); // 重新加载数据
+                    document.getElementById('editForm').style.display = 'none';
+                } else {
+                    throw new Error(data.message || '删除公告失败');
+                }
+            })
+            .catch(error => {
+                console.error('删除公告失败:', error);
+                showStatus('error', '删除公告失败: ' + error.message);
+            });
+        }
+
+        // 重置添加表单
+        function resetAddForm() {
+            document.getElementById('addForm').reset();
+            document.getElementById('addDate').valueAsDate = new Date();
+        }
+
+        // 预览Markdown
+        function previewMarkdown() {
+            const markdown = document.getElementById('previewContent').value;
+            const html = marked.parse(markdown || '# 预览效果将显示在这里...');
+            document.getElementById('previewResult').innerHTML = html;
+        }
+
+        // 清空预览
+        function clearPreview() {
+            document.getElementById('previewContent').value = '';
+            document.getElementById('previewResult').innerHTML = '预览效果将显示在这里...';
+        }
+
+        // 显示状态消息
+        function showStatus(type, message, containerId = 'statusMessage') {
+            const messageElement = document.getElementById(containerId);
+            if (messageElement) {
+                messageElement.className = `status-message status-${type}`;
+                messageElement.textContent = message;
+                
+                // 3秒后自动隐藏
+                setTimeout(() => {
+                    messageElement.textContent = '';
+                    messageElement.className = 'status-message';
+                }, 3000);
+            }
+        }
+
+        // 导出数据
+        function exportData() {
+            const dataStr = JSON.stringify(announcementsData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'announcements-backup.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 导入数据
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (importedData.announcements) {
+                            // 这里可以添加导入逻辑
+                            showStatus('info', '数据导入功能暂未实现');
+                        } else {
+                            showStatus('error', '无效的数据格式');
+                        }
+                    } catch (error) {
+                        showStatus('error', '解析数据失败: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // 添加公告表单提交
+        document.getElementById('addForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('addId').value;
+            const title = document.getElementById('addTitle').value;
+            const type = document.getElementById('addType').value;
+            const author = document.getElementById('addAuthor').value;
+            const created_at = document.getElementById('addDate').value;
+            const summary = document.getElementById('addSummary').value;
+            const content = document.getElementById('addContent').value;
+            
+            // 创建请求数据
+            const requestData = {
+                id: id,
+                title: title,
+                type: type,
+                author: author,
+                created_at: created_at,
+                summary: summary,
+                content: content
+            };
+            
+            // 发送请求
+            fetch(API.baseUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('添加公告失败');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showStatus('success', '公告添加成功', 'addStatusMessage');
+                    loadAnnouncements(); // 重新加载数据
+                    resetAddForm();
+                } else {
+                    throw new Error(data.message || '添加公告失败');
+                }
+            })
+            .catch(error => {
+                console.error('添加公告失败:', error);
+                showStatus('error', '添加公告失败: ' + error.message, 'addStatusMessage');
+            });
+        });
+
+        // 编辑公告表单提交
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('editId').value;
+            const title = document.getElementById('editTitle').value;
+            const type = document.getElementById('editType').value;
+            const author = document.getElementById('editAuthor').value;
+            const created_at = document.getElementById('editDate').value;
+            const summary = document.getElementById('editSummary').value;
+            const content = document.getElementById('editContent').value;
+            
+            // 创建请求数据
+            const requestData = {
+                title: title,
+                type: type,
+                author: author,
+                created_at: created_at,
+                summary: summary,
+                content: content
+            };
+            
+            // 发送请求
+            fetch(`${API.baseUrl}?id=${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('更新公告失败');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showStatus('success', '公告更新成功', 'editStatusMessage');
+                    loadAnnouncements(); // 重新加载数据
+                } else {
+                    throw new Error(data.message || '更新公告失败');
+                }
+            })
+            .catch(error => {
+                console.error('更新公告失败:', error);
+                showStatus('error', '更新公告失败: ' + error.message, 'editStatusMessage');
+            });
+        });
+    </script>
+</body>
+</html>

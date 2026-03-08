@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免责声明 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <style>
+        .legal-page {
+            padding: 0;
+        }
+
+        .legal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0 40px;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .legal-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .legal-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .legal-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .legal-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .legal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .legal-section {
+            margin-bottom: 40px;
+        }
+
+        .legal-section h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .legal-section h3 {
+            color: #764ba2;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+
+        .legal-section p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            color: #5a6c7d;
+        }
+
+        .legal-section ul {
+            margin-bottom: 20px;
+            padding-left: 30px;
+        }
+
+        .legal-section li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #5a6c7d;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .back-button:hover::before {
+            left: 100%;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.45);
+            color: white;
+            text-decoration: none !important;
+        }
+
+        .back-button:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        @media (max-width: 768px) {
+            .legal-header {
+                padding: 60px 0 30px;
+            }
+
+            .legal-title {
+                font-size: 1.8rem;
+            }
+
+            .legal-content {
+                padding: 30px 20px;
+            }
+
+            .legal-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .legal-section h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 免责声明页面 -->
+    <div class="legal-page">
+        <!-- 详情头部 -->
+        <div class="legal-header">
+            <div class="container">
+                <h1 class="legal-title">免责声明</h1>
+                <p class="legal-subtitle">了解我们的责任限制和使用条款</p>
+            </div>
+        </div>
+
+        <!-- 详情内容 -->
+        <div class="container">
+            <a href="../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                返回首页
+            </a>
+
+            <div class="legal-content">
+                <div class="legal-section">
+                    <h2>免责声明</h2>
+                    <p>欢迎使用万驹同源Minecraft服务器（以下简称"本服务器"）。本免责声明旨在告知您使用本服务器及相关服务时的权利和义务。请仔细阅读本免责声明，以确保您了解并同意其中的条款。</p>
+                    <p>使用本服务器即表示您已阅读、理解并同意本免责声明的所有条款。如您不同意本免责声明的任何条款，请立即停止使用本服务器。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>一、服务性质</h3>
+                    <p>1.1 本服务器是一个基于Minecraft游戏的多人在线游戏服务器，提供游戏娱乐、社交互动等虚拟服务。</p>
+                    <p>1.2 本服务器提供的所有服务均为娱乐性质，不构成任何商业承诺或保证。</p>
+                    <p>1.3 本服务器有权根据运营需要随时调整、暂停或终止部分或全部服务，无需提前通知。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>二、信息准确性声明</h3>
+                    <p>2.1 本服务器网站及游戏内提供的所有信息、内容和材料均仅供参考，不构成任何形式的保证或承诺。</p>
+                    <p>2.2 我们会尽力确保信息的准确性，但不对因信息错误或遗漏导致的任何损失或损害承担责任。</p>
+                    <p>2.3 游戏数据、玩家统计、服务器状态等信息可能存在延迟或错误，仅供参考。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>三、责任限制</h3>
+                    <p>3.1 在法律允许的最大范围内，本服务器及其管理人员、员工、合作伙伴不承担因使用或无法使用本服务器而导致的任何直接、间接、偶然、特殊或后果性损害。</p>
+                    <p>3.2 上述损害包括但不限于：利润损失、数据丢失、业务中断、游戏进度丢失、虚拟物品损失或其他商业损害或损失。</p>
+                    <p>3.3 本服务器不对因网络连接问题、游戏客户端问题、第三方软件问题等导致的任何损失承担责任。</p>
+                    <p>3.4 玩家应对自己的账号安全负责，因账号被盗、密码泄露等导致的损失，本服务器不承担责任。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>四、游戏数据免责</h3>
+                    <p>4.1 游戏内的所有数据，包括但不限于建筑、物品、经验值、货币等，均属于虚拟财产，不具有现实货币价值。</p>
+                    <p>4.2 本服务器不保证游戏数据的永久保存，可能因服务器维护、版本更新、技术故障等原因导致数据丢失或回滚。</p>
+                    <p>4.3 玩家应定期备份重要的游戏数据，本服务器不对数据丢失承担任何责任。</p>
+                    <p>4.4 因违反服务器规则被处罚（如封禁、物品清除等）导致的数据损失，本服务器不承担责任。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>五、服务器维护免责</h3>
+                    <p>5.1 本服务器可能因维护、升级、技术故障等原因暂停服务，无需提前通知。</p>
+                    <p>5.2 维护期间可能导致服务中断、数据无法访问等问题，本服务器不承担由此造成的任何损失。</p>
+                    <p>5.3 我们会尽力提前通知重大维护计划，但无法保证通知的及时性和准确性。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>六、知识产权声明</h3>
+                    <p>6.1 本服务器网站及游戏内的所有内容，包括但不限于文本、图片、音频、视频、软件、源代码、商标、标志、地图、建筑等，均归本服务器或其相关权利人所有。</p>
+                    <p>6.2 上述内容受中华人民共和国及国际知识产权法律法规的保护。</p>
+                    <p>6.3 未经授权，任何单位或个人不得复制、修改、传播、出版、发行、广播、展示、表演、改编、汇编、翻译或以其他方式使用本服务器的任何内容。</p>
+                    <p>6.4 玩家在游戏内创作的建筑、地图等内容，其知识产权归玩家所有，但玩家同意本服务器有权在合理范围内使用和展示。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>七、第三方插件和组件声明</h3>
+                    <p>7.1 本服务器使用的游戏插件、模组、资源包等第三方组件均来自开源社区或获得相应授权，其知识产权归原开发者或版权所有者所有。</p>
+                    <p>7.2 本服务器尊重第三方开发者的知识产权，使用第三方组件时严格遵守其开源协议或许可条款。</p>
+                    <p>7.3 第三方插件和组件可能存在的技术问题、安全漏洞或功能缺陷，本服务器不承担相应责任，但会尽力及时更新和修复。</p>
+                    <p>7.4 如第三方插件或组件的版权方认为本服务器的使用侵犯了其合法权益，请通过本声明第十一条提供的联系方式与我们联系，我们将及时处理。</p>
+                    <p>7.5 本服务器使用的第三方组件包括但不限于：Minecraft服务器核心插件、游戏机制插件、管理工具、资源包、材质包等。具体组件列表和授权信息可在服务器网站或游戏内查看。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>八、充值服务声明</h3>
+                    <p>8.1 本服务器目前暂不提供任何形式的充值服务或付费服务，所有游戏内容均为免费提供。</p>
+                    <p>8.2 本服务器保留未来开通充值服务的权利，如开通充值服务，将提前通过网站公告、游戏内公告、QQ群等方式通知用户。</p>
+                    <p>8.3 任何声称可以为本服务器提供充值服务的第三方网站或个人均与本服务器无关，请用户注意辨别，谨防上当受骗。</p>
+                    <p>8.4 如发现任何非法充值渠道，请立即通过本声明第十一条提供的联系方式向我们举报，我们将采取相应措施。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>九、链接到其他网站的免责声明</h3>
+                    <p>9.1 本服务器网站可能包含指向第三方网站的链接，这些链接仅为方便用户而提供。</p>
+                    <p>9.2 本服务器不对这些第三方网站的内容、隐私政策或安全性负责，也不认可这些网站上的任何信息、产品或服务。</p>
+                    <p>9.3 访问这些链接的风险由用户自行承担。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>十、未成年人保护</h3>
+                    <p>10.1 未满18周岁的未成年人应在监护人指导下使用本服务器。</p>
+                    <p>10.2 监护人应监督未成年人的使用行为，并对未成年人的使用行为负责。</p>
+                    <p>10.3 如发现未成年人未经监护人同意使用本服务器，我们有权暂停或终止相关服务。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>十一、适用法律和管辖权</h3>
+                    <p>11.1 本免责声明的订立、执行、解释及争议的解决均适用中华人民共和国法律。</p>
+                    <p>11.2 如就本免责声明发生任何争议，应首先通过友好协商解决。</p>
+                    <p>11.3 协商不成的，任何一方均有权将争议提交至本服务器所在地有管辖权的人民法院诉讼解决。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>十二、修改条款的权利</h3>
+                    <p>12.1 本服务器保留随时修改本免责声明的权利，修改后的免责声明将在网站上公布。</p>
+                    <p>12.2 修改后的免责声明自公布之日起生效。</p>
+                    <p>12.3 您继续使用本服务器及相关服务即视为您接受修改后的免责声明。</p>
+                    <p>12.4 重大修改我们会通过网站公告、QQ群等方式提前通知用户。</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>十三、联系我们</h3>
+                    <p>如果您对本免责声明有任何疑问，请通过以下方式联系我们：</p>
+                    <ul>
+                        <li>邮箱：czhdqqyx6044@qq.com</li>
+                        <li>QQ群：569208814</li>
+                        <li>服务器地址：mc.eqmemory.cn</li>
+                    </ul>
+                </div>
+
+                <div class="legal-section">
+                    <h3>十四、生效日期</h3>
+                    <p>本免责声明自2026年2月14日起生效。</p>
+                    <p>本免责声明的最新版本将在本服务器网站上公布，请定期查看以获取最新信息。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <!-- 回到顶部 -->
+    <div id="app-back-to-top"></div>
+
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+
+    <!-- 引入脚本 -->
+    <script src="../js/main.js?v=3.5"></script>
+    <script src="../js/back-to-top.js?v=1.0"></script>
+    <script src="../js/navbar.js?v=1.0"></script>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+</body>
+</html>

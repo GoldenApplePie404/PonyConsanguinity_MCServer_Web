@@ -1,0 +1,103 @@
+{
+    "announcements": [
+        {
+            "id": "v3.5",
+            "title": "万驹同源服务器V3.5版本更新公告",
+            "type": "update",
+            "author": "GoldenApplePie",
+            "created_at": "2026-01-15",
+            "updated_at": "2026-01-15",
+            "views": 0,
+            "content_file": "v3.5.md",
+            "summary": "本次更新增加了全新的生存模式玩法，优化了服务器性能，修复了多个bug。"
+        },
+        {
+            "id": "v3.4",
+            "title": "万驹同源服务器V3.4版本更新公告",
+            "type": "update",
+            "author": "GoldenApplePie",
+            "created_at": "2025-12-28",
+            "updated_at": "2025-12-28",
+            "views": 0,
+            "content_file": "v3.4.md",
+            "summary": "本次更新增加了新的活动系统，优化了经济系统，提升了服务器稳定性。"
+        },
+        {
+            "id": "v3.3",
+            "title": "万驹同源服务器V3.3版本更新公告",
+            "type": "update",
+            "author": "GoldenApplePie",
+            "created_at": "2025-12-15",
+            "updated_at": "2025-12-15",
+            "views": 0,
+            "content_file": "v3.3.md",
+            "summary": "本次更新增加了新的副本系统，优化了技能系统，修复了已知bug。"
+        },
+        {
+            "id": "v3.2",
+            "title": "万驹同源服务器V3.2版本更新公告",
+            "type": "update",
+            "author": "GoldenApplePie",
+            "created_at": "2025-11-30",
+            "updated_at": "2025-11-30",
+            "views": 0,
+            "content_file": "v3.2.md",
+            "summary": "本次更新增加了新的职业系统，优化了战斗系统，提升了服务器性能。"
+        },
+        {
+            "id": "v3.1",
+            "title": "万驹同源服务器V3.1版本更新公告",
+            "type": "update",
+            "author": "GoldenApplePie",
+            "created_at": "2025-11-15",
+            "updated_at": "2025-11-15",
+            "views": 0,
+            "content_file": "v3.1.md",
+            "summary": "本次更新增加了新的任务系统，优化了聊天系统，修复了多个bug。"
+        },
+        {
+            "id": "v3.0",
+            "title": "万驹同源服务器V3.0版本更新公告",
+            "type": "update",
+            "author": "GoldenApplePie",
+            "created_at": "2025-10-30",
+            "updated_at": "2025-10-30",
+            "views": 0,
+            "content_file": "v3.0.md",
+            "summary": "服务器重大更新，全新的游戏体验，更多的玩法内容。"
+        },
+        {
+            "id": "firework",
+            "title": "烟火璀璨映新春 —— \"烟火派对\"除夕夜特别活动",
+            "type": "event",
+            "author": "GoldenApplePie",
+            "created_at": "2025-12-20",
+            "updated_at": "2025-12-20",
+            "views": 0,
+            "content_file": "firework.md",
+            "summary": "除夕夜特别活动，烟火派对，丰厚奖励等你来拿！"
+        },
+        {
+            "id": "hide-and-seek",
+            "title": "万驹同源躲猫猫邀请赛",
+            "type": "event",
+            "author": "GoldenApplePie",
+            "created_at": "2025-11-20",
+            "updated_at": "2025-11-20",
+            "views": 0,
+            "content_file": "hide-and-seek.md",
+            "summary": "躲猫猫邀请赛，展示你的躲藏技巧，赢取精美奖励！"
+        },
+        {
+            "id": "wmbt",
+            "title": "万\"马\"奔腾——新年庆典活动",
+            "type": "event",
+            "author": "GoldenApplePie",
+            "created_at": "2026-02-01",
+            "updated_at": "2026-02-11",
+            "views": 0,
+            "content_file": "wmbt.md",
+            "summary": "新年庆典活动，万马奔腾，多重福利等你来！"
+        }
+    ]
+}
