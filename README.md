@@ -1,6 +1,10 @@
 # 万驹同源服务器官网
 
 <p align="center">
+  <img src="../../assets/img/pc_logo2.png" alt="Pony Consanguinity Logo" class="no-hover" style="max-width: 500px; width: 90%; border-radius: 10px; pointer-events: none;">
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/PHP-8.0+-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP Version">
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3">
@@ -26,14 +30,6 @@
 ## 项目简介
 
 **万驹同源（PonyConsanguinity）官网**是一个专属于万驹同源 Minecraft 服务器官网，致力于为广大玩家提供优质的社区环境，拥有以下功能：
-
-<p align="center">
-  <img src="https://img.shields.io/badge/功能-20+-blue?style=for-the-badge" alt="Features">
-  <img src="https://img.shields.io/badge/页面-20+-green?style=for-the-badge" alt="Pages">
-  <img src="https://img.shields.io/badge/API-24+-orange?style=for-the-badge" alt="APIs">
-  <img src="https://img.shields.io/badge/组件-5+-purple?style=for-the-badge" alt="Components">
-  <img src="https://img.shields.io/badge/代码行数-5000+-red?style=for-the-badge" alt="Lines of Code">
-</p>
 
 - **服务器介绍**：详细的服务器信息和玩法介绍
 - **论坛系统**：支持 Markdown 格式的帖子发布和回复；也包含服务器规则、公告等内容
