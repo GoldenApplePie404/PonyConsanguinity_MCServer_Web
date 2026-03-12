@@ -1,7 +1,6 @@
 <?php
 // ImageUpload.php
 // 图片上传类，封装图片上传相关操作
-
 if (!defined('ACCESS_ALLOWED')) {
     define('ACCESS_ALLOWED', true);
 }
@@ -296,7 +295,7 @@ class ImageUpload {
             return null;
         }
         
-        // 创建源图像
+        // 创建源图像（类型改为GdImage）
         $sourceImage = $this->createImageFromFile($filePath, $extension);
         if (!$sourceImage) {
             return null;
@@ -316,7 +315,7 @@ class ImageUpload {
         
         // 如果需要调整尺寸，或者转换为JPEG，才需要重新创建图像
         if ($needResize || $convertToJpeg) {
-            // 创建目标图像
+            // 创建目标图像（类型改为GdImage）
             $destinationImage = imagecreatetruecolor($newWidth, $newHeight);
             
             // 处理PNG透明度（仅在保持PNG格式时）
@@ -335,19 +334,19 @@ class ImageUpload {
                 $originalWidth, $originalHeight
             );
             
-            // 释放源图像内存
-            imagedestroy($sourceImage);
+            // 移除imagedestroy()：PHP 8.0+ 自动回收GdImage对象内存
+            // imagedestroy($sourceImage);
             
             // 保存压缩后的图片
             $result = $this->saveImage($destinationImage, $filePath, $extension);
             
-            // 释放目标图像内存
-            imagedestroy($destinationImage);
+            // 移除imagedestroy()：PHP 8.0+ 自动回收GdImage对象内存
+            // imagedestroy($destinationImage);
         } else {
             // 不需要调整尺寸，也不需要转换格式，只是质量压缩
             // 对于PNG，直接使用最高压缩级别重新保存
-            // 释放源图像内存（因为我们直接使用文件）
-            imagedestroy($sourceImage);
+            // 移除imagedestroy()：PHP 8.0+ 自动回收GdImage对象内存
+            // imagedestroy($sourceImage);
             
             // 重新加载并保存以应用压缩
             $result = $this->recompressPng($filePath);
@@ -380,14 +379,15 @@ class ImageUpload {
         
         // 保存为最高压缩级别的PNG
         $result = imagepng($image, $filePath, 9);
-        imagedestroy($image);
+        // 移除imagedestroy()：PHP 8.0+ 自动回收GdImage对象内存
+        // imagedestroy($image);
         
         return $result;
     }
     
     /**
      * 检查图像是否有透明度
-     * @param resource $image 图像资源
+     * @param GdImage $image 图像对象（修改类型注解）
      * @return bool
      */
     private function hasTransparency($image) {
@@ -439,10 +439,10 @@ class ImageUpload {
     }
     
     /**
-     * 从文件创建图像资源
+     * 从文件创建图像对象（修改返回值类型注解）
      * @param string $filePath 文件路径
      * @param string $extension 文件扩展名
-     * @return resource|false
+     * @return GdImage|false
      */
     private function createImageFromFile($filePath, $extension) {
         switch ($extension) {
@@ -461,8 +461,8 @@ class ImageUpload {
     }
     
     /**
-     * 保存图像到文件
-     * @param resource $image 图像资源
+     * 保存图像到文件（修改参数类型注解）
+     * @param GdImage $image 图像对象
      * @param string $filePath 文件路径
      * @param string $extension 文件扩展名
      * @return bool
