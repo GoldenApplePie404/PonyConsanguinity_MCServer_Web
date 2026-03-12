@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最新公告 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.19">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <style>
+        /* ========== Banner背景美化 ========== */
+        .subpage-banner {
+            min-height: 320px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        /* 动态渐变背景 */
+        .subpage-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, 
+                    rgba(102, 126, 234, 0.4) 0%, 
+                    rgba(118, 75, 162, 0.3) 25%, 
+                    rgba(240, 147, 251, 0.2) 50%, 
+                    rgba(79, 172, 254, 0.3) 75%, 
+                    rgba(102, 126, 234, 0.4) 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* 动态光束效果 */
+        .subpage-banner-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 30%, rgba(240, 147, 251, 0.3) 0%, transparent 45%),
+                radial-gradient(ellipse at 40% 80%, rgba(79, 172, 254, 0.35) 0%, transparent 55%),
+                radial-gradient(ellipse at 70% 70%, rgba(118, 75, 162, 0.3) 0%, transparent 40%);
+            animation: lightBeamMove 12s ease-in-out infinite;
+        }
+
+        @keyframes lightBeamMove {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            25% {
+                transform: translate(10px, -10px) scale(1.1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-5px, 5px) scale(0.95);
+                opacity: 0.9;
+            }
+            75% {
+                transform: translate(5px, 10px) scale(1.05);
+                opacity: 0.85;
+            }
+        }
+
+        /* 粒子系统 */
+        .subpage-banner-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+                radial-gradient(circle, rgba(102, 126, 234, 0.04) 2px, transparent 2px),
+                radial-gradient(circle, rgba(240, 147, 251, 0.03) 1.5px, transparent 1.5px);
+            background-size: 60px 60px, 100px 100px, 80px 80px;
+            background-position: 0 0, 30px 30px, 15px 45px;
+            animation: particleFloat 40s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(-40px) translateX(-5px);
+            }
+            75% {
+                transform: translateY(-60px) translateX(15px);
+            }
+            100% {
+                transform: translateY(-80px) translateX(0);
+            }
+        }
+
+        /* 漂浮的几何图形 */
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(240, 147, 251, 0.1));
+            backdrop-filter: blur(2px);
+            animation: floatShape 20s ease-in-out infinite;
+        }
+
+        .floating-shape:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .floating-shape:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 60%;
+            left: 85%;
+            animation-delay: 3s;
+            animation-duration: 22s;
+        }
+
+        .floating-shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 30%;
+            left: 90%;
+            animation-delay: 6s;
+            animation-duration: 16s;
+        }
+
+        .floating-shape:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            top: 70%;
+            left: 10%;
+            animation-delay: 9s;
+            animation-duration: 20s;
+        }
+
+        @keyframes floatShape {
+            0%, 100% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.6;
+            }
+            25% {
+                transform: translateY(-30px) translateX(20px) rotate(90deg);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-20px) translateX(-15px) rotate(180deg);
+                opacity: 0.5;
+            }
+            75% {
+                transform: translateY(-40px) translateX(10px) rotate(270deg);
+                opacity: 0.7;
+            }
+        }
+
+        /* 光晕闪烁效果 */
+        .glow-pulse {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+            animation: glowPulse 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .glow-pulse:nth-child(1) {
+            top: -100px;
+            left: -50px;
+            animation-delay: 0s;
+        }
+
+        .glow-pulse:nth-child(2) {
+            top: -50px;
+            right: -100px;
+            animation-delay: 4s;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.8;
+            }
+        }
+
+        /* 网格线效果 */
+        .grid-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(102, 126, 234, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102, 126, 234, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 30s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: perspective(500px) rotateX(60deg) translateY(0);
+            }
+            100% {
+                transform: perspective(500px) rotateX(60deg) translateY(50px);
+            }
+        }
+
+        /* Banner内容样式 */
+        .subpage-banner-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            color: white;
+            padding: 2.5rem 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 320px;
+        }
+
+        .subpage-banner-content.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .subpage-banner-title {
+            font-size: clamp(2.2rem, 5.5vw, 3.2rem);
+            font-weight: 900;
+            margin-bottom: 1.2rem;
+            font-family: 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+            color: #ffffff;
+            text-shadow: 
+                0 2px 10px rgba(0, 0, 0, 0.4),
+                0 4px 20px rgba(102, 126, 234, 0.4),
+                0 8px 40px rgba(118, 75, 162, 0.3);
+            letter-spacing: 3px;
+            animation: titleGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                text-shadow: 
+                    0 2px 10px rgba(0, 0, 0, 0.4),
+                    0 4px 20px rgba(102, 126, 234, 0.4),
+                    0 8px 40px rgba(118, 75, 162, 0.3);
+            }
+            50% {
+                text-shadow: 
+                    0 2px 10px rgba(0, 0, 0, 0.4),
+                    0 6px 30px rgba(102, 126, 234, 0.6),
+                    0 10px 50px rgba(118, 75, 162, 0.5),
+                    0 15px 60px rgba(240, 147, 251, 0.3);
+            }
+        }
+
+        .subpage-banner-subtitle {
+            font-size: clamp(1.1rem, 2.8vw, 1.4rem);
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            animation: subtitleFade 5s ease-in-out infinite;
+            position: relative;
+            display: inline-block;
+        }
+
+        .subpage-banner-subtitle::before,
+        .subpage-banner-subtitle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+        }
+
+        .subpage-banner-subtitle::before {
+            left: -60px;
+        }
+
+        .subpage-banner-subtitle::after {
+            right: -60px;
+        }
+
+        @keyframes subtitleFade {
+            0%, 100% {
+                opacity: 0.95;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-2px);
+            }
+        }
+
+        /* 页面加载动画 */
+        .announcement-page {
+            padding: 40px 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            animation: fadeInPage 0.8s ease-out;
+        }
+
+        @keyframes fadeInPage {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .announcement-list {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .announcement-item {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .announcement-item > * {
+            width: 100%;
+        }
+
+        .announcement-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            z-index: 1;
+            border-radius: 20px 0 0 20px;
+        }
+
+        .announcement-item::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            right: -100%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.12) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .announcement-item:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 12px 36px rgba(102, 126, 234, 0.15);
+            border-color: rgba(102, 126, 234, 0.12);
+        }
+
+        .announcement-item:hover::after {
+            opacity: 1;
+        }
+
+        .announcement-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .announcement-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            flex: 1;
+            min-width: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .announcement-meta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .announcement-type {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .announcement-type.update {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .announcement-type.update::before {
+            margin-right: 4px;
+        }
+
+        .announcement-type.event {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(240, 147, 251, 0.3);
+        }
+
+        .announcement-type.event::before {
+            margin-right: 4px;
+        }
+
+        .announcement-type.notice {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(79, 172, 254, 0.3);
+        }
+
+        .announcement-type.notice::before {
+            margin-right: 4px;
+        }
+
+        .announcement-date {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .announcement-date::before {
+            content: '📅';
+            font-size: 0.9rem;
+        }
+
+        .announcement-content {
+            color: #5a6c7d;
+            line-height: 1.85;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            font-size: 1rem;
+            padding: 16px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 14px;
+            border-left: 3px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .announcement-content p {
+            margin: 0;
+        }
+
+        .announcement-actions {
+            display: flex;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .announcement-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 24px;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+            letter-spacing: 0.6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .announcement-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .announcement-link:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 28px rgba(102, 126, 234, 0.45);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .announcement-link:hover::before {
+            left: 100%;
+        }
+
+        .announcement-link::after {
+            display: none;
+        }
+
+        /* 淡入动画 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 分页样式 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            border-radius: 24px;
+            background: #f8f9fa;
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 44px;
+            font-size: 0.9rem;
+            letter-spacing: 0.4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 18px rgba(102, 126, 234, 0.25);
+        }
+
+        .pagination-btn:active:not(:disabled) {
+            transform: translateY(0) scale(0.95);
+        }
+
+        .pagination-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 18px rgba(102, 126, 234, 0.3);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #e9ecef;
+            border-color: #dee2e6;
+            color: #adb5bd;
+        }
+
+        /* 返回论坛按钮样式 */
+        .back-to-forum {
+            position: fixed;
+            right: 20px;
+            bottom: 90px;
+            z-index: 999;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .back-to-forum-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            box-shadow: 0 5px 18px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-to-forum-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: rotate(45deg);
+            transition: left 0.7s;
+            left: -100%;
+        }
+
+        .back-to-forum-btn:hover {
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 7px 24px rgba(102, 126, 234, 0.5);
+        }
+
+        .back-to-forum-btn:hover::before {
+            left: 100%;
+        }
+
+        .back-to-forum-btn:active {
+            transform: scale(0.95);
+        }
+
+        .back-to-forum-btn .icon {
+            position: relative;
+            z-index: 1;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-forum-btn .icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .announcement-page {
+                padding: 20px 0;
+            }
+
+            .announcement-item {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+
+            .announcement-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .announcement-title {
+                font-size: 1.3rem;
+            }
+
+            .announcement-meta {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+
+            .announcement-content {
+                padding: 14px;
+                font-size: 0.95rem;
+            }
+
+            .announcement-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .announcement-link {
+                width: 100%;
+                justify-content: center;
+                padding: 10px 20px;
+            }
+
+            .back-to-forum {
+                right: 16px;
+                bottom: 70px;
+            }
+
+            .back-to-forum-btn {
+                width: 46px;
+                height: 46px;
+            }
+
+            .pagination {
+                gap: 8px;
+            }
+
+            .pagination-btn {
+                padding: 8px 16px;
+                min-width: 38px;
+                font-size: 0.85rem;
+            }
+
+            .subpage-banner {
+                min-height: 260px;
+            }
+
+            .subpage-banner-content {
+                min-height: 260px;
+                padding: 2rem 0;
+            }
+
+            .subpage-banner-title {
+                font-size: clamp(1.8rem, 4.5vw, 2.2rem);
+                letter-spacing: 2px;
+            }
+
+            .subpage-banner-subtitle {
+                font-size: clamp(1rem, 2.5vw, 1.2rem);
+                letter-spacing: 3px;
+            }
+
+            .subpage-banner-subtitle::before,
+            .subpage-banner-subtitle::after {
+                width: 30px;
+            }
+
+            .subpage-banner-subtitle::before {
+                left: -45px;
+            }
+
+            .subpage-banner-subtitle::after {
+                right: -45px;
+            }
+
+            .floating-shape {
+                display: none;
+            }
+        }
+
+        /* 错误消息样式 */
+        .error-message {
+            text-align: center;
+            padding: 60px 30px;
+            color: #7f8c8d;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .error-message p {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #5a6c7d;
+        }
+
+        /* 空消息样式 */
+        .empty-message {
+            text-align: center;
+            padding: 60px 30px;
+            color: #7f8c8d;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .empty-message p {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #5a6c7d;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+
+</head>
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 返回论坛按钮 -->
+    <div class="back-to-forum">
+        <button class="back-to-forum-btn" onclick="window.location.href='forum.html'">
+            <span class="icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </span>
+        </button>
+    </div>
+
+    <!-- 公告Banner区域 -->
+    <section class="subpage-banner">
+        <div class="subpage-banner-bg"></div>
+        <div class="subpage-banner-particles"></div>
+        
+        <!-- 漂浮的几何图形 -->
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        
+        <!-- 光晕闪烁效果 -->
+        <div class="glow-pulse"></div>
+        <div class="glow-pulse"></div>
+        
+        <div class="container">
+            <div class="subpage-banner-content">
+                <h1 class="subpage-banner-title">最新公告</h1>
+                <p class="subpage-banner-subtitle">实时动态 · 版本更新 · 活动预告</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 公告内容区 -->
+    <div class="section announcement-page">
+        <div class="container">
+            <div class="announcement-list" id="announcement-list">
+                <!-- 动态生成公告列表 -->
+            </div>
+            
+            <!-- 分页控件 -->
+            <div class="pagination" id="pagination">
+                <!-- 动态生成分页按钮 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.4"></script>
+
+    <!-- ========== Sidebar音乐播放器（模块化版本）========== -->
+
+
+
+    <!-- 导航栏 -->
+    <script src="../js/navbar.js?v=1.0"></script>
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+
+    <!-- 公告列表动态加载和分页 -->
+    <script>
+        // 配置参数
+        const CONFIG = {
+            itemsPerPage: 5, // 每页显示的公告数量
+            jsonUrl: '../data/announcements.json' // 公告数据文件路径
+        };
+
+        let announcements = [];
+        let currentPage = 1;
+
+        // 初始化页面
+        async function initPage() {
+            try {
+                // 加载公告数据
+                const response = await fetch(CONFIG.jsonUrl);
+                const data = await response.json();
+                
+                if (data && data.announcements) {
+                    // 确保 announcements 是数组
+                    let announcementsArray = data.announcements;
+                    if (!Array.isArray(announcementsArray)) {
+                        // 如果是对象，转换为数组
+                        const tempArray = [];
+                        for (let key in announcementsArray) {
+                            if (announcementsArray.hasOwnProperty(key) && typeof announcementsArray[key] === 'object') {
+                                tempArray.push(announcementsArray[key]);
+                            }
+                        }
+                        announcementsArray = tempArray;
+                    }
+                    
+                    // 按创建时间倒序排序
+                    announcements = announcementsArray.sort((a, b) => {
+                        return new Date(b.created_at) - new Date(a.created_at);
+                    });
+                    
+                    // 渲染第一页
+                    renderAnnouncements(1);
+                    // 生成分页控件
+                    generatePagination();
+                }
+            } catch (error) {
+                console.error('加载公告数据失败:', error);
+                document.getElementById('announcement-list').innerHTML = `
+                    <div class="error-message">
+                        <div class="error-icon">⚠️</div>
+                        <p>加载公告失败，请稍后重试</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 渲染公告列表
+        function renderAnnouncements(page) {
+            const listContainer = document.getElementById('announcement-list');
+            listContainer.innerHTML = '';
+
+            const startIndex = (page - 1) * CONFIG.itemsPerPage;
+            const endIndex = startIndex + CONFIG.itemsPerPage;
+            const pageAnnouncements = announcements.slice(startIndex, endIndex);
+
+            if (pageAnnouncements.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-message">
+                        <div class="empty-icon">📭</div>
+                        <p>当前页没有公告</p>
+                    </div>
+                `;
+                return;
+            }
+
+            pageAnnouncements.forEach((announcement, index) => {
+                const announcementItem = document.createElement('div');
+                announcementItem.className = `announcement-item fade-in`;
+                
+                // 根据类型获取对应的class
+                let typeClass = '';
+                let typeText = '';
+                
+                switch (announcement.type) {
+                    case 'update':
+                        typeClass = 'update';
+                        typeText = '版本更新';
+                        break;
+                    case 'event':
+                        typeClass = 'event';
+                        typeText = '活动';
+                        break;
+                    default:
+                        typeClass = 'notice';
+                        typeText = '通知';
+                }
+
+                // 截断摘要，如果没有摘要则使用标题
+                let summary = announcement.summary || announcement.title;
+                if (summary.length > 120) {
+                    summary = summary.substring(0, 120) + '...';
+                }
+
+                announcementItem.innerHTML = `
+                    <div class="announcement-header">
+                        <h2 class="announcement-title">${announcement.title}</h2>
+                        <div class="announcement-meta">
+                            <span class="announcement-type ${typeClass}">${typeText}</span>
+                            <span class="announcement-date">${announcement.created_at}</span>
+                        </div>
+                    </div>
+                    <div class="announcement-content">
+                        <p>${summary}</p>
+                    </div>
+                    <div class="announcement-actions">
+                        <a href="announcement-detail.html?id=${announcement.id}" class="announcement-link">查看详情 →</a>
+                    </div>
+                `;
+
+                listContainer.appendChild(announcementItem);
+
+                // 添加交错淡入动画延迟
+                announcementItem.style.animationDelay = `${index * 0.1}s`;
+            });
+        }
+
+        // 生成分页控件
+        function generatePagination() {
+            const paginationContainer = document.getElementById('pagination');
+            paginationContainer.innerHTML = '';
+
+            const totalPages = Math.ceil(announcements.length / CONFIG.itemsPerPage);
+            
+            if (totalPages <= 1) {
+                return; // 只有一页时不显示分页
+            }
+
+            // 上一页按钮
+            const prevButton = document.createElement('button');
+            prevButton.className = 'pagination-btn';
+            prevButton.textContent = '上一页';
+            prevButton.disabled = currentPage === 1;
+            
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderAnnouncements(currentPage);
+                    generatePagination();
+                }
+            });
+            
+            paginationContainer.appendChild(prevButton);
+
+            // 页码按钮
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = 'pagination-btn';
+                pageButton.textContent = i;
+                if (i === currentPage) {
+                    pageButton.classList.add('active');
+                }
+                
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    renderAnnouncements(currentPage);
+                    generatePagination();
+                });
+                
+                paginationContainer.appendChild(pageButton);
+            }
+
+            // 下一页按钮
+            const nextButton = document.createElement('button');
+            nextButton.className = 'pagination-btn';
+            nextButton.textContent = '下一页';
+            nextButton.disabled = currentPage === totalPages;
+            
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderAnnouncements(currentPage);
+                    generatePagination();
+                }
+            });
+            
+            paginationContainer.appendChild(nextButton);
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化公告页面
+            initPage();
+            
+            // 添加banner动画
+            setTimeout(() => {
+                const bannerContent = document.querySelector('.subpage-banner-content');
+                if (bannerContent) {
+                    bannerContent.classList.add('animate-in');
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

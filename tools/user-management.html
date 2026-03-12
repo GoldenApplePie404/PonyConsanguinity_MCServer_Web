@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <link rel="stylesheet" href="../css/modal.css?v=1.0">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <style>
+        .user-management {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        
+        .user-management h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-family: 'Mojangles', 'SimSun', 'STSong', '宋体', sans-serif;
+            font-size: 2rem;
+        }
+        
+        .user-search {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .user-search input {
+            flex: 1;
+            min-width: 300px;
+            padding: 10px 15px;
+            border: 2px solid #e8ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .user-search button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .user-table th,
+        .user-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e8ecef;
+        }
+        
+        .user-table th {
+            background: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+            font-family: 'Mojangles', 'SimSun', 'STSong', '宋体', sans-serif;
+            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .user-table tr {
+            transition: none;
+        }
+        
+        .user-table tr:hover {
+            background-color: transparent !important;
+            background: transparent !important;
+        }
+        
+        .user-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .user-actions button {
+            padding: 4px 12px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+        }
+        
+        .user-modal .modal-content {
+            max-width: 600px;
+        }
+        
+        .user-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .user-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-info-item label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .user-info-item span {
+            font-size: 1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .pagination button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .pagination button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        @media (max-width: 768px) {
+            .user-management {
+                padding: 10px;
+            }
+            
+            .user-search input {
+                min-width: 100%;
+            }
+            
+            .user-table {
+                font-size: 0.85rem;
+            }
+            
+            .user-table th,
+            .user-table td {
+                padding: 8px 12px;
+            }
+            
+            .user-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-components="backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 用户管理内容 -->
+    <div class="section">
+        <div style="width: 100%; max-width: 100%;">
+            <div class="user-management">
+                <h1>👥 用户管理</h1>
+                
+                <!-- 用户表格 -->
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户名</th>
+                            <th>邮箱</th>
+                            <th>角色</th>
+                            <th>邮箱验证</th>
+                            <th>积分</th>
+                            <th>注册时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body">
+                        <!-- 用户数据将在这里动态生成 -->
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 40px;">
+                                <div style="display: flex; flex-direction: column; align-items: center;">
+                                    <div style="font-size: 3rem; margin-bottom: 10px;">⏳</div>
+                                    <p>加载用户数据中...</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- 分页控件 -->
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 用户详情模态框 -->
+    <div class="modal user-modal" id="user-detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>用户详情</h2>
+                <button class="modal-close" onclick="closeModal('user-detail-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="user-detail-content">
+                    <!-- 用户详情将在这里动态生成 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('user-detail-modal')">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        // 全局变量
+        let currentPage = 1;
+        const usersPerPage = 10;
+        let allUsers = [];
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminPermission();
+            loadUsers();
+        });
+
+        // 检查管理员权限
+        function checkAdminPermission() {
+            const currentUser = getCurrentUser();
+            if (!currentUser || currentUser.role !== 'admin') {
+                showToast('无权限访问此页面', 'error');
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 1500);
+            }
+        }
+
+        // 加载用户列表
+        async function loadUsers() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    showToast('请先登录', 'error');
+                    setTimeout(() => {
+                        window.location.href = '../login.html';
+                    }, 1500);
+                    return;
+                }
+                
+                const response = await fetch('../api/user_manager.php?action=list', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    allUsers = result.data.users || [];
+                    currentPage = 1;
+                    displayUsers();
+                    generatePagination();
+                } else {
+                    showToast('加载用户失败', 'error');
+                    console.error('加载用户失败:', result.message);
+                    // 使用模拟数据
+                    useMockData();
+                }
+            } catch (error) {
+                console.error('加载用户失败:', error);
+                showToast('加载用户失败，请重试', 'error');
+                // 使用模拟数据
+                useMockData();
+            }
+        }
+
+        // 使用模拟数据
+        function useMockData() {
+            allUsers = [
+                {
+                    id: 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
+                    username: 'GoldenApplePie',
+                    email: '2928433540@qq.com',
+                    role: 'admin',
+                    email_verified: true,
+                    points: 60,
+                    registered_at: '2026-03-01 07:57:21',
+                    last_login: '2026-03-11 12:00:00'
+                },
+                {
+                    id: '990606f8-ccf1-44ba-8cfc-873401672d65',
+                    username: '金苹果派',
+                    email: 'czhdqqyx6044@qq.com',
+                    role: 'user',
+                    email_verified: true,
+                    points: 10,
+                    registered_at: '2026-03-08 21:22:52',
+                    last_login: '2026-03-08 21:32:30'
+                }
+            ];
+            displayUsers();
+            generatePagination();
+        }
+
+        // 显示用户列表
+        function displayUsers() {
+            const tableBody = document.getElementById('user-table-body');
+            if (!tableBody) return;
+
+            // 计算当前页的用户
+            const startIndex = (currentPage - 1) * usersPerPage;
+            const endIndex = startIndex + usersPerPage;
+            const currentUsers = allUsers.slice(startIndex, endIndex);
+
+            if (currentUsers.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px;">
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <div style="font-size: 3rem; margin-bottom: 10px;">🔍</div>
+                                <p>未找到用户</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // 生成用户行
+            const userRows = currentUsers.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <span style="padding: 4px 8px; border-radius: 4px; background: ${user.role === 'admin' ? '#f8d7da' : '#d1ecf1'}; color: ${user.role === 'admin' ? '#721c24' : '#0c5460'};">
+                            ${user.role === 'admin' ? '管理员' : '普通用户'}
+                        </span>
+                    </td>
+                    <td>
+                        <span style="padding: 4px 8px; border-radius: 4px; background: ${user.email_verified ? '#d4edda' : '#f8d7da'}; color: ${user.email_verified ? '#155724' : '#721c24'};">
+                            ${user.email_verified ? '已验证' : '未验证'}
+                        </span>
+                    </td>
+                    <td>${user.points}</td>
+                    <td>${user.registered_at}</td>
+                    <td>
+                        <div class="user-actions">
+                            <button class="btn btn-sm btn-primary" onclick="viewUserDetail('${user.id}')">查看</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            tableBody.innerHTML = userRows;
+        }
+
+        // 生成分页控件
+        function generatePagination() {
+            const paginationContainer = document.getElementById('pagination');
+            if (!paginationContainer) return;
+
+            const totalPages = Math.ceil(allUsers.length / usersPerPage);
+            
+            if (totalPages <= 1) {
+                paginationContainer.innerHTML = '<p style="color: #666; text-align: center;">共 1 页</p>';
+                return;
+            }
+
+            let paginationHTML = '<div style="display: flex; justify-content: center; align-items: center; gap: 5px;">';
+            
+            // 上一页按钮
+            if (currentPage > 1) {
+                paginationHTML += `<button class="btn btn-sm btn-outline" onclick="changePage(${currentPage - 1})">&laquo; 上一页</button>`;
+            }
+            
+            // 页码按钮
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, startPage + 4);
+            
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<button class="btn btn-sm active">${i}</button>`;
+                } else {
+                    paginationHTML += `<button class="btn btn-sm btn-outline" onclick="changePage(${i})">${i}</button>`;
+                }
+            }
+            
+            // 下一页按钮
+            if (currentPage < totalPages) {
+                paginationHTML += `<button class="btn btn-sm btn-outline" onclick="changePage(${currentPage + 1})")">下一页 &raquo;</button>`;
+            }
+            
+            paginationHTML += '</div>';
+            paginationHTML += `<p style="margin-top: 10px; color: #666; text-align: center;">共 ${totalPages} 页，当前第 ${currentPage} 页</p>`;
+            
+            paginationContainer.innerHTML = paginationHTML;
+        }
+
+        // 切换页码
+        function changePage(page) {
+            currentPage = page;
+            displayUsers();
+            generatePagination();
+        }
+
+        // 查看用户详情
+        function viewUserDetail(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            const detailContent = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h3>${user.username}</h3>
+                    <p style="color: #666;">${user.role === 'admin' ? '管理员' : '普通用户'}</p>
+                </div>
+                <div class="user-info-grid">
+                    <div class="user-info-item">
+                        <label>用户ID</label>
+                        <span>${user.id}</span>
+                    </div>
+                    <div class="user-info-item">
+                        <label>邮箱</label>
+                        <span>${user.email}</span>
+                    </div>
+                    <div class="user-info-item">
+                        <label>邮箱验证</label>
+                        <span style="color: ${user.email_verified ? '#28a745' : '#dc3545'}">
+                            ${user.email_verified ? '已验证' : '未验证'}
+                        </span>
+                    </div>
+                    <div class="user-info-item">
+                        <label>积分</label>
+                        <span>${user.points}</span>
+                    </div>
+                    <div class="user-info-item">
+                        <label>注册时间</label>
+                        <span>${user.registered_at}</span>
+                    </div>
+                    <div class="user-info-item">
+                        <label>最后登录</label>
+                        <span>${user.last_login || '从未登录'}</span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('user-detail-content').innerHTML = detailContent;
+            openModal('user-detail-modal');
+        }
+    </script>
+
+    <!-- 主脚本 -->
+    <script src="../js/main.js?v=3.5"></script>
+
+    <!-- 回到顶部 -->
+    <div id="app-back-to-top"></div>
+    <script src="../js/back-to-top.js?v=1.0"></script>
+    
+    <!-- 组件加载器 -->
+    <script src="../components/loader.js?v=3.0"></script>
+    
+    <!-- 导航栏 -->
+    <script src="../js/navbar.js?v=1.0"></script>
+
+</body>
+</html>

@@ -1,0 +1,3061 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 万驹同源 | Minecraft 服务器官网</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.18">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+        }
+
+        /* 邮箱验证提示条 */
+        .email-verification-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
+        .alert-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .alert-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .alert-message {
+            flex: 1;
+            font-size: 14px;
+            color: #721c24;
+        }
+
+        .alert-message strong {
+            display: block;
+            font-weight: bold;
+        }
+
+        .alert-message span {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .btn-primary:disabled::before {
+            display: none;
+        }
+
+        /* 签到按钮特殊样式*/
+        .btn-checkin {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+            justify-content: center;
+            padding: 10px 80px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 2px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-checkin:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-checkin:disabled {
+            border-color: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-checkin.checkin-success {
+            border-color: #28a745;
+            color: #28a745;
+        }
+
+        .btn-checkin.checkin-success:hover {
+            background: #28a745;
+            color: white;
+        }
+
+        #checkinBtn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .checkin-icon {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        #checkinBtn:hover .checkin-icon {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        #checkinBtn:disabled .checkin-icon {
+            opacity: 0.6;
+        }
+
+        /* 签到按钮脉冲动画 */
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 25px rgba(102, 126, 234, 0.7), 0 0 30px rgba(118, 75, 162, 0.4);
+            }
+        }
+
+        #checkinBtn:not(:disabled) {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* 签到按钮成功状态 */
+        #checkinBtn.checkin-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+        }
+
+        #checkinBtn.checkin-success .checkin-icon {
+            animation: check-bounce 0.5s ease;
+        }
+
+        @keyframes check-bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.3);
+            color: #721c24;
+            border: 1px solid rgba(114, 28, 36, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 邮箱验证状态样式 */
+        .verification-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .verification-status.verified {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .verification-status.unverified {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .alert-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .alert-actions {
+                align-self: flex-end;
+            }
+        }
+
+        .profile-container {
+            padding: 40px 0;
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+
+        .profile-sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .user-card {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .user-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border: 3px solid #d3d3d3;
+        }
+
+        .user-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .user-role {
+            display: inline-block;
+            padding: 5px 15px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+
+        .user-role.admin {
+            background: #e74c3c;
+        }
+
+        .user-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box-small {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .stat-box-small .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-box-small .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* 背包样式 */
+        .inventory-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .inventory-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .inventory-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .inventory-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s ease;
+        }
+
+        .inventory-item:hover {
+            background: #e9ecef;
+            transform: translateX(3px);
+        }
+
+        .inventory-item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .inventory-item-icon {
+            font-size: 1.3rem;
+        }
+
+        .inventory-item-name {
+            font-size: 0.9rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .inventory-item-count {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .inventory-empty {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* BUFF样式 */
+        .buff-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .buff-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .buff-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .buff-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .buff-item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .buff-item-icon {
+            font-size: 1.3rem;
+        }
+
+        .buff-item-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .buff-item-time {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .buff-empty {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* 背包网格布局 */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .inventory-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .inventory-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .inventory-card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .inventory-card-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .inventory-card-count {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .inventory-grid .inventory-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 1rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        /* 等级进度条样式 */
+        .level-progress-container {
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .level-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .level-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4CAF50;
+        }
+
+        .exp-text {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .level-progress-bg {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .level-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+            position: relative;
+        }
+
+        .level-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* 积分框增强样式 */
+        .stat-box-small {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box-small:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #4CAF50;
+        }
+
+        .stat-icon-small {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stat-box-small .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 3px;
+            color: #333;
+        }
+
+        .stat-box-small .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .menu-list {
+            list-style: none;
+        }
+
+        .menu-list li {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .menu-list li:last-child {
+            border-bottom: none;
+            text-decoration: none;
+        }
+
+        .menu-list a {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s;
+        }
+
+        .menu-list a:hover {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .profile-main {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .profile-tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            position: relative;
+        }
+
+        .profile-tab.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .profile-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-card {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #666;
+        }
+
+        .info-value {
+            font-weight: bold;
+        }
+
+        .admin-panel {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .admin-panel h3 {
+            color: #343a40;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-panel h3::before {
+            content: '🛠️';
+            font-size: 1.4rem;
+        }
+
+        .admin-panel p {
+            color: #6c757d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .admin-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .admin-btn {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .admin-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .admin-btn:hover {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .admin-btn:hover::before {
+            left: 100%;
+        }
+
+        .admin-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .admin-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .achievement-item {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .achievement-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .achievement-date {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ranking-table th {
+            background: var(--dark-bg);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .ranking-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .rank-1 {
+            background: #fff8e1;
+        }
+
+        .rank-2 {
+            background: #f5f5f5;
+        }
+
+        .rank-3 {
+            background: #fafafa;
+        }
+
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.25);
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .logout-btn:hover {
+            text-decoration: none;
+            background: linear-gradient(135deg, #ff5252 0%, #e04848 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        .logout-btn:hover::before {
+            left: 100%;
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
+        }
+
+        .delete-account-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.25);
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .delete-account-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .delete-account-btn:hover {
+            background: linear-gradient(135deg, #c82333 0%, #a71d2a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+            text-decoration: none;
+        }
+
+        .delete-account-btn:hover::before {
+            left: 100%;
+        }
+
+        .delete-account-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+        }
+
+        .notification-item {
+            background: #f8f8f8;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .notification-item.unread {
+            background: #f0f4ff;
+            border-left-color: var(--primary-color);
+        }
+
+        .notification-item.read {
+            background: #f9f9f9;
+            border-left-color: #ccc;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .notification-header h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .notification-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .notification-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .notification-content {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding: 20px 0;
+        }
+
+        .pagination button {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            transform: translateY(0);
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .pagination button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination button:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(102, 126, 234, 0.3);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination .page-info {
+            color: #666;
+            font-size: 14px;
+        }
+
+        #notification-message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        #notification-message.error {
+            background: #fee;
+            color: #c33;
+        }
+
+        #notification-message.success {
+            background: #efe;
+            color: #3c3;
+        }
+
+        @media (max-width: 768px) {
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js?v=1.0"></script>
+    <script src="../js/main.js?v=3.3"></script>
+
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <div class="container profile-container">
+
+        <div style="height: 80px;"></div>
+        <!-- 邮箱验证提示条 -->
+        <div id="emailVerificationAlert"></div>
+        <div class="profile-layout">
+            <aside class="profile-sidebar">
+                <div class="user-card">
+                    <div class="user-avatar-large">
+                        <img src="../assets/img/user.png" alt="用户头像"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto;">
+                    </div>
+                    <div class="user-name" id="profile-username">玩家名称</div>
+                    <span class="user-role" id="profile-role">普通用户</span>
+
+                    <!-- 等级进度条 -->
+                    <div class="level-progress-container">
+                        <div class="level-info">
+                            <span class="level-text">等级 <span id="headerLevel">-</span></span>
+                            <span class="exp-text" id="levelProgressText">0/0</span>
+                        </div>
+                        <div class="level-progress-bg">
+                            <div class="level-progress-bar" id="levelProgressBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="user-stats-grid">
+                        <div class="stat-box-small">
+                            <div class="stat-value" id="statLevel">-</div>
+                            <div class="stat-label">等级</div>
+                        </div>
+                        <div class="stat-box-small">
+                            <div class="stat-value" id="headerPoints">-</div>
+                            <div class="stat-label">积分</div>
+                        </div>
+                    </div>
+
+                    
+
+                </div>
+
+                <ul class="menu-list">
+                    <li><a href="#" onclick="logout()" class="logout-btn">退出登录</a></li>
+                    <li><a href="#" onclick="confirmDeleteAccount()" class="delete-account-btn">注销账户</a></li>
+
+                </ul>
+            </aside>
+
+            <main class="profile-main">
+                <h2 style="margin-bottom: 20px;">个人中心</h2>
+
+                <div class="profile-tabs">
+                    <button class="profile-tab active" onclick="switchProfileTab('overview')">概览</button>
+                    <button class="profile-tab" onclick="switchProfileTab('profile')">个人信息</button>
+                    <button class="profile-tab" onclick="switchProfileTab('inventory')">我的背包</button>
+                    <button class="profile-tab" onclick="switchProfileTab('notifications')">通知</button>
+                </div>
+
+                <!-- 概览 -->
+                <div id="tab-overview" class="tab-content active">
+                    <div id="admin-section" class="admin-panel" style="display: none;">
+                        <h3>管理员面板</h3>
+                        <p style="margin-bottom: 15px; color: #856404;">您拥有管理员权限，可以访问以下功能：</p>
+                        <div class="admin-actions">
+                            <button class="admin-btn"
+                                onclick="window.open('https://mcpanel.eqmemory.cn/mcs/', '_blank')">🖥️
+                                MCSManager</button>
+
+                            <button class="admin-btn" onclick="window.open(PATH_CONFIG.dbTest, '_blank')">📊
+                                数据库查询</button>
+                            <!--<button class="admin-btn" onclick="alert('此功能开发中')">🤖 QQ机器人管理</button>-->
+                            <button class="admin-btn" onclick="openSendNotificationModal()">📢 发送通知</button>
+                            <button class="admin-btn"
+                                onclick="window.open('../tools/announcement-manager.html', '_blank')">📝 公告管理</button>
+                            <button class="admin-btn" onclick="window.open('../tools/auto_update.html', '_blank')">🔄
+                                订单更新</button>
+                            <button class="admin-btn" onclick="window.open('../tools/user-management.html', '_blank')">👥 用户管理</button>
+                            <button class="admin-btn" onclick="window.open('../tools/gallery-management.html', '_blank')">🖼️ 图库管理</button>
+                            <!--<button class="admin-btn" onclick="alert('此功能开发中')">⚙️ 网站后台</button>-->
+                        </div>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h3>📧 邮箱验证</h3>
+                            <div class="info-item">
+                                <span class="info-label">验证状态</span>
+                                <span class="info-value" id="emailVerifyStatus">
+                                    <span class="verification-status unverified">加载中...</span>
+                                </span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">操作</span>
+                                <span class="info-value">
+                                    <button id="verifyEmailBtnInfo" class="btn btn-primary btn-sm"
+                                        style="display: none;">发送验证邮件</button>
+                                    <span id="verifiedText" style="display: none; color: #28a745;">✓ 已完成验证</span>
+                                </span>
+                            </div>
+                            <p class="note" style="font-size: 12px; color: #666; margin-top: 10px; margin-bottom: 0;">
+                                验证邮箱后可使用全部功能
+                            </p>
+                        </div>
+                        <div class="info-card">
+                            <h3>📅 每日签到</h3>
+                            <div class="info-item">
+                                <span class="info-label">今日状态</span>
+                                <span class="info-value" id="checkinStatus">加载中...</span>
+                            </div>
+                            <div class="info-item" style="margin-top: 15px;">
+                                <button id="checkinBtn" class="btn btn-checkin" onclick="handleCheckin()" disabled>
+                                    <span class="checkin-text">立即签到</span>
+                                </button>
+                            </div>
+                            <p class="note" style="font-size: 12px; color: #666; margin-top: 10px; margin-bottom: 0;">
+                                每日签到可获得10积分，验证邮箱后方可签到
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 个人信息 -->
+                <div id="tab-profile" class="tab-content">
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h3>👤 基本信息</h3>
+                            <div class="info-item">
+                                <span class="info-label">用户ID</span>
+                                <span class="info-value" id="profileUserId">加载中...</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">用户名</span>
+                                <span class="info-value" id="profileUsername">加载中...</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">昵称</span>
+                                <span class="info-value" id="profileNickname">加载中...</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">邮箱</span>
+                                <span class="info-value" id="profileEmail">加载中...</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">创建时间</span>
+                                <span class="info-value" id="profileCreatedAt">加载中...</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">账户类型</span>
+                                <span class="info-value" id="profileAccountType">加载中...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="info-card" id="completeProfileCard" style="display: none;">
+                            <h3>📝 完善账户信息</h3>
+                            <p style="color: #666; margin-bottom: 20px; font-size: 14px;">为了更好地使用网站功能，建议您完善邮箱和密码信息。</p>
+                            <form id="completeProfileForm" onsubmit="handleCompleteProfile(event)">
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">邮箱地址</label>
+                                    <input type="email" id="completeEmail" placeholder="请输入邮箱地址" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">设置密码</label>
+                                    <input type="password" id="completePassword" placeholder="请设置密码（至少6位）" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">确认密码</label>
+                                    <input type="password" id="completeConfirmPassword" placeholder="请再次输入密码" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">保存信息</button>
+                            </form>
+                            <div id="completeProfileMessage" style="margin-top: 15px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 通知 -->
+                <div id="tab-notifications" class="tab-content">
+                    <h3 style="margin-bottom: 20px;">我的通知</h3>
+                    <div id="notification-list"></div>
+                    <div id="notification-pagination" class="pagination"></div>
+                    <div id="notification-message"></div>
+                </div>
+
+                <!-- 我的背包 -->
+                <div id="tab-inventory" class="tab-content">
+                    <h3 style="margin-bottom: 20px;">🎒 我的背包（开发中）</h3>
+                    <div id="inventoryList" class="inventory-grid">
+                        <div class="inventory-empty">暂无物品，快去 <a href="shop.html" style="color: var(--primary-color); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--primary-color); padding-bottom: 2px; transition: all 0.2s ease;">积分商城</a> 兑换吧！</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 签到成功弹窗 -->
+    <div id="checkinModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; justify-content: center; align-items: center;">
+        <div id="checkinModalBackdrop" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0); backdrop-filter: blur(0px); transition: all 0.3s ease;"></div>
+        <div id="checkinModalContent" style="position: relative; background: white; border-radius: 16px; padding: 40px 50px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: scale(0.8); opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); max-width: 320px; width: 90%;">
+            <div style="font-size: 60px; margin-bottom: 15px; animation: checkinBounce 0.6s ease;">🎉</div>
+            <h3 style="margin: 0 0 10px 0; color: #333; font-size: 24px;">签到成功！</h3>
+            <p style="margin: 0 0 10px 0; color: #666; font-size: 16px;">获得 <span id="checkinReward" style="color: #ff6b6b; font-weight: bold; font-size: 20px;">10</span> 积分</p>
+            <p style="margin: 0 0 20px 0; color: #666; font-size: 16px;">获得 <span id="checkinExpReward" style="color: #4CAF50; font-weight: bold; font-size: 20px;">15</span> 经验</p>
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border-radius: 25px; font-weight: 600; font-size: 16px; margin-bottom: 10px;">
+                当前积分：<span id="checkinTotalPoints">0</span>
+            </div>
+            <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 12px 30px; border-radius: 25px; font-weight: 600; font-size: 16px;">
+                当前经验：<span id="checkinTotalExp">0</span>
+            </div>
+            <button onclick="closeCheckinModal()" style="margin-top: 20px; padding: 8px 20px; border: 1px solid #ddd; background: white; border-radius: 20px; cursor: pointer; color: #666; font-size: 14px; transition: all 0.2s;">关闭</button>
+        </div>
+    </div>
+
+    <style>
+        @keyframes checkinBounce {
+            0% { transform: scale(0) rotate(-180deg); }
+            50% { transform: scale(1.2) rotate(10deg); }
+            70% { transform: scale(0.9) rotate(-5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        #checkinModalContent button:hover {
+            background: #f5f5f5;
+            border-color: #667eea;
+            color: #667eea;
+        }
+    </style>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <script>
+        // 调试信息
+        console.log('=== 调试信息 ===');
+        console.log('api.js 加载状态:', typeof apiRequest !== 'undefined' ? '已加载' : '未加载');
+        console.log('getNotifications 初始状态:', typeof getNotifications !== 'undefined' ? '已定义' : '未定义');
+        console.log('API_CONFIG:', typeof API_CONFIG !== 'undefined' ? API_CONFIG : '未定义');
+        console.log('================');
+
+        // 邮箱验证功能
+        function initEmailVerification() {
+            const token = localStorage.getItem('authToken');
+            console.log('初始化邮箱验证，token:', token ? '存在' : '不存在');
+
+            if (!token) {
+                console.log('未登录，跳过验证检查');
+                // 更新为未登录状态
+                const emailVerifyStatus = document.getElementById('emailVerifyStatus');
+                if (emailVerifyStatus) {
+                    emailVerifyStatus.innerHTML = '<span class="verification-status unverified">请先登录</span>';
+                }
+                return;
+            }
+
+            // 检查验证状态
+            fetch('../api/check_verify_status.php', {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .then(response => {
+                    console.log('验证状态API响应:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('验证状态数据:', data);
+                    if (data.success) {
+                        // 更新顶部验证状态显示
+                        const statusElement = document.getElementById('verificationStatus');
+                        // 更新 info-card 中的验证状态
+                        const emailVerifyStatus = document.getElementById('emailVerifyStatus');
+                        const verifyBtnInfo = document.getElementById('verifyEmailBtnInfo');
+                        const verifiedText = document.getElementById('verifiedText');
+
+                        if (data.email_verified) {
+                            if (statusElement) {
+                                statusElement.className = 'verification-status verified';
+                                statusElement.textContent = '已验证';
+                            }
+                            if (emailVerifyStatus) {
+                                emailVerifyStatus.innerHTML = '<span class="verification-status verified">已验证</span>';
+                            }
+                            if (verifyBtnInfo) verifyBtnInfo.style.display = 'none';
+                            if (verifiedText) verifiedText.style.display = 'inline';
+                        } else {
+                            if (statusElement) {
+                                statusElement.className = 'verification-status unverified';
+                                statusElement.textContent = '未验证';
+                            }
+                            if (emailVerifyStatus) {
+                                emailVerifyStatus.innerHTML = '<span class="verification-status unverified">未验证</span>';
+                            }
+                            if (verifyBtnInfo) {
+                                verifyBtnInfo.style.display = 'inline-block';
+                                verifyBtnInfo.addEventListener('click', resendVerificationEmail);
+                            }
+                            if (verifiedText) verifiedText.style.display = 'none';
+
+                            // 显示验证提示条
+                            showVerificationAlert();
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error('检查验证状态失败:', err);
+                    // 更新为错误状态
+                    const emailVerifyStatus = document.getElementById('emailVerifyStatus');
+                    if (emailVerifyStatus) {
+                        emailVerifyStatus.innerHTML = '<span class="verification-status unverified">检查失败</span>';
+                    }
+                });
+        }
+
+        function showVerificationAlert() {
+            const alertContainer = document.getElementById('emailVerificationAlert');
+            if (!alertContainer) return;
+
+            alertContainer.innerHTML = `
+                <div class="alert-content">
+                    <div class="alert-icon">⚠️</div>
+                    <div class="alert-message">
+                        <strong>您的邮箱尚未验证</strong>
+                        <span>部分功能受限，请验证邮箱以使用全部功能</span>
+                    </div>
+                    <div class="alert-actions">
+                        <button id="verifyEmailBtn" class="btn btn-primary">立即验证</button>
+                        <button id="dismissAlertBtn" class="btn btn-secondary">稍后</button>
+                    </div>
+                </div>
+            `;
+
+            alertContainer.className = 'email-verification-alert';
+
+            // 添加事件监听器
+            document.getElementById('verifyEmailBtn').addEventListener('click', resendVerificationEmail);
+            document.getElementById('dismissAlertBtn').addEventListener('click', function () {
+                // 添加关闭动画
+                alertContainer.style.animation = 'slideUp 0.3s ease-in forwards';
+                
+                // 动画完成后隐藏
+                setTimeout(function() {
+                    alertContainer.style.display = 'none';
+                    // 存储用户选择（30天内不再提示）
+                    localStorage.setItem('dismissedEmailAlert', 'true');
+                    localStorage.setItem('dismissedEmailAlertTime', Date.now());
+                }, 300);
+            });
+        }
+
+        function resendVerificationEmail() {
+            console.log('点击发送验证邮件按钮');
+            const token = localStorage.getItem('authToken');
+            console.log('获取到的token:', token ? '存在' : '不存在');
+
+            if (!token) {
+                alert('请先登录');
+                return;
+            }
+
+            // 显示发送中状态
+            const btn = document.getElementById('verifyEmailBtnInfo');
+            if (btn) {
+                btn.textContent = '发送中...';
+                btn.disabled = true;
+            }
+
+            fetch('../api/resend_verify_email.php', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    console.log('API响应状态:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('API响应数据:', data);
+
+                    // 恢复按钮状态
+                    if (btn) {
+                        btn.textContent = '发送验证邮件';
+                        btn.disabled = false;
+                    }
+
+                    if (data.success) {
+                        // 根据环境配置决定显示方式
+                        if (APP_CONFIG.emailVerification.useManualVerification && data.verify_link) {
+                            // 开发环境：显示验证链接
+                            alert(data.message + '\n\n验证链接（可复制到浏览器）:\n' + data.verify_link);
+                        } else {
+                            // 生产环境：只显示成功消息
+                            alert(data.message || '验证邮件已发送');
+                        }
+                    } else {
+                        alert('发送失败: ' + (data.message || '请稍后重试'));
+                    }
+                })
+                .catch(err => {
+                    console.error('发送验证邮件失败:', err);
+
+                    // 恢复按钮状态
+                    if (btn) {
+                        btn.textContent = '发送验证邮件';
+                        btn.disabled = false;
+                    }
+
+                    alert('网络错误，请稍后重试');
+                });
+        }
+
+        // ==================== 签到功能 ====================
+        let checkinAutoCloseTimer = null;
+
+        // 初始化签到功能
+        function initCheckin() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.log('未登录，跳过签到初始化');
+                updateCheckinUI(0, false, false);
+                return;
+            }
+
+            loadCheckinStatus();
+        }
+
+        // 加载签到状态
+        async function loadCheckinStatus() {
+            try {
+                const token = localStorage.getItem('authToken');
+                console.log('加载签到状态，token:', token ? '存在' : '不存在');
+
+                const response = await fetch('../api/get_checkin_status.php', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                const data = await response.json();
+                console.log('签到状态API返回:', data);
+
+                if (data.success) {
+                    const { points, experience, has_checked_in, email_verified } = data.data;
+                    console.log('签到状态:', { points, experience, has_checked_in, email_verified });
+                    console.log('email_verified 类型:', typeof email_verified);
+                    console.log('email_verified 值:', email_verified);
+                    updateCheckinUI(points, experience, has_checked_in, email_verified);
+                } else {
+                    console.error('加载签到状态失败:', data.message);
+                    updateCheckinUI(0, 0, false, false);
+                }
+            } catch (err) {
+                console.error('加载签到状态出错:', err);
+                updateCheckinUI(0, 0, false, false);
+            }
+        }
+
+        // 计算等级（指数增长式经验容量）
+        function calculateLevel(experience) {
+            let level = 0;
+            let requiredExp = 100; // 初始经验值
+            let totalExp = experience;
+            
+            while (totalExp >= requiredExp) {
+                totalExp -= requiredExp;
+                level++;
+                // 指数增长：每级增加50%的经验值
+                requiredExp = Math.floor(requiredExp * 1.5);
+            }
+            
+            return {
+                level: level,
+                currentExp: totalExp,
+                requiredExp: requiredExp,
+                progress: (totalExp / requiredExp) * 100
+            };
+        }
+
+        // 更新签到UI
+        function updateCheckinUI(points, experience, hasCheckedIn, emailVerified) {
+            const pointsEl = document.getElementById('userPoints');
+            const statusEl = document.getElementById('checkinStatus');
+            const btn = document.getElementById('checkinBtn');
+            const headerPoints = document.getElementById('headerPoints');
+            const headerLevel = document.getElementById('headerLevel');
+            const statLevel = document.getElementById('statLevel');
+            const levelProgressBar = document.getElementById('levelProgressBar');
+            const levelProgressText = document.getElementById('levelProgressText');
+            
+            // 计算等级
+            const levelInfo = calculateLevel(experience);
+            
+            if (pointsEl) pointsEl.textContent = points;
+            if (headerPoints) headerPoints.textContent = points;
+            if (headerLevel) headerLevel.textContent = levelInfo.level;
+            if (statLevel) statLevel.textContent = levelInfo.level;
+            
+            // 更新等级进度条
+            if (levelProgressBar) {
+                levelProgressBar.style.width = `${levelInfo.progress}%`;
+            }
+            if (levelProgressText) {
+                levelProgressText.textContent = `${levelInfo.currentExp}/${levelInfo.requiredExp}`;
+            }
+
+            if (!emailVerified) {
+                if (statusEl) statusEl.innerHTML = '<span style="color: #999;">请先验证邮箱</span>';
+                if (btn) {
+                    btn.disabled = true;
+                    const textSpan = btn.querySelector('.checkin-text');
+                    if (textSpan) textSpan.textContent = '验证邮箱后签到';
+                }
+            } else if (hasCheckedIn) {
+                if (statusEl) statusEl.innerHTML = '<span style="color: #28a745;">✓ 今日已签到</span>';
+                if (btn) {
+                    btn.disabled = true;
+                    const textSpan = btn.querySelector('.checkin-text');
+                    if (textSpan) textSpan.textContent = '今日已签到';
+                }
+            } else {
+                if (statusEl) statusEl.innerHTML = '<span style="color: #ff6b6b;">● 今日未签到</span>';
+                if (btn) {
+                    btn.disabled = false;
+                    const textSpan = btn.querySelector('.checkin-text');
+                    if (textSpan) textSpan.textContent = '立即签到';
+                }
+            }
+        }
+
+        // 处理签到
+        async function handleCheckin() {
+            const btn = document.getElementById('checkinBtn');
+            if (!btn || btn.disabled) return;
+
+            btn.disabled = true;
+            const textSpan = btn.querySelector('.checkin-text');
+            if (textSpan) textSpan.textContent = '签到中...';
+
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('../api/checkin.php', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    // 更新UI
+                    updateCheckinUI(data.data.points, data.data.experience, true, true);
+                    // 显示成功弹窗
+                    showCheckinModal(data.data.reward, data.data.points, data.data.reward_experience, data.data.experience);
+                } else {
+                    alert(data.message || '签到失败');
+                    loadCheckinStatus(); // 重新加载状态
+                }
+            } catch (err) {
+                console.error('签到出错:', err);
+                alert('签到失败，请稍后重试');
+                loadCheckinStatus();
+            }
+        }
+
+        // 显示签到成功弹窗
+        function showCheckinModal(reward, totalPoints, rewardExperience, totalExperience) {
+            const modal = document.getElementById('checkinModal');
+            const backdrop = document.getElementById('checkinModalBackdrop');
+            const content = document.getElementById('checkinModalContent');
+            const rewardEl = document.getElementById('checkinReward');
+            const totalEl = document.getElementById('checkinTotalPoints');
+            const expRewardEl = document.getElementById('checkinExpReward');
+            const expTotalEl = document.getElementById('checkinTotalExp');
+
+            if (rewardEl) rewardEl.textContent = reward || 10;
+            if (totalEl) totalEl.textContent = totalPoints || 0;
+            if (expRewardEl) expRewardEl.textContent = rewardExperience || 15;
+            if (expTotalEl) expTotalEl.textContent = totalExperience || 0;
+
+            if (modal) modal.style.display = 'flex';
+
+            // 触发动画
+            requestAnimationFrame(() => {
+                if (backdrop) {
+                    backdrop.style.background = 'rgba(0,0,0,0.5)';
+                    backdrop.style.backdropFilter = 'blur(5px)';
+                }
+                if (content) {
+                    content.style.transform = 'scale(1)';
+                    content.style.opacity = '1';
+                }
+            });
+
+            // 3秒后自动关闭
+            checkinAutoCloseTimer = setTimeout(() => {
+                closeCheckinModal();
+            }, 3000);
+        }
+
+        // 关闭签到弹窗
+        function closeCheckinModal() {
+            if (checkinAutoCloseTimer) {
+                clearTimeout(checkinAutoCloseTimer);
+                checkinAutoCloseTimer = null;
+            }
+
+            const modal = document.getElementById('checkinModal');
+            const backdrop = document.getElementById('checkinModalBackdrop');
+            const content = document.getElementById('checkinModalContent');
+
+            if (backdrop) {
+                backdrop.style.background = 'rgba(0,0,0,0)';
+                backdrop.style.backdropFilter = 'blur(0px)';
+            }
+            if (content) {
+                content.style.transform = 'scale(0.8)';
+                content.style.opacity = '0';
+            }
+
+            setTimeout(() => {
+                if (modal) modal.style.display = 'none';
+            }, 300);
+        }
+
+        // 兼容性检查函数
+        function checkCompatibility() {
+            const compatibility = {
+                localStorage: typeof localStorage !== 'undefined',
+                fetch: typeof fetch !== 'undefined',
+                Promise: typeof Promise !== 'undefined',
+                asyncAwait: typeof (async function () { }) === 'function'
+            };
+
+            console.log('=== 浏览器兼容性检查 ===');
+            console.log('localStorage 可用:', compatibility.localStorage);
+            console.log('fetch API 可用:', compatibility.fetch);
+            console.log('Promise 可用:', compatibility.Promise);
+            console.log('async/await 可用:', compatibility.asyncAwait);
+            console.log('=====================');
+
+            return compatibility;
+        }
+
+        // 获取存储的 token（兼容性版本）
+        function getStoredToken() {
+            const compatibility = checkCompatibility();
+            if (compatibility.localStorage) {
+                return localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+            }
+            return null;
+        }
+
+        // 存储 token（兼容性版本，包含过期时间）
+        function storeToken(token, expiresIn = 3600) { // 默认过期时间为 1 小时
+            const compatibility = checkCompatibility();
+            if (compatibility.localStorage) {
+                try {
+                    // 计算过期时间
+                    const expiresAt = Date.now() + (expiresIn * 1000);
+
+                    // 优先使用 sessionStorage，提高安全性
+                    sessionStorage.setItem('authToken', token);
+                    sessionStorage.setItem('authTokenExpiresAt', expiresAt.toString());
+                    return true;
+                } catch (e) {
+                    console.warn('sessionStorage 存储失败，使用 localStorage:', e);
+                    try {
+                        // 计算过期时间
+                        const expiresAt = Date.now() + (expiresIn * 1000);
+
+                        localStorage.setItem('authToken', token);
+                        localStorage.setItem('authTokenExpiresAt', expiresAt.toString());
+                        return true;
+                    } catch (e) {
+                        console.error('localStorage 存储失败:', e);
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // 清除 token（兼容性版本）
+        function clearStoredToken() {
+            const compatibility = checkCompatibility();
+            if (compatibility.localStorage) {
+                try {
+                    sessionStorage.removeItem('authToken');
+                    sessionStorage.removeItem('authTokenExpiresAt');
+                } catch (e) {
+                    console.warn('sessionStorage 清除失败:', e);
+                }
+                try {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('authTokenExpiresAt');
+                } catch (e) {
+                    console.warn('localStorage 清除失败:', e);
+                }
+            }
+        }
+
+        // 获取 token 过期时间（兼容性版本）
+        function getTokenExpiration() {
+            const compatibility = checkCompatibility();
+            if (compatibility.localStorage) {
+                try {
+                    const expiresAt = sessionStorage.getItem('authTokenExpiresAt');
+                    if (expiresAt) {
+                        return parseInt(expiresAt);
+                    }
+                } catch (e) {
+                    console.warn('sessionStorage 读取失败:', e);
+                }
+                try {
+                    const expiresAt = localStorage.getItem('authTokenExpiresAt');
+                    if (expiresAt) {
+                        return parseInt(expiresAt);
+                    }
+                } catch (e) {
+                    console.warn('localStorage 读取失败:', e);
+                }
+            }
+            return null;
+        }
+
+        // 检查 token 是否已过期
+        function isTokenExpired() {
+            const expiresAt = getTokenExpiration();
+            if (!expiresAt) {
+                return true; // 如果没有过期时间，认为 token 已过期
+            }
+            return Date.now() > expiresAt;
+        }
+
+        // 刷新 token
+        async function refreshToken() {
+            try {
+                console.log('Refreshing token...');
+                const API_BASE_URL = typeof API_CONFIG !== 'undefined' ? API_CONFIG.baseUrl : '/api';
+
+                // 检查 refresh_token.php 文件是否存在
+                const response = await makeRequest(`${API_BASE_URL}/refresh_token.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({}),
+                    timeout: 10000
+                });
+
+                if (!response.ok) {
+                    // 如果是 404 错误，说明 refresh_token.php 文件不存在，返回 true，这样系统就不会清除 token
+                    if (response.status === 404) {
+                        console.warn('Refresh token endpoint not found (404), assuming token is still valid');
+                        return true;
+                    }
+                    throw new Error('Token refresh failed with status: ' + response.status);
+                }
+
+                const result = await response.json();
+                console.log('Token refresh result:', result);
+
+                if (result.success && result.token) {
+                    // 存储新 token
+                    storeToken(result.token, result.expires_in || 3600);
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error refreshing token:', error);
+                return false;
+            }
+        }
+
+        // 获取有效的 token（如果过期则尝试刷新）
+        async function getValidToken() {
+            const token = getStoredToken();
+            if (!token) {
+                return null;
+            }
+
+            if (isTokenExpired()) {
+                console.log('Token expired, trying to refresh...');
+                const refreshed = await refreshToken();
+                if (refreshed) {
+                    console.log('Token refresh successful, using refreshed token');
+                    return getStoredToken();
+                } else {
+                    console.log('Token refresh failed, but keeping existing token...');
+                    // 不清除 token，因为可能 refresh_token.php 文件不存在
+                    // 但是 token 可能仍然有效，或者用户可以通过重新登录获取新 token
+                    return token;
+                }
+            }
+
+            console.log('Token is valid, using existing token');
+            return token;
+        }
+
+        // 通用请求函数（支持 fetch 和 XMLHttpRequest）
+        function makeRequest(url, options) {
+            const compatibility = checkCompatibility();
+
+            // 如果支持 fetch API，使用 fetch
+            if (compatibility.fetch && compatibility.Promise) {
+                return fetch(url, options);
+            }
+
+            // 否则使用 XMLHttpRequest 作为备用
+            return new Promise(function (resolve, reject) {
+                const xhr = new XMLHttpRequest();
+                xhr.open(options.method || 'GET', url, true);
+
+                // 设置请求头
+                if (options.headers) {
+                    Object.keys(options.headers).forEach(function (key) {
+                        xhr.setRequestHeader(key, options.headers[key]);
+                    });
+                }
+
+                xhr.onload = function () {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            const response = {
+                                ok: true,
+                                status: xhr.status,
+                                json: function () {
+                                    return Promise.resolve(JSON.parse(xhr.responseText));
+                                },
+                                text: function () {
+                                    return Promise.resolve(xhr.responseText);
+                                }
+                            };
+                            resolve(response);
+                        } catch (e) {
+                            reject(new Error('响应解析失败'));
+                        }
+                    } else {
+                        const response = {
+                            ok: false,
+                            status: xhr.status
+                        };
+                        resolve(response);
+                    }
+                };
+
+                xhr.onerror = function () {
+                    reject(new Error('网络错误'));
+                };
+
+                xhr.timeout = options.timeout || 10000;
+                xhr.ontimeout = function () {
+                    reject(new Error('请求超时'));
+                };
+
+                if (options.body) {
+                    xhr.send(options.body);
+                } else {
+                    xhr.send();
+                }
+            });
+        }
+
+        // 确保 getNotifications 函数存在
+        if (typeof getNotifications === 'undefined') {
+            console.warn('getNotifications 函数未定义，使用备用实现');
+            window.getNotifications = async function () {
+                try {
+                    // 直接调用 API
+                    const API_BASE_URL = typeof API_CONFIG !== 'undefined' ? API_CONFIG.baseUrl : '/api';
+                    const headers = {
+                        'Content-Type': 'application/json'
+                    };
+
+                    // 添加认证头
+                    const token = await getValidToken();
+                    if (token) {
+                        headers['Authorization'] = `Bearer ${token}`;
+                    }
+
+                    console.log('使用备用实现调用 API:', API_BASE_URL + '/notification.php?action=list');
+
+                    const response = await makeRequest(`${API_BASE_URL}/notification.php?action=list`, {
+                        method: 'GET',
+                        headers: headers,
+                        timeout: 10000
+                    });
+
+                    if (!response.ok) {
+                        // 如果是 401 错误，可能是 token 过期，尝试刷新 token 后重试
+                        if (response.status === 401) {
+                            console.log('Token expired, trying to refresh...');
+                            const refreshed = await refreshToken();
+                            if (refreshed) {
+                                const newToken = getStoredToken();
+                                if (newToken) {
+                                    headers['Authorization'] = `Bearer ${newToken}`;
+                                    console.log('Retrying with refreshed token...');
+                                    const retryResponse = await makeRequest(`${API_BASE_URL}/notification.php?action=list`, {
+                                        method: 'GET',
+                                        headers: headers,
+                                        timeout: 10000
+                                    });
+
+                                    if (!retryResponse.ok) {
+                                        throw new Error('API 请求失败，状态码: ' + retryResponse.status);
+                                    }
+
+                                    const retryResult = await retryResponse.json();
+                                    console.log('备用实现 API 响应（重试）:', retryResult);
+                                    return retryResult;
+                                }
+                            } else {
+                                console.log('Token refresh failed, but keeping existing token...');
+                                // 不清除 token，因为可能 refresh_token.php 文件不存在
+                                // 但是 token 可能仍然有效，或者用户可以通过重新登录获取新 token
+                            }
+                        }
+                        throw new Error('API 请求失败，状态码: ' + response.status);
+                    }
+
+                    const result = await response.json();
+                    console.log('备用实现 API 响应:', result);
+                    return result;
+                } catch (error) {
+                    console.error('获取通知失败:', error);
+                    return {
+                        success: false,
+                        message: '获取通知失败: ' + error.message
+                    };
+                }
+            };
+        } else {
+            console.log('使用 api.js 中的 getNotifications 实现');
+        }
+
+        // 确保 markNotificationAsRead 函数存在
+        if (typeof markNotificationAsRead === 'undefined') {
+            console.warn('markNotificationAsRead 函数未定义，使用备用实现');
+            window.markNotificationAsRead = async function (notificationId) {
+                try {
+                    const API_BASE_URL = typeof API_CONFIG !== 'undefined' ? API_CONFIG.baseUrl : '/api';
+                    const headers = {
+                        'Content-Type': 'application/json'
+                    };
+
+                    // 添加认证头
+                    const token = await getValidToken();
+                    if (token) {
+                        headers['Authorization'] = `Bearer ${token}`;
+                    }
+
+                    const response = await makeRequest(`${API_BASE_URL}/notification.php?action=mark_read`, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify({ notification_id: notificationId }),
+                        timeout: 10000
+                    });
+
+                    if (!response.ok) {
+                        // 如果是 401 错误，可能是 token 过期，尝试刷新 token 后重试
+                        if (response.status === 401) {
+                            console.log('Token expired, trying to refresh...');
+                            const refreshed = await refreshToken();
+                            if (refreshed) {
+                                const newToken = getStoredToken();
+                                if (newToken) {
+                                    headers['Authorization'] = `Bearer ${newToken}`;
+                                    console.log('Retrying with refreshed token...');
+                                    const retryResponse = await makeRequest(`${API_BASE_URL}/notification.php?action=mark_read`, {
+                                        method: 'POST',
+                                        headers: headers,
+                                        body: JSON.stringify({ notification_id: notificationId }),
+                                        timeout: 10000
+                                    });
+
+                                    if (!retryResponse.ok) {
+                                        throw new Error('API 请求失败，状态码: ' + retryResponse.status);
+                                    }
+
+                                    const retryResult = await retryResponse.json();
+                                    console.log('备用实现 API 响应（重试）:', retryResult);
+                                    return retryResult;
+                                }
+                            } else {
+                                console.log('Token refresh failed, but keeping existing token...');
+                                // 不清除 token，因为可能 refresh_token.php 文件不存在
+                                // 但是 token 可能仍然有效，或者用户可以通过重新登录获取新 token
+                            }
+                        }
+                        throw new Error('API 请求失败，状态码: ' + response.status);
+                    }
+
+                    const result = await response.json();
+                    return result;
+                } catch (error) {
+                    console.error('标记通知已读失败:', error);
+                    return {
+                        success: false,
+                        message: '标记通知已读失败: ' + error.message
+                    };
+                }
+            };
+        }
+
+        function switchProfileTab(tab) {
+            // 移除所有标签的active类
+            document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+
+            // 获取所有内容标签
+            const allTabs = document.querySelectorAll('.tab-content');
+
+            // 先隐藏所有标签页
+            allTabs.forEach(c => {
+                c.style.opacity = '0';
+                c.style.transform = 'translateY(20px)';
+                c.style.display = 'none';
+                c.classList.remove('active');
+            });
+
+            // 激活当前标签
+            event.target.classList.add('active');
+            const tabElement = document.getElementById('tab-' + tab);
+
+            // 等待一小段时间后显示新标签页，触发动画
+            setTimeout(() => {
+                // 显示新标签页
+                tabElement.style.display = 'block';
+
+                // 触发重排
+                tabElement.offsetHeight;
+
+                // 添加active类和动画
+                tabElement.classList.add('active');
+                tabElement.style.opacity = '1';
+                tabElement.style.transform = 'translateY(0)';
+
+                // 加载通知
+                if (tab === 'notifications') {
+                    loadNotifications();
+                }
+                
+                // 加载个人信息
+                if (tab === 'profile') {
+                    loadUserInfo();
+                }
+            }, 50);
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            isLoggedIn = false;
+            currentUser = null;
+            showMessage('已退出登录', 'info');
+            setTimeout(() => {
+                window.location.href = '../index.html';
+            }, 1000);
+        }
+
+        let allNotifications = [];
+        let currentPage = 1;
+        const itemsPerPage = 5;
+
+        async function loadNotifications(resetPage = true) {
+            try {
+                console.log('Loading notifications...');
+                const result = await getNotifications();
+                console.log('Notifications loaded:', result);
+
+                if (result.success) {
+                    allNotifications = result.data.notifications;
+                    if (resetPage) {
+                        currentPage = 1;
+                    }
+                    displayNotifications();
+                } else {
+                    // 根据错误消息提供更详细的错误提示
+                    let errorMessage = result.message || '获取通知失败';
+                    if (errorMessage.includes('401')) {
+                        errorMessage = '未授权访问，请重新登录';
+                    } else if (errorMessage.includes('403')) {
+                        errorMessage = '权限不足，无法获取通知';
+                    } else if (errorMessage.includes('404')) {
+                        errorMessage = '通知服务不可用，请稍后重试';
+                    } else if (errorMessage.includes('500')) {
+                        errorMessage = '服务器内部错误，请稍后重试';
+                    }
+                    showNotificationMessage(errorMessage, 'error');
+                }
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+                // 根据错误类型提供更详细的错误提示
+                let errorMessage = '加载通知失败';
+                if (error.message.includes('Network')) {
+                    errorMessage = '网络连接失败，请检查网络设置';
+                } else if (error.message.includes('timeout')) {
+                    errorMessage = '请求超时，请稍后重试';
+                } else if (error.message.includes('parse')) {
+                    errorMessage = '服务器响应格式错误，请稍后重试';
+                }
+                showNotificationMessage(errorMessage + ': ' + error.message, 'error');
+            }
+        }
+
+        function displayNotifications() {
+            const container = document.getElementById('notification-list');
+
+            if (!allNotifications || allNotifications.length === 0) {
+                container.innerHTML = '<p>暂无通知</p>';
+                document.getElementById('notification-pagination').innerHTML = '';
+                return;
+            }
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageNotifications = allNotifications.slice(startIndex, endIndex);
+
+            container.innerHTML = '';
+
+            pageNotifications.forEach(notification => {
+                const item = document.createElement('div');
+                item.className = 'notification-item ' + (notification.read ? 'read' : 'unread');
+
+                const bgColor = notification.read ? '#f9f9f9' : '#f0f4ff';
+                const borderColor = notification.read ? '#ccc' : '#667eea';
+
+                item.style.cssText = `
+                    background: ${bgColor};
+                    padding: 20px;
+                    margin-bottom: 15px;
+                    border-radius: 8px;
+                    border-left: 4px solid ${borderColor};
+                `;
+
+                const header = document.createElement('div');
+                header.className = 'notification-header';
+                header.style.cssText = `
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+                `;
+
+                const title = document.createElement('div');
+                title.className = 'notification-title';
+                title.textContent = notification.title;
+                title.style.cssText = `
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin: 0;
+                `;
+
+                const time = document.createElement('span');
+                time.className = 'notification-time';
+
+                // 直接处理时间格式化
+                const timestamp = notification.created_at;
+
+                // 手动解析时间
+                const parts = timestamp.split(/[- :]/);
+
+                // 检查是否有足够的部分
+                if (parts.length >= 6) {
+                    const year = parseInt(parts[0]);
+                    const month = parseInt(parts[1]) - 1; // 月份从0开始
+                    const day = parseInt(parts[2]);
+                    const hour = parseInt(parts[3]);
+                    const minute = parseInt(parts[4]);
+                    const second = parseInt(parts[5]);
+
+                    // 手动格式化
+                    const formatted = `${year}/${String(month + 1).padStart(2, '0')}/${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
+
+                    time.textContent = formatted;
+                } else {
+                    time.textContent = timestamp;
+                }
+
+                time.style.cssText = `
+                    color: #999;
+                    font-size: 12px;
+                `;
+
+                header.appendChild(title);
+                header.appendChild(time);
+
+                const content = document.createElement('div');
+                content.className = 'notification-content';
+                content.textContent = notification.content;
+                content.style.cssText = `
+                    color: #666;
+                    line-height: 1.6;
+                    margin-bottom: 15px;
+                `;
+
+                item.appendChild(header);
+                item.appendChild(content);
+
+                if (!notification.read) {
+                    const button = document.createElement('button');
+                    button.className = 'btn-primary';
+                    button.style.cssText = `
+                        margin-top: 15px;
+                        padding: 8px 16px;
+                        background: var(--primary-color);
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+                    `;
+                    button.textContent = '标记为已读';
+                    button.onclick = function () {
+                        // 添加点击动画
+                        button.style.opacity = '0.7';
+                        button.style.transform = 'scale(0.95)';
+                        button.style.boxShadow = '0 1px 2px rgba(102, 126, 234, 0.2)';
+                        button.disabled = true;
+
+                        setTimeout(() => {
+                            markAsRead(notification.id);
+                        }, 200);
+                    };
+                    item.appendChild(button);
+                }
+
+                container.appendChild(item);
+            });
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('notification-pagination');
+            const totalPages = Math.ceil(allNotifications.length / itemsPerPage);
+
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+
+            html += `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>`;
+
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button onclick="changePage(${i})" ${i === currentPage ? 'class="active"' : ''}>${i}</button>`;
+            }
+
+            html += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>下一页</button>`;
+
+            html += `<span class="page-info">共 ${allNotifications.length} 条通知，第 ${currentPage}/${totalPages} 页</span>`;
+
+            pagination.innerHTML = html;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(allNotifications.length / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+
+            const container = document.getElementById('notification-list');
+
+            // 添加淡出动画
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(10px)';
+            container.style.transition = 'all 0.3s ease';
+
+            // 等待动画结束后更新内容
+            setTimeout(() => {
+                currentPage = page;
+                displayNotifications();
+
+                // 添加淡入动画
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        async function markAsRead(notificationId) {
+            try {
+                console.log('Marking notification as read:', notificationId);
+                const result = await window.markNotificationAsRead(notificationId);
+                console.log('Mark as read result:', result);
+
+                if (result.success) {
+                    showNotificationMessage('标记成功', 'success');
+                    loadNotifications(false);
+                } else {
+                    // 根据错误消息提供更详细的错误提示
+                    let errorMessage = result.message || '标记失败';
+                    if (errorMessage.includes('401')) {
+                        errorMessage = '未授权访问，请重新登录';
+                    } else if (errorMessage.includes('403')) {
+                        errorMessage = '权限不足，无法标记通知';
+                    } else if (errorMessage.includes('404')) {
+                        errorMessage = '通知不存在或已被删除';
+                    } else if (errorMessage.includes('500')) {
+                        errorMessage = '服务器内部错误，请稍后重试';
+                    }
+                    showNotificationMessage(errorMessage, 'error');
+                }
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+                // 根据错误类型提供更详细的错误提示
+                let errorMessage = '标记失败';
+                if (error.message.includes('Network')) {
+                    errorMessage = '网络连接失败，请检查网络设置';
+                } else if (error.message.includes('timeout')) {
+                    errorMessage = '请求超时，请稍后重试';
+                } else if (error.message.includes('parse')) {
+                    errorMessage = '服务器响应格式错误，请稍后重试';
+                }
+                showNotificationMessage(errorMessage + ': ' + error.message, 'error');
+            }
+        }
+
+        function showNotificationMessage(text, type) {
+            const messageEl = document.getElementById('notification-message');
+            messageEl.textContent = text;
+            messageEl.className = type === 'error' ? 'error' : 'success';
+        }
+
+        // 注销账户相关函数
+        function confirmDeleteAccount() {
+            // 创建注销确认对话框
+            const dialog = document.createElement('div');
+            dialog.className = 'delete-account-dialog';
+            dialog.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+            `;
+
+            const dialogContent = document.createElement('div');
+            dialogContent.style.cssText = `
+                background-color: white;
+                padding: 30px;
+                border-radius: 8px;
+                width: 90%;
+                max-width: 400px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            `;
+
+            dialogContent.innerHTML = `
+                <h3 style="margin-top: 0; color: #333;">注销账户</h3>
+                <p style="margin-bottom: 20px; color: #666;">您确定要注销您的账户吗？此操作不可恢复，所有数据将被永久删除。</p>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">请输入密码确认：</label>
+                    <input type="password" id="delete-account-password" style="
+                        width: 100%;
+                        padding: 10px;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        font-size: 14px;
+                    " placeholder="请输入您的密码">
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button onclick="closeDeleteAccountDialog()" style="
+                        padding: 10px 20px;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        background-color: #f8f9fa;
+                        color: #333;
+                        cursor: pointer;
+                        font-size: 14px;
+                    ">取消</button>
+                    <button onclick="submitDeleteAccount()" style="
+                        padding: 10px 20px;
+                        border: none;
+                        border-radius: 4px;
+                        background-color: #dc3545;
+                        color: white;
+                        cursor: pointer;
+                        font-size: 14px;
+                    ">确认注销</button>
+                </div>
+            `;
+
+            dialog.appendChild(dialogContent);
+            document.body.appendChild(dialog);
+
+            // 存储对话框引用
+            window.deleteAccountDialog = dialog;
+        }
+
+        function closeDeleteAccountDialog() {
+            if (window.deleteAccountDialog) {
+                window.deleteAccountDialog.remove();
+                window.deleteAccountDialog = null;
+            }
+        }
+
+        // 确保 deleteAccount 函数存在
+        if (typeof deleteAccount === 'undefined') {
+            console.warn('deleteAccount 函数未定义，使用备用实现');
+            window.deleteAccount = async function (password) {
+                try {
+                    // 直接调用 API
+                    const API_BASE_URL = typeof API_CONFIG !== 'undefined' ? API_CONFIG.baseUrl : '/api';
+                    const headers = {
+                        'Content-Type': 'application/json'
+                    };
+
+                    // 添加认证头
+                    const token = getStoredToken();
+                    if (token) {
+                        headers['Authorization'] = `Bearer ${token}`;
+                    }
+
+                    console.log('使用备用实现调用 API:', API_BASE_URL + '/delete_account.php');
+                    const response = await makeRequest(`${API_BASE_URL}/delete_account.php`, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify({ password: password }),
+                        timeout: 10000
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('API 请求失败，状态码: ' + response.status);
+                    }
+
+                    const result = await response.json();
+                    console.log('备用实现 API 响应:', result);
+                    return result;
+                } catch (error) {
+                    console.error('注销账户失败:', error);
+                    return {
+                        success: false,
+                        message: '网络错误，请检查连接' + error.message
+                    };
+                }
+            };
+        }
+
+        async function submitDeleteAccount() {
+            const passwordInput = document.getElementById('delete-account-password');
+            const password = passwordInput.value.trim();
+
+            if (!password) {
+                alert('请输入密码');
+                return;
+            }
+
+            try {
+                // 使用 window.deleteAccount 确保函数存在
+                const result = await window.deleteAccount(password);
+
+                if (result.success) {
+                    closeDeleteAccountDialog();
+
+                    // 创建假刷新对话框
+                    const loadingDialog = document.createElement('div');
+                    loadingDialog.className = 'loading-dialog';
+                    loadingDialog.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.7);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 9999;
+                    `;
+
+                    const loadingContent = document.createElement('div');
+                    loadingContent.style.cssText = `
+                        background-color: white;
+                        padding: 40px;
+                        border-radius: 8px;
+                        width: 90%;
+                        max-width: 350px;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                        text-align: center;
+                    `;
+
+                    loadingContent.innerHTML = `
+                        <div style="font-size: 3rem; margin-bottom: 20px;">🔄</div>
+                        <h3 style="margin-top: 0; color: #333; margin-bottom: 15px;">正在注销账户</h3>
+                        <p style="color: #666; margin-bottom: 25px;">服务器正在处理您的请求，请稍候...</p>
+                        <div style="width: 100%; height: 4px; background: #f0f0f0; border-radius: 2px; overflow: hidden;">
+                            <div class="loading-bar" style="width: 0%; height: 100%; background: #dc3545; border-radius: 2px; transition: width 0.3s ease;"></div>
+                        </div>
+                        <p class="loading-text" style="color: #999; margin-top: 10px; font-size: 0.9rem;">正在清理数据...</p>
+                    `;
+
+                    loadingDialog.appendChild(loadingContent);
+                    document.body.appendChild(loadingDialog);
+
+                    // 模拟加载过程
+                    let progress = 0;
+                    const loadingBar = loadingContent.querySelector('.loading-bar');
+                    const loadingText = loadingContent.querySelector('.loading-text');
+                    const loadingSteps = [
+                        '正在清理数据...',
+                        '正在删除账户信息...',
+                        '正在清除会话...',
+                        '注销成功，正在跳转...'
+                    ];
+
+                    const interval = setInterval(() => {
+                        progress += 10;
+                        if (progress <= 100) {
+                            loadingBar.style.width = progress + '%';
+                            const stepIndex = Math.min(Math.floor(progress / 25), loadingSteps.length - 1);
+                            loadingText.textContent = loadingSteps[stepIndex];
+                        } else {
+                            clearInterval(interval);
+                        }
+                    }, 300);
+
+                    // 3秒后完成注销
+                    setTimeout(() => {
+                        // 清除本地存储
+                        localStorage.removeItem('currentUser');
+                        localStorage.removeItem('authToken');
+                        // 跳转到登录页面
+                        window.location.href = 'login.html';
+                    }, 3000);
+                } else {
+                    alert('注销失败: ' + result.message);
+                }
+            } catch (error) {
+                console.error('注销账户失败:', error);
+                alert('注销失败: 网络错误，请稍后重试');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('=== DOMContentLoaded 事件触发 ===');
+            console.log('getNotifications 最终状态:', typeof getNotifications !== 'undefined' ? '已定义' : '未定义');
+            console.log('loadNotifications 函数定义:', typeof loadNotifications !== 'undefined' ? '已定义' : '未定义');
+            console.log('================================');
+
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser && storedUser !== 'undefined' && storedUser !== 'null') {
+                try {
+                    currentUser = JSON.parse(storedUser);
+                    isLoggedIn = true;
+                } catch (e) {
+                    console.error('解析用户数据失败:', e);
+                    localStorage.removeItem('currentUser');
+                    currentUser = null;
+                    isLoggedIn = false;
+                }
+            }
+
+            if (currentUser && isLoggedIn) {
+                document.getElementById('profile-username').textContent = currentUser.username;
+                const roleEl = document.getElementById('profile-role');
+                roleEl.textContent = currentUser.role === 'admin' ? '管理员' : '普通用户';
+                if (currentUser.role === 'admin') {
+                    roleEl.classList.add('admin');
+                    document.getElementById('admin-section').style.display = 'block';
+                }
+                
+                // 加载用户详细信息（包括马国记忆头像）
+                loadUserInfo();
+            }
+
+            // 预加载通知数据，确保切换标签时能立即显示
+            console.log('开始预加载通知数据...');
+            loadNotifications();
+
+            // 初始化邮箱验证功能
+            initEmailVerification();
+
+            // 初始化签到功能
+            initCheckin();
+        });
+
+        // 加载用户详细信息
+        async function loadUserInfo() {
+            console.log('开始加载用户详细信息...');
+            try {
+                const token = localStorage.getItem('authToken') || (currentUser ? currentUser.token : null);
+                console.log('Token状态:', token ? '存在' : '不存在');
+                
+                if (!token) {
+                    console.log('无token，跳过加载用户信息');
+                    return;
+                }
+
+                const response = await fetch('../api/user_info.php', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                
+                console.log('API响应状态:', response.status);
+                const data = await response.json();
+                console.log('用户信息API返回:', data);
+                
+                if (data.success && data.data && data.data.user) {
+                    const user = data.data.user;
+                    console.log('解析用户数据:', user);
+                    
+                    // 更新头像
+                    const avatarElement = document.querySelector('.user-avatar-large img');
+                    if (avatarElement) {
+                        if (user.eypa_avatar) {
+                            avatarElement.src = user.eypa_avatar;
+                            console.log('使用马国记忆头像:', user.eypa_avatar);
+                        } else {
+                            avatarElement.src = '../assets/img/user.png';
+                            console.log('使用默认头像');
+                        }
+                    }
+                    
+                    // 用户名只显示username
+                    const usernameElement = document.getElementById('profile-username');
+                    if (usernameElement) {
+                        usernameElement.textContent = user.username;
+                    }
+                    
+                    // 更新个人信息标签页
+                    console.log('开始更新个人信息标签页...');
+                    const profileUserId = document.getElementById('profileUserId');
+                    const profileUsername = document.getElementById('profileUsername');
+                    const profileNickname = document.getElementById('profileNickname');
+                    const profileEmail = document.getElementById('profileEmail');
+                    const profileCreatedAt = document.getElementById('profileCreatedAt');
+                    
+                    console.log('DOM元素状态:', {
+                        profileUserId: !!profileUserId,
+                        profileUsername: !!profileUsername,
+                        profileNickname: !!profileNickname,
+                        profileEmail: !!profileEmail,
+                        profileCreatedAt: !!profileCreatedAt
+                    });
+                    
+                    if (profileUserId) {
+                        profileUserId.textContent = user.id || '未知';
+                        console.log('用户ID已更新:', user.id);
+                    }
+                    if (profileUsername) {
+                        profileUsername.textContent = user.username || '未知';
+                        console.log('用户名已更新:', user.username);
+                    }
+                    if (profileNickname) {
+                        profileNickname.textContent = user.eypa_nickname || user.username || '未知';
+                        console.log('昵称已更新:', user.eypa_nickname || user.username);
+                    }
+                    if (profileEmail) {
+                        profileEmail.textContent = user.email || '未设置';
+                        console.log('邮箱已更新:', user.email);
+                    }
+                    if (profileCreatedAt) {
+                        profileCreatedAt.textContent = user.created_at || '未知';
+                        console.log('创建时间已更新:', user.created_at);
+                    }
+                    
+                    // 更新账户类型
+                    const profileAccountType = document.getElementById('profileAccountType');
+                    if (profileAccountType) {
+                        const isEypaUser = user.eypa_uid ? true : false;
+                        profileAccountType.textContent = isEypaUser ? 'EYPA用户' : '普通用户';
+                        console.log('账户类型已更新:', isEypaUser ? 'EYPA用户' : '普通用户');
+                    }
+                    
+                    // 检查是否需要完善信息
+                    const completeProfileCard = document.getElementById('completeProfileCard');
+                    if (completeProfileCard) {
+                        const needsCompleteProfile = (!user.email || !user.password);
+                        completeProfileCard.style.display = needsCompleteProfile ? 'block' : 'none';
+                        console.log('是否需要完善信息:', needsCompleteProfile);
+                    }
+                    
+                    console.log('个人信息标签页更新完成');
+                    
+                    // 加载背包和BUFF信息
+                    loadInventoryAndBuffs();
+                } else {
+                    console.error('API返回失败:', data);
+                }
+            } catch (error) {
+                console.error('加载用户信息失败:', error);
+            }
+        }
+        
+        // 加载背包信息
+        async function loadInventoryAndBuffs() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                
+                const response = await fetch('../api/get_profile.php', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    // 更新背包显示
+                    const inventoryList = document.getElementById('inventoryList');
+                    if (inventoryList) {
+                        if (data.data.inventory && data.data.inventory.length > 0) {
+                            // 物品图标映射
+                            const itemIcons = {
+                                'resign_card': '📅'
+                            };
+                            
+                            inventoryList.innerHTML = data.data.inventory.map(item => `
+                                <div class="inventory-card">
+                                    <div class="inventory-card-icon">${itemIcons[item.type] || '📦'}</div>
+                                    <div class="inventory-card-name">${item.name}</div>
+                                    <span class="inventory-card-count">数量: ${item.count}</span>
+                                </div>
+                            `).join('');
+                        } else {
+                            inventoryList.innerHTML = '<div class="inventory-empty">暂无物品，快去 <a href="shop.html" style="color: var(--primary-color); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--primary-color); padding-bottom: 2px; transition: all 0.2s ease;">积分商城</a> 兑换吧！</div>';
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('加载背包信息失败:', error);
+            }
+        }
+
+        // 处理完善信息表单提交
+        async function handleCompleteProfile(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('completeEmail').value;
+            const password = document.getElementById('completePassword').value;
+            const confirmPassword = document.getElementById('completeConfirmPassword').value;
+            const messageDiv = document.getElementById('completeProfileMessage');
+            
+            // 验证输入
+            if (!email || !password || !confirmPassword) {
+                showCompleteProfileMessage('请填写所有字段', 'error');
+                return;
+            }
+            
+            if (!filterEmail(email)) {
+                showCompleteProfileMessage('邮箱格式不正确', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showCompleteProfileMessage('密码长度不能少于6位', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showCompleteProfileMessage('两次输入的密码不一致', 'error');
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('../api/complete_profile.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        token: token,
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const result = await response.json();
+                console.log('完善信息结果:', result);
+                
+                if (result.success) {
+                    showCompleteProfileMessage('账户信息已完善！', 'success');
+                    // 重新加载用户信息
+                    setTimeout(() => {
+                        loadUserInfo();
+                    }, 1500);
+                } else {
+                    showCompleteProfileMessage(result.message || '保存失败，请重试', 'error');
+                }
+            } catch (error) {
+                console.error('完善信息失败:', error);
+                showCompleteProfileMessage('网络错误，请稍后重试', 'error');
+            }
+        }
+
+        function showCompleteProfileMessage(message, type) {
+            const messageDiv = document.getElementById('completeProfileMessage');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            
+            if (type === 'success') {
+                messageDiv.style.background = '#d4edda';
+                messageDiv.style.color = '#155724';
+                messageDiv.style.border = '1px solid #c3e6cb';
+            } else {
+                messageDiv.style.background = '#f8d7da';
+                messageDiv.style.color = '#721c24';
+                messageDiv.style.border = '1px solid #f5c6cb';
+            }
+        }
+
+        function filterEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // 发送通知功能
+        function openSendNotificationModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style = 'display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center;';
+            modal.innerHTML = `
+                <div class="modal-content" style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="margin: 0; color: #333;">发送通知</h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">通知标题</label>
+                            <input type="text" id="notification-title" placeholder="请输入通知标题" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">通知类型</label>
+                            <select id="notification-type" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                                <option value="system">系统通知</option>
+                                <option value="event">活动通知</option>
+                                <option value="update">更新通知</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">通知内容</label>
+                            <textarea id="notification-content" placeholder="请输入通知内容" rows="5" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; resize: vertical;"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="padding: 10px 20px; border: 1px solid #ddd; border-radius: 6px; background: #f5f5f5; cursor: pointer;">取消</button>
+                        <button onclick="sendNotification()" style="padding: 10px 20px; border: none; border-radius: 6px; background: #3498db; color: white; cursor: pointer;">发送</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        async function sendNotification() {
+            const title = document.getElementById('notification-title').value.trim();
+            const type = document.getElementById('notification-type').value;
+            const content = document.getElementById('notification-content').value.trim();
+
+            if (!title) {
+                showMessage('请输入通知标题', 'error');
+                return;
+            }
+
+            if (!content) {
+                showMessage('请输入通知内容', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('../api/send_notification.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        type: type,
+                        content: content
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('通知发送成功', 'success');
+                    document.querySelector('.modal').remove();
+                    // 重新加载通知列表
+                    loadNotifications();
+                } else {
+                    showMessage(result.message || '通知发送失败', 'error');
+                }
+            } catch (error) {
+                console.error('发送通知失败:', error);
+                showMessage('发送失败，请重试', 'error');
+            }
+        }
+    </script>
+
+    <!-- ========== Sidebar音乐播放器（模块化版本）========== -->
+
+
+
+    <!-- 导航栏 -->
+    <script src="../js/navbar.js?v=1.0"></script>
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+
+    <!-- 组件加载器 -->
+    <script src="../components/loader.js?v=3.0"></script>
+
+</body>
+
+</html>

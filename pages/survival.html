@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生存服特色 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.19">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    
+    <link rel="preload" href="../assets/img/survival.png" as="image">
+    <link rel="preload" href="../assets/img/1.png" as="image">
+    <style>
+        .survival-page {
+            padding: 40px 0;
+        }
+
+        .content-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-section {
+            margin-bottom: 60px;
+        }
+
+        .feature-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f5f3ff 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .feature-card h4 {
+            font-size: 1.2rem;
+            color: #667eea;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f5f3ff 100%);
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .feature-list li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .highlight-box h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .highlight-box p {
+            line-height: 1.8;
+            margin-bottom: 10px;
+            opacity: 0.95;
+        }
+
+        .highlight-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 14px 35px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .back-btn::after {
+            display: none;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-8px) translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+            text-decoration: none !important;
+            background: linear-gradient(135deg, #5a67d8, #764ba2);
+        }
+
+        .back-btn:hover::before {
+            left: 100%;
+        }
+
+        .back-btn:active {
+            transform: translateX(-4px) translateY(-1px) scale(0.98);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .back-btn i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 30px 20px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @keyframes satelliteFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        @keyframes orbitRotate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        @keyframes signalWave {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+        }
+
+        @keyframes radarScan {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7),
+                            0 0 0 4px rgba(0, 255, 136, 0.3),
+                            0 0 15px rgba(0, 255, 136, 0.5);
+            }
+            50% { 
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 1),
+                            0 0 0 8px rgba(0, 255, 136, 0.5),
+                            0 0 25px rgba(0, 255, 136, 0.8);
+            }
+        }
+
+        @keyframes techPulse {
+            0%, 100% { 
+                opacity: 1; 
+                transform: scale(1);
+                box-shadow: 0 0 15px #00ff88, 0 0 30px #00ff88;
+            }
+            50% { 
+                opacity: 0.7; 
+                transform: scale(1.2);
+                box-shadow: 0 0 25px #00ff88, 0 0 50px #00ff88, 0 0 75px #00ff88;
+            }
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { 
+                transform: translateY(0) scale(1); 
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translateY(-20px) scale(1.5); 
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes meteorFall {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-300px) translateY(300px);
+                opacity: 0;
+            }
+        }
+    </style>
+
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 生存游戏Banner区域 -->
+    <section class="subpage-banner">
+        <div class="subpage-banner-bg"></div>
+        <div class="subpage-banner-particles"></div>
+        <div class="container">
+            <div class="subpage-banner-content">
+                <h1 class="subpage-banner-title">生存游戏特色</h1>
+                <p class="subpage-banner-subtitle">自由探索 · 丰富玩法 · 无限可能</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 生存游戏内容区 -->
+    <div class="section survival-page">
+        <div class="container">
+            <div class="content-wrapper fade-in">
+                <div class="feature-section">
+                    <div class="feature-title">🌍 全新的生存世界</div>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>🗺️ 全新地形生成</h4>
+                            <p>更深邃的海洋、更雄伟的山峰、更壮观的地下河，每一处都是独特风景，等待你的探索。</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>🏛️ 神秘建筑结构</h4>
+                            <p>30+种新建筑结构隐藏在世界各地，每一座建筑都蕴含着神秘的故事和珍贵的宝藏。</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="feature-title">🐉 挑战极致战斗</div>
+                    <div class="highlight-box">
+                        <h4>⚔️ 全新战斗体验</h4>
+                        <p>20+种新怪物带来更强的敌人、更刺激的战斗、更丰厚的奖励。</p>
+                        <p>终极BOSS Herobrine——曾经的王，正等待着你的挑战。</p>
+                        <p>末影龙全面升级，全新战斗场景、震撼音乐效果、炫酷技能特效，体验史诗级对决。每一次战斗都是对智慧和勇气的考验！</p>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="feature-title">🎮 丰富玩法系统</div>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>💰 完善经济体系</h4>
+                            <p>全球市场自由交易、兑换商店稀有物品、限时杂货店好物，构建繁荣玩家经济。</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>🎨 梦幻卡池系统</h4>
+                            <p>六大卡池等你来抽，限时概率UP，稀有物品轻松获取。包含生存物资、粘液科技等多种类型。</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>⚔️ 个性化装备</h4>
+                            <p>15+种武器皮肤，每款皮肤都有独特特效和属性加成。高级附魔系统超越原版，打造专属神器。</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>🎨 专属资源包</h4>
+                            <p>精心设计的粘液科技专属材质，带来沉浸式视觉体验，让游戏世界更加绚丽多彩。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="feature-title">🎁 核心特色功能</div>
+                    <ul class="feature-list">
+                        <li><strong>便捷菜单：</strong>传送、邮箱、商店、领地、签到、称号等功能一键搞定，告别繁琐指令</li>
+                        <li><strong>特色玩法：</strong>粘液科技、梦幻卡池、每日任务、高级附魔、药水扩展、玩家技能，玩法应有尽有</li>
+                        <li><strong>趣味系统：</strong>粒子特效、点歌系统、VIP特权，打造专属个性化游戏体验</li>
+                        <li><strong>传送功能：</strong>家园传送、公共传送点，快速移动到想去的地方</li>
+                        <li><strong>领地系统：</strong>圈地建设，保护你的建筑和财物</li>
+                        <li><strong>锁箱保护：</strong>保护你的珍贵物品，防止被他人拿取</li>
+                    </ul>
+                </div>
+
+                <div class="feature-section">
+                    <div class="feature-title">🛰️ 卫星云图系统</div>
+                    <div style="text-align: center; padding: 60px 20px; position: relative; overflow: hidden; background: linear-gradient(135deg, #f8f9ff 0%, #f5f3ff 100%); border-radius: 15px; border: 2px solid rgba(102, 126, 234, 0.2);">
+                        
+                        <!-- 深空背景 -->
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: 
+                            radial-gradient(ellipse at top, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+                            radial-gradient(ellipse at bottom, rgba(118, 75, 162, 0.08) 0%, transparent 50%),
+                            linear-gradient(180deg, #0a0e27 0%, #050a1f 50%, #0a0e27 100%);"></div>
+
+                        <!-- 星空背景 -->
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border: 1px solid rgba(102, 126, 234, 0.1); border-radius: 50%; animation: orbitRotate 20s linear infinite; pointer-events: none;"></div>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; border: 1px solid rgba(118, 75, 162, 0.1); border-radius: 50%; animation: orbitRotate 30s linear infinite reverse; pointer-events: none;"></div>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 500px; border: 1px solid rgba(102, 126, 234, 0.08); border-radius: 50%; animation: orbitRotate 40s linear infinite; pointer-events: none;"></div>
+
+                        <!-- 背景粒子效果 -->
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                            <div style="position: absolute; top: 20%; left: 10%; width: 4px; height: 4px; background: rgba(102, 126, 234, 0.3); border-radius: 50%; animation: particleFloat 3s ease-in-out infinite;"></div>
+                            <div style="position: absolute; top: 30%; left: 80%; width: 3px; height: 3px; background: rgba(118, 75, 162, 0.3); border-radius: 50%; animation: particleFloat 4s ease-in-out infinite 0.5s;"></div>
+                            <div style="position: absolute; top: 60%; left: 20%; width: 5px; height: 5px; background: rgba(102, 126, 234, 0.3); border-radius: 50%; animation: particleFloat 3.5s ease-in-out infinite 1s;"></div>
+                            <div style="position: absolute; top: 70%; left: 70%; width: 4px; height: 4px; background: rgba(118, 75, 162, 0.3); border-radius: 50%; animation: particleFloat 4.5s ease-in-out infinite 1.5s;"></div>
+                            <div style="position: absolute; top: 40%; left: 50%; width: 3px; height: 3px; background: rgba(102, 126, 234, 0.3); border-radius: 50%; animation: particleFloat 3.8s ease-in-out infinite 2s;"></div>
+                        </div>
+
+                        <!-- 星星效果 -->
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                            <div style="position: absolute; top: 5%; left: 8%; width: 1px; height: 1px; background: rgba(255,255, 255, 0.6); border-radius: 50%; animation: starTwinkle 2s ease-in-out infinite;"></div>
+                            <div style="position: absolute; top: 12%; left: 22%; width: 2px; height: 2px; background: rgba(255,255, 255, 0.5); border-radius: 50%; animation: starTwinkle 3s ease-in-out infinite 0.3s;"></div>
+                            <div style="position: absolute; top: 8%; left: 45%; width: 1px; height: 1px; background: rgba(255,255, 255, 0.7); border-radius: 50%; animation: starTwinkle 2.5s ease-in-out infinite 0.6s;"></div>
+                            <div style="position: absolute; top: 15%; left: 68%; width: 2px; height: 2px; background: rgba(255,255, 255, 0.4); border-radius: 50%; animation: starTwinkle 3.5s ease-in-out infinite 0.9s;"></div>
+                            <div style="position: absolute; top: 10%; left: 88%; width: 1px; height: 1px; background: rgba(255,255, 255, 0.6); border-radius: 50%; animation: starTwinkle 2.8s ease-in-out infinite 1.2s;"></div>
+                            <div style="position: absolute; top: 25%; left: 5%; width: 2px; height: 2px; background: rgba(255,255, 255, 0.5); border-radius: 50%; animation: starTwinkle 3.2s ease-in-out infinite 0.4s;"></div>
+                            <div style="position: absolute; top: 30%; left: 18%; width: 1px; height: 1px; background: rgba(255,255, 255, 0.6); border-radius: 50%; animation: starTwinkle 2.3s ease-in-out infinite 0.7s;"></div>
+                            <div style="position: absolute; top: 28%; left: 55%; width: 2px; height: 2px; background: rgba(255,255, 255, 0.4); border-radius: 50%; animation: starTwinkle 3.8s ease-in-out infinite 1s;"></div>
+                            <div style="position: absolute; top: 35%; left: 75%; width: 1px; height: 1px; background: rgba(255,255, 255, 0.7); border-radius: 50%; animation: starTwinkle 2.6s ease-in-out infinite 1.3s;"></div>
+                            <div style="position: absolute; top: 40%; left: 92%; width: 2px; height: 2px; background: rgba(255,255, 255, 0.5); border-radius: 50%; animation: starTwinkle 3.4s ease-in-out infinite 1.6s;"></div>
+                            <div style="position: absolute; top: 55%; left: 12%; width: 1px; height: 1px; background: rgba(255,255, 255, 0.6); border-radius: 50%; animation: starTwinkle 2.9s ease-in-out infinite 0.5s;"></div>
+                            <div style="position: absolute; top: 60%; left: 38%; width: 2px; height: 2px; background: rgba(255,255, 255, 0.4); border-radius: 50%; animation: starTwinkle 3.6s ease-in-out infinite 0.8s;"></div>
+                            <div style="position: absolute; top: 65%; left: 62%; width: 1px; height: 1px; background: rgba(255,255, 255, 0.7); border-radius: 50%; animation: starTwinkle 2.4s ease-in-out infinite 1.1s;"></div>
+                            <div style="position: absolute; top: 70%; left: 85%; width: 2px; height: 2px; background: rgba(255,255, 255, 0.5); border-radius: 50%; animation: starTwinkle 3.7s ease-in-out infinite 1.4s;"></div>
+                            <div style="position: absolute; top: 78%; left: 8%; width: 1px; height: 1px; background: rgba(255,255, 255, 0.6); border-radius: 50%; animation: starTwinkle 2.7s ease-in-out infinite 0.2s;"></div>
+                            <div style="position: absolute; top: 82%; left: 28%; width: 2px; height: 2px; background: rgba(255,255, 255, 0.4); border-radius: 50%; animation: starTwinkle 3.3s ease-in-out infinite 0.5s;"></div>
+                            <div style="position: absolute; top: 85%; left: 52%; width: 1px; height: 1px; background: rgba(255,255, 255, 0.7); border-radius: 50%; animation: starTwinkle 2.5s ease-in-out infinite 0.8s;"></div>
+                            <div style="position: absolute; top: 88%; left: 72%; width: 2px; height: 2px; background: rgba(255,255, 255, 0.5); border-radius: 50%; animation: starTwinkle 3.9s ease-in-out infinite 1.1s;"></div>
+                            <div style="position: absolute; top: 92%; left: 95%; width: 1px; height: 1px; background: rgba(255,255, 255, 0.6); border-radius: 50%; animation: starTwinkle 2.8s ease-in-out infinite 1.4s;"></div>
+                        </div>
+
+                        <!-- 流星效果 -->
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden;">
+                            <div style="position: absolute; top: 10%; left: 20%; width: 80px; height: 2px; background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent); transform: rotate(-45deg); animation: meteorFall 3s linear infinite; border-radius: 2px;"></div>
+                            <div style="position: absolute; top: 25%; left: 70%; width: 60px; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.6), transparent); transform: rotate(-30deg); animation: meteorFall 4s linear infinite 1.5s; border-radius: 1px;"></div>
+                            <div style="position: absolute; top: 45%; left: 15%; width: 100px; height: 2px; background: linear-gradient(90deg, rgba(255,255,255,0.7), transparent); transform: rotate(-60deg); animation: meteorFall 5s linear infinite 2.5s; border-radius: 2px;"></div>
+                        </div>
+
+                        <!-- 信号波效果 -->
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 50%; animation: signalWave 2s ease-out infinite; pointer-events: none;"></div>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 50%; animation: signalWave 2s ease-out infinite 0.5s; pointer-events: none;"></div>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 50%; animation: signalWave 2s ease-out infinite 1s; pointer-events: none;"></div>
+
+                        <!-- 雷达扫描效果 -->
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border-radius: 50%; pointer-events: none; overflow: hidden;">
+                            <div style="position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: linear-gradient(90deg, rgba(102, 126, 234, 0.6), transparent); transform-origin: left center; animation: radarScan 4s linear infinite;"></div>
+                        </div>
+
+                        <!-- 科技感边框 -->
+                        <div style="position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; border-top: 2px solid rgba(102, 126, 234, 0.3); border-left: 2px solid rgba(102, 126, 234, 0.3); pointer-events: none;"></div>
+                        <div style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; border-top: 2px solid rgba(102, 126, 234, 0.3); border-right: 2px solid rgba(102, 126, 234, 0.3); pointer-events: none;"></div>
+                        <div style="position: absolute; bottom: 10px; left: 10px; width: 30px; height: 30px; border-bottom: 2px solid rgba(102, 126, 234, 0.3); border-left: 2px solid rgba(102, 126, 234, 0.3); pointer-events: none;"></div>
+                        <div style="position: absolute; bottom: 10px; right: 10px; width: 30px; height: 30px; border-bottom: 2px solid rgba(102, 126, 234, 0.3); border-right: 2px solid rgba(102, 126, 234, 0.3); pointer-events: none;"></div>
+
+                        <!-- 光晕效果 -->
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none; animation: glowPulse 4s ease-in-out infinite;"></div>
+
+                        <!-- 科技感图标 -->
+                        <div style="position: relative; z-index: 1; margin-bottom: 30px;">
+                            <div style="font-size: 6rem; display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: satelliteFloat 3s ease-in-out infinite; filter: drop-shadow(0 0 30px rgba(102, 126, 234, 0.5));">
+                                🛰️
+                            </div>
+                        </div>
+
+                        <!-- 运行中标题 -->
+                        <h3 style="position: relative; z-index: 1; font-size: 2.5rem; font-weight: 700; margin-bottom: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 3px; text-transform: uppercase;">
+                            运行中
+                        </h3>
+
+                        <!-- 英文副标题 -->
+                        <p style="position: relative; z-index: 1; font-size: 1.2rem; color: rgba(102, 126, 234, 0.8); margin-bottom: 30px; letter-spacing: 2px; font-weight: 600;">
+                            SYSTEM ONLINE
+                        </p>
+
+                        <!-- 科技感状态信息 -->
+                        <div style="position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 200, 100, 0.1) 100%); border: 2px solid rgba(0, 255, 136, 0.5); border-radius: 25px; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 10px rgba(0, 255, 136, 0.1);">
+                            <div style="width: 12px; height: 12px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 15px #00ff88, 0 0 30px #00ff88; animation: statusPulse 2s ease-in-out infinite;"></div>
+                            <span style="font-size: 0.9rem; font-weight: 600; color: #00ff88; text-transform: uppercase; letter-spacing: 1px;">LIVE</span>
+                        </div>
+
+                        <!-- 访问地图按钮 -->
+                        <div style="position: relative; z-index: 1; margin-top: 30px;">
+                            <a href="map.html" style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 30px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); position: relative; overflow: hidden; text-decoration: none;">
+                                <span>访问卫星云图</span>
+                                <span>→</span>
+                            </a>
+                        </div>
+
+                        <!-- 提示信息 -->
+                        <p style="position: relative; z-index: 1; font-size: 0.95rem; color: #666; margin-top: 30px; line-height: 1.8; max-width: 500px; margin-left: auto; margin-right: auto;">
+                            卫星云图系统已上线运行，实时显示服务器地图数据。<br>
+                            点击上方按钮即可访问！
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="feature-title">�� 适合所有玩家</div>
+                    <div class="highlight-box">
+                        <h4>🎯 个性化游戏体验</h4>
+                        <p>无论是喜欢探索建造的休闲玩家，还是追求挑战极限的 hardcore玩家，万驹同源生存服都能满足你的需求！</p>
+                        <ul>
+                            <li><strong>新手友好：</strong>便捷的操作菜单，完善的引导系统，让你快速上手</li>
+                            <li><strong>老玩家天堂：</strong>高级附魔、粘液科技、BOSS挑战，不断挑战你的极限</li>
+                            <li><strong>社区活跃：</strong>定期举办活动，玩家互动频繁，打造温馨游戏社区</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="../index.html" class="back-btn"><i class="fas fa-arrow-left"></i>返回首页</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.4"></script>
+
+    <!-- ========== Sidebar音乐播放器（模块化版本）========== -->
+
+
+
+    <!-- 导航栏 -->
+    <script src="../js/navbar.js?v=1.0"></script>
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+</body>
+
+</html>
+

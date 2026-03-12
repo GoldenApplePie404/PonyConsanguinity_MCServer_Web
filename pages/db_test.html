@@ -1,0 +1,413 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据库测试 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <style>
+        .db-test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .table-list {
+            margin-bottom: 30px;
+        }
+
+        .table-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .table-item:hover {
+            background-color: #f5f5f5;
+            transform: translateY(-2px);
+        }
+
+        .table-details {
+            margin-top: 30px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .structure-table,
+        .data-table {
+            min-width: 100%;
+            border-collapse: collapse;
+        }
+
+        .structure-table th,
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .structure-table td,
+        .data-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .structure-table tr:nth-child(even),
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #e74c3c;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .success {
+            text-align: center;
+            padding: 20px;
+            color: #28a745;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin: 20px 0;
+        }
+
+        .pagination button {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .pagination button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+    
+    
+</head>
+
+<body>
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 数据库测试区域 -->
+    <div class="section">
+        <div class="container">
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h2>数据库测试</h2>
+                    <p>连接到 MySQL 数据库并查看表结构和数据</p>
+                </div>
+                <div class="card-body">
+                    <!-- 数据库信息 -->
+                    <div id="db-info" class="success" style="display: none;">
+                        <h3>数据库连接成功</h3>
+                        <p>数据库: <span id="db-name"></span></p>
+                    </div>
+
+                    <!-- 表列表 -->
+                    <div class="table-list">
+                        <h3>数据库表</h3>
+                        <div id="tables-container" class="loading">
+                            加载表列表中...
+                        </div>
+                    </div>
+
+                    <!-- 表详情 -->
+                    <div class="table-details" id="table-details" style="display: none;">
+                        <h3 id="current-table"></h3>
+
+                        <!-- 表结构 -->
+                        <div class="table-structure">
+                            <h4>表结构</h4>
+                            <div id="structure-container" class="loading">
+                                加载表结构中...
+                            </div>
+                        </div>
+
+                        <!-- 表数据 -->
+                        <div class="table-data">
+                            <h4>表数据</h4>
+                            <div id="data-container" class="loading">
+                                加载表数据中...
+                            </div>
+                            <!-- 分页控件 -->
+                            <div id="pagination" class="pagination"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <!-- 引入脚本 -->
+    <script src="../js/main.js?v=3.5"></script>
+    <script src="../js/navbar.js?v=1.0"></script>
+
+    <script>
+        // 分页相关变量
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let currentTable = '';
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDatabaseInfo();
+        });
+
+        // 加载数据库信息
+        async function loadDatabaseInfo() {
+            try {
+                const response = await fetch('../api/db_test.php');
+                const result = await response.json();
+
+                if (result.success) {
+                    // 显示数据库信息
+                    document.getElementById('db-name').textContent = result.data.database;
+                    document.getElementById('db-info').style.display = 'block';
+
+                    // 显示表列表
+                    displayTables(result.data.tables);
+                } else {
+                    document.getElementById('tables-container').innerHTML = `<div class="error">${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('加载数据库信息失败:', error);
+                document.getElementById('tables-container').innerHTML = `<div class="error">加载失败: ${error.message}</div>`;
+            }
+        }
+
+        // 显示表列表
+        function displayTables(tables) {
+            const container = document.getElementById('tables-container');
+
+            if (tables.length === 0) {
+                container.innerHTML = '<div class="error">数据库中没有表</div>';
+                return;
+            }
+
+            let html = '';
+            tables.forEach(table => {
+                html += `
+                    <div class="table-item" onclick="loadTableDetails('${table}')">
+                        <h4>${table}</h4>
+                        <p>点击查看表结构和数据</p>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 加载表详情
+        async function loadTableDetails(tableName, page = 1) {
+            // 更新当前表和页码
+            currentTable = tableName;
+            currentPage = page;
+
+            // 显示加载状态
+            document.getElementById('table-details').style.display = 'block';
+            document.getElementById('current-table').textContent = tableName;
+            document.getElementById('structure-container').innerHTML = '加载表结构中...';
+            document.getElementById('data-container').innerHTML = '加载表数据中...';
+
+            // 加载表结构
+            try {
+                const structureResponse = await fetch(`../api/db_test.php?action=get_table_structure&table=${tableName}`);
+                const structureResult = await structureResponse.json();
+
+                if (structureResult.success) {
+                    displayTableStructure(structureResult.data.structure);
+                } else {
+                    document.getElementById('structure-container').innerHTML = `<div class="error">${structureResult.message}</div>`;
+                }
+            } catch (error) {
+                console.error('加载表结构失败:', error);
+                document.getElementById('structure-container').innerHTML = `<div class="error">加载失败: ${error.message}</div>`;
+            }
+
+            // 加载表数据
+            try {
+                const dataResponse = await fetch(`../api/db_test.php?action=get_table_data&table=${tableName}&page=${page}&limit=${itemsPerPage}`);
+                const dataResult = await dataResponse.json();
+
+                if (dataResult.success) {
+                    displayTableData(dataResult.data);
+                    generatePagination(dataResult.data.total);
+                } else {
+                    document.getElementById('data-container').innerHTML = `<div class="error">${dataResult.message}</div>`;
+                }
+            } catch (error) {
+                console.error('加载表数据失败:', error);
+                document.getElementById('data-container').innerHTML = `<div class="error">加载失败: ${error.message}</div>`;
+            }
+        }
+
+        // 显示表结构
+        function displayTableStructure(structure) {
+            const container = document.getElementById('structure-container');
+
+            if (structure.length === 0) {
+                container.innerHTML = '<div class="error">表结构为空</div>';
+                return;
+            }
+
+            let html = `
+                <div class="table-container">
+                    <table class="structure-table">
+                        <thead>
+                            <tr>
+                                <th>字段名</th>
+                                <th>类型</th>
+                                <th>是否为空</th>
+                                <th>默认值</th>
+                                <th>额外信息</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            structure.forEach(column => {
+                html += `
+                    <tr>
+                        <td>${column.Field}</td>
+                        <td>${column.Type}</td>
+                        <td>${column.Null}</td>
+                        <td>${column.Default || '-'}</td>
+                        <td>${column.Extra || '-'}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // 显示表数据
+        function displayTableData(data) {
+            const container = document.getElementById('data-container');
+
+            if (data.data.length === 0) {
+                container.innerHTML = '<div class="error">表中没有数据</div>';
+                return;
+            }
+
+            // 获取表头
+            const headers = Object.keys(data.data[0]);
+
+            let html = `
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+            `;
+
+            // 添加表头
+            headers.forEach(header => {
+                html += `<th>${header}</th>`;
+            });
+
+            html += `
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // 添加数据行
+            data.data.forEach(row => {
+                html += '<tr>';
+                headers.forEach(header => {
+                    html += `<td>${row[header] || '-'}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += `
+                    </tbody>
+                </table>
+                <p style="text-align: right; margin-top: 10px;">共 ${data.total} 条记录</p>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // 生成分页控件
+        function generatePagination(total) {
+            const paginationContainer = document.getElementById('pagination');
+            const totalPages = Math.ceil(total / itemsPerPage);
+
+            if (totalPages <= 1) {
+                paginationContainer.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+
+            // 上一页按钮
+            html += `<button onclick="loadTableDetails('${currentTable}', ${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>&laquo;</button>`;
+
+            // 页码按钮
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, startPage + 4);
+
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button onclick="loadTableDetails('${currentTable}', ${i})" ${i === currentPage ? 'class="active"' : ''}>${i}</button>`;
+            }
+
+            // 下一页按钮
+            html += `<button onclick="loadTableDetails('${currentTable}', ${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>&raquo;</button>`;
+
+            paginationContainer.innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>
+
