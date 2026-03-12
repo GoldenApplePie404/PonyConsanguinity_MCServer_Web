@@ -1,3 +1,18 @@
+@font-face {
+    font-family: 'MinecraftTen-VGORe';
+    src: url('../assets/fonts/MinecraftTen-VGORe.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mojangles';
+    src: url('../assets/fonts/mojangles.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 * {
     margin: 0;
     padding: 0;
@@ -205,11 +220,29 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 1.3rem;
+    font-weight: normal;
     text-decoration: none;
     color: inherit;
-    font-family: 'SimSun', 'STSong', '宋体', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-family: 'Mojangles', 'SimSun', 'STSong', '宋体', sans-serif;
+    text-shadow: 2px 2px 0px #333;
+    letter-spacing: 1px;
+}
+
+.server-name {
+    font-family: 'MinecraftTen-VGORe', 'SimSun', 'STSong', '宋体', sans-serif;
+    font-size: 1.4rem;
+    color: #ffffff;
+    text-shadow: 2px 2px 0px #000;
+    letter-spacing: 2px;
+}
+
+.footer-c {
+    font-family: 'Mojangles', 'SimSun', 'STSong', '宋体', sans-serif;
+    font-size: 1.2rem;
+    color: #ffffff;
+    text-shadow: 2px 2px 0px #000;
+    letter-spacing: 1px;
 }
 
 .nav-menu {
@@ -1142,6 +1175,37 @@ body {
 .stat-label {
     font-size: 0.9rem;
     opacity: 0.8;
+}
+
+/* 用户资料页面统计区域 */
+.user-stats-grid {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.stat-box-small {
+    text-align: center;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    min-width: 100px;
+}
+
+.stat-box-small .stat-value {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stat-box-small .stat-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .btn {

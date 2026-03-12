@@ -142,6 +142,12 @@
                     <label>内容</label>
                     <div class="content-wrapper">
                         <div class="content-editor">
+                            <div class="editor-toolbar">
+                                <div style="flex: 1;"></div>
+                                <button class="btn btn-sm btn-outline" onclick="uploadImage()" title="此功能开发中">
+                                    上传图片
+                                </button>
+                            </div>
                             <textarea id="post-content" rows="15" placeholder="请输入帖子内容（最多3000字）" maxlength="3000"></textarea>
                             <div style="text-align: right; margin-top: 5px; color: #666; font-size: 0.9rem;">
                                 <span id="content-char-count">0</span>/3000
@@ -150,6 +156,43 @@
                         <div class="content-preview">
                             <div class="preview-label">预览</div>
                             <div id="markdown-preview" class="markdown-content"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 图片上传模态框 -->
+                <div class="modal" id="upload-image-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>上传图片</h2>
+                            <button class="modal-close" onclick="closeModal('upload-image-modal')">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="upload-area" id="image-upload-area">
+                                <div class="upload-icon">📤</div>
+                                <div class="upload-text">点击或拖拽图片到此处上传</div>
+                                <div class="upload-hint">支持 JPG、PNG、GIF、WEBP 格式，最大 5MB</div>
+                                <input type="file" class="upload-input" id="image-file-input" accept="image/*">
+                            </div>
+                            <div class="upload-progress" id="image-upload-progress" style="display: none;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="image-progress-fill"></div>
+                                </div>
+                                <div class="upload-status" id="image-upload-status">上传中...</div>
+                            </div>
+                            <div class="image-preview" id="image-upload-preview" style="display: none;">
+                                <div class="preview-title">图片预览</div>
+                                <img class="preview-image" id="uploaded-image-preview" src="" alt="预览">
+                                <div class="image-info" id="uploaded-image-info"></div>
+                                <div class="upload-actions">
+                                    <button class="btn btn-primary" id="insert-image-btn">插入到文章</button>
+                                    <button class="btn btn-secondary" id="upload-another-btn">上传另一张</button>
+                                </div>
+                            </div>
+                            <div class="error-message" id="upload-error" style="display: none; color: #e74c3c; text-align: center; margin-top: 10px;"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline" onclick="closeModal('upload-image-modal')">关闭</button>
                         </div>
                     </div>
                 </div>
@@ -181,6 +224,7 @@
             initPostCharCount();
             initAnnouncementBar();
             initCategoryTabs();
+            initImageUpload();
         });
 
         // 初始化公告栏
@@ -774,6 +818,213 @@
                 console.error('发布帖子失败:', error);
                 showToast('发布失败，请重试', 'error');
             }
+        }
+
+        // 图片上传功能
+        function uploadImage() {
+            if (!isLoggedin()) {
+                showToast('请先登录后再上传图片', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+                return;
+            }
+            resetUploadForm();
+            openModal('upload-image-modal');
+        }
+
+        // 初始化图片上传（页面加载时执行一次）
+        function initImageUpload() {
+            const uploadArea = document.getElementById('image-upload-area');
+            const fileInput = document.getElementById('image-file-input');
+            const uploadProgress = document.getElementById('image-upload-progress');
+            const uploadPreview = document.getElementById('image-upload-preview');
+            const uploadError = document.getElementById('upload-error');
+            const insertBtn = document.getElementById('insert-image-btn');
+            const uploadAnotherBtn = document.getElementById('upload-another-btn');
+
+            if (!uploadArea || !fileInput) return;
+
+            // 移除旧的事件监听器（防止重复）
+            const newFileInput = fileInput.cloneNode(true);
+            fileInput.parentNode.replaceChild(newFileInput, fileInput);
+            
+            // 重新获取新的fileInput
+            const currentFileInput = document.getElementById('image-file-input');
+
+            // 点击上传区域触发文件选择
+            uploadArea.addEventListener('click', () => {
+                currentFileInput.click();
+            });
+
+            // 处理文件选择（只添加一次）
+            currentFileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    handleFileUpload(file);
+                }
+            });
+
+            // 处理拖拽上传
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    handleFileUpload(file);
+                }
+            });
+
+            // 插入图片到文章
+            if (insertBtn) {
+                insertBtn.addEventListener('click', () => {
+                    const imageUrl = document.getElementById('uploaded-image-preview').src;
+                    if (imageUrl) {
+                        insertImageToEditor(imageUrl);
+                        closeModal('upload-image-modal');
+                    }
+                });
+            }
+
+            // 上传另一张
+            if (uploadAnotherBtn) {
+                uploadAnotherBtn.addEventListener('click', () => {
+                    resetUploadForm();
+                });
+            }
+        }
+
+        // 处理文件上传
+        async function handleFileUpload(file) {
+            const uploadArea = document.getElementById('image-upload-area');
+            const uploadProgress = document.getElementById('image-upload-progress');
+            const uploadPreview = document.getElementById('image-upload-preview');
+            const uploadError = document.getElementById('upload-error');
+            const progressFill = document.getElementById('image-progress-fill');
+            const uploadStatus = document.getElementById('image-upload-status');
+
+            // 验证文件
+            if (!file.type.match('image.*')) {
+                showUploadError('请选择图片文件');
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                showUploadError('图片大小不能超过5MB');
+                return;
+            }
+
+            // 显示上传进度
+            uploadArea.style.display = 'none';
+            uploadProgress.style.display = 'block';
+            uploadPreview.style.display = 'none';
+            uploadError.style.display = 'none';
+
+            // 创建FormData
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                // 获取当前用户
+                const currentUser = getCurrentUser();
+                if (!currentUser) {
+                    showUploadError('请先登录');
+                    return;
+                }
+
+                // 发送上传请求
+                const response = await fetch('../api/image_api/upload.php', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // 显示预览
+                    uploadProgress.style.display = 'none';
+                    uploadPreview.style.display = 'block';
+                    
+                    const imageUrl = result.data.url;
+                    const imageInfo = result.data;
+                    
+                    document.getElementById('uploaded-image-preview').src = imageUrl;
+                    document.getElementById('uploaded-image-info').innerHTML = `
+                        <p>文件名: ${imageInfo.original_name}</p>
+                        <p>大小: ${(imageInfo.size / 1024).toFixed(2)} KB</p>
+                        <p>尺寸: ${imageInfo.width} × ${imageInfo.height}</p>
+                    `;
+                } else {
+                    showUploadError(result.message || '上传失败');
+                }
+            } catch (error) {
+                console.error('上传失败:', error);
+                showUploadError('上传失败，请重试');
+            }
+        }
+
+        // 显示上传错误
+        function showUploadError(message) {
+            const uploadArea = document.getElementById('image-upload-area');
+            const uploadProgress = document.getElementById('image-upload-progress');
+            const uploadPreview = document.getElementById('image-upload-preview');
+            const uploadError = document.getElementById('upload-error');
+
+            uploadArea.style.display = 'block';
+            uploadProgress.style.display = 'none';
+            uploadPreview.style.display = 'none';
+            uploadError.style.display = 'block';
+            uploadError.textContent = message;
+        }
+
+        // 重置上传表单
+        function resetUploadForm() {
+            const uploadArea = document.getElementById('image-upload-area');
+            const uploadProgress = document.getElementById('image-upload-progress');
+            const uploadPreview = document.getElementById('image-upload-preview');
+            const uploadError = document.getElementById('upload-error');
+            const fileInput = document.getElementById('image-file-input');
+
+            uploadArea.style.display = 'block';
+            uploadProgress.style.display = 'none';
+            uploadPreview.style.display = 'none';
+            uploadError.style.display = 'none';
+            fileInput.value = '';
+        }
+
+        // 插入图片到编辑器
+        function insertImageToEditor(imageUrl) {
+            const contentEditor = document.getElementById('post-content');
+            if (!contentEditor) return;
+
+            // 在光标位置插入图片Markdown
+            const cursorPos = contentEditor.selectionStart;
+            const textBefore = contentEditor.value.substring(0, cursorPos);
+            const textAfter = contentEditor.value.substring(cursorPos);
+            const imageMarkdown = `![图片](${imageUrl})\n\n`;
+            
+            contentEditor.value = textBefore + imageMarkdown + textAfter;
+            
+            // 触发input事件以更新预览
+            const inputEvent = new Event('input', { bubbles: true });
+            contentEditor.dispatchEvent(inputEvent);
+            
+            // 聚焦回编辑器
+            contentEditor.focus();
+            const newCursorPos = cursorPos + imageMarkdown.length;
+            contentEditor.setSelectionRange(newCursorPos, newCursorPos);
         }
 
 

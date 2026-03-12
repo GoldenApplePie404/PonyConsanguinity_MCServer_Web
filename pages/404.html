@@ -84,7 +84,16 @@
 
         .error-illustration {
             margin-bottom: 30px;
-            font-size: 80px;
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            transition: none !important;
+            transform: none !important;
+        }
+
+        .error-illustration:hover {
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         @media (max-width: 768px) {
@@ -124,7 +133,7 @@
     <!-- 404错误页内容 -->
     <div class="error-page">
         <div class="error-container">
-            <div class="error-illustration">🚫</div>
+            <img src="../assets/img/404.png" class="error-illustration" alt="404 Error">
             <div class="error-code">404</div>
             <h1 class="error-title">页面未找到</h1>
             <p class="error-message">

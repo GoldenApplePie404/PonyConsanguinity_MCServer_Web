@@ -600,3 +600,163 @@
     font-style: italic;
     color: #7f8c8d;
 }
+
+/* 编辑器工具栏样式 */
+.editor-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px 8px 0 0;
+    border: 2px solid #e8ecef;
+    border-bottom: none;
+}
+
+.editor-toolbar .btn {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.editor-toolbar .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 图片上传区域样式 */
+.upload-area {
+    border: 2px dashed #e8ecef;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafbfc;
+}
+
+.upload-area:hover {
+    border-color: #667eea;
+    background: #f0f2ff;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+
+.upload-area.dragover {
+    border-color: #667eea;
+    background: #e8f0ff;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.6;
+}
+
+.upload-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.upload-hint {
+    font-size: 0.9rem;
+    color: #95a5a6;
+}
+
+.upload-input {
+    display: none;
+}
+
+/* 上传进度条样式 */
+.upload-progress {
+    margin: 20px 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e8ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0;
+}
+
+.upload-status {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #667eea;
+    font-weight: 500;
+}
+
+/* 图片预览样式 */
+.image-preview {
+    margin: 20px 0;
+}
+
+.preview-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.preview-image {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.image-info {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.image-info p {
+    margin: 5px 0;
+}
+
+.upload-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .content-wrapper {
+        grid-template-columns: 1fr;
+    }
+    
+    .editor-toolbar {
+        flex-wrap: wrap;
+    }
+    
+    .upload-area {
+        padding: 30px 15px;
+    }
+    
+    .upload-icon {
+        font-size: 2.5rem;
+    }
+}

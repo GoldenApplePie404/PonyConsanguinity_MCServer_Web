@@ -2,7 +2,7 @@
 // 获取当前页面的基础路径
 function getBasePath() {
     const path = window.location.pathname;
-    if (path.includes('/pages/')) {
+    if (path.includes('/pages/') || path.includes('/tools/')) {
         return '../';
     }
     return '';

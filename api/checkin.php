@@ -6,6 +6,7 @@ if (!defined('ACCESS_ALLOWED')) {
 require_once 'config.php';
 require_once 'helper.php';
 require_once 'secure_data.php';
+require_once 'UserManager.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -22,17 +23,17 @@ if (!AuthHelper::validateToken()) {
 }
 
 $username = AuthHelper::getUsernameFromToken();
-$users = secureReadData(USERS_FILE);
+$manager = new UserManager();
 
-if (!isset($users[$username])) {
+// 检查用户是否存在
+$user = $manager->getUser($username);
+if (!$user) {
     echo json_encode([
         'success' => false,
         'message' => '用户不存在'
     ]);
     exit;
 }
-
-$user = $users[$username];
 
 // 检查邮箱是否验证
 if (!isset($user['email_verified']) || $user['email_verified'] !== true) {
@@ -43,42 +44,25 @@ if (!isset($user['email_verified']) || $user['email_verified'] !== true) {
     exit;
 }
 
-// 检查今天是否已经签到
-$today = date('Y-m-d');
-$lastCheckin = isset($user['check_t']) ? $user['check_t'] : '';
+// 执行签到
+$result = $manager->checkin($username);
 
-if ($lastCheckin === $today) {
+if ($result['success']) {
+    echo json_encode([
+        'success' => true,
+        'message' => '签到成功',
+        'data' => [
+            'points' => $result['points'],
+            'experience' => $result['experience'],
+            'reward' => $result['reward'],
+            'reward_experience' => $result['reward_experience'],
+            'checkin_date' => date('Y-m-d')
+        ]
+    ]);
+} else {
     echo json_encode([
         'success' => false,
-        'message' => '今天已经签到过了，明天再来吧'
+        'message' => $result['message']
     ]);
-    exit;
 }
-
-// 签到奖励积分
-$points = isset($user['points']) ? intval($user['points']) : 0;
-$rewardPoints = 10; // 每次签到获得10积分
-$newPoints = $points + $rewardPoints;
-
-// 更新用户数据
-$users[$username]['check_t'] = $today;
-$users[$username]['points'] = $newPoints;
-
-if (!secureWriteData(USERS_FILE, $users)) {
-    echo json_encode([
-        'success' => false,
-        'message' => '签到失败，请稍后重试'
-    ]);
-    exit;
-}
-
-echo json_encode([
-    'success' => true,
-    'message' => '签到成功',
-    'data' => [
-        'points' => $newPoints,
-        'reward' => $rewardPoints,
-        'checkin_date' => $today
-    ]
-]);
 ?>

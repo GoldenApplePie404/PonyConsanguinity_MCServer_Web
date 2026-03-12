@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.png">
+    <link rel="shortcut icon" href="../assets/img/m.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>积分商城 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    
+    <style>
+        /* 商城Banner样式 */
+        .shop-banner {
+            position: relative;
+            min-height: 350px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+
+
+        .shop-banner-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        .shop-banner-particles::before,
+        .shop-banner-particles::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shop-banner-particles::before {
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .shop-banner-particles::after {
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -30px) scale(1.1); }
+            50% { transform: translate(0, -50px) scale(1); }
+            75% { transform: translate(-50px, -30px) scale(0.9); }
+        }
+
+        .shop-banner-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .shop-banner-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .shop-banner-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 用户信息卡片 */
+        .user-info-section {
+            background: #f8f9fa;
+            padding: 30px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .user-info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .user-info-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .user-details h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .user-level {
+            color: #4CAF50;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .user-points-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .user-points-display .points-value {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .user-points-display .points-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* 商城内容区 */
+        .shop-section {
+            padding: 40px 0;
+            background: #f8f9fa;
+            min-height: 600px;
+        }
+
+        /* 分类标签 */
+        .shop-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .shop-tab {
+            padding: 12px 25px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .shop-tab:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .shop-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: white;
+        }
+
+        /* 商品网格 */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* 商品卡片 */
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .product-card.unavailable {
+            opacity: 0.7;
+        }
+
+        .product-card.unavailable::after {
+            content: '未上架';
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 40px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transform: rotate(45deg);
+            z-index: 10;
+        }
+
+        .product-image {
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .product-image.gold {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        }
+
+        .product-image.exp {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .product-image.special {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        }
+
+        .product-image.vip {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .product-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .product-limit {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 12px;
+            padding: 4px 10px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .product-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+
+        .product-price .price-icon {
+            font-size: 1rem;
+        }
+
+        .buy-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .buy-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .buy-btn.disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .buy-btn.coming-soon {
+            background: #95a5a6;
+        }
+
+        /* Toast提示样式 */
+        .shop-toast {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .shop-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .shop-toast.toast-success {
+            border-left: 4px solid #2ecc71;
+        }
+
+        .shop-toast.toast-error {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .shop-toast .toast-icon {
+            font-size: 1.2rem;
+        }
+
+        .shop-toast .toast-message {
+            font-size: 0.95rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* 更多商品提示 */
+        .more-products {
+            text-align: center;
+            padding: 50px 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+        }
+
+        .more-products-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .more-products h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .more-products p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* 兑换弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalPop 0.3s ease;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .modal-message {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.confirm {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .modal-btn.cancel {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .shop-banner-title {
+                font-size: 2rem;
+            }
+
+            .shop-banner-subtitle {
+                font-size: 1rem;
+            }
+
+            .shop-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+
+            .user-info-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .user-info-left {
+                flex-direction: column;
+            }
+
+            .shop-tabs {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 商城Banner -->
+    <section class="shop-banner">
+        <div class="shop-banner-particles"></div>
+        <div class="container">
+            <div class="shop-banner-content">
+                <h1 class="shop-banner-title">【开发中】积分商城</h1>
+                <p class="shop-banner-subtitle">使用积分兑换各种游戏道具和特权</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户信息区 -->
+    <section class="user-info-section">
+        <div class="container">
+            <div class="user-info-card">
+                <div class="user-info-left">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-details">
+                        <h3 id="shop-username">加载中...</h3>
+                        <div class="user-level">等级 <span id="shop-level">-</span></div>
+                    </div>
+                </div>
+                <div class="user-points-display">
+                    <span class="points-value" id="shop-points">-</span>
+                    <span class="points-label">当前积分</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 商城内容区 -->
+    <section class="shop-section">
+        <div class="container">
+            <!-- 分类标签 -->
+            <div class="shop-tabs">
+                <button class="shop-tab active" data-category="all">全部商品</button>
+                <button class="shop-tab" data-category="hot">🔥 热销</button>
+                <button class="shop-tab" data-category="privilege">👑 特权</button>
+                <button class="shop-tab" data-category="tool">🎮 道具</button>
+            </div>
+
+            <!-- 商品列表 -->
+            <div class="shop-grid" id="productGrid">
+                <!-- 经验值礼包 -->
+                <div class="product-card" data-category="hot" data-product="exp">
+                    <div class="product-image exp">📈</div>
+                    <div class="product-info">
+                        <div class="product-name">经验值礼包</div>
+                        <div class="product-description">快速提升等级，获得100点经验值，助你更快升级解锁特权</div>
+
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-icon">💰</span>
+                                <span>50</span>
+                            </div>
+                            <button class="buy-btn product-exchange-btn" onclick="openExchangeModal('exp', 50, '100经验值')">立即兑换</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 改名卡 -->
+                <div class="product-card unavailable" data-category="tool" data-product="namecard">
+                    <div class="product-image special">📝</div>
+                    <div class="product-info">
+                        <div class="product-name">改名卡</div>
+                        <div class="product-description">修改你的游戏昵称，展现全新形象，每人限购1次</div>
+
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-icon">💰</span>
+                                <span>200</span>
+                            </div>
+                            <button class="buy-btn coming-soon" disabled>未上架</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 黄金VIP券 -->
+                <div class="product-card unavailable" data-category="privilege" data-product="vip">
+                    <div class="product-image gold">🎫</div>
+                    <div class="product-info">
+                        <div class="product-name">黄金VIP券</div>
+                        <div class="product-description">尊享黄金VIP特权30天，专属标识、优先排队、专属频道等特权</div>
+
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-icon">💰</span>
+                                <span>1000</span>
+                            </div>
+                            <button class="buy-btn coming-soon" disabled>未上架</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 经验双倍卡 -->
+                <div class="product-card" data-category="privilege" data-product="double_exp">
+                    <div class="product-image vip">⚡</div>
+                    <div class="product-info">
+                        <div class="product-name">经验双倍卡</div>
+                        <div class="product-description">24小时内获得的经验值翻倍，快速升级必备神器</div>
+
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-icon">💰</span>
+                                <span>150</span>
+                            </div>
+                            <button class="buy-btn product-exchange-btn" onclick="openExchangeModal('double_exp', 150, '24小时双倍经验')">立即兑换</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 专属称号 -->
+                <div class="product-card unavailable" data-category="privilege" data-product="title">
+                    <div class="product-image">🏆</div>
+                    <div class="product-info">
+                        <div class="product-name">专属称号·传奇</div>
+                        <div class="product-description">获得游戏内专属称号，彰显你的独特身份和荣耀</div>
+
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-icon">💰</span>
+                                <span>500</span>
+                            </div>
+                            <button class="buy-btn coming-soon" disabled>未上架</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 神秘宝箱 -->
+                <div class="product-card" data-category="hot" data-product="chest">
+                    <div class="product-image special">🎁</div>
+                    <div class="product-info">
+                        <div class="product-name">神秘宝箱</div>
+                        <div class="product-description">开启获得随机奖励，可能包含积分、经验、道具等惊喜</div>
+
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-icon">💰</span>
+                                <span>80</span>
+                            </div>
+                            <button class="buy-btn product-exchange-btn" onclick="openExchangeModal('chest', 80, '神秘宝箱')">立即兑换</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 补签卡 -->
+                <div class="product-card" data-category="tool" data-product="resign">
+                    <div class="product-image">📅</div>
+                    <div class="product-info">
+                        <div class="product-name">补签卡</div>
+                        <div class="product-description">错过签到？使用补签卡补回昨天的签到记录和奖励</div>
+
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-icon">💰</span>
+                                <span>30</span>
+                            </div>
+                            <button class="buy-btn product-exchange-btn" onclick="openExchangeModal('resign', 30, '补签卡')">立即兑换</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 积分加成卡 -->
+                <div class="product-card" data-category="tool" data-product="points_boost">
+                    <div class="product-image vip">💎</div>
+                    <div class="product-info">
+                        <div class="product-name">积分加成卡</div>
+                        <div class="product-description">7天内签到获得积分+50%，快速积累财富</div>
+
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-icon">💰</span>
+                                <span>120</span>
+                            </div>
+                            <button class="buy-btn product-exchange-btn" onclick="openExchangeModal('points_boost', 120, '7天积分加成')">立即兑换</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 优先进入权 -->
+                <div class="product-card unavailable" data-category="privilege" data-product="priority">
+                    <div class="product-image gold">🚀</div>
+                    <div class="product-info">
+                        <div class="product-name">优先进入权</div>
+                        <div class="product-description">服务器满员时优先进入，无需排队等待</div>
+
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-icon">💰</span>
+                                <span>300</span>
+                            </div>
+                            <button class="buy-btn coming-soon" disabled>未上架</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 更多商品 -->
+            <div class="more-products">
+                <div class="more-products-icon">🎊</div>
+                <h3>更多商品敬请期待</h3>
+                <p>我们正在准备更多精彩商品，敬请期待后续更新！</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 兑换确认弹窗 -->
+    <div class="modal-overlay" id="exchangeModal">
+        <div class="modal-content">
+            <div class="modal-icon">🛒</div>
+            <h3 class="modal-title">确认兑换</h3>
+            <p class="modal-message" id="modalMessage">确定要兑换该商品吗？</p>
+            <div class="modal-buttons">
+                <button class="modal-btn confirm" onclick="confirmExchange()">确认兑换</button>
+                <button class="modal-btn cancel" onclick="closeExchangeModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 侧边栏播放器 -->
+    <div id="app-sidebar-player"></div>
+
+    <!-- 回到顶部按钮 -->
+    <div id="app-back-to-top"></div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/back-to-top.js"></script>
+    <script src="../js/sidebar-player.js"></script>
+    <script src="../components/loader.js"></script>
+    <script>
+        // 当前选中的商品信息
+        let selectedProduct = null;
+        let userPoints = 0;
+        let productInfo = {};
+
+        // 加载用户信息
+        async function loadUserInfo() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+                
+                const response = await fetch('../api/get_checkin_status.php', {
+                    method: 'GET',
+                    headers: headers,
+                    credentials: 'include'
+                });
+                const data = await response.json();
+
+                console.log('API响应数据:', data);
+
+                if (data.success) {
+                    userPoints = data.data.points;
+                    document.getElementById('shop-points').textContent = userPoints;
+                    
+                    console.log('用户积分:', userPoints);
+                    
+                    // 计算等级
+                    const levelInfo = calculateLevel(data.data.experience);
+                    document.getElementById('shop-level').textContent = levelInfo.level;
+                    
+                    console.log('用户等级:', levelInfo.level);
+                    
+                    // 获取用户名
+                    const username = await getUsername();
+                    document.getElementById('shop-username').textContent = username || '玩家';
+                    
+                    console.log('用户名:', username);
+                } else {
+                    console.error('API返回失败:', data.message);
+                    document.getElementById('shop-username').textContent = '未登录';
+                }
+            } catch (err) {
+                console.error('加载用户信息失败:', err);
+                document.getElementById('shop-username').textContent = '加载失败';
+            }
+        }
+
+        // 加载商品信息（包含限购信息）
+        async function loadProducts() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                };
+                
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+                
+                const response = await fetch('../api/exchange.php', {
+                    method: 'POST',
+                    headers: headers,
+                    credentials: 'include',
+                    body: new URLSearchParams({
+                        action: 'get_products'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    productInfo = data.data;
+                    updateProductDisplay();
+                }
+            } catch (err) {
+                console.error('加载商品信息失败:', err);
+            }
+        }
+
+        // 更新商品显示（限购信息）
+        function updateProductDisplay() {
+            for (const [type, info] of Object.entries(productInfo)) {
+                const productCard = document.querySelector(`[data-product="${type}"]`);
+                if (productCard) {
+                    // 更新限购信息
+                    const limitInfo = productCard.querySelector('.product-limit');
+                    if (limitInfo) {
+
+                    }
+                    
+                    // 更新兑换按钮
+                    const exchangeBtn = productCard.querySelector('.product-exchange-btn');
+                    if (exchangeBtn) {
+                        exchangeBtn.disabled = false;
+                        exchangeBtn.textContent = '立即兑换';
+                        exchangeBtn.classList.remove('disabled');
+                    }
+                }
+            }
+        }
+
+        // 获取用户名
+        async function getUsername() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+                
+                const response = await fetch('../api/get_profile.php', {
+                    method: 'GET',
+                    headers: headers,
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                return data.success ? data.data.username : null;
+            } catch (err) {
+                console.error('获取用户名失败:', err);
+                return null;
+            }
+        }
+
+        // 计算等级
+        function calculateLevel(experience) {
+            let level = 0;
+            let requiredExp = 100;
+            let totalExp = experience;
+
+            while (totalExp >= requiredExp) {
+                totalExp -= requiredExp;
+                level++;
+                requiredExp = Math.floor(requiredExp * 1.5);
+            }
+
+            return {
+                level: level,
+                currentExp: totalExp,
+                requiredExp: requiredExp,
+                progress: (totalExp / requiredExp) * 100
+            };
+        }
+
+        // 分类筛选
+        document.querySelectorAll('.shop-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 更新激活状态
+                document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 筛选商品
+                const category = this.dataset.category;
+                const products = document.querySelectorAll('.product-card');
+                
+                products.forEach(product => {
+                    if (category === 'all' || product.dataset.category === category) {
+                        product.style.display = 'block';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 打开兑换弹窗
+        function openExchangeModal(type, price, reward) {
+            // 检查限购
+
+            
+            selectedProduct = { type, price, reward };
+            
+            if (userPoints < price) {
+                showToast('积分不足，无法兑换该商品', 'error');
+                return;
+            }
+            
+            document.getElementById('modalMessage').textContent = 
+                `确定要花费 ${price} 积分兑换 ${reward} 吗？`;
+            document.getElementById('exchangeModal').style.display = 'flex';
+        }
+
+        // 关闭兑换弹窗
+        function closeExchangeModal() {
+            document.getElementById('exchangeModal').style.display = 'none';
+            selectedProduct = null;
+        }
+
+        // 确认兑换
+        async function confirmExchange() {
+            if (!selectedProduct) return;
+            
+            // 禁用按钮防止重复提交
+            const confirmBtn = document.querySelector('#exchangeModal .modal-btn.confirm');
+            if (confirmBtn) {
+                confirmBtn.disabled = true;
+                confirmBtn.textContent = '兑换中...';
+            }
+            
+            try {
+                const token = localStorage.getItem('authToken');
+                const headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                };
+                
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+                
+                // 使用兑换API
+                const response = await fetch('../api/exchange.php', {
+                    method: 'POST',
+                    headers: headers,
+                    credentials: 'include',
+                    body: new URLSearchParams({
+                        action: 'exchange',
+                        product_type: selectedProduct.type,
+                        price: selectedProduct.price
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // 更新显示
+                    userPoints = data.data.points;
+                    document.getElementById('shop-points').textContent = userPoints;
+                    
+                    // 更新商品限购信息
+                    if (productInfo[selectedProduct.type]) {
+
+                        updateProductDisplay();
+                    }
+                    
+                    // 显示成功弹窗
+                    showSuccessModal(data.data.reward);
+                    closeExchangeModal();
+                    
+                    // 显示Toast提示
+                    showToast(`兑换成功！获得 ${data.data.reward}`, 'success');
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (err) {
+                console.error('兑换失败:', err);
+                showToast('兑换失败，请稍后重试', 'error');
+            } finally {
+                // 恢复按钮
+                if (confirmBtn) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.textContent = '确定';
+                }
+            }
+        }
+        
+        // 显示兑换成功弹窗
+        function showSuccessModal(reward) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.style.display = 'flex';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-icon">🎉</div>
+                    <h3 class="modal-title">兑换成功！</h3>
+                    <p class="modal-message">恭喜您获得 ${reward}</p>
+                    <div class="modal-buttons">
+                        <button class="modal-btn confirm" onclick="this.closest('.modal-overlay').remove()">确定</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // 3秒后自动关闭
+            setTimeout(() => {
+                if (modal.parentNode) {
+                    modal.remove();
+                }
+            }, 3000);
+        }
+        
+        // 显示Toast提示
+        function showToast(message, type = 'success') {
+            // 移除已存在的toast
+            const existingToast = document.querySelector('.shop-toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `shop-toast toast-${type}`;
+            
+            const icon = type === 'success' ? '✅' : '❌';
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+            `;
+
+            document.body.appendChild(toast);
+
+            // 添加动画类
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            // 3秒后移除
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.remove();
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 点击弹窗外部关闭
+        document.getElementById('exchangeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeExchangeModal();
+            }
+        });
+
+        // 页面加载时获取用户信息和商品信息
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+            loadProducts();
+            // 初始化组件（导航栏、页脚等）
+            if (typeof initComponents === 'function') {
+                initComponents();
+            }
+        });
+    </script>
+</body>
+
+</html>
