@@ -20,9 +20,9 @@ return array (
     'role' => 'admin',
     'login_attempts' => 0,
     'lock_until' => NULL,
-    'points' => 70,
-    'experience' => 145,
-    'check_t' => '2026-03-11',
+    'points' => 80,
+    'experience' => 160,
+    'check_t' => '2026-03-12',
     'inventory' => 
     array (
     ),
@@ -50,9 +50,9 @@ return array (
     'verify_expires' => NULL,
     'verify_sent_at' => '2026-03-08 21:24:31',
     'verify_resend_count' => 1,
-    'check_t' => '2026-03-08',
-    'points' => 10,
-    'experience' => 30,
+    'check_t' => '2026-03-18',
+    'points' => 20,
+    'experience' => 45,
     'inventory' => 
     array (
     ),

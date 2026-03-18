@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>万驹同源 - AI 智能客服（专业版）</title>
+    <script src="../../lib/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: none;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* 左侧折叠菜单 */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 300px;
+            background: white;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-header h2 {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .close-sidebar {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .close-sidebar:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 14px;
+            color: #667eea;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-info {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .sidebar-info-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar-info-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* 侧边栏链接样式 */
+        .sidebar-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .sidebar-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 主聊天区域 */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 新的 header（简化版，只保留菜单按钮） */
+        .header {
+            background: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+            height: 64px;
+            box-sizing: border-box;
+            z-index: 100;
+            position: relative;
+        }
+
+        .menu-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .chat-box {
+            flex: 1;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.05);
+            min-height: 0;
+            max-height: 100%;
+        }
+
+        .chat-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-box::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .chat-box::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+
+        .message {
+            margin-bottom: 18px;
+            padding: 16px 22px;
+            border-radius: 18px;
+            max-width: 75%;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-size: 15px;
+            line-height: 1.7;
+            position: relative;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            /* 关键：防止消息超出容器 */
+            max-width: calc(100% - 44px);
+            /* 精致边框效果 */
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #667eea 0%, #4b4ba2 100%);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            border: none;
+            padding: 16px 70px 16px 22px; /* 上、右（头像空间）、下、左 */
+            position: relative;
+        }
+
+        /* 用户头像 */
+        .message.user::after {
+            content: '👤';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f0f4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .message.assistant {
+            background: white;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            padding: 16px 22px 16px 70px; /* 上、右、下、左（头像空间） */
+            position: relative;
+
+        }
+
+        /* AI 头像 */
+        .message.assistant::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: url('../../assets/img/ai.png') center/cover no-repeat;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            margin: 10px auto;
+            max-width: 90%;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.system {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: #1976d2;
+            margin: 10px auto;
+            height: 15%;
+            max-width: 90%;
+            text-align: center;
+            display: flex;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #bbdefb;
+        }
+
+        .message-meta {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 6px;
+            text-align: right;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* AI 消息的时间戳在左下角 */
+        .message.assistant .message-meta {
+            text-align: right;
+            margin-left: 52px;
+        }
+
+        /* 用户消息的时间戳在右下角 */
+        .message.user .message-meta {
+            text-align: left;
+            margin-right: 52px; 
+        }
+
+        /* 输入框样式 */
+        .input-section {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+            background: white;
+            padding: 12px 20px;
+            border-top: 1px solid #e9ecef;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 100;
+        }
+
+        .input-section textarea {
+            flex: 1;
+            padding: 10px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 14px;
+            resize: none;
+            height: 44px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .input-section textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-section button {
+            padding: 10px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-section button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .input-section button:hover::before {
+            left: 100%;
+        }
+
+        .input-section button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .input-section button:active {
+            transform: translateY(-1px);
+        }
+
+        .input-section button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* 技能卡片样式 */
+        .skill-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 15px auto;
+            max-width: 90%;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .skill-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .skill-card-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .skill-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .skill-card-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .skill-info-item {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .skill-info-label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .skill-info-value {
+            font-size: 15px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .skill-status-online {
+            color: #10b981;
+        }
+
+        .skill-status-offline {
+            color: #ef4444;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 14px 18px;
+            background: white;
+            border-radius: 16px;
+            width: fit-content;
+            margin-right: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .typing-indicator span {
+            width: 9px;
+            height: 9px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        /* Markdown 样式 */
+        .markdown-body {
+            line-height: 1.5;
+            font-size: 14px;
+            color: #333;
+            max-width: 100%;
+            overflow-wrap: break-word;
+        }
+
+        .markdown-body p {
+            margin: 0.2em 0;
+            line-height: 1.5;
+        }
+
+        .markdown-body p:empty {
+            margin: 0;
+            padding: 0;
+            height: 0;
+            display: none;
+        }
+
+        .markdown-body p:first-child {
+            margin-top: 0;
+        }
+
+        .markdown-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .markdown-body br {
+            line-height: 1;
+            margin: 0;
+            padding: 0;
+        }
+
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3 {
+            margin: 0.7em 0 0.4em 0;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #2c3e50;
+        }
+
+        .markdown-body h1 { font-size: 1.4em; }
+        .markdown-body h2 { font-size: 1.2em; }
+        .markdown-body h3 { font-size: 1.1em; }
+
+        .markdown-body pre {
+            background: #f8f9fa;
+            padding: 10px 14px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 8px 0;
+            border: 1px solid #e9ecef;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .markdown-body code {
+            background: #f8f9fa;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #e83e8c;
+            border: 1px solid #e9ecef;
+        }
+
+        .markdown-body pre code {
+            background: transparent;
+            padding: 0;
+            border: none;
+            color: #333;
+        }
+
+        .markdown-body ul,
+        .markdown-body ol {
+            padding-left: 20px;
+            margin: 4px 0;
+        }
+
+        .markdown-body li {
+            margin: 2px 0;
+            line-height: 1.5;
+        }
+
+        .markdown-body blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 16px;
+            margin: 8px 0;
+            color: #666;
+            background: rgba(102, 126, 234, 0.05);
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+
+        .markdown-body table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 8px 0;
+            font-size: 13px;
+        }
+
+        .markdown-body th,
+        .markdown-body td {
+            border: 1px solid #e9ecef;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .markdown-body th {
+            background: #f6f8fa;
+            color: #24292e;
+            font-weight: 600;
+        }
+
+        .markdown-body tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .markdown-body a {
+            color: #667eea;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .markdown-body a:hover {
+            border-bottom-color: #667eea;
+        }
+
+        .markdown-body strong {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .markdown-body em {
+            font-style: italic;
+            color: #555;
+        }
+
+        .markdown-body hr {
+            border: none;
+            border-top: 2px solid #e9ecef;
+            margin: 12px 0;
+        }
+
+        /* 快速回复按钮样式 */
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .quick-reply-btn {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .quick-reply-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 猜你想问样式 */
+        .frequent-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 8px;
+        }
+
+        .frequent-questions-title {
+            width: 100%;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .frequent-question-btn {
+            background: white;
+            border: 1px solid #667eea;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .frequent-question-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 280px;
+            }
+
+            .header {
+                padding: 10px 15px;
+            }
+
+            .header-title {
+                font-size: 16px;
+            }
+
+            .menu-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .chat-box {
+                padding: 15px;
+            }
+
+            .message {
+                max-width: 85%;
+            }
+
+            .input-section {
+                padding: 10px 15px;
+            }
+
+            .input-section textarea {
+                height: 40px;
+                font-size: 13px;
+            }
+
+            .input-section button {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 遮罩层 -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- 左侧折叠菜单 -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>📋 信息面板</h2>
+            <button class="close-sidebar" id="closeSidebar">×</button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <h3>🤖 客服信息</h3>
+                <div class="sidebar-info">
+                    <div class="sidebar-info-item">
+                        <span class="sidebar-info-label">名称：</span>金苹果派 (客服版)
+                    </div>
+                    <div class="sidebar-info-item">
+                        <span class="sidebar-info-label">状态：</span><span style="color: #4ade80;">● 在线</span>
+                    </div>
+                    <div class="sidebar-info-item">
+                        <span class="sidebar-info-label">类型：</span>AI 智能客服
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>🔗 快速导航</h3>
+                <div class="sidebar-info">
+                    <div class="sidebar-info-item">
+                        <a href="../../index.html" class="sidebar-link">🏠 返回主页</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 简化版 Header -->
+        <div class="header">
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <div class="header-title">金苹果派 (客服版)</div>
+            <div style="width: 40px;"></div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-main">
+                <div class="chat-box" id="chatBox">
+
+                    <div class="message assistant">
+                        你好呀喵～我是万驹同源服务器的客服~
+
+                        有什么问题都可以问我哦，比如：
+                        - 如何加入服务器？
+                        - 如何获取黄金券？
+                        - VIP 特权有哪些？
+                        - 服务器有什么玩法？
+
+                        我会尽力帮助你的喵～💕
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <textarea id="userInput" placeholder="输入你的问题...（按 Enter 发送，Shift+Enter 换行）"></textarea>
+                    <button id="sendBtn">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://api.deepseek.com';
+        const LOCAL_API_URL = '../../api/ai/api.php'; // 本地 API
+        const SKILL_API_URL = '../../api/ai/skills.php'; // 技能 API
+
+        // DOM 元素
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        // 配置信息（从服务器获取）
+        let config = {
+            apiKey: '',
+            model: 'deepseek-chat',
+            temperature: 1.0,
+            maxTokens: 2048
+        };
+
+        // 技能定义
+        const SKILLS = [
+            {
+                name: 'server_status',
+                displayName: '服务器状态查询',
+                description: '查询 Minecraft 服务器的在线状态、玩家数量、版本等信息',
+                examples: ['服务器状态如何？', '服务器开了吗？', '服务器能连吗？']
+            },
+            {
+                name: 'player_count',
+                displayName: '玩家数量查询',
+                description: '查询当前在线玩家数量和服务器容量',
+                examples: ['多少人在线？', '服务器现在多少人？', '在线玩家数量']
+            },
+            {
+                name: 'player_query',
+                displayName: '玩家查询',
+                description: '查询指定玩家是否在线',
+                examples: ['czhdq 在线吗？', '查询玩家 Steve', '帮我看看小明在不在']
+            },
+            {
+                name: 'server_version',
+                displayName: '服务器版本查询',
+                description: '查询服务器版本信息',
+                examples: ['服务器是什么版本？', '服务器版本号多少？']
+            }
+        ];
+
+        // 使用 AI 进行意图识别
+        async function detectSkillWithAI(message) {
+            try {
+                const response = await fetch(LOCAL_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        api_key: config.apiKey,
+                        model: config.model,
+                        temperature: 0.1, // 低温度，更精确
+                        max_tokens: 200,
+                        mode: 'skill_detection' // 特殊模式，只进行意图识别
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.skill) {
+                    // AI 返回的格式：{"skill": "server_status", "params": {}, "confidence": 0.9}
+                    return {
+                        skill: data.skill.skill || data.skill.name, // 兼容两种格式
+                        params: data.skill.params || {},
+                        confidence: data.skill.confidence || 0.8,
+                        fromAI: true
+                    };
+                }
+
+                return null;
+            } catch (error) {
+                console.error('AI 意图识别失败:', error);
+                return null;
+            }
+        }
+
+        // 本地规则匹配（作为 AI 的后备方案）
+        function detectSkillWithRules(message) {
+            const cleanMessage = message.trim()
+                .replace(/[？?！!.]/g, '')
+                .replace(/(请 | 帮我 | 一下 | 呗 | 啊 | 呢 | 喵)/g, '');
+
+            const rules = {
+                server_status: [
+                    /服务器.* (状态 | 情况 | 如何)/i,
+                    /服务器.* (开没开 | 开了吗 | 开着吗)/i,
+                    /服务器.* (在线 | 离线 | 运行)/i,
+                    /看看服务器/i
+                ],
+                player_count: [
+                    /多少.* (人 | 玩家 | 在线)/i,
+                    /.* (在线 | 玩家) 数量/i,
+                    /服务器.* 多少人/i
+                ],
+                player_query: [
+                    /查询玩家\s*([a-zA-Z0-9_\u4e00-\u9fa5]+)/i,
+                    /玩家.* ([a-zA-Z0-9_\u4e00-\u9fa5]+).* (在线 | 在吗)/i,
+                    /([a-zA-Z0-9_\u4e00-\u9fa5]+).* (在线吗 | 在吗)/i
+                ],
+                server_version: [
+                    /服务器.* (版本 | 版本号)/i,
+                    /.*版本.*多少/i
+                ]
+            };
+
+            for (const [skillName, patterns] of Object.entries(rules)) {
+                for (const pattern of patterns) {
+                    const match = cleanMessage.match(pattern);
+                    if (match) {
+                        const params = {};
+                        if (skillName === 'player_query' && match[1]) {
+                            params.player = match[1];
+                        }
+                        return {
+                            skill: skillName,
+                            params: params,
+                            confidence: 0.7,
+                            fromAI: false
+                        };
+                    }
+                }
+            }
+            return null;
+        }
+
+        // 统一的意图检测接口（优先使用 AI，失败时使用规则）
+        async function detectSkill(message) {
+            // 首先尝试 AI 识别
+            const aiResult = await detectSkillWithAI(message);
+            if (aiResult) {
+                return aiResult;
+            }
+
+            // AI 失败时使用规则匹配
+            return detectSkillWithRules(message);
+        }
+
+        // 常用问题列表
+        const FREQUENT_QUESTIONS = [
+            '如何加入服务器？',
+            '服务器地址是什么？',
+            '服务器支持哪些版本？',
+            '如何获取黄金券？',
+            '黄金券有什么用？',
+            '如何充值黄金券？',
+            'VIP 特权有哪些？',
+            '如何成为 VIP？',
+            '如何创建个人商店？',
+            '如何圈定领地？',
+            '如何传送？',
+            '如何返回死亡地点？',
+            '粘液科技怎么解锁？',
+            '如何抽奖（梦幻卡池）？',
+            '无法连接服务器怎么办？',
+            '忘记密码怎么办？',
+            '遇到 BUG 如何反馈？',
+            '服务器支持 MOD 吗？',
+            '服务器 QQ 群是多少？',
+            '如何联系客服？',
+            '服务器官网地址？',
+            '梦幻币怎么获得？',
+            '服务器有哪些玩法？'
+        ];
+
+        // 快速回复问题（初始显示）
+        const QUICK_REPLIES = [
+            '如何加入服务器？',
+            '如何获取黄金券？',
+            'VIP 特权有哪些？',
+            '服务器地址是什么？',
+            '如何创建商店？'
+        ];
+
+        // 初始化
+        window.addEventListener('load', () => {
+            loadConfig();
+            addQuickReplies(); // 初始显示快速回复
+
+            // 配置 marked.js
+            if (typeof marked !== 'undefined') {
+                marked.setOptions({
+                    breaks: true, // 支持换行
+                    gfm: true, // GitHub Flavored Markdown
+                    headerIds: false, // 不生成 ID
+                    mangle: false // 不转义 HTML
+                });
+            }
+
+            // 侧边栏控制
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const menuBtn = document.getElementById('menuBtn');
+            const closeSidebar = document.getElementById('closeSidebar');
+
+            // 打开侧边栏
+            menuBtn.addEventListener('click', () => {
+                sidebar.classList.add('open');
+                overlay.classList.add('show');
+            });
+
+            // 关闭侧边栏
+            closeSidebar.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+            });
+
+            // 点击遮罩层关闭
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+            });
+        });
+
+        // 加载配置
+        function loadConfig() {
+            // 从 localStorage 加载（如果之前保存过）
+            const savedApiKey = localStorage.getItem('deepseek_api_key');
+            const savedModel = localStorage.getItem('deepseek_model');
+            const savedTemperature = localStorage.getItem('deepseek_temperature');
+            const savedMaxTokens = localStorage.getItem('deepseek_max_tokens');
+
+            if (savedApiKey) config.apiKey = savedApiKey;
+            if (savedModel) config.model = savedModel;
+            if (savedTemperature) config.temperature = parseFloat(savedTemperature);
+            if (savedMaxTokens) config.maxTokens = parseInt(savedMaxTokens);
+        }
+
+        // 保存配置
+        function saveConfig() {
+            localStorage.setItem('deepseek_api_key', config.apiKey);
+            localStorage.setItem('deepseek_model', config.model);
+            localStorage.setItem('deepseek_temperature', config.temperature.toString());
+            localStorage.setItem('deepseek_max_tokens', config.maxTokens.toString());
+        }
+
+        // 执行技能
+        async function executeSkill(skillName, params) {
+            try {
+                const response = await fetch(SKILL_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'execute',
+                        skill: skillName,
+                        params: params
+                    })
+                });
+
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                return {
+                    success: false,
+                    message: '技能执行失败：' + error.message
+                };
+            }
+        }
+
+        // 渲染技能卡片
+        function renderSkillCard(skillName, data) {
+            const card = document.createElement('div');
+            card.className = 'skill-card';
+
+            const icons = {
+                server_status: '🖥️',
+                player_count: '👥',
+                player_query: '🔍',
+                server_version: '📦',
+            };
+
+            const titles = {
+                server_status: '服务器状态',
+                player_count: '玩家数量',
+                player_query: '玩家查询',
+                server_version: '服务器版本'
+            };
+
+            card.innerHTML = `
+                <div class="skill-card-header">
+                    <div class="skill-card-icon">${icons[skillName] || '⚡'}</div>
+                    <div class="skill-card-title">${titles[skillName] || '技能结果'}</div>
+                </div>
+                <div class="skill-card-body">
+                    ${renderSkillInfo(skillName, data)}
+                </div>
+            `;
+
+            return card;
+        }
+
+        // 渲染技能信息
+        function renderSkillInfo(skillName, data) {
+            if (!data) return '';
+
+            let html = '';
+
+            if (skillName === 'server_status') {
+                html += `
+                    <div class="skill-info-item">
+                        <div class="skill-info-label">状态</div>
+                        <div class="skill-info-value ${data.online ? 'skill-status-online' : 'skill-status-offline'}">
+                            ${data.online ? '🟢 在线' : '🔴 离线'}
+                        </div>
+                    </div>
+                `;
+                if (data.players) {
+                    html += `
+                        <div class="skill-info-item">
+                            <div class="skill-info-label">在线玩家</div>
+                            <div class="skill-info-value">${data.players.online}/${data.players.max}</div>
+                        </div>
+                    `;
+                }
+                if (data.version) {
+                    html += `
+                        <div class="skill-info-item">
+                            <div class="skill-info-label">服务器版本</div>
+                            <div class="skill-info-value">${data.version.name}</div>
+                        </div>
+                    `;
+                }
+            } else if (skillName === 'player_count') {
+                html += `
+                    <div class="skill-info-item">
+                        <div class="skill-info-label">当前在线</div>
+                        <div class="skill-info-value">${data.online} 人</div>
+                    </div>
+                    <div class="skill-info-item">
+                        <div class="skill-info-label">最大容量</div>
+                        <div class="skill-info-value">${data.max} 人</div>
+                    </div>
+                    <div class="skill-info-item">
+                        <div class="skill-info-label">使用率</div>
+                        <div class="skill-info-value">${data.percentage}%</div>
+                    </div>
+                `;
+            } else if (skillName === 'player_query') {
+                html += `
+                    <div class="skill-info-item">
+                        <div class="skill-info-label">玩家</div>
+                        <div class="skill-info-value">${data.player}</div>
+                    </div>
+                    <div class="skill-info-item">
+                        <div class="skill-info-label">状态</div>
+                        <div class="skill-info-value ${data.online ? 'skill-status-online' : 'skill-status-offline'}">
+                            ${data.online ? '🟢 在线' : '⚫ 离线'}
+                        </div>
+                    </div>
+                `;
+            } else if (skillName === 'server_version') {
+                html += `
+                    <div class="skill-info-item">
+                        <div class="skill-info-label">版本名称</div>
+                        <div class="skill-info-value">${data.version}</div>
+                    </div>
+                    <div class="skill-info-item">
+                        <div class="skill-info-label">协议版本</div>
+                        <div class="skill-info-value">${data.protocol}</div>
+                    </div>
+                `;
+            }
+
+            return html || '<div class="skill-info-item"><div class="skill-info-value">暂无详细信息</div></div>';
+        }
+
+        // 添加快速回复按钮
+        function addQuickReplies() {
+            // 移除旧的快速回复
+            const existingQuickReplies = chatBox.querySelector('.quick-replies');
+            if (existingQuickReplies) {
+                existingQuickReplies.remove();
+            }
+
+            const quickRepliesDiv = document.createElement('div');
+            quickRepliesDiv.className = 'quick-replies';
+
+            QUICK_REPLIES.forEach(question => {
+                const btn = document.createElement('button');
+                btn.className = 'quick-reply-btn';
+                btn.textContent = question;
+                btn.onclick = () => {
+                    userInput.value = question;
+                    sendMessage();
+                };
+                quickRepliesDiv.appendChild(btn);
+            });
+
+            chatBox.appendChild(quickRepliesDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // 添加常用问题按钮（随机 4 个）
+        function addFrequentQuestions() {
+            // 移除旧的常用问题
+            const existingFrequent = chatBox.querySelector('.frequent-questions');
+            if (existingFrequent) {
+                existingFrequent.remove();
+            }
+
+            // 随机抽取 4 个问题
+            const shuffled = FREQUENT_QUESTIONS.sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 4);
+
+            const frequentDiv = document.createElement('div');
+            frequentDiv.className = 'frequent-questions';
+            frequentDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding: 15px; background: #f0f4ff; border-radius: 8px;';
+
+            const title = document.createElement('div');
+            title.style.cssText = 'width: 100%; font-weight: 600; color: #667eea; margin-bottom: 8px; font-size: 13px;';
+            title.textContent = '💡 猜你想问：';
+            frequentDiv.appendChild(title);
+
+            selected.forEach(question => {
+                const btn = document.createElement('button');
+                btn.className = 'quick-reply-btn';
+                btn.style.cssText = 'background: white; border: 1px solid #667eea; color: #667eea; padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.2s;';
+                btn.textContent = question;
+                btn.onmouseover = () => {
+                    btn.style.background = '#667eea';
+                    btn.style.color = 'white';
+                };
+                btn.onmouseout = () => {
+                    btn.style.background = 'white';
+                    btn.style.color = '#667eea';
+                };
+                btn.onclick = () => {
+                    userInput.value = question;
+                    sendMessage();
+                };
+                frequentDiv.appendChild(btn);
+            });
+
+            chatBox.appendChild(frequentDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // 添加消息
+        function addMessage(content, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+
+            // 如果是 assistant 类型的消息，解析 Markdown
+            if (type === 'assistant' && typeof marked !== 'undefined') {
+                try {
+                    content = marked.parse(content);
+                    // 移除空的段落（包含空格、换行符的也算）
+                    content = content.replace(/<p>\s*<\/p>/gi, '');
+                    // 移除多余的 <br> 标签（连续 2 个以上的<br>替换为 1 个）
+                    content = content.replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+                    // 移除段落内的空<br>
+                    content = content.replace(/<p><br\s*\/?><\/p>/gi, '');
+                    // 添加 markdown-body 类以应用样式
+                    messageDiv.innerHTML = '<div class="markdown-body">' + content + '</div>';
+                } catch (e) {
+                    // 如果解析失败，使用原始内容
+                    messageDiv.innerHTML = content;
+                }
+            } else {
+                messageDiv.innerHTML = content;
+            }
+
+            const metaDiv = document.createElement('div');
+            metaDiv.className = 'message-meta';
+            metaDiv.textContent = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            messageDiv.appendChild(metaDiv);
+
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // 显示正在输入
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = '<span></span><span></span><span></span>';
+            chatBox.appendChild(typingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // 隐藏正在输入
+        function hideTyping() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // 更新统计
+        function updateStats() {
+            document.getElementById('messageCount').textContent = stats.messageCount;
+            document.getElementById('tokenUsage').textContent = stats.tokenUsage;
+            document.getElementById('kbMatches').textContent = stats.kbMatches;
+        }
+
+        // 发送消息（使用本地 API）
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // 立即添加用户消息到对话框（不等待响应）
+            addMessage(message, 'user');
+            userInput.value = '';
+
+            // 禁用按钮
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<span class="loading"></span>发送中...';
+
+            // 显示正在输入
+            showTyping();
+
+            // 先检测是否是技能调用
+            const skillMatch = await detectSkill(message); // 添加 await
+
+            if (skillMatch) {
+                // 执行技能
+                await handleSkillExecution(message, skillMatch);
+                return;
+            }
+
+            // 检查是否配置了 API Key
+            if (!config.apiKey) {
+                addMessage('请先配置 API Key 喵～<br>请在 <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">config/config.php</code> 文件中设置 <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">DEEPSEEK_API_KEY</code>', 'error');
+                hideTyping();
+                sendBtn.disabled = false;
+                sendBtn.textContent = '发送';
+                userInput.focus();
+                return;
+            }
+
+            const model = config.model;
+            const temperature = config.temperature;
+            const maxTokens = config.maxTokens;
+
+            try {
+                // 使用本地 API
+                const response = await fetch(LOCAL_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        api_key: config.apiKey,
+                        model: model,
+                        temperature: temperature,
+                        max_tokens: maxTokens
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    addMessage(data.message, 'assistant');
+
+                    // 添加常用问题（每次对话后随机显示 4 个）
+                    setTimeout(() => {
+                        addFrequentQuestions();
+                    }, 300);
+                } else {
+                    addMessage(`❌ 错误：${data.message || '请求失败'}`, 'error');
+                }
+            } catch (error) {
+                addMessage(`❌ 请求错误：${error.message}`, 'error');
+            } finally {
+                hideTyping();
+                sendBtn.disabled = false;
+                sendBtn.textContent = '发送';
+                userInput.focus();
+            }
+        }
+
+        // 处理技能执行
+        async function handleSkillExecution(message, skillMatch) {
+            // 用户消息已经在 sendMessage 中添加了
+
+            try {
+                // 执行技能
+                const result = await executeSkill(skillMatch.skill, skillMatch.params);
+
+                if (result.success) {
+                    // 渲染技能卡片
+                    const skillCard = renderSkillCard(skillMatch.skill, result.data);
+                    chatBox.appendChild(skillCard);
+
+                    // 如果有附加消息，也显示出来
+                    if (result.message) {
+                        addMessage(result.message, 'assistant');
+                    }
+
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                } else {
+                    let errorMsg = `❌ 技能执行失败：${result.message}`;
+
+                    // 如果有调试信息，显示出来
+                    if (result.data && result.data.debug) {
+                        const debug = result.data.debug;
+                        errorMsg += '<br><br><details style="font-size: 12px; color: #666;"><summary style="cursor: pointer; color: #f59e0b;">🔍 查看调试信息</summary><pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; overflow-x: auto;">' +
+                            JSON.stringify(debug, null, 2) + '</pre></details>';
+                    }
+
+                    addMessage(errorMsg, 'error');
+                }
+            } catch (error) {
+                addMessage(`❌ 技能执行错误：${error.message}`, 'error');
+            } finally {
+                hideTyping();
+                sendBtn.disabled = false;
+                sendBtn.textContent = '发送';
+                userInput.focus();
+            }
+        }
+
+        // 事件绑定
+        sendBtn.addEventListener('click', sendMessage);
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+
+</html>

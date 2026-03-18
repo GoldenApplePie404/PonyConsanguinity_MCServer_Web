@@ -9,6 +9,8 @@
     <title>个人中心 - 万驹同源 | Minecraft 服务器官网</title>
     <link rel="stylesheet" href="../css/style.css?v=3.18">
     <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <link rel="stylesheet" href="../css/ai-assistant.css?v=1.0">
     <style>
         :root {
             --primary-color: #667eea;
@@ -1138,7 +1140,7 @@
     <link rel="shortcut icon" href="../assets/img/m.png">
 </head>
 
-<body data-components="sidebarPlayer,backToTop,navbar,footer">
+<body data-components="sidebarPlayer,backToTop,aiAssistant,navbar,footer">
 
 
 
@@ -3055,6 +3057,10 @@
 
     <!-- 组件加载器 -->
     <script src="../components/loader.js?v=3.0"></script>
+
+    <!-- AI 客服按钮（在组件加载器后加载） -->
+    <div id="app-ai-assistant"></div>
+    <script src="../js/ai-assistant.js?v=1.0"></script>
 
 </body>
 

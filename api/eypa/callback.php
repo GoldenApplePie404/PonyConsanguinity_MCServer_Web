@@ -215,7 +215,9 @@ try {
     
     $sessions = secureReadData(SESSIONS_FILE);
     $sessions[$sessionToken] = [
+        'user_id' => $user['id'],
         'username' => $username,
+        'role' => $user['role'] ?? 'user',
         'created_at' => time(),
         'expires_at' => $expiresAt,
         'ip' => $_SERVER['REMOTE_ADDR'] ?? '',
@@ -245,6 +247,7 @@ try {
     $redirectUrl .= '&username=' . urlencode($username);
     $redirectUrl .= '&nickname=' . urlencode($eypaNickname);
     $redirectUrl .= '&avatar=' . urlencode($eypaAvatar);
+    $redirectUrl .= '&role=' . urlencode($user['role'] ?? 'user');
     $redirectUrl .= '&is_new=' . ($existingUser ? '0' : '1');
     
     if ($debug) {

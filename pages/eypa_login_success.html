@@ -166,7 +166,7 @@
             <span class="badge" id="badge"></span>
         </div>
         
-        <a href="../index.html" class="btn" id="homeBtn" style="display: none;">返回首页</a>
+        <a href="../pages/profile.html" class="btn" id="homeBtn" style="display: none;">前往个人中心</a>
         
         <div class="countdown" id="countdown" style="display: none;">
             <span id="countdownNum">5</span>秒后自动跳转...
@@ -179,6 +179,7 @@
         const username = urlParams.get('username');
         const nickname = urlParams.get('nickname');
         const avatar = urlParams.get('avatar');
+        const role = urlParams.get('role') || 'user';
         const isNew = urlParams.get('is_new') === '1';
         const debugData = urlParams.get('debug');
         
@@ -193,6 +194,7 @@
             // 存储用户信息（兼容现有登录逻辑）
             const userInfo = {
                 username: username,
+                role: role,
                 token: token
             };
             localStorage.setItem('currentUser', JSON.stringify(userInfo));
@@ -235,7 +237,7 @@
                     if (isNew) {
                         window.location.href = 'complete_profile.html?token=' + token + '&username=' + username + '&is_new=1';
                     } else {
-                        window.location.href = '../index.html';
+                        window.location.href = '../pages/profile.html';
                     }
                 }
             }, 1000);

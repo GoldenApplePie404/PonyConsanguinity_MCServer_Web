@@ -5,34 +5,6 @@ if (!defined('ACCESS_ALLOWED')) {
 }
 
 return array (
-  'd82421c6-a20c-4fd5-85d8-604f7a2275b9' => 
-  array (
-    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-03-08 11:54:00',
-  ),
-  '710d22ed-81b4-4985-ac52-72ef13cdb6c6' => 
-  array (
-    'user_id' => '1c42af70-b49e-4d22-80cb-9150a6c86be0',
-    'username' => '金苹果派',
-    'role' => 'user',
-    'created_at' => '2026-03-08 13:14:07',
-  ),
-  '85022cc1-304f-497d-82ea-b65bb805dfd5' => 
-  array (
-    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-03-10 02:24:59',
-  ),
-  '583d628b-c06e-43a4-a464-ec8e0e8732e0' => 
-  array (
-    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-03-10 02:30:46',
-  ),
   '533d03a2-67f9-4373-9633-f9b81e97e5d6' => 
   array (
     'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
@@ -74,6 +46,34 @@ return array (
     'username' => 'GoldenApplePie',
     'role' => 'admin',
     'created_at' => '2026-03-11 10:10:43',
+  ),
+  '4d1150f1-4dc6-4b02-ae21-1515606731a3' => 
+  array (
+    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
+    'username' => 'GoldenApplePie',
+    'role' => 'admin',
+    'created_at' => '2026-03-12 09:22:45',
+  ),
+  '18c58048-492b-4bef-97c8-b7f2f26a4ff1' => 
+  array (
+    'user_id' => '990606f8-ccf1-44ba-8cfc-873401672d65',
+    'username' => '金苹果派',
+    'role' => 'admin',
+    'created_at' => '2026-03-12 09:57:07',
+  ),
+  'f2cfc297-cdf0-425b-b4f1-d00c2497ac83' => 
+  array (
+    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
+    'username' => 'GoldenApplePie',
+    'role' => 'admin',
+    'created_at' => '2026-03-12 17:01:57',
+  ),
+  '94d77846-c4cc-4058-bddf-4943d39ee656' => 
+  array (
+    'user_id' => '990606f8-ccf1-44ba-8cfc-873401672d65',
+    'username' => '金苹果派',
+    'role' => 'admin',
+    'created_at' => '2026-03-17 10:54:50',
   ),
 );
 ?>

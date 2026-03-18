@@ -27,6 +27,13 @@ const components = {
             initBackToTop();
         }
     },
+    // AI 客服按钮
+    aiAssistant: {
+        selector: '#app-ai-assistant',
+        template: basePath + 'components/ai-assistant.html?v=1.0',
+        callback: () => {
+        }
+    },
     // 导航栏
     navbar: {
         selector: '#app-navbar',
@@ -96,13 +103,19 @@ function initComponents() {
     const body = document.body;
     const componentsToLoad = body.getAttribute('data-components');
 
+    console.log('准备加载组件:', componentsToLoad);
+
     if (componentsToLoad) {
         const componentNames = componentsToLoad.split(',');
 
         componentNames.forEach(name => {
             const componentName = name.trim();
+            console.log('检查组件:', componentName);
             if (components[componentName]) {
+                console.log('加载组件:', componentName);
                 loadComponent(components[componentName]);
+            } else {
+                console.warn('未找到组件配置:', componentName);
             }
         });
     }

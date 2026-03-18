@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="css/style.css?v=3.36">
     <link rel="stylesheet" href="css/sidebar-player.css?v=2.2">
     <link rel="stylesheet" href="css/back-to-top.css?v=1.0">
-    
+
     <link rel="preload" href="assets/img/1.png" as="image">
     <link rel="preload" href="assets/img/logo.png" as="image">
     <link rel="preload" href="assets/img/logo1.png" as="image">
@@ -95,8 +95,7 @@
         <div class="container">
             <h2 class="section-title">服务器玩法</h2>
             <div class="features-grid">
-                <a href="pages/survival.html"
-                    class="feature-card fade-in-delay-1"
+                <a href="pages/survival.html" class="feature-card fade-in-delay-1"
                     style="text-decoration: none; color: inherit; display: block; position: relative;">
                     <style>
                         .feature-card.fade-in-delay-1::after {
@@ -119,8 +118,7 @@
                     <h3 class="feature-title">自由创造</h3>
                     <p class="feature-desc">是艺术家，只喜欢创造？没关系。万驹同源为您准备了一个自由创造的世界，你可以在此发挥您的创造思维，建造出你想要的一切。</p>
                 </a>
-                <a href="pages/announcement-detail.html?id=wmbt"
-                    class="feature-card fade-in-delay-3"
+                <a href="pages/announcement-detail.html?id=wmbt" class="feature-card fade-in-delay-3"
                     style="text-decoration: none; color: inherit; display: block; position: relative;">
                     <style>
                         .feature-card.fade-in-delay-3::after {
@@ -161,6 +159,8 @@
     <section class="section">
         <div class="container">
             <h2 class="section-title">服务器概况</h2>
+
+
             <div class="features-grid">
                 <div class="feature-card fade-in-delay-1">
                     <div class="feature-icon internet"></div>
@@ -177,6 +177,9 @@
                     <h3 class="feature-title">安全稳定</h3>
                     <p class="feature-desc">服务器使用自建的账户登录授权系统，让玩家玩的开心，玩的放心。</p>
                 </div>
+            </div>
+            <div style="display: flex; justify-content: center; margin-top: 50px;">
+                <img src="assets\img\localhost.gif" alt="localhost" loading="lazy">
             </div>
         </div>
     </section>
@@ -455,7 +458,7 @@
                     <p class="member-desc">负责服务器技术支持和问题排查</p>
                     <div class="member-links">
                         <a href="https://eqmemory.cn/author/2" class="member-link" target="_blank">EYPA</a>
-                        
+
                     </div>
                 </div>
                 <div class="team-member fade-in-delay-4">
@@ -465,10 +468,11 @@
                     <p class="member-desc">负责服务器功能测试和玩家管理</p>
                     <div class="member-links">
                         <a href="https://eqmemory.cn/author/9" class="member-link" target="_blank">EYPA</a>
-                        <a href="https://space.bilibili.com/3494377238300999" class="member-link" target="_blank">BiliBili</a>
+                        <a href="https://space.bilibili.com/3494377238300999" class="member-link"
+                            target="_blank">BiliBili</a>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </section>
@@ -488,16 +492,16 @@
     <!-- 音乐播放器 -->
     <div id="app-sidebar-player"></div>
     <script src="js/sidebar-player.js?v=3.0"></script>
-    
+
     <!-- 组件加载器 -->
     <script src="components/loader.js?v=3.0"></script>
-    
+
     <!-- 导航栏 -->
     <script src="js/navbar.js?v=1.0"></script>
 
     <!-- 画廊交互脚本 -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initNavbar();
             // 创建图片查看器元素
             const imageViewer = document.createElement('div');
@@ -520,22 +524,22 @@
 
             // 鼠标悬停事件
             galleryItems.forEach(item => {
-                item.addEventListener('mouseenter', function() {
+                item.addEventListener('mouseenter', function () {
                     // 暂停画廊滚动
                     galleryTrack.classList.add('paused');
                 });
 
-                item.addEventListener('mouseleave', function() {
+                item.addEventListener('mouseleave', function () {
                     // 恢复画廊滚动
                     galleryTrack.classList.remove('paused');
                 });
 
                 // 点击事件查看大图
-                item.addEventListener('click', function() {
+                item.addEventListener('click', function () {
                     const imgSrc = this.querySelector('img').src;
                     const title = this.dataset.title;
                     const description = this.dataset.description;
-                    
+
                     viewerImg.src = imgSrc;
                     viewerInfo.textContent = title;
                     // 重置图片样式，确保完整显示
@@ -557,14 +561,14 @@
             closeBtn.addEventListener('click', closeViewer);
 
             // 点击空白处关闭
-            imageViewer.addEventListener('click', function(e) {
+            imageViewer.addEventListener('click', function (e) {
                 if (e.target === imageViewer) {
                     closeViewer();
                 }
             });
 
             // ESC键关闭
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && imageViewer.classList.contains('show')) {
                     closeViewer();
                 }
@@ -575,4 +579,3 @@
 </body>
 
 </html>
-
