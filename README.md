@@ -1,7 +1,7 @@
 # 万驹同源服务器官网
 
 <p align="center">
-  <img src="../assets/img/pc_logo2.png" alt="Pony Consanguinity Logo" class="no-hover" style="max-width: 500px; width: 90%; border-radius: 10px; pointer-events: none;">
+  <img src="../assets/img/pc_logo2.webp" alt="Pony Consanguinity Logo" class="no-hover" style="max-width: 500px; width: 90%; border-radius: 10px; pointer-events: none;">
 </p>
 
 
@@ -23,7 +23,6 @@
   <a href="#-快速开始">快速开始</a> •
   <a href="#-技术栈">技术栈</a> •
   <a href="#-使用指南">使用指南</a> •
-  <a href="#-ai-客服系统">AI 客服系统</a> •
   <a href="#-系统配置">系统配置</a> •
   <a href="#-开发指导">开发指导</a> •
   <a href="#-安全配置">安全配置</a>
