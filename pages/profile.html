@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 
 <head>
-    <link rel="icon" type="image/png" href="../assets/img/m.png">
-    <link rel="shortcut icon" href="../assets/img/m.png">
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人中心 - 万驹同源 | Minecraft 服务器官网</title>
@@ -148,13 +148,13 @@
         }
 
         /* 签到按钮特殊样式*/
-        .btn-checkin {
-            display: inline-flex;
+        .btn.btn-checkin {
+            display: inline-flex !important;
             align-items: center;
             gap: 8px;
-            min-width: 140px;
+            min-width: 180px !important;
             justify-content: center;
-            padding: 10px 80px;
+            padding: 10px 40px !important;
             font-size: 14px;
             font-weight: 500;
             border: 2px solid #667eea;
@@ -359,78 +359,7 @@
             color: #666;
         }
 
-        /* 背包样式 */
-        .inventory-section {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-
-        .inventory-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .inventory-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .inventory-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
-            transition: all 0.2s ease;
-        }
-
-        .inventory-item:hover {
-            background: #e9ecef;
-            transform: translateX(3px);
-        }
-
-        .inventory-item-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .inventory-item-icon {
-            font-size: 1.3rem;
-        }
-
-        .inventory-item-name {
-            font-size: 0.9rem;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .inventory-item-count {
-            background: var(--primary-color);
-            color: white;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .inventory-empty {
-            text-align: center;
-            padding: 20px;
-            color: #999;
-            font-size: 0.9rem;
-        }
-
-        /* BUFF样式 */
+        /* BUFF 样式 */
         .buff-section {
             margin-top: 20px;
             padding-top: 20px;
@@ -489,60 +418,6 @@
             padding: 20px;
             color: #999;
             font-size: 0.9rem;
-        }
-
-        /* 背包网格布局 */
-        .inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .inventory-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e9ecef;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .inventory-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
-        }
-
-        .inventory-card-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-
-        .inventory-card-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .inventory-card-count {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .inventory-grid .inventory-empty {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-            font-size: 1rem;
-            background: #f8f9fa;
-            border-radius: 12px;
         }
 
         /* 等级进度条样式 */
@@ -729,6 +604,83 @@
             background: #f8f8f8;
             padding: 20px;
             border-radius: 8px;
+        }
+
+        /* 积分商城入口卡片 */
+        .shop-entrance-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .shop-entrance-card:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-entrance-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .shop-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .shop-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .shop-icon {
+            font-size: 40px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .shop-description {
+            flex: 1;
+        }
+
+        .shop-description p:first-child {
+            color: #333 !important;
+            font-weight: 500;
+            margin-bottom: 5px !important;
+        }
+
+        .shop-description p:last-child {
+            font-size: 12px !important;
+            color: #999 !important;
+            margin: 0 !important;
+        }
+
+        .shop-arrow {
+            font-size: 28px;
+            color: #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .shop-entrance-card:hover .shop-arrow {
+            transform: translateX(5px);
         }
 
         .info-card h3 {
@@ -1136,8 +1088,8 @@
     <script src="../js/api.js?v=1.0"></script>
     <script src="../js/main.js?v=3.3"></script>
 
-    <link rel="icon" type="image/png" href="../assets/img/m.png">
-    <link rel="shortcut icon" href="../assets/img/m.png">
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
 </head>
 
 <body data-components="sidebarPlayer,backToTop,aiAssistant,navbar,footer">
@@ -1156,7 +1108,7 @@
             <aside class="profile-sidebar">
                 <div class="user-card">
                     <div class="user-avatar-large">
-                        <img src="../assets/img/user.png" alt="用户头像"
+                        <img src="../assets/img/user.webp" alt="用户头像"
                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto;">
                     </div>
                     <div class="user-name" id="profile-username">玩家名称</div>
@@ -1201,7 +1153,6 @@
                 <div class="profile-tabs">
                     <button class="profile-tab active" onclick="switchProfileTab('overview')">概览</button>
                     <button class="profile-tab" onclick="switchProfileTab('profile')">个人信息</button>
-                    <button class="profile-tab" onclick="switchProfileTab('inventory')">我的背包</button>
                     <button class="profile-tab" onclick="switchProfileTab('notifications')">通知</button>
                 </div>
 
@@ -1217,7 +1168,7 @@
 
                             <button class="admin-btn" onclick="window.open(PATH_CONFIG.dbTest, '_blank')">📊
                                 数据库查询</button>
-                            <!--<button class="admin-btn" onclick="alert('此功能开发中')">🤖 QQ机器人管理</button>-->
+                            <button class="admin-btn" onclick="window.open('https://botpanel.eqmemory.cn/', '_blank')">🤖 QQ机器人管理</button>
                             <button class="admin-btn" onclick="openSendNotificationModal()">📢 发送通知</button>
                             <button class="admin-btn"
                                 onclick="window.open('../tools/announcement-manager.html', '_blank')">📝 公告管理</button>
@@ -1225,7 +1176,7 @@
                                 订单更新</button>
                             <button class="admin-btn" onclick="window.open('../tools/user-management.html', '_blank')">👥 用户管理</button>
                             <button class="admin-btn" onclick="window.open('../tools/gallery-management.html', '_blank')">🖼️ 图库管理</button>
-                            <!--<button class="admin-btn" onclick="alert('此功能开发中')">⚙️ 网站后台</button>-->
+
                         </div>
                     </div>
 
@@ -1262,8 +1213,21 @@
                                 </button>
                             </div>
                             <p class="note" style="font-size: 12px; color: #666; margin-top: 10px; margin-bottom: 0;">
-                                每日签到可获得10积分，验证邮箱后方可签到
+                                每日签到可获得 10 积分，验证邮箱后方可签到
                             </p>
+                        </div>
+                        <div class="info-card shop-entrance-card" onclick="window.location.href='../pages/shop.html'">
+                            <h3>🛒 积分商城</h3>
+                            <div class="shop-entrance-content">
+                                <div class="shop-icon">🎁</div>
+                                <div class="shop-description">
+                                    <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">使用积分兑换各种道具</p>
+                                    <p style="margin: 0; color: #999; font-size: 12px;">经验礼包 · 特殊效果 · 限时优惠</p>
+                                </div>
+                            </div>
+                            <button class="shop-btn" onclick="window.location.href='../pages/shop.html'">
+                                点击跳转 →
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1328,14 +1292,6 @@
                     <div id="notification-list"></div>
                     <div id="notification-pagination" class="pagination"></div>
                     <div id="notification-message"></div>
-                </div>
-
-                <!-- 我的背包 -->
-                <div id="tab-inventory" class="tab-content">
-                    <h3 style="margin-bottom: 20px;">🎒 我的背包（开发中）</h3>
-                    <div id="inventoryList" class="inventory-grid">
-                        <div class="inventory-empty">暂无物品，快去 <a href="shop.html" style="color: var(--primary-color); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--primary-color); padding-bottom: 2px; transition: all 0.2s ease;">积分商城</a> 兑换吧！</div>
-                    </div>
                 </div>
             </main>
         </div>
@@ -2725,8 +2681,8 @@
             initEmailVerification();
 
             // 初始化签到功能
-            initCheckin();
-        });
+        initCheckin();
+    });
 
         // 加载用户详细信息
         async function loadUserInfo() {
@@ -2761,7 +2717,7 @@
                             avatarElement.src = user.eypa_avatar;
                             console.log('使用马国记忆头像:', user.eypa_avatar);
                         } else {
-                            avatarElement.src = '../assets/img/user.png';
+                            avatarElement.src = '../assets/img/user.webp';
                             console.log('使用默认头像');
                         }
                     }
@@ -2813,8 +2769,8 @@
                     const profileAccountType = document.getElementById('profileAccountType');
                     if (profileAccountType) {
                         const isEypaUser = user.eypa_uid ? true : false;
-                        profileAccountType.textContent = isEypaUser ? 'EYPA用户' : '普通用户';
-                        console.log('账户类型已更新:', isEypaUser ? 'EYPA用户' : '普通用户');
+                        profileAccountType.textContent = isEypaUser ? 'EYPA 用户' : '普通用户';
+                        console.log('账户类型已更新:', isEypaUser ? 'EYPA 用户' : '普通用户');
                     }
                     
                     // 检查是否需要完善信息
@@ -2826,55 +2782,11 @@
                     }
                     
                     console.log('个人信息标签页更新完成');
-                    
-                    // 加载背包和BUFF信息
-                    loadInventoryAndBuffs();
                 } else {
                     console.error('API返回失败:', data);
                 }
             } catch (error) {
                 console.error('加载用户信息失败:', error);
-            }
-        }
-        
-        // 加载背包信息
-        async function loadInventoryAndBuffs() {
-            try {
-                const token = localStorage.getItem('authToken');
-                if (!token) return;
-                
-                const response = await fetch('../api/get_profile.php', {
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success && data.data) {
-                    // 更新背包显示
-                    const inventoryList = document.getElementById('inventoryList');
-                    if (inventoryList) {
-                        if (data.data.inventory && data.data.inventory.length > 0) {
-                            // 物品图标映射
-                            const itemIcons = {
-                                'resign_card': '📅'
-                            };
-                            
-                            inventoryList.innerHTML = data.data.inventory.map(item => `
-                                <div class="inventory-card">
-                                    <div class="inventory-card-icon">${itemIcons[item.type] || '📦'}</div>
-                                    <div class="inventory-card-name">${item.name}</div>
-                                    <span class="inventory-card-count">数量: ${item.count}</span>
-                                </div>
-                            `).join('');
-                        } else {
-                            inventoryList.innerHTML = '<div class="inventory-empty">暂无物品，快去 <a href="shop.html" style="color: var(--primary-color); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--primary-color); padding-bottom: 2px; transition: all 0.2s ease;">积分商城</a> 兑换吧！</div>';
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('加载背包信息失败:', error);
             }
         }
 

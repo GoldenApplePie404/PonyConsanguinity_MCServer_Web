@@ -8,7 +8,11 @@
  * 3. 上下文管理
  */
 
-require_once __DIR__ . '/../../config/_config.php';
+// 错误处理（开发环境）
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require_once __DIR__ . '/../../config/config.php';
 
 // 设置 CORS 头
 header('Access-Control-Allow-Origin: *');
@@ -19,6 +23,19 @@ header('Content-Type: application/json; charset=utf-8');
 // 处理预检请求
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
+    exit;
+}
+
+// 处理 GET 请求（获取配置）
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    echo json_encode([
+        'success' => true,
+        'config' => [
+            'model' => defined('DEEPSEEK_DEFAULT_MODEL') ? DEEPSEEK_DEFAULT_MODEL : 'deepseek-chat',
+            'temperature' => defined('DEEPSEEK_DEFAULT_TEMPERATURE') ? DEEPSEEK_DEFAULT_TEMPERATURE : 1.0,
+            'max_tokens' => defined('DEEPSEEK_DEFAULT_MAX_TOKENS') ? DEEPSEEK_DEFAULT_MAX_TOKENS : 2048
+        ]
+    ]);
     exit;
 }
 
@@ -38,17 +55,20 @@ if (!$data) {
 }
 
 // 验证必要参数
-$requiredFields = ['message', 'api_key'];
-foreach ($requiredFields as $field) {
-    if (!isset($data[$field]) || empty($data[$field])) {
-        http_response_code(400);
-        echo json_encode(['error' => "缺少必要参数：{$field}"]);
-        exit;
-    }
+if (!isset($data['message']) || empty($data['message'])) {
+    http_response_code(400);
+    echo json_encode(['error' => '缺少必要参数：message']);
+    exit;
 }
 
 $userMessage = $data['message'];
-$apiKey = $data['api_key'];
+// 优先使用配置文件中的 API Key，如果前端传了就使用前端的
+$apiKey = $data['api_key'] ?? DEEPSEEK_API_KEY;
+if (empty($apiKey)) {
+    http_response_code(400);
+    echo json_encode(['error' => '未配置 API Key，请在 config.php 中设置 DEEPSEEK_API_KEY']);
+    exit;
+}
 $conversationId = $data['conversation_id'] ?? null;
 $model = $data['model'] ?? 'deepseek-chat';
 $temperature = $data['temperature'] ?? 1.0;
@@ -70,15 +90,11 @@ if ($mode === 'skill_detection') {
    - 查询在线玩家数量
    - 示例：多少人在线？服务器现在多少人？
 
-3. player_query - 玩家查询
-   - 查询特定玩家是否在线
-   - 示例：czhdq 在线吗？查询玩家 Steve
-
-4. server_version - 服务器版本查询
+3. server_version - 服务器版本查询
    - 查询服务器版本信息
    - 示例：服务器是什么版本？
 
-5. player_count - 玩家数量查询
+4. player_count - 玩家数量查询
    - 查询在线玩家数量
    - 示例：多少人在线？服务器现在多少人？
 
@@ -172,59 +188,70 @@ class KnowledgeBase {
     }
     
     private function loadKnowledgeBase() {
-        // 从 Markdown 文件读取知识库
-        if (!file_exists($this->knowledgeBaseFile)) {
-            // 如果文件不存在，使用默认硬编码数据
-            $this->loadDefaultKnowledgeBase();
-            return;
-        }
-        
-        $content = file_get_contents($this->knowledgeBaseFile);
-        
-        // 按章节分割（## 标题）
-        $sections = preg_split('/^##\s+/m', $content);
-        
-        foreach ($sections as $section) {
-            if (empty(trim($section))) {
-                continue;
+        try {
+            // 从 Markdown 文件读取知识库
+            if (!file_exists($this->knowledgeBaseFile)) {
+                // 如果文件不存在，使用默认硬编码数据
+                $this->loadDefaultKnowledgeBase();
+                return;
             }
             
-            // 提取章节标题（第一行）
-            $lines = explode("\n", $section);
-            $title = trim($lines[0]);
+            $content = file_get_contents($this->knowledgeBaseFile);
             
-            // 提取章节内容（去除第一行标题）
-            $content = trim(implode("\n", array_slice($lines, 1)));
+            if ($content === false) {
+                $this->loadDefaultKnowledgeBase();
+                return;
+            }
             
-            if (!empty($content)) {
-                // 为每个章节创建知识库条目
-                $this->knowledgeBase[] = [
-                    'category' => $title,
-                    'content' => $content,
-                    'title' => $title
-                ];
+            // 按章节分割（## 标题）
+            $sections = preg_split('/^##\s+/m', $content);
+            
+            foreach ($sections as $section) {
+                if (empty(trim($section))) {
+                    continue;
+                }
                 
-                // 对于包含子章节的内容，进一步分割（### 子标题）
-                $subsections = preg_split('/^###\s+/m', $content);
-                if (count($subsections) > 1) {
-                    foreach ($subsections as $subsection) {
-                        if (empty(trim($subsection))) {
-                            continue;
-                        }
-                        $subLines = explode("\n", $subsection);
-                        $subTitle = trim($subLines[0]);
-                        $subContent = trim(implode("\n", array_slice($subLines, 1)));
-                        
-                        if (!empty($subContent)) {
-                            $this->knowledgeBase[] = [
-                                'category' => $title . ' - ' . $subTitle,
-                                'content' => $subContent,
-                                'title' => $subTitle
-                            ];
+                // 提取章节标题（第一行）
+                $lines = explode("\n", $section);
+                $title = trim($lines[0]);
+                
+                // 提取章节内容（去除第一行标题）
+                $content = trim(implode("\n", array_slice($lines, 1)));
+                
+                if (!empty($content)) {
+                    // 为每个章节创建知识库条目
+                    $this->knowledgeBase[] = [
+                        'category' => $title,
+                        'content' => $content,
+                        'title' => $title
+                    ];
+                    
+                    // 对于包含子章节的内容，进一步分割（### 子标题）
+                    $subsections = preg_split('/^###\s+/m', $content);
+                    if (count($subsections) > 1) {
+                        foreach ($subsections as $subsection) {
+                            if (empty(trim($subsection))) {
+                                continue;
+                            }
+                            $subLines = explode("\n", $subsection);
+                            $subTitle = trim($subLines[0]);
+                            $subContent = trim(implode("\n", array_slice($subLines, 1)));
+                            
+                            if (!empty($subContent)) {
+                                $this->knowledgeBase[] = [
+                                    'category' => $title . ' - ' . $subTitle,
+                                    'content' => $subContent,
+                                    'title' => $subTitle
+                                ];
+                            }
                         }
                     }
                 }
             }
+        } catch (Exception $e) {
+            // 如果解析失败，使用默认知识库
+            error_log('KnowledgeBase load error: ' . $e->getMessage());
+            $this->loadDefaultKnowledgeBase();
         }
     }
     

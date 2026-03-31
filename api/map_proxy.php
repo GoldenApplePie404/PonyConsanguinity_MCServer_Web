@@ -12,7 +12,7 @@ set_security_headers();
 $mapUrl = $_GET['url'] ?? '';
 
 // 默认地图服务器地址
-$defaultMapUrl = 'http://115.231.176.218:11823/';
+$defaultMapUrl = 'https://dynmap.eqmemory.cn/';
 
 // 如果没有指定URL，使用默认地址
 if (empty($mapUrl)) {

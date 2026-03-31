@@ -23,12 +23,6 @@ return array (
     'points' => 80,
     'experience' => 160,
     'check_t' => '2026-03-12',
-    'inventory' => 
-    array (
-    ),
-    'buffs' => 
-    array (
-    ),
   ),
   '金苹果派' => 
   array (
@@ -50,15 +44,9 @@ return array (
     'verify_expires' => NULL,
     'verify_sent_at' => '2026-03-08 21:24:31',
     'verify_resend_count' => 1,
-    'check_t' => '2026-03-18',
-    'points' => 20,
-    'experience' => 45,
-    'inventory' => 
-    array (
-    ),
-    'buffs' => 
-    array (
-    ),
+    'check_t' => '2026-03-22',
+    'points' => 450,
+    'experience' => 565,
   ),
   'gap' => 
   array (

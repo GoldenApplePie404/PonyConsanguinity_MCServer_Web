@@ -193,16 +193,22 @@
         if (token && username) {
             // 存储用户信息（兼容现有登录逻辑）
             const userInfo = {
+                user_id: token,
+                id: token,
                 username: username,
+                nickname: nickname,
+                avatar: avatar || '../assets/img/user.webp',
                 role: role,
                 token: token
             };
             localStorage.setItem('currentUser', JSON.stringify(userInfo));
             localStorage.setItem('isLoggedIn', 'true');
             
-            // 同时存储单独的token和username（用于兼容性）
+            // 同时存储单独的 token 和 username（用于兼容性）
             localStorage.setItem('authToken', token);
             localStorage.setItem('username', username);
+            
+            console.log('保存的完整用户信息:', userInfo);
             
             console.log('用户信息已保存到localStorage');
             console.log('保存的用户信息:', userInfo);
@@ -218,7 +224,7 @@
             }
             
             document.getElementById('userInfo').style.display = 'block';
-            document.getElementById('avatar').src = avatar || '../assets/img/default_avatar.png';
+            document.getElementById('avatar').src = avatar || '../assets/img/user.webp';
             document.getElementById('nickname').textContent = nickname || username;
             document.getElementById('username').textContent = '@' + username;
             document.getElementById('badge').textContent = isNew ? '新用户' : '马国记忆用户';

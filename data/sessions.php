@@ -5,34 +5,6 @@ if (!defined('ACCESS_ALLOWED')) {
 }
 
 return array (
-  '533d03a2-67f9-4373-9633-f9b81e97e5d6' => 
-  array (
-    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-03-10 03:24:13',
-  ),
-  'a178b1a6-6d9c-4041-8ef2-04bf50de1ef6' => 
-  array (
-    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-03-10 04:10:56',
-  ),
-  'fad3766c-5124-490b-8431-e335296d1f51' => 
-  array (
-    'user_id' => '9ef5894a-c147-4b12-a695-13d1de16db8c',
-    'username' => 'gap',
-    'role' => 'user',
-    'created_at' => '2026-03-11 03:57:56',
-  ),
-  '062c04a0-4491-4c5b-911d-1013a0cd2ca8' => 
-  array (
-    'user_id' => 'ed2f1a94-0b92-4f86-83f8-29cdbaf65671',
-    'username' => 'GoldenApplePie',
-    'role' => 'admin',
-    'created_at' => '2026-03-11 03:58:12',
-  ),
   '41ac6f21-6745-4aee-936e-1b1703df30ee' => 
   array (
     'user_id' => '9ef5894a-c147-4b12-a695-13d1de16db8c',
@@ -74,6 +46,34 @@ return array (
     'username' => '金苹果派',
     'role' => 'admin',
     'created_at' => '2026-03-17 10:54:50',
+  ),
+  'e61f207e-8d04-4564-b658-9d347a79b885' => 
+  array (
+    'user_id' => '990606f8-ccf1-44ba-8cfc-873401672d65',
+    'username' => '金苹果派',
+    'role' => 'admin',
+    'created_at' => '2026-03-19 16:05:12',
+  ),
+  '8826b875-4d96-4e4c-b37a-9660896d42f3' => 
+  array (
+    'user_id' => '990606f8-ccf1-44ba-8cfc-873401672d65',
+    'username' => '金苹果派',
+    'role' => 'admin',
+    'created_at' => '2026-03-20 16:10:32',
+  ),
+  '091234a9-0165-4ea7-8408-48c99f52201a' => 
+  array (
+    'user_id' => '990606f8-ccf1-44ba-8cfc-873401672d65',
+    'username' => '金苹果派',
+    'role' => 'admin',
+    'created_at' => '2026-03-22 03:15:58',
+  ),
+  'b23ba668-0090-4274-b864-6e6a0ffa45ce' => 
+  array (
+    'user_id' => '990606f8-ccf1-44ba-8cfc-873401672d65',
+    'username' => '金苹果派',
+    'role' => 'admin',
+    'created_at' => '2026-03-23 11:11:56',
   ),
 );
 ?>

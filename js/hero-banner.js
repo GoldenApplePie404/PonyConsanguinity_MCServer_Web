@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!heroBg) return;
 
     const backgroundImages = [
-        'assets/img/pc1.png',
-        'assets/img/pc2.png',
-        'assets/img/pc3.png',
-        'assets/img/pc4.png'
+        'assets/img/pc1.webp',
+        'assets/img/pc2.webp',
+        'assets/img/pc3.webp',
+        'assets/img/pc4.webp'
     ];
 
     let currentIndex = 0;

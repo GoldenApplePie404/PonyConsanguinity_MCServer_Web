@@ -92,12 +92,19 @@ define('VERIFY_RESEND_INTERVAL', 600);         // 重新发送间隔（秒）默
 define('VERIFY_MAX_RESEND', 3);                // 每小时最大重发次数
 
 // ==================== 马国记忆 OAuth 配置 ====================
-// 是否启用马国记忆OAuth登录
+// 是否启用马国记忆 OAuth 登录
 define('EYPA_OAUTH_ENABLED', true);
 
 // 马国记忆平台配置
 define('EYPA_API_ENDPOINT', 'https://eqmemory.cn/eu-json/eu-connect/v1/user-profile');
 define('EYPA_AUTH_URL', 'https://eqmemory.cn/eu-connect/auth');  // 授权页面地址（需确认）
+
+// ==================== DeepSeek AI 配置 ====================
+define('DEEPSEEK_API_KEY', 'your_deepseek_api_key_here');  // DeepSeek API 密钥
+define('DEEPSEEK_API_URL', 'https://api.deepseek.com');
+define('DEEPSEEK_MODEL', 'deepseek-chat');
+define('DEEPSEEK_TEMPERATURE', 0.7);
+define('DEEPSEEK_MAX_TOKENS', 2000);
 
 // 回调地址（自动根据当前域名生成）
 $protocol = IS_HTTPS ? 'https' : 'http';

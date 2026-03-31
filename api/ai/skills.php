@@ -39,7 +39,6 @@ class SkillEngine {
      */
     private function registerSkills() {
         $this->skills['server_status'] = [$this, 'getServerStatus'];
-        $this->skills['player_query'] = [$this, 'getPlayerInfo'];
         $this->skills['server_version'] = [$this, 'getServerVersion'];
         $this->skills['player_count'] = [$this, 'getPlayerCount'];
     }
@@ -142,65 +141,6 @@ class SkillEngine {
                 'success' => false,
                 'skill' => 'server_version',
                 'message' => '无法获取服务器版本'
-            ];
-        }
-    }
-    
-    /**
-     * 技能：查询玩家信息
-     */
-    private function getPlayerInfo($params) {
-        $playerName = $params['player'] ?? '';
-        
-        if (empty($playerName)) {
-            return [
-                'success' => false,
-                'skill' => 'player_query',
-                'message' => '请提供要查询的玩家名称'
-            ];
-        }
-        
-        // 查询服务器在线玩家列表
-        $status = $this->queryMCServer();
-        
-        if (!$status['online']) {
-            return [
-                'success' => false,
-                'skill' => 'player_query',
-                'message' => '服务器离线，无法查询玩家信息'
-            ];
-        }
-        
-        // 检查玩家是否在线
-        $onlinePlayers = $status['players']['list'] ?? [];
-        $isOnline = false;
-        
-        foreach ($onlinePlayers as $onlinePlayer) {
-            if (strtolower($onlinePlayer['name']) === strtolower($playerName)) {
-                $isOnline = true;
-                break;
-            }
-        }
-        
-        if ($isOnline) {
-            return [
-                'success' => true,
-                'skill' => 'player_query',
-                'data' => [
-                    'player' => $playerName,
-                    'online' => true
-                ],
-                'message' => "玩家 {$playerName} 当前在线"
-            ];
-        } else {
-            return [
-                'success' => true,
-                'skill' => 'player_query',
-                'data' => [
-                    'player' => $playerName,
-                    'online' => false
-                ],
-                'message' => "玩家 {$playerName} 当前不在线"
             ];
         }
     }

@@ -1,47 +1,104 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-    <link rel="icon" type="image/png" href="../assets/img/m.png">
-    <link rel="shortcut icon" href="../assets/img/m.png">
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - 页面未找到 | 万驹同源</title>
     <link rel="stylesheet" href="../css/style.css?v=3.18">
     <style>
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        .matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
         .error-page {
             min-height: calc(100vh - 200px);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 60px 20px;
+            position: relative;
+            z-index: 10;
         }
 
         .error-container {
             text-align: center;
             max-width: 600px;
+            background-color: rgba(0, 0, 0, 0.85);
+            border: 2px solid #0F0;
+            border-radius: 4px;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3),
+                inset 0 0 10px rgba(0, 255, 0, 0.1);
+            animation: flicker 3s infinite alternate;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            19%,
+            21%,
+            23%,
+            25%,
+            54%,
+            56%,
+            100% {
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.3),
+                    inset 0 0 10px rgba(0, 255, 0, 0.1);
+            }
+
+            20%,
+            24%,
+            55% {
+                box-shadow: 0 0 5px rgba(0, 255, 0, 0.1),
+                    inset 0 0 2px rgba(0, 255, 0, 0.05);
+            }
         }
 
         .error-code {
             font-size: 150px;
             font-weight: 900;
-            color: var(--primary-color);
+            color: #0F0;
             line-height: 1;
             margin-bottom: 20px;
-            text-shadow: 4px 4px 0 rgba(92, 184, 92, 0.2);
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+            letter-spacing: 2px;
         }
 
         .error-title {
             font-size: 2.5rem;
             font-weight: bold;
             margin-bottom: 20px;
-            color: var(--text-color);
+            color: #0F0;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
         }
 
         .error-message {
             font-size: 1.2rem;
-            color: #666;
+            color: #0F0;
             margin-bottom: 40px;
             line-height: 1.6;
+            border-bottom: 1px dashed #0F0;
+            padding-bottom: 20px;
         }
 
         .error-actions {
@@ -51,35 +108,44 @@
             flex-wrap: wrap;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(92, 184, 92, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(92, 184, 92, 0.4);
-        }
-
+        .btn-primary,
         .btn-outline {
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
+            background-color: transparent;
+            color: #0F0;
+            border: 1px solid #0F0;
             padding: 12px 30px;
-            border-radius: 25px;
+            border-radius: 0;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-weight: bold;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+            position: relative;
+            overflow: hidden;
         }
 
+        .btn-primary::after,
+        .btn-outline::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::after,
+        .btn-outline:hover::after {
+            left: 100%;
+        }
+
+        .btn-primary:hover,
         .btn-outline:hover {
-            background: var(--primary-color);
-            color: white;
+            background-color: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
         }
 
         .error-illustration {
@@ -89,6 +155,7 @@
             object-fit: contain;
             transition: none !important;
             transform: none !important;
+            filter: drop-shadow(0 0 5px #0F0);
         }
 
         .error-illustration:hover {
@@ -96,6 +163,7 @@
             box-shadow: none !important;
         }
 
+        
         @media (max-width: 768px) {
             .error-code {
                 font-size: 100px;
@@ -119,56 +187,96 @@
                 width: 100%;
                 max-width: 300px;
             }
+
+            .error-container {
+                padding: 20px;
+            }
         }
     </style>
     <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
     <script src="../js/main.js?v=3.3"></script>
 
-<link rel="icon" type="image/png" href="../assets/img/m.png"><link rel="shortcut icon" href="../assets/img/m.png"></head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+</head>
+
 <body data-components="sidebarPlayer,backToTop,navbar,footer">
 
-    <!-- 导航栏组件 -->
-    <div id="app-navbar"></div>
+    <div class="matrix-bg">
+        <canvas id="matrixCanvas" class="matrix-canvas"></canvas>
+    </div>
 
-    <!-- 404错误页内容 -->
     <div class="error-page">
         <div class="error-container">
-            <img src="../assets/img/404.png" class="error-illustration" alt="404 Error">
+            <div class="glitch-effect">
+                <div class="glitch-layer"></div>
+                <div class="glitch-layer"></div>
+                <div class="glitch-layer"></div>
+                <canvas id="glitchNoise" class="glitch-noise"></canvas>
+            </div>
+            <img src="../assets/img/404.webp" class="error-illustration" alt="404 Error">
             <div class="error-code">404</div>
-            <h1 class="error-title">页面未找到</h1>
-            <p class="error-message">
-                抱歉，您访问的页面不存在或已被移除。<br>
-                请检查URL是否正确，或使用下方按钮返回。
-            </p>
+            <h1 class="error-title">PAGE NOT FOUND</h1>
+            <p class="error-message">对不起，您请求的页面不存在。<br>请检查网址是否正确或返回主页。</p>
             <div class="error-actions">
-                <a href="../index.html" class="btn-primary">返回首页</a>
-                <a href="javascript:history.back()" class="btn-outline">返回上一页</a>
+                <a href="../index.html" class="btn-primary">[首页]</a>
+                <a href="javascript:history.back()" class="btn-outline">[返回]</a>
             </div>
         </div>
     </div>
 
-    <!-- 页脚组件 -->
-    <div id="app-footer"></div>
-
     <script>
-        // 隐藏加载动画
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const pageLoader = document.getElementById('pageLoader');
             if (pageLoader) {
                 pageLoader.style.display = 'none';
                 pageLoader.classList.add('hidden');
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            const chars = "01";
+            const charArray = chars.split('');
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+
+            const drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
+            }
+
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#0F0';
+                ctx.font = `${fontSize}px monospace`;
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = charArray[Math.floor(Math.random() * charArray.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+
+            setInterval(drawMatrix, 33);
+        });
     </script>
 
-    <!-- 导航栏 -->
-    <script src="../js/navbar.js?v=1.0"></script>
-    <!-- 音乐播放器 -->
-    <div id="app-sidebar-player"></div>
-    <script src="../js/sidebar-player.js?v=3.0"></script>
-    <script src="../components/loader.js?v=3.0"></script>
-
 </body>
+
 </html>
-
-

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>万驹同源 - AI 智能客服（专业版）</title>
+    <title>万驹同源 - AI 智能客服</title>
     <script src="../../lib/marked.min.js"></script>
     <style>
         * {
@@ -94,6 +94,24 @@
 
         .close-sidebar:hover {
             background: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-deepseek-link {
+            font-size: inherit;
+            color: inherit;
+            text-decoration: none;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease-in-out;
+            vertical-align: middle;
+        }
+
+        .sidebar-deepseek-link:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
         }
 
         .sidebar-content {
@@ -292,7 +310,8 @@
             border-bottom-right-radius: 6px;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
             border: none;
-            padding: 16px 70px 16px 22px; /* 上、右（头像空间）、下、左 */
+            padding: 16px 70px 16px 22px;
+            /* 上、右（头像空间）、下、左 */
             position: relative;
         }
 
@@ -319,7 +338,8 @@
             border-bottom-left-radius: 6px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(102, 126, 234, 0.1);
-            padding: 16px 22px 16px 70px; /* 上、右、下、左（头像空间） */
+            padding: 16px 22px 16px 70px;
+            /* 上、右、下、左（头像空间） */
             position: relative;
 
         }
@@ -333,7 +353,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: url('../../assets/img/ai.png') center/cover no-repeat;
+            background: url('../../assets/img/ai.webp') center/cover no-repeat;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
@@ -376,7 +396,7 @@
         /* 用户消息的时间戳在右下角 */
         .message.user .message-meta {
             text-align: left;
-            margin-right: 52px; 
+            margin-right: 52px;
         }
 
         /* 输入框样式 */
@@ -616,9 +636,17 @@
             color: #2c3e50;
         }
 
-        .markdown-body h1 { font-size: 1.4em; }
-        .markdown-body h2 { font-size: 1.2em; }
-        .markdown-body h3 { font-size: 1.1em; }
+        .markdown-body h1 {
+            font-size: 1.4em;
+        }
+
+        .markdown-body h2 {
+            font-size: 1.2em;
+        }
+
+        .markdown-body h3 {
+            font-size: 1.1em;
+        }
 
         .markdown-body pre {
             background: #f8f9fa;
@@ -838,12 +866,12 @@
     <!-- 左侧折叠菜单 -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2>📋 信息面板</h2>
+            <h2>信息面板</h2>
             <button class="close-sidebar" id="closeSidebar">×</button>
         </div>
         <div class="sidebar-content">
             <div class="sidebar-section">
-                <h3>🤖 客服信息</h3>
+                <h3>客服信息</h3>
                 <div class="sidebar-info">
                     <div class="sidebar-info-item">
                         <span class="sidebar-info-label">名称：</span>金苹果派 (客服版)
@@ -854,14 +882,18 @@
                     <div class="sidebar-info-item">
                         <span class="sidebar-info-label">类型：</span>AI 智能客服
                     </div>
+                    <div class="sidebar-info-item">
+                        <span class="sidebar-info-label">API：</span>
+                        <a href="https://www.deepseek.com/" target="_blank" rel="noopener noreferrer"
+                            class="sidebar-deepseek-link">DeepSeek</a>
+                    </div>
                 </div>
             </div>
 
             <div class="sidebar-section">
-                <h3>🔗 快速导航</h3>
                 <div class="sidebar-info">
                     <div class="sidebar-info-item">
-                        <a href="../../index.html" class="sidebar-link">🏠 返回主页</a>
+                        <a href="../../pages/profile.html" class="sidebar-link">返回个人中心</a>
                     </div>
                 </div>
             </div>
@@ -905,6 +937,7 @@
         const API_BASE_URL = 'https://api.deepseek.com';
         const LOCAL_API_URL = '../../api/ai/api.php'; // 本地 API
         const SKILL_API_URL = '../../api/ai/skills.php'; // 技能 API
+        const CONFIG_API_URL = '../../api/ai/api.php'; // 配置 API
 
         // DOM 元素
         const chatBox = document.getElementById('chatBox');
@@ -934,12 +967,6 @@
                 examples: ['多少人在线？', '服务器现在多少人？', '在线玩家数量']
             },
             {
-                name: 'player_query',
-                displayName: '玩家查询',
-                description: '查询指定玩家是否在线',
-                examples: ['czhdq 在线吗？', '查询玩家 Steve', '帮我看看小明在不在']
-            },
-            {
                 name: 'server_version',
                 displayName: '服务器版本查询',
                 description: '查询服务器版本信息',
@@ -957,7 +984,6 @@
                     },
                     body: JSON.stringify({
                         message: message,
-                        api_key: config.apiKey,
                         model: config.model,
                         temperature: 0.1, // 低温度，更精确
                         max_tokens: 200,
@@ -1001,11 +1027,6 @@
                     /多少.* (人 | 玩家 | 在线)/i,
                     /.* (在线 | 玩家) 数量/i,
                     /服务器.* 多少人/i
-                ],
-                player_query: [
-                    /查询玩家\s*([a-zA-Z0-9_\u4e00-\u9fa5]+)/i,
-                    /玩家.* ([a-zA-Z0-9_\u4e00-\u9fa5]+).* (在线 | 在吗)/i,
-                    /([a-zA-Z0-9_\u4e00-\u9fa5]+).* (在线吗 | 在吗)/i
                 ],
                 server_version: [
                     /服务器.* (版本 | 版本号)/i,
@@ -1122,8 +1143,22 @@
         });
 
         // 加载配置
-        function loadConfig() {
-            // 从 localStorage 加载（如果之前保存过）
+        async function loadConfig() {
+            // 首先尝试从服务器获取配置
+            try {
+                const response = await fetch(CONFIG_API_URL);
+                const data = await response.json();
+
+                if (data.success) {
+                    config.model = data.config.model || config.model;
+                    config.temperature = data.config.temperature || config.temperature;
+                    config.maxTokens = data.config.max_tokens || config.maxTokens;
+                }
+            } catch (error) {
+                console.log('无法从服务器获取配置，使用默认配置');
+            }
+
+            // 从 localStorage 加载（如果之前保存过，会覆盖服务器配置）
             const savedApiKey = localStorage.getItem('deepseek_api_key');
             const savedModel = localStorage.getItem('deepseek_model');
             const savedTemperature = localStorage.getItem('deepseek_temperature');
@@ -1176,14 +1211,13 @@
             const icons = {
                 server_status: '🖥️',
                 player_count: '👥',
-                player_query: '🔍',
                 server_version: '📦',
             };
 
             const titles = {
                 server_status: '服务器状态',
                 player_count: '玩家数量',
-                player_query: '玩家查询',
+
                 server_version: '服务器版本'
             };
 
@@ -1430,16 +1464,6 @@
                 return;
             }
 
-            // 检查是否配置了 API Key
-            if (!config.apiKey) {
-                addMessage('请先配置 API Key 喵～<br>请在 <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">config/config.php</code> 文件中设置 <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">DEEPSEEK_API_KEY</code>', 'error');
-                hideTyping();
-                sendBtn.disabled = false;
-                sendBtn.textContent = '发送';
-                userInput.focus();
-                return;
-            }
-
             const model = config.model;
             const temperature = config.temperature;
             const maxTokens = config.maxTokens;
@@ -1453,7 +1477,6 @@
                     },
                     body: JSON.stringify({
                         message: message,
-                        api_key: config.apiKey,
                         model: model,
                         temperature: temperature,
                         max_tokens: maxTokens
