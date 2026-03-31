@@ -1,7 +1,7 @@
 # 万驹同源服务器官网
 
 <p align="center">
-  <img src="assets/img/pc_logo2.png" alt="Pony Consanguinity Logo" class="no-hover" style="max-width: 500px; width: 90%; border-radius: 10px; pointer-events: none;">
+  <img src="../assets/img/pc_logo2.png" alt="Pony Consanguinity Logo" class="no-hover" style="max-width: 500px; width: 90%; border-radius: 10px; pointer-events: none;">
 </p>
 
 
