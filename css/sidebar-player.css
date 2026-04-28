@@ -1,0 +1,334 @@
+/* Sidebar 音乐播放器样式 */
+.sidebar-player {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+
+/* 确保容器样式正确 */
+#app-sidebar-player {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+}
+
+/* 播放器图标按钮 */
+.player-toggle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1002;
+}
+
+.player-toggle:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.player-toggle:active {
+    transform: translateY(0) scale(0.95);
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+}
+
+.player-toggle.active {
+    transform: rotate(90deg);
+}
+
+.player-toggle .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.player-toggle .icon svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+/* 播放器面板 */
+.player-panel {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    width: 280px;
+    background: linear-gradient(180deg, #1e1e2e 0%, #2d2d3f 100%);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: -1;
+}
+
+.player-panel.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    z-index: 1001;
+}
+
+/* 歌曲信息 */
+.song-info {
+    margin-bottom: 15px;
+}
+
+.song-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.song-status {
+    font-size: 12px;
+    color: #888;
+}
+
+/* 进度条 */
+.progress-container {
+    margin-bottom: 15px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #3a3a4a;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-current {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 3px;
+    transition: width 0.1s ease;
+    position: relative;
+}
+
+.progress-current::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #888;
+}
+
+/* 控制按钮 */
+.player-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.control-btn {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn:hover {
+    color: #667eea;
+    transform: scale(1.1);
+}
+
+.play-btn {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.play-btn:hover {
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    color: white;
+}
+
+/* 音量控制 */
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.volume-icon {
+    color: #888;
+    flex-shrink: 0;
+}
+
+.volume-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: #3a3a4a;
+    border-radius: 2px;
+    outline: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #667eea;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: #667eea;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+/* 播放列表 */
+.playlist {
+    margin-top: 15px;
+}
+
+.playlist-header {
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #3a3a4a;
+}
+
+.playlist-items {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.playlist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.playlist-item:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.playlist-item.active {
+    background: rgba(102, 126, 234, 0.2);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+.item-title {
+    font-size: 13px;
+    color: #ffffff;
+}
+
+.item-duration {
+    font-size: 11px;
+    color: #888;
+}
+
+/* 滚动条样式 */
+.playlist-items::-webkit-scrollbar {
+    width: 4px;
+}
+
+.playlist-items::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.playlist-items::-webkit-scrollbar-thumb {
+    background: #3a3a4a;
+    border-radius: 2px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .sidebar-player {
+        right: 10px;
+        bottom: 10px;
+    }
+
+    #app-sidebar-player {
+        right: 10px;
+        bottom: 10px;
+    }
+
+    .player-panel {
+        right: -10px;
+        width: 260px;
+        bottom: 60px;
+    }
+
+    .player-toggle {
+        width: 45px;
+        height: 45px;
+    }
+
+    .player-toggle .icon svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* 确保 SVG 图标正确显示 */
+.player-toggle svg,
+.control-btn svg {
+    display: block;
+}
+
+/* 防止内容溢出 */
+.player-panel {
+    box-sizing: border-box;
+}
+
+.player-panel * {
+    box-sizing: border-box;
+}

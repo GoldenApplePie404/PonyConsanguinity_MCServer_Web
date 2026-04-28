@@ -1,0 +1,98 @@
+/* 回到顶部按钮样式 */
+.back-to-top {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.back-to-top-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.back-to-top-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: rotate(45deg);
+    transition: left 0.7s;
+    left: -100%;
+}
+
+.back-to-top-btn:hover {
+    transform: scale(1.15) translateY(-5px);
+    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+}
+
+.back-to-top-btn:hover::before {
+    left: 100%;
+}
+
+.back-to-top-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+}
+
+.back-to-top-btn svg {
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s ease;
+    z-index: 1;
+    position: relative;
+}
+
+.back-to-top-btn:hover svg {
+    transform: translateY(-2px) rotate(360deg);
+}
+
+/* 隐藏状态（通过JS控制） */
+.back-to-top.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(20px) scale(0.8);
+}
+
+/* 显示状态 */
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .back-to-top {
+        left: 10px;
+        bottom: 10px;
+    }
+    
+    .back-to-top-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .back-to-top-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+}

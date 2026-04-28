@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册成功 - 万驹同源</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .success-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            background: #d4edda;
+            color: #155724;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .email-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .email-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .email-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        .note {
+            font-size: 14px;
+            color: #666;
+            margin: 20px 0;
+            line-height: 1.5;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            ✅
+        </div>
+        <h1>注册成功！</h1>
+        <p>您的账户已创建成功，请验证您的邮箱以使用全部功能。</p>
+        
+        <div class="email-info">
+            <div class="email-label">验证邮件已发送至：</div>
+            <div class="email-value" id="emailValue">---</div>
+        </div>
+        
+        <div class="note">
+            <p>💡 请检查您的邮箱，包括垃圾箱。</p>
+            <p>⏰ 验证链接将在24小时后过期。</p>
+            <p>🔑 验证后才能使用全部功能。</p>
+        </div>
+        
+        <div>
+            <a href="login.html" class="btn">去登录</a>
+            <a href="index.html" class="btn btn-outline">返回首页</a>
+        </div>
+    </div>
+
+    <script>
+        // 解析URL参数
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // 获取邮箱参数
+        const email = getQueryParam('email');
+        if (email) {
+            document.getElementById('emailValue').textContent = email;
+        }
+
+        // 自动跳转到登录页（5秒后）
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 5000);
+    </script>
+</body>
+</html>

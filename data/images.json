@@ -1,0 +1,38 @@
+{
+    "img_1775229762_81d85bde": {
+        "id": "img_1775229762_81d85bde",
+        "user_id": "990606f8-ccf1-44ba-8cfc-873401672d65",
+        "username": "金苹果派",
+        "filename": "text_img_1775229761_631062e1.jpg",
+        "original_name": "gap.png",
+        "url": "http:\/\/localhost:8000\/assets\/img\/text_img\/text_img_1775229761_631062e1.jpg",
+        "size": 139125,
+        "original_size": 1407105,
+        "type": "jpg",
+        "width": 1440,
+        "height": 1080,
+        "mime": "image\/png",
+        "compressed": true,
+        "compression_ratio": 90.11,
+        "upload_time": "2026-04-03 15:22:42",
+        "status": "active"
+    },
+    "img_1775229783_f8f53756": {
+        "id": "img_1775229783_f8f53756",
+        "user_id": "990606f8-ccf1-44ba-8cfc-873401672d65",
+        "username": "金苹果派",
+        "filename": "text_img_1775229783_3894d2cd.png",
+        "original_name": "48264FBEB93867911AF5F3A00FAE2BED.png",
+        "url": "http:\/\/localhost:8000\/assets\/img\/text_img\/text_img_1775229783_3894d2cd.png",
+        "size": 17315,
+        "original_size": 17315,
+        "type": "png",
+        "width": 654,
+        "height": 169,
+        "mime": "image\/png",
+        "compressed": false,
+        "compression_ratio": 0,
+        "upload_time": "2026-04-03 15:23:03",
+        "status": "active"
+    }
+}

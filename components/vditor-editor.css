@@ -1,0 +1,76 @@
+/**
+ * Vditor 富文本编辑器组件样式 - 自定义覆盖
+ * 注意：此文件用于覆盖 Vditor 默认样式，基础样式由 lib/vditor/index.css 提供
+ */
+
+/* 编辑器容器自定义样式 */
+.vditor {
+    border-radius: 4px !important;
+    font-family: inherit !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* 工具栏自定义样式 */
+.vditor-toolbar {
+    background-color: #f8f9fa !important;
+    border-radius: 4px 4px 0 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* 编辑区域自定义样式 */
+.vditor-ir {
+    background-color: #fafbfc !important;
+    min-height: 400px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* 预览区域自定义样式 */
+.vditor-reset {
+    font-family: inherit !important;
+}
+
+/* 全屏模式自定义样式 */
+.vditor--fullscreen {
+    z-index: 9999 !important;
+}
+
+/* 编辑器容器包装器 */
+.vditor-editor-wrapper {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 字数统计自定义样式 */
+.vditor-counter {
+    margin-top: 10px;
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+    .vditor {
+        font-size: 14px !important;
+    }
+    
+    .vditor-toolbar__item {
+        padding: 0 8px !important;
+    }
+}
+
+/* 暗黑模式支持（可选） */
+body.dark-theme .vditor {
+    --border-color: #141414;
+    --panel-background-color: #24292e;
+    --toolbar-background-color: #1d2125;
+    --toolbar-icon-color: #b9b9b9;
+    --toolbar-icon-hover-color: #fff;
+    --textarea-background-color: #2f363d;
+    --textarea-text-color: #d1d5da;
+}
+

@@ -1,0 +1,3049 @@
+/* 自定义代码高亮主题 - 更丰富的颜色方案 */
+
+pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+}
+
+code.hljs {
+    padding: 3px 5px;
+}
+
+.hljs {
+    color: #e6e6e6;
+    background: #282c34;
+}
+
+/* 注释 - 柔和的灰色 */
+.hljs-comment,
+.hljs-quote {
+    color: #7f848e;
+    font-style: italic;
+}
+
+/* 关键字 - 醒目的紫色 */
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+    color: #c678dd;
+    font-weight: 600;
+}
+
+/* 控制流关键字 - 亮粉色 */
+.hljs-keyword.control-flow {
+    color: #ff79c6;
+    font-weight: 700;
+}
+
+/* 函数名 - 亮蓝色 */
+.hljs-function .hljs-title,
+.hljs-title.function_ {
+    color: #61afef;
+    font-weight: 600;
+}
+
+/* 类名 - 金黄色 */
+.hljs-class .hljs-title,
+.hljs-title.class_ {
+    color: #e5c07b;
+    font-weight: 600;
+}
+
+/* 变量名 - 浅红色 */
+.hljs-name,
+.hljs-variable {
+    color: #e06c75;
+}
+
+/* 字符串 - 清新的绿色 */
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+    color: #98c379;
+}
+
+/* 数字和布尔值 - 橙色 */
+.hljs-number,
+.hljs-literal,
+.hljs-type,
+.hljs-template-variable {
+    color: #d19a66;
+}
+
+/* 内置函数和常量 - 青色 */
+.hljs-built_in,
+.hljs-builtin-name {
+    color: #56b6c2;
+    font-weight: 500;
+}
+
+/* 运算符 - 亮青色 */
+.hljs-operator {
+    color: #56b6c2;
+}
+
+/* 标点符号 - 浅灰色 */
+.hljs-punctuation {
+    color: #abb2bf;
+}
+
+/* 标签和选择器 - 红色 */
+.hljs-selector-tag,
+.hljs-tag {
+    color: #e06c75;
+}
+
+/* 属性 - 橙色 */
+.hljs-attr,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-pseudo {
+    color: #d19a66;
+}
+
+/* ID选择器 - 蓝色 */
+.hljs-selector-id,
+.hljs-id {
+    color: #61afef;
+}
+
+/* 链接和URL - 下划线蓝色 */
+.hljs-link,
+.hljs-url {
+    color: #61afef;
+    text-decoration: underline;
+}
+
+/* 元信息 - 灰色 */
+.hljs-meta,
+.hljs-meta-keyword {
+    color: #5c6370;
+}
+
+/* 强调 */
+.hljs-emphasis {
+    font-style: italic;
+    color: #c678dd;
+}
+
+/* 粗体 */
+.hljs-strong {
+    font-weight: 700;
+    color: #e5c07b;
+}
+
+/* 删除线 */
+.hljs-deletion {
+    color: #e06c75;
+    text-decoration: line-through;
+}
+
+/* 插入 */
+.hljs-addition {
+    color: #98c379;
+}
+
+/* 符号 */
+.hljs-symbol {
+    color: #c678dd;
+}
+
+/* 标题 */
+.hljs-title {
+    color: #e5c07b;
+}
+
+/* 章节 */
+.hljs-section {
+    color: #e06c75;
+    font-weight: 600;
+}
+
+/* 替代 */
+.hljs-subst {
+    color: #e6e6e6;
+}
+
+/* 项目符号 */
+.hljs-bullet {
+    color: #61afef;
+}
+
+/* 代码块中的特殊标记 */
+.hljs-params {
+    color: #d19a66;
+}
+
+/* 参数 */
+.hljs-property {
+    color: #61afef;
+}
+
+/* 属性 */
+.hljs-namespace {
+    color: #e5c07b;
+}
+
+/* 装饰器/注解 */
+.hljs-decorator,
+.hljs-annotation {
+    color: #c678dd;
+    font-style: italic;
+}
+
+/* 类型定义 */
+.hljs-type-def {
+    color: #e5c07b;
+    font-weight: 600;
+}
+
+/* 模块导入/导出 */
+.hljs-module {
+    color: #c678dd;
+}
+
+/* 异常处理 */
+.hljs-exception {
+    color: #e06c75;
+    font-weight: 600;
+}
+
+/* 正则表达式 */
+.hljs-regexp {
+    color: #98c379;
+}
+
+/* 特殊字符 */
+.hljs-char {
+    color: #98c379;
+}
+
+/* 转义序列 */
+.hljs-escape {
+    color: #56b6c2;
+}
+
+/* 预处理指令 */
+.hljs-preprocessor {
+    color: #c678dd;
+}
+
+/* 宏定义 */
+.hljs-macro {
+    color: #c678dd;
+}
+
+/* 模板标签 */
+.hljs-template-tag {
+    color: #e06c75;
+}
+
+/* 模板变量 */
+.hljs-template-variable {
+    color: #d19a66;
+}
+
+/* 代码高亮增强 */
+.hljs-keyword.important {
+    color: #ff79c6;
+    font-weight: 700;
+}
+
+.hljs-string.interpolated {
+    color: #98c379;
+}
+
+.hljs-number.float {
+    color: #d19a66;
+}
+
+.hljs-number.hex {
+    color: #d19a66;
+}
+
+.hljs-number.binary {
+    color: #d19a66;
+}
+
+.hljs-number.octal {
+    color: #d19a66;
+}
+
+/* 函数调用 */
+.hljs-function-call {
+    color: #61afef;
+}
+
+/* 方法调用 */
+.hljs-method-call {
+    color: #61afef;
+}
+
+/* 属性访问 */
+.hljs-property-access {
+    color: #e6e6e6;
+}
+
+/* 链式调用 */
+.hljs-chain {
+    color: #abb2bf;
+}
+
+/* 箭头函数 */
+.hljs-arrow {
+    color: #c678dd;
+}
+
+/* 展开运算符 */
+.hljs-spread {
+    color: #c678dd;
+}
+
+/* 解构赋值 */
+.hljs-destructuring {
+    color: #e06c75;
+}
+
+/* 默认参数 */
+.hljs-default-param {
+    color: #d19a66;
+}
+
+/* 剩余参数 */
+.hljs-rest-param {
+    color: #c678dd;
+}
+
+/* 异步/等待 */
+.hljs-async,
+.hljs-await {
+    color: #c678dd;
+    font-weight: 600;
+}
+
+/* 生成器 */
+.hljs-generator {
+    color: #c678dd;
+}
+
+/* yield */
+.hljs-yield {
+    color: #c678dd;
+}
+
+/* 严格模式 */
+.hljs-strict {
+    color: #c678dd;
+    font-weight: 600;
+}
+
+/* 全局对象 */
+.hljs-global {
+    color: #e5c07b;
+}
+
+/* 原型 */
+.hljs-prototype {
+    color: #e5c07b;
+}
+
+/* 构造函数 */
+.hljs-constructor {
+    color: #61afef;
+    font-weight: 600;
+}
+
+/* getter/setter */
+.hljs-getter,
+.hljs-setter {
+    color: #c678dd;
+}
+
+/* 静态成员 */
+.hljs-static {
+    color: #c678dd;
+}
+
+/* 私有成员 */
+.hljs-private {
+    color: #e06c75;
+}
+
+/* 保护成员 */
+.hljs-protected {
+    color: #d19a66;
+}
+
+/* 公共成员 */
+.hljs-public {
+    color: #98c379;
+}
+
+/* 抽象 */
+.hljs-abstract {
+    color: #c678dd;
+}
+
+/* 最终 */
+.hljs-final {
+    color: #c678dd;
+}
+
+/* 接口 */
+.hljs-interface {
+    color: #e5c07b;
+}
+
+/* 枚举 */
+.hljs-enum {
+    color: #e5c07b;
+}
+
+/* 结构体 */
+.hljs-struct {
+    color: #e5c07b;
+}
+
+/* 联合 */
+.hljs-union {
+    color: #e5c07b;
+}
+
+/* 类型别名 */
+.hljs-type-alias {
+    color: #e5c07b;
+}
+
+/* 泛型 */
+.hljs-generic {
+    color: #d19a66;
+}
+
+/* 约束 */
+.hljs-constraint {
+    color: #c678dd;
+}
+
+/* 实现 */
+.hljs-implements {
+    color: #c678dd;
+}
+
+/* 扩展 */
+.hljs-extends {
+    color: #c678dd;
+}
+
+/* 混入 */
+.hljs-mixin {
+    color: #e5c07b;
+}
+
+/* 特质 */
+.hljs-trait {
+    color: #e5c07b;
+}
+
+/* 包/模块 */
+.hljs-package,
+.hljs-module {
+    color: #c678dd;
+}
+
+/* 导入 */
+.hljs-import {
+    color: #c678dd;
+}
+
+/* 导出 */
+.hljs-export {
+    color: #c678dd;
+}
+
+/* 从...导入 */
+.hljs-from {
+    color: #c678dd;
+}
+
+/* 作为 */
+.hljs-as {
+    color: #c678dd;
+}
+
+/* 默认 */
+.hljs-default {
+    color: #c678dd;
+}
+
+/* 命名空间 */
+.hljs-namespace {
+    color: #e5c07b;
+}
+
+/* 使用 */
+.hljs-using {
+    color: #c678dd;
+}
+
+/* 包含 */
+.hljs-include {
+    color: #c678dd;
+}
+
+/* 定义 */
+.hljs-define {
+    color: #c678dd;
+}
+
+/* 条件编译 */
+.hljs-ifdef,
+.hljs-ifndef,
+.hljs-endif {
+    color: #c678dd;
+}
+
+/* 警告/错误指令 */
+.hljs-warning,
+.hljs-error {
+    color: #e06c75;
+}
+
+/* 编译指示 */
+.hljs-pragma {
+    color: #c678dd;
+}
+
+/* 行号指令 */
+.hljs-line {
+    color: #5c6370;
+}
+
+/* 文件指令 */
+.hljs-file {
+    color: #5c6370;
+}
+
+/* 区域 */
+.hljs-region {
+    color: #5c6370;
+}
+
+/* 结束区域 */
+.hljs-endregion {
+    color: #5c6370;
+}
+
+/* 折叠标记 */
+.hljs-fold-marker {
+    color: #5c6370;
+}
+
+/* TODO标记 */
+.hljs-todo {
+    color: #ff79c6;
+    font-weight: 600;
+    background: rgba(255, 121, 198, 0.1);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* FIXME标记 */
+.hljs-fixme {
+    color: #e06c75;
+    font-weight: 600;
+    background: rgba(224, 108, 117, 0.1);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* HACK标记 */
+.hljs-hack {
+    color: #e5c07b;
+    font-weight: 600;
+    background: rgba(229, 192, 123, 0.1);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* XXX标记 */
+.hljs-xxx {
+    color: #d19a66;
+    font-weight: 600;
+    background: rgba(209, 154, 102, 0.1);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* NOTE标记 */
+.hljs-note {
+    color: #61afef;
+    font-weight: 600;
+    background: rgba(97, 175, 239, 0.1);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* BUG标记 */
+.hljs-bug {
+    color: #e06c75;
+    font-weight: 700;
+    background: rgba(224, 108, 117, 0.15);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* 优化标记 */
+.hljs-optimize {
+    color: #98c379;
+    font-weight: 600;
+    background: rgba(152, 195, 121, 0.1);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* 性能标记 */
+.hljs-performance {
+    color: #56b6c2;
+    font-weight: 600;
+    background: rgba(86, 182, 194, 0.1);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* 安全标记 */
+.hljs-security {
+    color: #c678dd;
+    font-weight: 600;
+    background: rgba(198, 120, 221, 0.1);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* 废弃标记 */
+.hljs-deprecated {
+    color: #7f848e;
+    text-decoration: line-through;
+}
+
+/* 实验性标记 */
+.hljs-experimental {
+    color: #e5c07b;
+    font-style: italic;
+}
+
+/* 内部标记 */
+.hljs-internal {
+    color: #5c6370;
+}
+
+/* 文档标记 */
+.hljs-documentation {
+    color: #7f848e;
+    font-style: italic;
+}
+
+/* 示例代码 */
+.hljs-example {
+    color: #98c379;
+}
+
+/* 输出 */
+.hljs-output {
+    color: #abb2bf;
+}
+
+/* 提示 */
+.hljs-prompt {
+    color: #56b6c2;
+}
+
+/* 命令 */
+.hljs-command {
+    color: #61afef;
+}
+
+/* 参数 */
+.hljs-argument {
+    color: #d19a66;
+}
+
+/* 选项 */
+.hljs-option {
+    color: #c678dd;
+}
+
+/* 标志 */
+.hljs-flag {
+    color: #e06c75;
+}
+
+/* 路径 */
+.hljs-path {
+    color: #98c379;
+}
+
+/* URL */
+.hljs-url {
+    color: #61afef;
+    text-decoration: underline;
+}
+
+/* 邮箱 */
+.hljs-email {
+    color: #61afef;
+}
+
+/* 日期 */
+.hljs-date {
+    color: #d19a66;
+}
+
+/* 时间 */
+.hljs-time {
+    color: #d19a66;
+}
+
+/* 版本 */
+.hljs-version {
+    color: #e5c07b;
+}
+
+/* 许可证 */
+.hljs-license {
+    color: #7f848e;
+    font-style: italic;
+}
+
+/* 作者 */
+.hljs-author {
+    color: #61afef;
+}
+
+/* 版权 */
+.hljs-copyright {
+    color: #7f848e;
+}
+
+/* 商标 */
+.hljs-trademark {
+    color: #e5c07b;
+}
+
+/* 专利 */
+.hljs-patent {
+    color: #7f848e;
+}
+
+/* 法律文本 */
+.hljs-legal {
+    color: #7f848e;
+    font-style: italic;
+}
+
+/* 警告文本 */
+.hljs-warning-text {
+    color: #e5c07b;
+    font-weight: 600;
+}
+
+/* 错误文本 */
+.hljs-error-text {
+    color: #e06c75;
+    font-weight: 600;
+}
+
+/* 成功文本 */
+.hljs-success-text {
+    color: #98c379;
+    font-weight: 600;
+}
+
+/* 信息文本 */
+.hljs-info-text {
+    color: #61afef;
+}
+
+/* 调试文本 */
+.hljs-debug-text {
+    color: #5c6370;
+}
+
+/* 跟踪文本 */
+.hljs-trace-text {
+    color: #5c6370;
+}
+
+/* 详细文本 */
+.hljs-verbose-text {
+    color: #5c6370;
+}
+
+/* 静默文本 */
+.hljs-quiet-text {
+    color: #5c6370;
+}
+
+/* 正常文本 */
+.hljs-normal-text {
+    color: #e6e6e6;
+}
+
+/* 高亮文本 */
+.hljs-highlight-text {
+    background: rgba(229, 192, 123, 0.2);
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+/* 选择文本 */
+.hljs-selection-text {
+    background: rgba(97, 175, 239, 0.3);
+}
+
+/* 匹配文本 */
+.hljs-match-text {
+    background: rgba(152, 195, 121, 0.3);
+}
+
+/* 当前行 */
+.hljs-current-line {
+    background: rgba(97, 175, 239, 0.1);
+}
+
+/* 断点行 */
+.hljs-breakpoint-line {
+    background: rgba(224, 108, 117, 0.2);
+}
+
+/* 书签行 */
+.hljs-bookmark-line {
+    background: rgba(229, 192, 123, 0.2);
+}
+
+/* 差异添加 */
+.hljs-diff-add {
+    background: rgba(152, 195, 121, 0.2);
+}
+
+/* 差异删除 */
+.hljs-diff-delete {
+    background: rgba(224, 108, 117, 0.2);
+}
+
+/* 差异修改 */
+.hljs-diff-change {
+    background: rgba(229, 192, 123, 0.2);
+}
+
+/* 差异上下文 */
+.hljs-diff-context {
+    color: #5c6370;
+}
+
+/* 差异信息 */
+.hljs-diff-info {
+    color: #61afef;
+}
+
+/* 差异标记 */
+.hljs-diff-marker {
+    color: #5c6370;
+}
+
+/* 合并冲突 */
+.hljs-merge-conflict {
+    background: rgba(224, 108, 117, 0.2);
+}
+
+/* 合并冲突标记 */
+.hljs-merge-marker {
+    color: #e06c75;
+    font-weight: 700;
+}
+
+/* 合并冲突 ours */
+.hljs-merge-ours {
+    background: rgba(97, 175, 239, 0.2);
+}
+
+/* 合并冲突 theirs */
+.hljs-merge-theirs {
+    background: rgba(152, 195, 121, 0.2);
+}
+
+/* 搜索匹配 */
+.hljs-search-match {
+    background: rgba(229, 192, 123, 0.4);
+    border-radius: 2px;
+}
+
+/* 搜索当前匹配 */
+.hljs-search-current {
+    background: rgba(229, 192, 123, 0.6);
+    border-radius: 2px;
+}
+
+/* 括号匹配 */
+.hljs-bracket-match {
+    background: rgba(97, 175, 239, 0.3);
+    border-radius: 2px;
+}
+
+/* 括号不匹配 */
+.hljs-bracket-error {
+    background: rgba(224, 108, 117, 0.3);
+    border-radius: 2px;
+}
+
+/* 标签匹配 */
+.hljs-tag-match {
+    background: rgba(152, 195, 121, 0.3);
+    border-radius: 2px;
+}
+
+/* 标签不匹配 */
+.hljs-tag-error {
+    background: rgba(224, 108, 117, 0.3);
+    border-radius: 2px;
+}
+
+/* 自动完成建议 */
+.hljs-autocomplete-suggestion {
+    color: #abb2bf;
+}
+
+/* 自动完成匹配 */
+.hljs-autocomplete-match {
+    color: #61afef;
+    font-weight: 600;
+}
+
+/* 自动完成选中 */
+.hljs-autocomplete-selected {
+    background: rgba(97, 175, 239, 0.3);
+}
+
+/* 参数提示 */
+.hljs-parameter-hint {
+    color: #d19a66;
+}
+
+/* 快速信息 */
+.hljs-quick-info {
+    color: #abb2bf;
+}
+
+/* 签名帮助 */
+.hljs-signature-help {
+    color: #abb2bf;
+}
+
+/* 文档注释 */
+.hljs-doc-comment {
+    color: #7f848e;
+    font-style: italic;
+}
+
+/* 文档标签 */
+.hljs-doc-tag {
+    color: #c678dd;
+    font-weight: 600;
+}
+
+/* 文档参数 */
+.hljs-doc-param {
+    color: #d19a66;
+}
+
+/* 文档返回值 */
+.hljs-doc-return {
+    color: #98c379;
+}
+
+/* 文档异常 */
+.hljs-doc-exception {
+    color: #e06c75;
+}
+
+/* 文档示例 */
+.hljs-doc-example {
+    color: #98c379;
+}
+
+/* 文档参见 */
+.hljs-doc-see {
+    color: #61afef;
+}
+
+/* 文档链接 */
+.hljs-doc-link {
+    color: #61afef;
+    text-decoration: underline;
+}
+
+/* 文档代码 */
+.hljs-doc-code {
+    color: #98c379;
+    background: rgba(152, 195, 121, 0.1);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* 文档预格式化 */
+.hljs-doc-pre {
+    color: #abb2bf;
+    background: rgba(171, 178, 191, 0.1);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+/* 文档列表 */
+.hljs-doc-list {
+    color: #abb2bf;
+}
+
+/* 文档表格 */
+.hljs-doc-table {
+    color: #abb2bf;
+}
+
+/* 文档标题 */
+.hljs-doc-heading {
+    color: #e5c07b;
+    font-weight: 600;
+}
+
+/* 文档强调 */
+.hljs-doc-emphasis {
+    color: #c678dd;
+    font-style: italic;
+}
+
+/* 文档粗体 */
+.hljs-doc-strong {
+    color: #e5c07b;
+    font-weight: 700;
+}
+
+/* 文档代码块 */
+.hljs-doc-code-block {
+    color: #98c379;
+    background: rgba(152, 195, 121, 0.1);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+/* 文档引用 */
+.hljs-doc-quote {
+    color: #7f848e;
+    font-style: italic;
+    border-left: 3px solid #5c6370;
+    padding-left: 10px;
+}
+
+/* 文档水平线 */
+.hljs-doc-hr {
+    color: #5c6370;
+}
+
+/* 文档图片 */
+.hljs-doc-image {
+    color: #61afef;
+}
+
+/* 文档链接定义 */
+.hljs-doc-link-def {
+    color: #61afef;
+}
+
+/* 文档脚注 */
+.hljs-doc-footnote {
+    color: #7f848e;
+}
+
+/* 文档引用标记 */
+.hljs-doc-citation {
+    color: #61afef;
+}
+
+/* 文档缩写 */
+.hljs-doc-abbr {
+    color: #e5c07b;
+}
+
+/* 文档定义 */
+.hljs-doc-dfn {
+    color: #e5c07b;
+    font-style: italic;
+}
+
+/* 文档变量 */
+.hljs-doc-var {
+    color: #e06c75;
+    font-style: italic;
+}
+
+/* 文档样本 */
+.hljs-doc-samp {
+    color: #98c379;
+    background: rgba(152, 195, 121, 0.1);
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* 文档键盘 */
+.hljs-doc-kbd {
+    color: #abb2bf;
+    background: rgba(171, 178, 191, 0.2);
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid #5c6370;
+}
+
+/* 文档子脚本 */
+.hljs-doc-sub {
+    color: #abb2bf;
+}
+
+/* 文档上脚本 */
+.hljs-doc-sup {
+    color: #abb2bf;
+}
+
+/* 文档删除 */
+.hljs-doc-del {
+    color: #7f848e;
+    text-decoration: line-through;
+}
+
+/* 文档插入 */
+.hljs-doc-ins {
+    color: #98c379;
+    text-decoration: underline;
+}
+
+/* 文档标记 */
+.hljs-doc-mark {
+    color: #282c34;
+    background: #e5c07b;
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* 文档小字体 */
+.hljs-doc-small {
+    color: #5c6370;
+    font-size: 0.9em;
+}
+
+/* 文档大字体 */
+.hljs-doc-big {
+    color: #e5c07b;
+    font-size: 1.1em;
+}
+
+/* 文档地址 */
+.hljs-doc-address {
+    color: #abb2bf;
+    font-style: italic;
+}
+
+/* 文档时间 */
+.hljs-doc-time {
+    color: #d19a66;
+}
+
+/* 文档进度 */
+.hljs-doc-progress {
+    color: #98c379;
+}
+
+/* 文档仪表 */
+.hljs-doc-meter {
+    color: #61afef;
+}
+
+/* 文档详情 */
+.hljs-doc-details {
+    color: #abb2bf;
+}
+
+/* 文档摘要 */
+.hljs-doc-summary {
+    color: #e5c07b;
+    font-weight: 600;
+}
+
+/* 文档对话框 */
+.hljs-doc-dialog {
+    color: #abb2bf;
+}
+
+/* 文档模板 */
+.hljs-doc-template {
+    color: #c678dd;
+}
+
+/* 文档插槽 */
+.hljs-doc-slot {
+    color: #d19a66;
+}
+
+/* 文档影子DOM */
+.hljs-doc-shadow {
+    color: #c678dd;
+}
+
+/* 文档自定义元素 */
+.hljs-doc-custom-element {
+    color: #e5c07b;
+}
+
+/* 文档Web组件 */
+.hljs-doc-web-component {
+    color: #e5c07b;
+}
+
+/* 文档导入映射 */
+.hljs-doc-import-map {
+    color: #c678dd;
+}
+
+/* 文档规范模式 */
+.hljs-doc-speculation {
+    color: #c678dd;
+}
+
+/* 文档视图过渡 */
+.hljs-doc-view-transition {
+    color: #c678dd;
+}
+
+/* 文档容器查询 */
+.hljs-doc-container-query {
+    color: #c678dd;
+}
+
+/* 文档层叠 */
+.hljs-doc-cascade {
+    color: #c678dd;
+}
+
+/* 文档作用域 */
+.hljs-doc-scope {
+    color: #c678dd;
+}
+
+/* 文档上下文 */
+.hljs-doc-context {
+    color: #c678dd;
+}
+
+/* 文档层 */
+.hljs-doc-layer {
+    color: #c678dd;
+}
+
+/* 文档嵌套 */
+.hljs-doc-nesting {
+    color: #c678dd;
+}
+
+/* 文档父选择器 */
+.hljs-doc-parent-selector {
+    color: #c678dd;
+}
+
+/* 文档占位符 */
+.hljs-doc-placeholder {
+    color: #5c6370;
+}
+
+/* 文档空值 */
+.hljs-doc-empty {
+    color: #5c6370;
+    font-style: italic;
+}
+
+/* 文档通配符 */
+.hljs-doc-wildcard {
+    color: #c678dd;
+}
+
+/* 文档任意值 */
+.hljs-doc-any {
+    color: #d19a66;
+}
+
+/* 文档未知 */
+.hljs-doc-unknown {
+    color: #7f848e;
+    font-style: italic;
+}
+
+/* 文档未定义 */
+.hljs-doc-undefined {
+    color: #7f848e;
+    font-style: italic;
+}
+
+/* 文档空 */
+.hljs-doc-null {
+    color: #d19a66;
+}
+
+/* 文档真 */
+.hljs-doc-true {
+    color: #98c379;
+}
+
+/* 文档假 */
+.hljs-doc-false {
+    color: #e06c75;
+}
+
+/* 文档布尔值 */
+.hljs-doc-boolean {
+    color: #d19a66;
+}
+
+/* 文档整数 */
+.hljs-doc-integer {
+    color: #d19a66;
+}
+
+/* 文档浮点数 */
+.hljs-doc-float {
+    color: #d19a66;
+}
+
+/* 文档双精度 */
+.hljs-doc-double {
+    color: #d19a66;
+}
+
+/* 文档长整数 */
+.hljs-doc-long {
+    color: #d19a66;
+}
+
+/* 文档短整数 */
+.hljs-doc-short {
+    color: #d19a66;
+}
+
+/* 文档字节 */
+.hljs-doc-byte {
+    color: #d19a66;
+}
+
+/* 文档字符 */
+.hljs-doc-char {
+    color: #98c379;
+}
+
+/* 文档字符串 */
+.hljs-doc-string {
+    color: #98c379;
+}
+
+/* 文档数组 */
+.hljs-doc-array {
+    color: #e5c07b;
+}
+
+/* 文档列表 */
+.hljs-doc-list {
+    color: #e5c07b;
+}
+
+/* 文档元组 */
+.hljs-doc-tuple {
+    color: #e5c07b;
+}
+
+/* 文档集合 */
+.hljs-doc-set {
+    color: #e5c07b;
+}
+
+/* 文档字典 */
+.hljs-doc-dict {
+    color: #e5c07b;
+}
+
+/* 文档映射 */
+.hljs-doc-map {
+    color: #e5c07b;
+}
+
+/* 文档哈希 */
+.hljs-doc-hash {
+    color: #e5c07b;
+}
+
+/* 文档对象 */
+.hljs-doc-object {
+    color: #e5c07b;
+}
+
+/* 文档实例 */
+.hljs-doc-instance {
+    color: #e5c07b;
+}
+
+/* 文档引用 */
+.hljs-doc-reference {
+    color: #61afef;
+}
+
+/* 文档指针 */
+.hljs-doc-pointer {
+    color: #61afef;
+}
+
+/* 文档内存 */
+.hljs-doc-memory {
+    color: #c678dd;
+}
+
+/* 文档地址 */
+.hljs-doc-address {
+    color: #61afef;
+}
+
+/* 文档偏移量 */
+.hljs-doc-offset {
+    color: #d19a66;
+}
+
+/* 文档大小 */
+.hljs-doc-size {
+    color: #d19a66;
+}
+
+/* 文档长度 */
+.hljs-doc-length {
+    color: #d19a66;
+}
+
+/* 文档容量 */
+.hljs-doc-capacity {
+    color: #d19a66;
+}
+
+/* 文档索引 */
+.hljs-doc-index {
+    color: #d19a66;
+}
+
+/* 文档键 */
+.hljs-doc-key {
+    color: #d19a66;
+}
+
+/* 文档值 */
+.hljs-doc-value {
+    color: #98c379;
+}
+
+/* 文档条目 */
+.hljs-doc-entry {
+    color: #abb2bf;
+}
+
+/* 文档字段 */
+.hljs-doc-field {
+    color: #e06c75;
+}
+
+/* 文档列 */
+.hljs-doc-column {
+    color: #d19a66;
+}
+
+/* 文档行 */
+.hljs-doc-row {
+    color: #d19a66;
+}
+
+/* 文档单元格 */
+.hljs-doc-cell {
+    color: #abb2bf;
+}
+
+/* 文档记录 */
+.hljs-doc-record {
+    color: #e5c07b;
+}
+
+/* 文档结构 */
+.hljs-doc-struct {
+    color: #e5c07b;
+}
+
+/* 文档联合 */
+.hljs-doc-union {
+    color: #e5c07b;
+}
+
+/* 文档枚举 */
+.hljs-doc-enum {
+    color: #e5c07b;
+}
+
+/* 文档标志 */
+.hljs-doc-flag {
+    color: #c678dd;
+}
+
+/* 文档选项 */
+.hljs-doc-option {
+    color: #c678dd;
+}
+
+/* 文档结果 */
+.hljs-doc-result {
+    color: #98c379;
+}
+
+/* 文档错误 */
+.hljs-doc-error {
+    color: #e06c75;
+}
+
+/* 文档警告 */
+.hljs-doc-warning {
+    color: #e5c07b;
+}
+
+/* 文档信息 */
+.hljs-doc-info {
+    color: #61afef;
+}
+
+/* 文档调试 */
+.hljs-doc-debug {
+    color: #5c6370;
+}
+
+/* 文档跟踪 */
+.hljs-doc-trace {
+    color: #5c6370;
+}
+
+/* 文档日志 */
+.hljs-doc-log {
+    color: #abb2bf;
+}
+
+/* 文档事件 */
+.hljs-doc-event {
+    color: #c678dd;
+}
+
+/* 文档监听器 */
+.hljs-doc-listener {
+    color: #61afef;
+}
+
+/* 文档处理器 */
+.hljs-doc-handler {
+    color: #61afef;
+}
+
+/* 文档回调 */
+.hljs-doc-callback {
+    color: #61afef;
+}
+
+/* 文档 Promise */
+.hljs-doc-promise {
+    color: #e5c07b;
+}
+
+/* 文档异步 */
+.hljs-doc-async {
+    color: #c678dd;
+}
+
+/* 文档等待 */
+.hljs-doc-await {
+    color: #c678dd;
+}
+
+/* 文档生成器 */
+.hljs-doc-generator {
+    color: #c678dd;
+}
+
+/* 文档迭代器 */
+.hljs-doc-iterator {
+    color: #e5c07b;
+}
+
+/* 文档可迭代 */
+.hljs-doc-iterable {
+    color: #e5c07b;
+}
+
+/* 文档符号 */
+.hljs-doc-symbol {
+    color: #c678dd;
+}
+
+/* 文档唯一 */
+.hljs-doc-unique {
+    color: #c678dd;
+}
+
+/* 文档共享 */
+.hljs-doc-shared {
+    color: #98c379;
+}
+
+/* 文档弱引用 */
+.hljs-doc-weak {
+    color: #5c6370;
+}
+
+/* 文档强引用 */
+.hljs-doc-strong {
+    color: #98c379;
+}
+
+/* 文档原子 */
+.hljs-doc-atomic {
+    color: #c678dd;
+}
+
+/* 文档线程 */
+.hljs-doc-thread {
+    color: #c678dd;
+}
+
+/* 文档进程 */
+.hljs-doc-process {
+    color: #c678dd;
+}
+
+/* 文档锁 */
+.hljs-doc-lock {
+    color: #e06c75;
+}
+
+/* 文档互斥 */
+.hljs-doc-mutex {
+    color: #e06c75;
+}
+
+/* 文档信号量 */
+.hljs-doc-semaphore {
+    color: #e5c07b;
+}
+
+/* 文档条件变量 */
+.hljs-doc-condition {
+    color: #61afef;
+}
+
+/* 文档屏障 */
+.hljs-doc-barrier {
+    color: #c678dd;
+}
+
+/* 文档通道 */
+.hljs-doc-channel {
+    color: #98c379;
+}
+
+/* 文档管道 */
+.hljs-doc-pipe {
+    color: #98c379;
+}
+
+/* 文档流 */
+.hljs-doc-stream {
+    color: #61afef;
+}
+
+/* 文档缓冲区 */
+.hljs-doc-buffer {
+    color: #e5c07b;
+}
+
+/* 文档队列 */
+.hljs-doc-queue {
+    color: #e5c07b;
+}
+
+/* 文档栈 */
+.hljs-doc-stack {
+    color: #e5c07b;
+}
+
+/* 文档堆 */
+.hljs-doc-heap {
+    color: #e5c07b;
+}
+
+/* 文档树 */
+.hljs-doc-tree {
+    color: #98c379;
+}
+
+/* 文档图 */
+.hljs-doc-graph {
+    color: #98c379;
+}
+
+/* 文档节点 */
+.hljs-doc-node {
+    color: #e5c07b;
+}
+
+/* 文档边 */
+.hljs-doc-edge {
+    color: #abb2bf;
+}
+
+/* 文档顶点 */
+.hljs-doc-vertex {
+    color: #e5c07b;
+}
+
+/* 文档权重 */
+.hljs-doc-weight {
+    color: #d19a66;
+}
+
+/* 文档成本 */
+.hljs-doc-cost {
+    color: #d19a66;
+}
+
+/* 文档距离 */
+.hljs-doc-distance {
+    color: #d19a66;
+}
+
+/* 文档路径 */
+.hljs-doc-path {
+    color: #98c379;
+}
+
+/* 文档循环 */
+.hljs-doc-cycle {
+    color: #e06c75;
+}
+
+/* 文档递归 */
+.hljs-doc-recursion {
+    color: #c678dd;
+}
+
+/* 文档迭代 */
+.hljs-doc-iteration {
+    color: #61afef;
+}
+
+/* 文档分治 */
+.hljs-doc-divide {
+    color: #c678dd;
+}
+
+/* 文档动态规划 */
+.hljs-doc-dp {
+    color: #c678dd;
+}
+
+/* 文档贪心 */
+.hljs-doc-greedy {
+    color: #e5c07b;
+}
+
+/* 文档回溯 */
+.hljs-doc-backtrack {
+    color: #c678dd;
+}
+
+/* 文档分支定界 */
+.hljs-doc-branch {
+    color: #c678dd;
+}
+
+/* 文档剪枝 */
+.hljs-doc-prune {
+    color: #e06c75;
+}
+
+/* 文档启发式 */
+.hljs-doc-heuristic {
+    color: #61afef;
+}
+
+/* 文档近似 */
+.hljs-doc-approximation {
+    color: #d19a66;
+}
+
+/* 文档随机化 */
+.hljs-doc-random {
+    color: #c678dd;
+}
+
+/* 文档概率 */
+.hljs-doc-probability {
+    color: #d19a66;
+}
+
+/* 文档期望 */
+.hljs-doc-expectation {
+    color: #d19a66;
+}
+
+/* 文档方差 */
+.hljs-doc-variance {
+    color: #d19a66;
+}
+
+/* 文档标准差 */
+.hljs-doc-stddev {
+    color: #d19a66;
+}
+
+/* 文档分布 */
+.hljs-doc-distribution {
+    color: #e5c07b;
+}
+
+/* 文档采样 */
+.hljs-doc-sample {
+    color: #98c379;
+}
+
+/* 文档蒙特卡洛 */
+.hljs-doc-monte-carlo {
+    color: #c678dd;
+}
+
+/* 文档拉斯维加斯 */
+.hljs-doc-las-vegas {
+    color: #c678dd;
+}
+
+/* 文档舍伍德 */
+.hljs-doc-sherwood {
+    color: #c678dd;
+}
+
+/* 文档阿姆斯特朗 */
+.hljs-doc-armstrong {
+    color: #c678dd;
+}
+
+/* 文档米勒-拉宾 */
+.hljs-doc-miller-rabin {
+    color: #c678dd;
+}
+
+/* 文档Pollard Rho */
+.hljs-doc-pollard-rho {
+    color: #c678dd;
+}
+
+/* 文档欧几里得 */
+.hljs-doc-euclidean {
+    color: #c678dd;
+}
+
+/* 文档扩展欧几里得 */
+.hljs-doc-extended-euclidean {
+    color: #c678dd;
+}
+
+/* 文档中国剩余定理 */
+.hljs-doc-crt {
+    color: #c678dd;
+}
+
+/* 文档费马小定理 */
+.hljs-doc-fermat {
+    color: #c678dd;
+}
+
+/* 文档欧拉定理 */
+.hljs-doc-euler {
+    color: #c678dd;
+}
+
+/* 文档威尔逊定理 */
+.hljs-doc-wilson {
+    color: #c678dd;
+}
+
+/* 文档卢卡斯定理 */
+.hljs-doc-lucas {
+    color: #c678dd;
+}
+
+/* 文档卡特兰数 */
+.hljs-doc-catalan {
+    color: #d19a66;
+}
+
+/* 文档斯特林数 */
+.hljs-doc-stirling {
+    color: #d19a66;
+}
+
+/* 文档贝尔数 */
+.hljs-doc-bell {
+    color: #d19a66;
+}
+
+/* 文档斐波那契 */
+.hljs-doc-fibonacci {
+    color: #d19a66;
+}
+
+/* 文档卢卡斯数 */
+.hljs-doc-lucas-number {
+    color: #d19a66;
+}
+
+/* 文档黄金分割 */
+.hljs-doc-golden-ratio {
+    color: #d19a66;
+}
+
+/* 文档圆周率 */
+.hljs-doc-pi {
+    color: #d19a66;
+}
+
+/* 文档自然常数 */
+.hljs-doc-e {
+    color: #d19a66;
+}
+
+/* 文档无穷大 */
+.hljs-doc-infinity {
+    color: #d19a66;
+}
+
+/* 文档NaN */
+.hljs-doc-nan {
+    color: #e06c75;
+}
+
+/* 文档Epsilon */
+.hljs-doc-epsilon {
+    color: #d19a66;
+}
+
+/* 文档Delta */
+.hljs-doc-delta {
+    color: #d19a66;
+}
+
+/* 文档Sigma */
+.hljs-doc-sigma {
+    color: #d19a66;
+}
+
+/* 文档Pi大写 */
+.hljs-doc-pi-upper {
+    color: #d19a66;
+}
+
+/* 文档Omega */
+.hljs-doc-omega {
+    color: #d19a66;
+}
+
+/* 文档Theta */
+.hljs-doc-theta {
+    color: #d19a66;
+}
+
+/* 文档大O */
+.hljs-doc-big-o {
+    color: #d19a66;
+}
+
+/* 文档小o */
+.hljs-doc-little-o {
+    color: #d19a66;
+}
+
+/* 文档Omega大写 */
+.hljs-doc-omega-upper {
+    color: #d19a66;
+}
+
+/* 文档Theta大写 */
+.hljs-doc-theta-upper {
+    color: #d19a66;
+}
+
+/* 文档渐进 */
+.hljs-doc-asymptotic {
+    color: #d19a66;
+}
+
+/* 文档复杂度 */
+.hljs-doc-complexity {
+    color: #d19a66;
+}
+
+/* 文档时间复杂度 */
+.hljs-doc-time-complexity {
+    color: #d19a66;
+}
+
+/* 文档空间复杂度 */
+.hljs-doc-space-complexity {
+    color: #d19a66;
+}
+
+/* 文档最优 */
+.hljs-doc-optimal {
+    color: #98c379;
+}
+
+/* 文档次优 */
+.hljs-doc-suboptimal {
+    color: #e5c07b;
+}
+
+/* 文档近似最优 */
+.hljs-doc-near-optimal {
+    color: #e5c07b;
+}
+
+/* 文档最坏情况 */
+.hljs-doc-worst-case {
+    color: #e06c75;
+}
+
+/* 文档最好情况 */
+.hljs-doc-best-case {
+    color: #98c379;
+}
+
+/* 文档平均情况 */
+.hljs-doc-average-case {
+    color: #61afef;
+}
+
+/* 文档期望情况 */
+.hljs-doc-expected-case {
+    color: #61afef;
+}
+
+/* 文档摊还分析 */
+.hljs-doc-amortized {
+    color: #c678dd;
+}
+
+/* 文档均摊 */
+.hljs-doc-average {
+    color: #61afef;
+}
+
+/* 文档概率分析 */
+.hljs-doc-probabilistic {
+    color: #d19a66;
+}
+
+/* 文档随机分析 */
+.hljs-doc-randomized-analysis {
+    color: #c678dd;
+}
+
+/* 文档对手论证 */
+.hljs-doc-adversary {
+    color: #e06c75;
+}
+
+/* 文档下界 */
+.hljs-doc-lower-bound {
+    color: #d19a66;
+}
+
+/* 文档上界 */
+.hljs-doc-upper-bound {
+    color: #d19a66;
+}
+
+/* 文档紧界 */
+.hljs-doc-tight-bound {
+    color: #98c379;
+}
+
+/* 文档松弛 */
+.hljs-doc-slacked {
+    color: #e5c07b;
+}
+
+/* 文档对偶 */
+.hljs-doc-dual {
+    color: #c678dd;
+}
+
+/* 文档原始 */
+.hljs-doc-primal {
+    color: #c678dd;
+}
+
+/* 文档可行 */
+.hljs-doc-feasible {
+    color: #98c379;
+}
+
+/* 文档不可行 */
+.hljs-doc-infeasible {
+    color: #e06c75;
+}
+
+/* 文档基 */
+.hljs-doc-basis {
+    color: #e5c07b;
+}
+
+/* 文档非基 */
+.hljs-doc-non-basis {
+    color: #abb2bf;
+}
+
+/* 文档单纯形 */
+.hljs-doc-simplex {
+    color: #c678dd;
+}
+
+/* 文档内点 */
+.hljs-doc-interior-point {
+    color: #c678dd;
+}
+
+/* 文档椭球 */
+.hljs-doc-ellipsoid {
+    color: #c678dd;
+}
+
+/* 文档割平面 */
+.hljs-doc-cutting-plane {
+    color: #c678dd;
+}
+
+/* 文档分支定界算法 */
+.hljs-doc-branch-bound {
+    color: #c678dd;
+}
+
+/* 文档动态规划算法 */
+.hljs-doc-dp-algorithm {
+    color: #c678dd;
+}
+
+/* 文档贪心算法 */
+.hljs-doc-greedy-algorithm {
+    color: #e5c07b;
+}
+
+/* 文档分治算法 */
+.hljs-doc-divide-conquer {
+    color: #c678dd;
+}
+
+/* 文档回溯算法 */
+.hljs-doc-backtrack-algorithm {
+    color: #c678dd;
+}
+
+/* 文档递归算法 */
+.hljs-doc-recursive-algorithm {
+    color: #c678dd;
+}
+
+/* 文档迭代算法 */
+.hljs-doc-iterative-algorithm {
+    color: #61afef;
+}
+
+/* 文档随机算法 */
+.hljs-doc-random-algorithm {
+    color: #c678dd;
+}
+
+/* 文档近似算法 */
+.hljs-doc-approximation-algorithm {
+    color: #d19a66;
+}
+
+/* 文档启发式算法 */
+.hljs-doc-heuristic-algorithm {
+    color: #61afef;
+}
+
+/* 文档元启发式 */
+.hljs-doc-metaheuristic {
+    color: #61afef;
+}
+
+/* 文档遗传算法 */
+.hljs-doc-genetic {
+    color: #c678dd;
+}
+
+/* 文档模拟退火 */
+.hljs-doc-simulated-annealing {
+    color: #c678dd;
+}
+
+/* 文档禁忌搜索 */
+.hljs-doc-tabu {
+    color: #c678dd;
+}
+
+/* 文档蚁群 */
+.hljs-doc-ant-colony {
+    color: #c678dd;
+}
+
+/* 文档粒子群 */
+.hljs-doc-particle-swarm {
+    color: #c678dd;
+}
+
+/* 文档神经网络 */
+.hljs-doc-neural-network {
+    color: #c678dd;
+}
+
+/* 文档深度学习 */
+.hljs-doc-deep-learning {
+    color: #c678dd;
+}
+
+/* 文档机器学习 */
+.hljs-doc-machine-learning {
+    color: #c678dd;
+}
+
+/* 文档强化学习 */
+.hljs-doc-reinforcement {
+    color: #c678dd;
+}
+
+/* 文档监督学习 */
+.hljs-doc-supervised {
+    color: #c678dd;
+}
+
+/* 文档无监督学习 */
+.hljs-doc-unsupervised {
+    color: #c678dd;
+}
+
+/* 文档半监督学习 */
+.hljs-doc-semi-supervised {
+    color: #c678dd;
+}
+
+/* 文档自监督学习 */
+.hljs-doc-self-supervised {
+    color: #c678dd;
+}
+
+/* 文档迁移学习 */
+.hljs-doc-transfer {
+    color: #c678dd;
+}
+
+/* 文档联邦学习 */
+.hljs-doc-federated {
+    color: #c678dd;
+}
+
+/* 文档元学习 */
+.hljs-doc-meta-learning {
+    color: #c678dd;
+}
+
+/* 文档少样本学习 */
+.hljs-doc-few-shot {
+    color: #c678dd;
+}
+
+/* 文档零样本学习 */
+.hljs-doc-zero-shot {
+    color: #c678dd;
+}
+
+/* 文档多任务学习 */
+.hljs-doc-multi-task {
+    color: #c678dd;
+}
+
+/* 文档多模态学习 */
+.hljs-doc-multi-modal {
+    color: #c678dd;
+}
+
+/* 文档对比学习 */
+.hljs-doc-contrastive {
+    color: #c678dd;
+}
+
+/* 文档生成对抗 */
+.hljs-doc-gan {
+    color: #c678dd;
+}
+
+/* 文档变分自编码器 */
+.hljs-doc-vae {
+    color: #c678dd;
+}
+
+/* 文档自编码器 */
+.hljs-doc-autoencoder {
+    color: #c678dd;
+}
+
+/* 文档Transformer */
+.hljs-doc-transformer {
+    color: #c678dd;
+}
+
+/* 文档注意力 */
+.hljs-doc-attention {
+    color: #c678dd;
+}
+
+/* 文档BERT */
+.hljs-doc-bert {
+    color: #c678dd;
+}
+
+/* 文档GPT */
+.hljs-doc-gpt {
+    color: #c678dd;
+}
+
+/* 文档LLM */
+.hljs-doc-llm {
+    color: #c678dd;
+}
+
+/* 文档NLP */
+.hljs-doc-nlp {
+    color: #c678dd;
+}
+
+/* 文档CV */
+.hljs-doc-cv {
+    color: #c678dd;
+}
+
+/* 文档ASR */
+.hljs-doc-asr {
+    color: #c678dd;
+}
+
+/* 文档TTS */
+.hljs-doc-tts {
+    color: #c678dd;
+}
+
+/* 文档OCR */
+.hljs-doc-ocr {
+    color: #c678dd;
+}
+
+/* 文档推荐系统 */
+.hljs-doc-recommendation {
+    color: #c678dd;
+}
+
+/* 文档搜索引擎 */
+.hljs-doc-search-engine {
+    color: #c678dd;
+}
+
+/* 文档信息检索 */
+.hljs-doc-ir {
+    color: #c678dd;
+}
+
+/* 文档知识图谱 */
+.hljs-doc-knowledge-graph {
+    color: #c678dd;
+}
+
+/* 文档语义网 */
+.hljs-doc-semantic-web {
+    color: #c678dd;
+}
+
+/* 文档本体论 */
+.hljs-doc-ontology {
+    color: #c678dd;
+}
+
+/* 文档RDF */
+.hljs-doc-rdf {
+    color: #c678dd;
+}
+
+/* 文档SPARQL */
+.hljs-doc-sparql {
+    color: #c678dd;
+}
+
+/* 文档OWL */
+.hljs-doc-owl {
+    color: #c678dd;
+}
+
+/* 文档Linked Data */
+.hljs-doc-linked-data {
+    color: #c678dd;
+}
+
+/* 文档JSON-LD */
+.hljs-doc-json-ld {
+    color: #c678dd;
+}
+
+/* 文档Schema.org */
+.hljs-doc-schema-org {
+    color: #c678dd;
+}
+
+/* 文档微数据 */
+.hljs-doc-microdata {
+    color: #c678dd;
+}
+
+/* 文档微格式 */
+.hljs-doc-microformat {
+    color: #c678dd;
+}
+
+/* 文档开放图谱 */
+.hljs-doc-open-graph {
+    color: #c678dd;
+}
+
+/* 文档Twitter卡片 */
+.hljs-doc-twitter-card {
+    color: #c678dd;
+}
+
+/* 文档SEO */
+.hljs-doc-seo {
+    color: #c678dd;
+}
+
+/* 文档A11y */
+.hljs-doc-a11y {
+    color: #c678dd;
+}
+
+/* 文档i18n */
+.hljs-doc-i18n {
+    color: #c678dd;
+}
+
+/* 文档L10n */
+.hljs-doc-l10n {
+    color: #c678dd;
+}
+
+/* 文档RTL */
+.hljs-doc-rtl {
+    color: #c678dd;
+}
+
+/* 文档PWA */
+.hljs-doc-pwa {
+    color: #c678dd;
+}
+
+/* 文档Service Worker */
+.hljs-doc-service-worker {
+    color: #c678dd;
+}
+
+/* 文档Web App Manifest */
+.hljs-doc-web-app-manifest {
+    color: #c678dd;
+}
+
+/* 文档Push API */
+.hljs-doc-push-api {
+    color: #c678dd;
+}
+
+/* 文档Notifications API */
+.hljs-doc-notifications-api {
+    color: #c678dd;
+}
+
+/* 文档Background Sync */
+.hljs-doc-background-sync {
+    color: #c678dd;
+}
+
+/* 文档Periodic Background Sync */
+.hljs-doc-periodic-sync {
+    color: #c678dd;
+}
+
+/* 文档Content Index */
+.hljs-doc-content-index {
+    color: #c678dd;
+}
+
+/* 文档Badging API */
+.hljs-doc-badging-api {
+    color: #c678dd;
+}
+
+/* 文档App Badging */
+.hljs-doc-app-badging {
+    color: #c678dd;
+}
+
+/* 文档Contact Picker */
+.hljs-doc-contact-picker {
+    color: #c678dd;
+}
+
+/* 文档File System Access */
+.hljs-doc-file-system-access {
+    color: #c678dd;
+}
+
+/* 文档Native File System */
+.hljs-doc-native-file-system {
+    color: #c678dd;
+}
+
+/* 文档Storage Foundation */
+.hljs-doc-storage-foundation {
+    color: #c678dd;
+}
+
+/* 文档OPFS */
+.hljs-doc-opfs {
+    color: #c678dd;
+}
+
+/* 文档Origin Private File System */
+.hljs-doc-origin-private-file-system {
+    color: #c678dd;
+}
+
+/* 文档File Handling */
+.hljs-doc-file-handling {
+    color: #c678dd;
+}
+
+/* 文档Web Share */
+.hljs-doc-web-share {
+    color: #c678dd;
+}
+
+/* 文档Web Share Target */
+.hljs-doc-web-share-target {
+    color: #c678dd;
+}
+
+/* 文档Protocol Handlers */
+.hljs-doc-protocol-handlers {
+    color: #c678dd;
+}
+
+/* 文档URL Handlers */
+.hljs-doc-url-handlers {
+    color: #c678dd;
+}
+
+/* 文档Web Authentication */
+.hljs-doc-web-authentication {
+    color: #c678dd;
+}
+
+/* 文档WebAuthn */
+.hljs-doc-webauthn {
+    color: #c678dd;
+}
+
+/* 文档Credential Management */
+.hljs-doc-credential-management {
+    color: #c678dd;
+}
+
+/* 文档Password Credentials */
+.hljs-doc-password-credentials {
+    color: #c678dd;
+}
+
+/* 文档Federated Credentials */
+.hljs-doc-federated-credentials {
+    color: #c678dd;
+}
+
+/* 文档Public Key Credentials */
+.hljs-doc-public-key-credentials {
+    color: #c678dd;
+}
+
+/* 文档Payment Request */
+.hljs-doc-payment-request {
+    color: #c678dd;
+}
+
+/* 文档Payment Handler */
+.hljs-doc-payment-handler {
+    color: #c678dd;
+}
+
+/* 文档Web Payments */
+.hljs-doc-web-payments {
+    color: #c678dd;
+}
+
+/* 文档Payment Method Identifiers */
+.hljs-doc-pmi {
+    color: #c678dd;
+}
+
+/* 文档Basic Card */
+.hljs-doc-basic-card {
+    color: #c678dd;
+}
+
+/* 文档Google Pay */
+.hljs-doc-google-pay {
+    color: #c678dd;
+}
+
+/* 文档Apple Pay */
+.hljs-doc-apple-pay {
+    color: #c678dd;
+}
+
+/* 文档Samsung Pay */
+.hljs-doc-samsung-pay {
+    color: #c678dd;
+}
+
+/* 文档PayPal */
+.hljs-doc-paypal {
+    color: #c678dd;
+}
+
+/* 文档Stripe */
+.hljs-doc-stripe {
+    color: #c678dd;
+}
+
+/* 文档Square */
+.hljs-doc-square {
+    color: #c678dd;
+}
+
+/* 文档Braintree */
+.hljs-doc-braintree {
+    color: #c678dd;
+}
+
+/* 文档Adyen */
+.hljs-doc-adyen {
+    color: #c678dd;
+}
+
+/* 文档Checkout.com */
+.hljs-doc-checkout {
+    color: #c678dd;
+}
+
+/* 文档Razorpay */
+.hljs-doc-razorpay {
+    color: #c678dd;
+}
+
+/* 文档Mercado Pago */
+.hljs-doc-mercado-pago {
+    color: #c678dd;
+}
+
+/* 文档PagSeguro */
+.hljs-doc-pagseguro {
+    color: #c678dd;
+}
+
+/* 文档Alipay */
+.hljs-doc-alipay {
+    color: #c678dd;
+}
+
+/* 文档WeChat Pay */
+.hljs-doc-wechat-pay {
+    color: #c678dd;
+}
+
+/* 文档UnionPay */
+.hljs-doc-unionpay {
+    color: #c678dd;
+}
+
+/* 文档Visa */
+.hljs-doc-visa {
+    color: #c678dd;
+}
+
+/* 文档Mastercard */
+.hljs-doc-mastercard {
+    color: #c678dd;
+}
+
+/* 文档American Express */
+.hljs-doc-amex {
+    color: #c678dd;
+}
+
+/* 文档Discover */
+.hljs-doc-discover {
+    color: #c678dd;
+}
+
+/* 文档JCB */
+.hljs-doc-jcb {
+    color: #c678dd;
+}
+
+/* 文档Diners Club */
+.hljs-doc-diners {
+    color: #c678dd;
+}
+
+/* 文档Maestro */
+.hljs-doc-maestro {
+    color: #c678dd;
+}
+
+/* 文档Interac */
+.hljs-doc-interac {
+    color: #c678dd;
+}
+
+/* 文档iDEAL */
+.hljs-doc-ideal {
+    color: #c678dd;
+}
+
+/* 文档Giropay */
+.hljs-doc-giropay {
+    color: #c678dd;
+}
+
+/* 文档Sofort */
+.hljs-doc-sofort {
+    color: #c678dd;
+}
+
+/* 文档Bancontact */
+.hljs-doc-bancontact {
+    color: #c678dd;
+}
+
+/* 文档EPS */
+.hljs-doc-eps {
+    color: #c678dd;
+}
+
+/* 文档Przelewy24 */
+.hljs-doc-p24 {
+    color: #c678dd;
+}
+
+/* 文档BLIK */
+.hljs-doc-blik {
+    color: #c678dd;
+}
+
+/* 文档PayU */
+.hljs-doc-payu {
+    color: #c678dd;
+}
+
+/* 文档Klarna */
+.hljs-doc-klarna {
+    color: #c678dd;
+}
+
+/* 文档Afterpay */
+.hljs-doc-afterpay {
+    color: #c678dd;
+}
+
+/* 文档Affirm */
+.hljs-doc-affirm {
+    color: #c678dd;
+}
+
+/* 文档Sezzle */
+.hljs-doc-sezzle {
+    color: #c678dd;
+}
+
+/* 文档Quadpay */
+.hljs-doc-quadpay {
+    color: #c678dd;
+}
+
+/* 文档Splitit */
+.hljs-doc-splitit {
+    color: #c678dd;
+}
+
+/* 文档Zip */
+.hljs-doc-zip {
+    color: #c678dd;
+}
+
+/* 文档Openpay */
+.hljs-doc-openpay {
+    color: #c678dd;
+}
+
+/* 文档Laybuy */
+.hljs-doc-laybuy {
+    color: #c678dd;
+}
+
+/* 文档Humm */
+.hljs-doc-humm {
+    color: #c678dd;
+}
+
+/* 文档LatitudePay */
+.hljs-doc-latitudepay {
+    color: #c678dd;
+}
+
+/* 文档Oxipay */
+.hljs-doc-oxipay {
+    color: #c678dd;
+}
+
+/* 文档Genoapay */
+.hljs-doc-genoapay {
+    color: #c678dd;
+}
+
+/* 文档PartPay */
+.hljs-doc-partpay {
+    color: #c678dd;
+}
+
+/* 文档Four */
+.hljs-doc-four {
+    color: #c678dd;
+}
+
+/* 文档ViaBill */
+.hljs-doc-viabill {
+    color: #c678dd;
+}
+
+/* 文档Tabby */
+.hljs-doc-tabby {
+    color: #c678dd;
+}
+
+/* 文档Tamara */
+.hljs-doc-tamara {
+    color: #c678dd;
+}
+
+/* 文档Spotii */
+.hljs-doc-spotii {
+    color: #c678dd;
+}
+
+/* 文档Postpay */
+.hljs-doc-postpay {
+    color: #c678dd;
+}
+
+/* 文档Cashew */
+.hljs-doc-cashew {
+    color: #c678dd;
+}
+
+/* 文档Sympl */
+.hljs-doc-sympl {
+    color: #c678dd;
+}
+
+/* 文档Mashreq */
+.hljs-doc-mashreq {
+    color: #c678dd;
+}
+
+/* 文档PostFinance */
+.hljs-doc-postfinance {
+    color: #c678dd;
+}
+
+/* 文档Twint */
+.hljs-doc-twint {
+    color: #c678dd;
+}
+
+/* 文档Swish */
+.hljs-doc-swish {
+    color: #c678dd;
+}
+
+/* 文档Vipps */
+.hljs-doc-vipps {
+    color: #c678dd;
+}
+
+/* 文档MobilePay */
+.hljs-doc-mobilepay {
+    color: #c678dd;
+}
+
+/* 文档Payconiq */
+.hljs-doc-payconiq {
+    color: #c678dd;
+}
+
+/* 文档Bancomat */
+.hljs-doc-bancomat {
+    color: #c678dd;
+}
+
+/* 文档MyBank */
+.hljs-doc-mybank {
+    color: #c678dd;
+}
+
+/* 文档Trustly */
+.hljs-doc-trustly {
+    color: #c678dd;
+}
+
+/* 文档Zimpler */
+.hljs-doc-zimpler {
+    color: #c678dd;
+}
+
+/* 文档Entercash */
+.hljs-doc-entercash {
+    color: #c678dd;
+}
+
+/* 文档InstaDebit */
+.hljs-doc-instadebit {
+    color: #c678dd;
+}
+
+/* 文档iDebit */
+.hljs-doc-idebit {
+    color: #c678dd;
+}
+
+/* 文档Interac Online */
+.hljs-doc-interac-online {
+    color: #c678dd;
+}
+
+/* 文档Interac e-Transfer */
+.hljs-doc-interac-etransfer {
+    color: #c678dd;
+}
+
+/* 文档WeChat */
+.hljs-doc-wechat {
+    color: #c678dd;
+}
+
+/* 文档AlipayHK */
+.hljs-doc-alipayhk {
+    color: #c678dd;
+}
+
+/* 文档PayMe */
+.hljs-doc-payme {
+    color: #c678dd;
+}
+
+/* 文档FPS */
+.hljs-doc-fps {
+    color: #c678dd;
+}
+
+/* 文档PayNow */
+.hljs-doc-paynow {
+    color: #c678dd;
+}
+
+/* 文档PromptPay */
+.hljs-doc-promptpay {
+    color: #c678dd;
+}
+
+/* 文档DANA */
+.hljs-doc-dana {
+    color: #c678dd;
+}
+
+/* 文档LinkAja */
+.hljs-doc-linkaja {
+    color: #c678dd;
+}
+
+/* 文档OVO */
+.hljs-doc-ovo {
+    color: #c678dd;
+}
+
+/* 文档GoPay */
+.hljs-doc-gopay {
+    color: #c678dd;
+}
+
+/* 文档ShopeePay */
+.hljs-doc-shopeepay {
+    color: #c678dd;
+}
+
+/* 文档Touch 'n Go */
+.hljs-doc-touchnngo {
+    color: #c678dd;
+}
+
+/* 文档Boost */
+.hljs-doc-boost {
+    color: #c678dd;
+}
+
+/* 文档GrabPay */
+.hljs-doc-grabpay {
+    color: #c678dd;
+}
+
+/* 文档PayMaya */
+.hljs-doc-paymaya {
