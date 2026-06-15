@@ -8,12 +8,17 @@ test/mysql
 *.log
 safe_test/*.php
 safe_test/*.md
-md_files/生存服指南-管理员篇.md
-md_files/优化建议.md
-md_files/eypa_oauth.md
-md_files/eypa.png
-md_files/git.md 
+md_files/*.md
+md_files/*.png
+md_files/aifadian.md
+md_files/DeepSeek_API.md
 test/eypa
 API.md
 test/ai
+bugs.md
+server_mermory.txt
+test_api.html
+test_data.php
+.workbuddy/
+
 

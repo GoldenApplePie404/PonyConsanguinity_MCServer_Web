@@ -3,21 +3,12 @@
 require_once 'config.php';
 require_once 'helper.php';
 require_once 'secure_data.php';
+require_once '../includes/auth_helper.php';
 
-function getCurrentUser() {
-    $headers = getallheaders();
-    $token = $headers['Authorization'] ?? '';
-    
-    if (strpos($token, 'Bearer ') === 0) {
-        $token = substr($token, 7);
-    }
-    
-    if (empty($token)) {
-        return null;
-    }
-    
-    $sessions = secureReadData(SESSIONS_FILE);
-    return $sessions[$token] ?? null;
+$user = AuthHelper::getSession();
+
+if (!$user) {
+    json_response(false, '请先登录', null, 401);
 }
 
 function getUserNotificationFile($username) {
@@ -40,15 +31,9 @@ function ensureUserNotificationFile($username) {
     return $userFile;
 }
 
-$action = $_GET['action'] ?? '';
-$user = getCurrentUser();
-
-if (!$user) {
-    json_response(false, '请先登录', null, 401);
-}
-
 $notificationsFile = dirname(__DIR__) . '/data/notifications.json';
 $username = $user['username'];
+$action = $_GET['action'] ?? '';
 
 // 初始化 notifications.json 文件
 if (!file_exists($notificationsFile)) {

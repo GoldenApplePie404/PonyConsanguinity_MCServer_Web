@@ -16,27 +16,22 @@ require_once '../includes/auth_helper.php';
 set_cors_headers();
 set_security_headers();
 
-// 只允许 GET 请求
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    json_response(false, '只允许 GET 请求', null, 405);
+// 只允许 GET 或 POST 请求
+if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
+    json_response(false, '不支持的请求方法', null, 405);
 }
 
-// 验证用户身份
-if (!AuthHelper::validateToken()) {
-    json_response(false, '未提供认证令牌', null, 401);
-}
-
-// 检查是否为管理员
-$username = AuthHelper::getUsernameFromToken();
+// 验证管理员权限
+AuthHelper::requireAdmin();
 $userManager = new UserManager();
-$user = $userManager->getUser($username);
 
-if (!$user || $user['role'] !== 'admin') {
-    json_response(false, '权限不足', null, 403);
+// 获取请求参数（支持 GET 和 POST）
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = json_decode(file_get_contents('php://input'), true) ?: [];
+    $action = isset($input['action']) ? $input['action'] : ($_GET['action'] ?? '');
+} else {
+    $action = isset($_GET['action']) ? $_GET['action'] : '';
 }
-
-// 获取请求参数
-$action = isset($_GET['action']) ? $_GET['action'] : '';
 
 switch ($action) {
     case 'list':
@@ -69,7 +64,7 @@ switch ($action) {
         
     case 'get':
         // 获取单个用户信息
-        $userId = isset($_GET['id']) ? $_GET['id'] : '';
+        $userId = isset($_GET['id']) ? $_GET['id'] : (isset($input['id']) ? $input['id'] : '');
         if (!$userId) {
             json_response(false, '缺少用户ID', null, 400);
         }
@@ -83,6 +78,38 @@ switch ($action) {
             json_response(true, '获取用户信息成功', $user);
         } catch (Exception $e) {
             json_response(false, '获取用户信息失败: ' . $e->getMessage(), null, 500);
+        }
+        break;
+
+    case 'set_role':
+        // 设置用户角色（管理员可提升/降级其他用户）
+        $targetUser = isset($_GET['username']) ? $_GET['username'] : (isset($input['username']) ? $input['username'] : '');
+        $newRole = isset($_GET['role']) ? $_GET['role'] : (isset($input['role']) ? $input['role'] : '');
+        
+        if (!$targetUser || !$newRole) {
+            json_response(false, '缺少参数 username 或 role', null, 400);
+        }
+        if (!in_array($newRole, ['admin', 'user'])) {
+            json_response(false, '角色无效，仅支持 admin/user', null, 400);
+        }
+        
+        try {
+            $users = secureReadData(USERS_FILE);
+            if (!isset($users[$targetUser])) {
+                json_response(false, '用户不存在', null, 404);
+            }
+            // 禁止将自己降级
+            $current = AuthHelper::getCurrentUser();
+            if ($current && $current['username'] === $targetUser) {
+                json_response(false, '不能修改自己的角色', null, 400);
+            }
+            $users[$targetUser]['role'] = $newRole;
+            if (!secureWriteData(USERS_FILE, $users)) {
+                json_response(false, '保存失败', null, 500);
+            }
+            json_response(true, "用户 {$targetUser} 的角色已更新为 {$newRole}");
+        } catch (Exception $e) {
+            json_response(false, '设置角色失败: ' . $e->getMessage(), null, 500);
         }
         break;
         

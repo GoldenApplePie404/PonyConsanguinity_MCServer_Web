@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据管理 - 万驹同源管理后台</title>
+    <link rel="icon" type="image/png" href="../../assets/img/m.webp">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="../../css/data-management.css">
+    <link rel="stylesheet" href="../../css/font-awesome/all.min.css">
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav class="admin-navbar">
+        <div class="navbar-brand">
+            <h1>📊 数据管理系统</h1>
+        </div>
+        <div class="navbar-menu">
+            <a href="user-management.html" class="nav-item">用户管理</a>
+            <a href="content-management.html" class="nav-item">内容管理</a>
+            <a href="data-management.html" class="nav-item active">数据管理</a>
+            <a href="../forum.html" class="nav-item" target="_blank">返回论坛</a>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <div class="admin-container">
+        <!-- 侧边栏 -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-section">
+                <h3><i class="fas fa-chart-line"></i> 数据概览</h3>
+                <ul>
+                    <li><a href="#overview" class="active">总览</a></li>
+                    <li><a href="#content-data">内容数据</a></li>
+                    <li><a href="#user-data">用户数据</a></li>
+                    <li><a href="#system-data">系统数据</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3><i class="fas fa-tools"></i> 数据操作</h3>
+                <ul>
+                    <li><a href="#data-browser">数据浏览</a></li>
+                    <li><a href="#backup-restore">备份恢复</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3><i class="fas fa-shield-alt"></i> 系统</h3>
+                <ul>
+                    <li><a href="#" onclick="checkAdminAuth(); return false;">权限验证</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="admin-main">
+            <!-- 数据概览卡片 -->
+            <section id="overview" class="admin-section">
+                <h2 class="section-title"><i class="fas fa-chart-pie"></i> 数据概览</h2>
+                <div class="overview-cards">
+                    <div class="data-card">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>帖子内容</h3>
+                            <p class="data-value" id="post-count">-</p>
+                            <p class="data-label">篇文章</p>
+                        </div>
+                    </div>
+                    <div class="data-card">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>回复数据</h3>
+                            <p class="data-value" id="reply-count">-</p>
+                            <p class="data-label">条回复</p>
+                        </div>
+                    </div>
+                    <div class="data-card">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>用户数据</h3>
+                            <p class="data-value" id="user-count">-</p>
+                            <p class="data-label">个用户</p>
+                        </div>
+                    </div>
+                    <div class="data-card">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>图片资源</h3>
+                            <p class="data-value" id="image-count">-</p>
+                            <p class="data-label">张图片</p>
+                        </div>
+                    </div>
+                    <div class="data-card">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>公告数据</h3>
+                            <p class="data-value" id="announcement-count">-</p>
+                            <p class="data-label">条公告</p>
+                        </div>
+                    </div>
+                    <div class="data-card">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>通知数据</h3>
+                            <p class="data-value" id="notification-count">-</p>
+                            <p class="data-label">条通知</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 数据分类详情 -->
+            <section id="content-data" class="admin-section">
+                <h2 class="section-title"><i class="fas fa-folder-open"></i> 内容数据详情</h2>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>数据类型</th>
+                                <th>文件数量</th>
+                                <th>总大小</th>
+                                <th>最后修改</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="content-data-body">
+                            <tr>
+                                <td colspan="5" class="loading">加载中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="user-data" class="admin-section">
+                <h2 class="section-title"><i class="fas fa-user-friends"></i> 用户数据详情</h2>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>数据类型</th>
+                                <th>文件数量</th>
+                                <th>总大小</th>
+                                <th>最后修改</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-data-body">
+                            <tr>
+                                <td colspan="5" class="loading">加载中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="system-data" class="admin-section">
+                <h2 class="section-title"><i class="fas fa-cogs"></i> 系统数据详情</h2>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>数据类型</th>
+                                <th>文件数量</th>
+                                <th>总大小</th>
+                                <th>最后修改</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="system-data-body">
+                            <tr>
+                                <td colspan="5" class="loading">加载中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 数据浏览 -->
+            <section id="data-browser" class="admin-section">
+                <h2 class="section-title"><i class="fas fa-search"></i> 数据浏览</h2>
+                <div class="browser-controls">
+                    <div class="control-group">
+                        <label>选择目录：</label>
+                        <select id="directory-select">
+                            <option value="content">content/ - 帖子内容</option>
+                            <option value="replies">replies/ - 回复数据</option>
+                            <option value="announcements">announcements/ - 公告</option>
+                            <option value="user_notifications">user_notifications/ - 用户通知</option>
+                            <option value="shop_items">shop_items/ - 商店物品</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="loadDirectoryData()">
+                        <i class="fas fa-sync"></i> 加载数据
+                    </button>
+                </div>
+                <div class="data-viewer" id="data-viewer">
+                    <div class="viewer-placeholder">
+                        <i class="fas fa-folder-open"></i>
+                        <p>选择目录并点击加载数据</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 备份恢复 -->
+            <section id="backup-restore" class="admin-section">
+                <h2 class="section-title"><i class="fas fa-download"></i> 数据备份</h2>
+                <div class="backup-panel">
+                    <div class="backup-options">
+                        <div class="option-card">
+                            <h3><i class="fas fa-database"></i> 完整备份</h3>
+                            <p>备份所有数据文件（content、replies、users、announcements 等）</p>
+                            <button class="btn btn-primary" onclick="createBackup('all')">
+                                <i class="fas fa-download"></i> 开始备份
+                            </button>
+                        </div>
+                        <div class="option-card">
+                            <h3><i class="fas fa-file-alt"></i> 内容备份</h3>
+                            <p>仅备份帖子内容和回复数据</p>
+                            <button class="btn btn-secondary" onclick="createBackup('content')">
+                                <i class="fas fa-download"></i> 备份内容
+                            </button>
+                        </div>
+                        <div class="option-card">
+                            <h3><i class="fas fa-users"></i> 用户数据备份</h3>
+                            <p>仅备份用户相关数据</p>
+                            <button class="btn btn-secondary" onclick="createBackup('users')">
+                                <i class="fas fa-download"></i> 备份用户
+                            </button>
+                        </div>
+                    </div>
+                    <div class="backup-status" id="backup-status" style="display: none;">
+                        <div class="status-header">
+                            <h3><i class="fas fa-tasks"></i> 备份进度</h3>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="backup-progress"></div>
+                        </div>
+                        <p class="status-text" id="backup-status-text">准备中...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 数据详情模态框 -->
+    <div class="modal" id="data-detail-modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="modal-title">数据详情</h2>
+                <button class="modal-close" onclick="closeModal('data-detail-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-content">加载中...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('data-detail-modal')">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/api.js"></script>
+    <script>
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminAuth();
+            loadOverviewData();
+            loadDataTables();
+        });
+
+        // 检查管理员权限
+        function checkAdminAuth() {
+            const currentUser = getCurrentUser();
+            if (!currentUser || currentUser.role !== 'admin') {
+                showToast('权限不足，需要管理员权限', 'error');
+                setTimeout(() => {
+                    window.location.href = '../forum.html';
+                }, 2000);
+                return false;
+            }
+            return true;
+        }
+
+        // 加载概览数据
+        async function loadOverviewData() {
+            try {
+                const response = await fetch('../../api/admin/data_api.php?action=overview');
+                const result = await response.json();
+
+                if (result.success) {
+                    const data = result.data;
+                    document.getElementById('post-count').textContent = data.posts || 0;
+                    document.getElementById('reply-count').textContent = data.replies || 0;
+                    document.getElementById('user-count').textContent = data.users || 0;
+                    document.getElementById('image-count').textContent = data.images || 0;
+                    document.getElementById('announcement-count').textContent = data.announcements || 0;
+                    document.getElementById('notification-count').textContent = data.notifications || 0;
+                }
+            } catch (error) {
+                console.error('加载概览数据失败:', error);
+            }
+        }
+
+        // 加载数据表格
+        async function loadDataTables() {
+            try {
+                const response = await fetch('../../api/admin/data_api.php?action=categories');
+                const result = await response.json();
+
+                if (result.success) {
+                    renderDataTable('content-data-body', result.data.content);
+                    renderDataTable('user-data-body', result.data.users);
+                    renderDataTable('system-data-body', result.data.system);
+                }
+            } catch (error) {
+                console.error('加载数据表格失败:', error);
+            }
+        }
+
+        // 渲染数据表格
+        function renderDataTable(tbodyId, data) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="no-data">暂无数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.count} 个文件</td>
+                    <td>${formatFileSize(item.size)}</td>
+                    <td>${formatDate(item.modified)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="viewData('${item.path}')">
+                            <i class="fas fa-eye"></i> 查看
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="downloadData('${item.path}')">
+                            <i class="fas fa-download"></i> 下载
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 加载目录数据
+        async function loadDirectoryData() {
+            const directory = document.getElementById('directory-select').value;
+            const viewer = document.getElementById('data-viewer');
+
+            viewer.innerHTML = '<div class="loading">加载中...</div>';
+
+            try {
+                const response = await fetch(`../../api/admin/data_api.php?action=files&dir=${directory}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    renderDataViewer(viewer, result.data, directory);
+                } else {
+                    viewer.innerHTML = `<div class="error">加载失败：${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('加载目录数据失败:', error);
+                viewer.innerHTML = '<div class="error">加载失败</div>';
+            }
+        }
+
+        // 渲染数据查看器
+        function renderDataViewer(container, files, directory) {
+            if (!files || files.length === 0) {
+                container.innerHTML = `
+                    <div class="viewer-placeholder">
+                        <i class="fas fa-folder-open"></i>
+                        <p>此目录为空</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="file-list">
+                    <div class="file-list-header">
+                        <span>文件名</span>
+                        <span>大小</span>
+                        <span>修改时间</span>
+                        <span>操作</span>
+                    </div>
+            `;
+
+            files.forEach(file => {
+                html += `
+                    <div class="file-item">
+                        <span class="file-name">
+                            <i class="fas fa-file"></i> ${file.name}
+                        </span>
+                        <span class="file-size">${formatFileSize(file.size)}</span>
+                        <span class="file-date">${formatDate(file.modified)}</span>
+                        <span class="file-actions">
+                            <button class="btn btn-sm btn-primary" onclick="viewFile('${directory}/${file.name}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="downloadFile('${directory}/${file.name}')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </span>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // 查看数据
+        function viewData(path) {
+            window.open(`../../api/admin/data_api.php?action=view&path=${encodeURIComponent(path)}`, '_blank');
+        }
+
+        // 下载数据
+        function downloadData(path) {
+            window.location.href = `../../api/admin/data_api.php?action=download&path=${encodeURIComponent(path)}`;
+        }
+
+        // 查看文件
+        function viewFile(path) {
+            window.open(`../../api/admin/data_api.php?action=view&path=${encodeURIComponent(path)}`, '_blank');
+        }
+
+        // 下载文件
+        function downloadFile(path) {
+            window.location.href = `../../api/admin/data_api.php?action=download&path=${encodeURIComponent(path)}`;
+        }
+
+        // 创建备份
+        async function createBackup(type) {
+            const statusPanel = document.getElementById('backup-status');
+            const progressBar = document.getElementById('backup-progress');
+            const statusText = document.getElementById('backup-status-text');
+
+            statusPanel.style.display = 'block';
+            progressBar.style.width = '0%';
+            statusText.textContent = '准备备份...';
+
+            try {
+                // 模拟进度
+                const progressInterval = setInterval(() => {
+                    const currentWidth = parseFloat(progressBar.style.width) || 0;
+                    if (currentWidth < 90) {
+                        progressBar.style.width = (currentWidth + 10) + '%';
+                        statusText.textContent = '正在打包数据...';
+                    }
+                }, 300);
+
+                const response = await fetch('../../api/admin/backup_api.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ type: type })
+                });
+
+                clearInterval(progressInterval);
+
+                if (response.ok) {
+                    progressBar.style.width = '100%';
+                    statusText.textContent = '备份完成！正在下载...';
+
+                    // 触发下载
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `backup_${type}_${new Date().getTime()}.zip`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+
+                    setTimeout(() => {
+                        statusPanel.style.display = 'none';
+                        showToast('备份下载成功！', 'success');
+                    }, 2000);
+                } else {
+                    const result = await response.json();
+                    throw new Error(result.message || '备份失败');
+                }
+            } catch (error) {
+                console.error('备份失败:', error);
+                progressBar.style.width = '100%';
+                progressBar.parentElement.style.background = '#ffebee';
+                statusText.textContent = '备份失败：' + error.message;
+                showToast('备份失败：' + error.message, 'error');
+            }
+        }
+
+        // 工具函数
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return '-';
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleString('zh-CN');
+        }
+
+        // 模态框函数
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+            document.getElementById(modalId).classList.remove('hide');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hide');
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // 侧边栏导航
+        document.querySelectorAll('.admin-sidebar a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+
+                    // 更新激活状态
+                    document.querySelectorAll('.admin-sidebar a').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

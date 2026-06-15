@@ -602,6 +602,77 @@ body {
     transform: translateY(0);
 }
 
+/* Hero 按钮重新设计 */
+.hero-actions .btn {
+    padding: 14px 36px;
+    font-size: 1.05rem;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 了解更多 - 主按钮 */
+.hero-actions .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.hero-actions .btn-primary::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.4s, transform 0.4s;
+}
+
+.hero-actions .btn-primary:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    background: linear-gradient(135deg, #7b8ff0 0%, #8a5fb8 100%);
+    color: #fff;
+}
+
+.hero-actions .btn-primary:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.hero-actions .btn-primary:active {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* 快速加入 - 描边按钮 */
+.hero-actions .btn-outline {
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hero-actions .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.95);
+    color: #764ba2;
+    border-color: #fff;
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+}
+
+.hero-actions .btn-outline:active {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
 /* 公共Banner类（用于所有子页面，不包括首页） */
 .common-banner {
     position: relative;
@@ -3520,6 +3591,33 @@ tr:hover {
 }
 
 /* Section标题动画 */
+.section-title {
+    position: relative;
+    display: inline-block;
+}
+
+/* 服务器团队背景 */
+.section-team {
+    background: url('../assets/img/bg1.webp') center center / cover no-repeat;
+    position: relative;
+}
+
+.section-team::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(57, 83, 114, 0.);
+    z-index: 0;
+}
+
+.section-team .container {
+    position: relative;
+    z-index: 1;
+}
+
 .section-title {
     position: relative;
     display: inline-block;

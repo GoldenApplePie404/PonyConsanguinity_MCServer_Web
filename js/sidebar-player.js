@@ -25,6 +25,8 @@ let isPlaying = false;
 let audio = null;
 
 // 初始化播放器
+let initRetries = 0;
+const MAX_INIT_RETRIES = 10;
 function initSidebarPlayer() {
     // 等待DOM完全准备好
     setTimeout(() => {
@@ -34,9 +36,10 @@ function initSidebarPlayer() {
         const progressBar = document.querySelector('.progress-bar');
 
         if (!titleEl || !statusEl || !progressBar) {
-            console.error('关键元素缺失，延迟重试...');
-            // 延迟重试（静默重试）
-            setTimeout(() => initSidebarPlayer(), 100);
+            initRetries++;
+            if (initRetries < MAX_INIT_RETRIES) {
+                setTimeout(() => initSidebarPlayer(), 200);
+            }
             return;
         }
 

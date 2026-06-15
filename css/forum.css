@@ -768,3 +768,151 @@
         font-size: 2.5rem;
     }
 }
+
+/* ── 主帖子列表卡片美化 ── */
+.forum-main .forum-post {
+    background: #ffffff;
+    border: 1px solid #e8ecef;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.forum-main .forum-post:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    border-color: #d0d7de;
+}
+
+/* 帖子头部：标题左、点赞收藏右 */
+.forum-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.forum-post-header h3 {
+    flex: 1;
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.forum-post-header h3 a {
+    color: #2c3e50;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.forum-post-header h3 a:hover {
+    color: var(--primary-color, #667eea);
+}
+
+.forum-post-header .post-category {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 10px;
+    border-radius: 12px;
+    color: #fff;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* 右侧点赞/收藏按钮组 */
+.forum-post-actions-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.btn-like,
+.btn-bookmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #f8f9fa;
+    cursor: pointer;
+    font-size: 13px;
+    color: #666;
+    transition: all 0.25s ease;
+    user-select: none;
+}
+
+.btn-like:hover {
+    background: #fff0f0;
+    border-color: #ffb3b3;
+    color: #e74c3c;
+}
+
+.btn-like.liked {
+    background: #fff0f0;
+    border-color: #ffb3b3;
+    color: #e74c3c;
+}
+
+.btn-bookmark:hover {
+    background: #fff8e1;
+    border-color: #ffe082;
+    color: #f39c12;
+}
+
+.btn-bookmark.bookmarked {
+    background: #fff8e1;
+    border-color: #ffe082;
+    color: #f39c12;
+}
+
+/* 元数据 */
+.forum-main .forum-post .post-meta {
+    font-size: 0.78rem;
+    color: #95a5a6;
+    margin: 8px 0 10px;
+}
+
+/* 内容摘要 */
+.forum-main .forum-post .post-content-container {
+    margin-bottom: 12px;
+}
+
+.forum-main .forum-post .post-content {
+    font-size: 0.88rem;
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 底部操作区 */
+.forum-main .forum-post .post-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+@media (max-width: 600px) {
+    .forum-post-header {
+        flex-direction: column;
+    }
+    .forum-post-actions-right {
+        align-self: flex-end;
+    }
+}
+
+/* 投票选项行输入框（发帖时） */
+.poll-option-row input:focus {
+    outline: none;
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+}

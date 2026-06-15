@@ -478,6 +478,19 @@
         const API = {
             baseUrl: '../api/announcement.php'
         };
+
+        /**
+         * 带 Bearer Token 的统一 fetch 封装
+         * 确保所有 API 请求都携带认证信息
+         */
+        function apiFetch(url, options = {}) {
+            const token = localStorage.getItem('authToken');
+            if (!options.headers) {
+                options.headers = {};
+            }
+            options.headers['Authorization'] = 'Bearer ' + (token || '');
+            return fetch(url, options);
+        }
         
         // 获取当前用户
         function getCurrentUser() {
@@ -558,7 +571,7 @@
 
         // 加载公告数据
         function loadAnnouncements() {
-            fetch(API.baseUrl)
+            apiFetch(API.baseUrl)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('加载数据失败');
@@ -655,7 +668,7 @@
 
         // 加载公告用于编辑
         function loadAnnouncementForEdit(id) {
-            fetch(`${API.baseUrl}?id=${id}`)
+            apiFetch(`${API.baseUrl}?id=${id}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('加载公告失败');
@@ -695,7 +708,7 @@
 
         // 预览公告
         function previewAnnouncement(id) {
-            fetch(`${API.baseUrl}?id=${id}`)
+            apiFetch(`${API.baseUrl}?id=${id}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('加载公告失败');
@@ -728,7 +741,7 @@
 
         // 删除公告
         function deleteAnnouncement(id) {
-            fetch(`${API.baseUrl}?id=${id}`, {
+            apiFetch(`${API.baseUrl}?id=${id}`, {
                 method: 'DELETE'
             })
             .then(response => {
@@ -850,7 +863,7 @@
             };
             
             // 发送请求
-            fetch(API.baseUrl, {
+            apiFetch(API.baseUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -901,7 +914,7 @@
             };
             
             // 发送请求
-            fetch(`${API.baseUrl}?id=${id}`, {
+            apiFetch(`${API.baseUrl}?id=${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

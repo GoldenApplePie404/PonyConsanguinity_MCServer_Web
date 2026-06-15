@@ -22,30 +22,14 @@ set_exception_handler(function($e) {
 try {
     require_once 'config.php';
     require_once 'helper.php';
-    require_once 'secure_data.php';
+    require_once '../includes/auth_helper.php';
 } catch (Throwable $e) {
     echo json_encode(['success' => false, 'message' => '加载文件失败: ' . $e->getMessage()]);
     exit();
 }
 
-// 获取 token
-$headers = getallheaders();
-$token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : '';
-
-if (!$token) {
-    echo json_encode(['success' => false, 'message' => '未提供认证令牌']);
-    exit();
-}
-
-// 读取会话数据
-$sessions = secureReadData(SESSIONS_FILE);
-
-if (!isset($sessions[$token])) {
-    echo json_encode(['success' => false, 'message' => '令牌无效或已过期']);
-    exit();
-}
-
-$session = $sessions[$token];
+// 验证登录
+$session = AuthHelper::requireLogin();
 $username = $session['username'];
 
 // 读取用户数据

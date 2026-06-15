@@ -251,4 +251,52 @@ class PointsManager {
             'username' => null
         ];
     }
+
+    // ─── 基于用户名的方法（推荐，因为 data/users.php 以用户名为键）───
+
+    public function getUserPointsByUsername($username) {
+        if (isset($this->usersData[$username])) {
+            return $this->usersData[$username]['points'] ?? 0;
+        }
+        return 0;
+    }
+
+    public function getUserLevelByUsername($username) {
+        if (isset($this->usersData[$username])) {
+            $exp = $this->usersData[$username]['experience'] ?? 0;
+            return floor($exp / 100);
+        }
+        return 0;
+    }
+
+    public function addPointsByUsername($username, $amount) {
+        if (!isset($this->usersData[$username])) return false;
+        $this->usersData[$username]['points'] = ($this->usersData[$username]['points'] ?? 0) + $amount;
+        $this->saveUsersData();
+        return true;
+    }
+
+    public function reducePointsByUsername($username, $amount) {
+        if (!isset($this->usersData[$username])) return false;
+        $current = $this->usersData[$username]['points'] ?? 0;
+        if ($current < $amount) return false;
+        $this->usersData[$username]['points'] = $current - $amount;
+        $this->saveUsersData();
+        return true;
+    }
+
+    public function addExperienceByUsername($username, $exp) {
+        if (!isset($this->usersData[$username])) {
+            return ['success' => false, 'message' => '用户不存在'];
+        }
+        $this->usersData[$username]['experience'] = ($this->usersData[$username]['experience'] ?? 0) + $exp;
+        $newExp = $this->usersData[$username]['experience'];
+        $newLevel = floor($newExp / 100);
+        $this->saveUsersData();
+        return [
+            'success' => true,
+            'new_experience' => $newExp,
+            'new_level' => $newLevel
+        ];
+    }
 }

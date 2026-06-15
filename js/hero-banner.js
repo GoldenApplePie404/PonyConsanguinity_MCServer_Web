@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!heroBg) return;
 
     const backgroundImages = [
+        'assets/img/bg3.webp',
         'assets/img/pc1.webp',
         'assets/img/pc2.webp',
-        'assets/img/pc3.webp',
         'assets/img/pc4.webp'
     ];
 

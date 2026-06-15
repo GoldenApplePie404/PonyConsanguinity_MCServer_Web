@@ -3,6 +3,7 @@
 require_once 'config.php';
 require_once 'helper.php';
 require_once 'secure_data.php';
+require_once '../includes/auth_helper.php';
 
 // 设置 CORS 和安全头
 set_cors_headers();
@@ -144,31 +145,7 @@ switch ($method) {
             $replyId = $data['replyId'];
             
             // 获取当前用户
-            $headers = getallheaders();
-            $token = $headers['Authorization'] ?? '';
-            
-            if (strpos($token, 'Bearer ') === 0) {
-                $token = substr($token, 7);
-            }
-            
-            if (empty($token)) {
-                echo json_encode([
-                    'success' => false,
-                    'message' => '请先登录'
-                ]);
-                exit;
-            }
-            
-            $sessions = secureReadData(SESSIONS_FILE);
-            $currentUser = $sessions[$token] ?? null;
-            
-            if (!$currentUser) {
-                echo json_encode([
-                    'success' => false,
-                    'message' => '请先登录'
-                ]);
-                exit;
-            }
+            $currentUser = AuthHelper::requireLogin();
             
             // 加载回复数据
             $repliesFile = REPLIES_DIR . "/{$postId}.json";
@@ -260,31 +237,7 @@ switch ($method) {
             $content = $data['content'];
             
             // 获取当前用户
-            $headers = getallheaders();
-            $token = $headers['Authorization'] ?? '';
-            
-            if (strpos($token, 'Bearer ') === 0) {
-                $token = substr($token, 7);
-            }
-            
-            if (empty($token)) {
-                echo json_encode([
-                    'success' => false,
-                    'message' => '请先登录'
-                ]);
-                exit;
-            }
-            
-            $sessions = secureReadData(SESSIONS_FILE);
-            $currentUser = $sessions[$token] ?? null;
-            
-            if (!$currentUser) {
-                echo json_encode([
-                    'success' => false,
-                    'message' => '请先登录'
-                ]);
-                exit;
-            }
+            $currentUser = AuthHelper::requireLogin();
             
             // 加载帖子数据
             $postsData = secureReadData(POSTS_FILE);
@@ -353,6 +306,99 @@ switch ($method) {
                 'success' => true,
                 'message' => '修改成功'
             ]);
+        } elseif ($action === 'vote') {
+            // 处理投票
+            if (!isset($data['postId'], $data['optionIndex'])) {
+                json_response(false, '缺少必要参数');
+            }
+            
+            $user = AuthHelper::getCurrentUser();
+            if (!$user) {
+                json_response(false, '请先登录');
+            }
+            $username = $user['username'] ?? '';
+            $postId = $data['postId'];
+            $optionIndex = (int)$data['optionIndex'];
+            
+            $postsData = secureReadData(POSTS_FILE);
+            $posts = &$postsData['posts'];
+            $found = false;
+            $postRef = null;
+            
+            foreach ($posts as &$post) {
+                if ($post['id'] === $postId) {
+                    if (!isset($post['poll'])) {
+                        json_response(false, '该帖子没有投票');
+                    }
+                    if (in_array($username, $post['poll']['voters'] ?? [])) {
+                        json_response(false, '你已经投过票了');
+                    }
+                    $optionCount = count($post['poll']['options']);
+                    if ($optionIndex < 0 || $optionIndex >= $optionCount) {
+                        json_response(false, '选项无效');
+                    }
+                    $post['poll']['votes'][$optionIndex]++;
+                    $post['poll']['voters'][] = $username;
+                    $found = true;
+                    $postRef = &$post;
+                    break;
+                }
+            }
+            unset($post);
+            
+            if (!$found) {
+                json_response(false, '帖子不存在');
+            }
+            
+            secureWriteData(POSTS_FILE, $postsData);
+            
+            json_response(true, '投票成功', [
+                'votes' => $postRef['poll']['votes'],
+                'total' => array_sum($postRef['poll']['votes'])
+            ]);
+        } elseif ($action === 'update_poll') {
+            // 管理员设置/更新/删除投票
+            $user = AuthHelper::getCurrentUser();
+            if (!$user || ($user['role'] ?? 'user') !== 'admin') {
+                json_response(false, '权限不足');
+            }
+            if (!isset($data['postId'])) {
+                json_response(false, '缺少帖子 ID');
+            }
+            
+            $postsData = secureReadData(POSTS_FILE);
+            $found = false;
+            foreach ($postsData['posts'] as &$post) {
+                if ($post['id'] === $data['postId']) {
+                    if (isset($data['remove']) && $data['remove'] === true) {
+                        unset($post['poll']);
+                    } elseif (isset($data['poll']) && is_array($data['poll'])) {
+                        $options = $data['poll']['options'] ?? [];
+                        if (count($options) < 2) {
+                            json_response(false, '至少需要 2 个选项');
+                        }
+                        // 保留已有投票数据或初始化
+                        $existingVotes = $post['poll']['votes'] ?? array_fill(0, count($options), 0);
+                        $existingVoters = $post['poll']['voters'] ?? [];
+                        // 如果选项数量变化，重置投票
+                        if (count($existingVotes) !== count($options)) {
+                            $existingVotes = array_fill(0, count($options), 0);
+                            $existingVoters = [];
+                        }
+                        $post['poll'] = [
+                            'question' => $data['poll']['question'] ?? '投票',
+                            'options' => $options,
+                            'votes' => $existingVotes,
+                            'voters' => $existingVoters
+                        ];
+                    }
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) json_response(false, '帖子不存在');
+            secureWriteData(POSTS_FILE, $postsData);
+            json_response(true, '投票已更新');
         } else {
             // 创建新帖子
             if (!isset($data['title'], $data['content'], $data['author'], $data['forum'])) {
@@ -386,6 +432,19 @@ switch ($method) {
                 'views' => 0,
                 'content_file' => $contentFile
             ];
+            
+            // 添加投票问卷
+            if (isset($data['poll']) && is_array($data['poll'])) {
+                $pollOptions = $data['poll']['options'] ?? [];
+                if (is_array($pollOptions) && count($pollOptions) >= 2) {
+                    $newPost['poll'] = [
+                        'question' => $data['poll']['question'] ?? '投票',
+                        'options' => $pollOptions,
+                        'votes' => array_fill(0, count($pollOptions), 0),
+                        'voters' => []
+                    ];
+                }
+            }
             
             // 添加新帖子
             array_unshift($posts, $newPost);

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP 控制台 - 管理中心</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding-top: 60px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* 顶部 */
+        .header-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid #722ed1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-card h1 {
+            font-size: 22px; color: #333;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .header-card p { color: #888; font-size: 13px; margin-top: 4px; }
+        .back-btn {
+            padding: 8px 16px;
+            background: #f5f5f5; color: #333;
+            border: none; border-radius: 6px;
+            font-size: 13px; cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
+            text-decoration: none;
+        }
+        .back-btn:hover { background: #e8e8e8; }
+
+        /* 连接状态 */
+        .status-bar {
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot.online { background: #52c41a; box-shadow: 0 0 6px rgba(82,196,26,0.4); }
+        .dot.offline { background: #f5222d; }
+        .dot.connecting { background: #faad14; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+        .status-tools { font-size: 13px; color: #666; }
+        .status-role {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-role.admin { background: #fff7e6; color: #d46b08; }
+        .status-role.user { background: #e6f7ff; color: #1890ff; }
+        .status-role.guest { background: #f5f5f5; color: #999; }
+
+        /* 主内容：两栏 */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+        }
+
+        /* 左侧：工具列表 */
+        .tool-list-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .tool-list-header {
+            padding: 15px 18px;
+            border-bottom: 1px solid #e8e8e8;
+            font-weight: 600;
+            color: #333;
+            background: #fafafa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tool-list-header span { font-size: 13px; color: #888; font-weight: 400; }
+        .tool-item {
+            padding: 12px 18px;
+            border-bottom: 1px solid #f5f5f5;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tool-item:hover { background: #f0f5ff; }
+        .tool-item.active { background: #e6f7ff; border-left: 3px solid #1890ff; }
+        .tool-item .name { font-size: 14px; font-weight: 500; color: #333; }
+        .tool-item .desc { font-size: 12px; color: #888; margin-top: 4px; line-height: 1.5; }
+        .tool-item .badge {
+            display: inline-block;
+            padding: 1px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-top: 6px;
+        }
+        .badge.read-only { background: #e6f7ff; color: #1890ff; border: 1px solid #bae7ff; }
+        .badge.admin-only { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; }
+
+        /* 右侧：工具调用面板 */
+        .tool-panel {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 20px;
+            min-height: 400px;
+        }
+        .panel-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 350px;
+            color: #bbb;
+        }
+        .panel-placeholder i { font-size: 48px; margin-bottom: 15px; }
+        .panel-placeholder p { font-size: 14px; }
+        .panel-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 15px; }
+
+        .param-group { margin-bottom: 14px; }
+        .param-group label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .param-group label .required { color: #f5222d; }
+        .param-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        .param-group input:focus { border-color: #1890ff; outline: none; box-shadow: 0 0 0 2px rgba(24,144,255,0.1); }
+
+        .btn-execute {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-execute:hover { opacity: 0.9; }
+        .btn-execute:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-execute.loading {
+            position: relative;
+            color: transparent;
+        }
+        .btn-execute.loading::after {
+            content: '';
+            position: absolute;
+            width: 18px; height: 18px;
+            top: 50%; left: 50%;
+            margin: -9px 0 0 -9px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* 结果区域 */
+        .result-section { margin-top: 15px; }
+        .result-section h3 {
+            font-size: 14px; color: #333;
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .result-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 500px;
+            overflow: auto;
+        }
+        .result-box .key { color: #9cdcfe; }
+        .result-box .string { color: #ce9178; }
+        .result-box .number { color: #b5cea8; }
+        .result-box .bool { color: #569cd6; }
+        .result-box .null { color: #808080; }
+
+        .error-box {
+            background: #2d1b1b;
+            color: #f48771;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+
+<div class="container">
+    <!-- 顶部 -->
+    <div class="header-card">
+        <div>
+            <h1><i class="fas fa-terminal"></i> MCP 控制台</h1>
+            <p>直接调用 MCP 工具，查看原始返回数据</p>
+        </div>
+        <a href="admin-hub.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> 返回管理总站
+        </a>
+    </div>
+
+    <!-- 连接状态 -->
+    <div class="status-bar" id="statusBar">
+        <div class="status-indicator">
+            <span class="dot offline" id="statusDot"></span>
+            <span id="statusText">未连接</span>
+        </div>
+        <div class="status-tools" id="toolsCount">-</div>
+        <div>
+            <span class="status-role guest" id="roleBadge">-</span>
+        </div>
+        <button class="back-btn" onclick="connectMCP()" style="margin-left:auto;">
+            <i class="fas fa-sync-alt"></i> 重新连接
+        </button>
+    </div>
+
+    <!-- 两栏 -->
+    <div class="main-grid">
+        <!-- 左侧：工具列表 -->
+        <div class="tool-list-card">
+            <div class="tool-list-header">
+                可用工具
+                <span id="toolCount">0</span>
+            </div>
+            <div id="toolList">
+                <div style="padding:30px;text-align:center;color:#bbb;font-size:14px;">
+                    请先连接 MCP 服务器
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：调用面板 -->
+        <div class="tool-panel" id="toolPanel">
+            <div class="panel-placeholder" id="placeholder">
+                <i class="fas fa-hand-pointer"></i>
+                <p>从左侧选择一个工具开始调用</p>
+            </div>
+            <div id="panelContent" style="display:none;">
+                <div class="panel-title" id="panelTitle">工具名称</div>
+                <div id="panelParams"></div>
+                <button class="btn-execute" id="executeBtn" onclick="executeTool()">
+                    <i class="fas fa-play"></i> 执行
+                </button>
+                <div class="result-section" id="resultSection" style="display:none;">
+                    <h3><i class="fas fa-code"></i> 返回结果</h3>
+                    <div id="resultBox" class="result-box"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script src="../js/api.js"></script>
+<script src="../js/mcp-client.js"></script>
+<script>
+    let mcp = null;
+    let currentTool = null;
+
+    // 页面加载时自动连接
+    document.addEventListener('DOMContentLoaded', async () => {
+        if (typeof loadComponent !== 'undefined') {
+            loadComponent('navbar', 'navbar-placeholder');
+            loadComponent('footer', 'footer-placeholder');
+        }
+
+        // 权限检查（前端 + 后端双重验证）
+        const user = getCurrentUser();
+        if (!user || user.role !== 'admin') {
+            showToast('权限不足，需要管理员权限', 'error');
+            setTimeout(() => { window.location.href = 'admin-hub.html'; }, 1500);
+            return;
+        }
+
+        // 后端二次验证
+        const verified = await verifyAdminSession();
+        if (!verified) return;
+
+        await connectMCP();
+    });
+
+    // 后端验证管理员会话
+    async function verifyAdminSession() {
+        try {
+            const token = localStorage.getItem('authToken');
+            const resp = await fetch('../api/admin/data_api.php?action=overview&token=' + encodeURIComponent(token || ''));
+            const result = await resp.json();
+            if (!result.success) {
+                showToast('管理员验证失败', 'error');
+                setTimeout(() => { window.location.href = '../pages/login.html'; }, 1500);
+                return false;
+            }
+            return true;
+        } catch (e) {
+            showToast('验证请求失败', 'error');
+            setTimeout(() => { window.location.href = 'admin-hub.html'; }, 1500);
+            return false;
+        }
+    }
+
+    // 连接 MCP
+    async function connectMCP() {
+        const dot = document.getElementById('statusDot');
+        const text = document.getElementById('statusText');
+        const count = document.getElementById('toolsCount');
+
+        dot.className = 'dot connecting';
+        text.textContent = '连接中...';
+        count.textContent = '-';
+
+        try {
+            mcp = new MCPClient('../mcp/mcp-server.php');
+            await mcp.connect();
+
+            dot.className = 'dot online';
+            text.textContent = '已连接';
+
+            // 加载工具列表
+            const tools = await mcp.listTools();
+            document.getElementById('toolCount').textContent = tools.length;
+            count.textContent = `已发现 ${tools.length} 个工具`;
+
+            // 更新角色徽章
+            const badge = document.getElementById('roleBadge');
+            const adminTools = tools.filter(t => t.inputSchema?.required?.length > 0 || t.name.startsWith('start_') || t.name.startsWith('stop_') || t.name.startsWith('restart_') || t.name === 'send_command');
+            const isAdmin = tools.some(t => t.name === 'send_command');
+            badge.className = 'status-role ' + (isAdmin ? 'admin' : 'user');
+            badge.textContent = isAdmin ? '管理员' : '已登录';
+
+            renderToolList(tools);
+            showToast('MCP 连接成功', 'success');
+        } catch (err) {
+            dot.className = 'dot offline';
+            text.textContent = '连接失败：' + err.message;
+            count.textContent = '-';
+            showToast('MCP 连接失败：' + err.message, 'error');
+        }
+    }
+
+    // 渲染工具列表
+    function renderToolList(tools) {
+        const list = document.getElementById('toolList');
+        if (tools.length === 0) {
+            list.innerHTML = '<div style="padding:30px;text-align:center;color:#bbb;">无可用工具</div>';
+            return;
+        }
+
+        list.innerHTML = tools.map(t => `
+            <div class="tool-item" onclick="selectTool('${t.name}')" data-name="${t.name}">
+                <div class="name">${t.name}</div>
+                <div class="desc">${t.description || '无描述'}</div>
+                <span class="badge ${isAdminTool(t.name) ? 'admin-only' : 'read-only'}">
+                    ${isAdminTool(t.name) ? '🔐 管理员' : '🔓 只读'}
+                </span>
+            </div>
+        `).join('');
+    }
+
+    function isAdminTool(name) {
+        return ['start_instance','stop_instance','restart_instance','send_command'].includes(name);
+    }
+
+    // 选择工具
+    function selectTool(name) {
+        if (!mcp || !mcp.tools) return;
+
+        // 高亮
+        document.querySelectorAll('.tool-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.name === name);
+        });
+
+        currentTool = mcp.tools.find(t => t.name === name);
+        if (!currentTool) return;
+
+        document.getElementById('placeholder').style.display = 'none';
+        document.getElementById('panelContent').style.display = 'block';
+        document.getElementById('resultSection').style.display = 'none';
+        document.getElementById('panelTitle').textContent = currentTool.name;
+
+        // 渲染参数表单
+        const schema = currentTool.inputSchema || {};
+        const props = schema.properties || {};
+        const required = schema.required || [];
+        const paramHtml = Object.entries(props).map(([key, val]) => {
+            const isReq = required.includes(key);
+            return `
+                <div class="param-group">
+                    <label>${key} ${isReq ? '<span class="required">*</span>' : ''}</label>
+                    <input type="text" id="param-${key}"
+                           placeholder="${val.description || key}"
+                           data-required="${isReq}">
+                </div>
+            `;
+        }).join('');
+
+        document.getElementById('panelParams').innerHTML = paramHtml ||
+            '<p style="color:#888;font-size:13px;margin-bottom:15px;">此工具无需参数</p>';
+    }
+
+    // 执行工具
+    async function executeTool() {
+        if (!mcp || !currentTool) return;
+
+        // 收集参数
+        const schema = currentTool.inputSchema || {};
+        const props = schema.properties || {};
+        const required = schema.required || [];
+        const args = {};
+
+        let missing = false;
+        Object.keys(props).forEach(key => {
+            const input = document.getElementById('param-' + key);
+            if (input) {
+                const val = input.value.trim();
+                if (required.includes(key) && !val) {
+                    input.style.borderColor = '#f5222d';
+                    missing = true;
+                } else {
+                    input.style.borderColor = '#ddd';
+                    if (val) args[key] = val;
+                }
+            }
+        });
+
+        if (missing) {
+            showToast('请填写所有必填参数', 'error');
+            return;
+        }
+
+        // 执行
+        const btn = document.getElementById('executeBtn');
+        btn.disabled = true;
+        btn.classList.add('loading');
+        document.getElementById('resultSection').style.display = 'none';
+
+        try {
+            const result = await mcp.callTool(currentTool.name, args);
+            const resultBox = document.getElementById('resultBox');
+
+            // JSON 格式化显示
+            try {
+                const parsed = JSON.parse(result.data);
+                resultBox.textContent = JSON.stringify(parsed, null, 2);
+            } catch {
+                resultBox.textContent = result.data;
+            }
+
+            document.getElementById('resultSection').style.display = 'block';
+        } catch (err) {
+            const resultBox = document.getElementById('resultBox');
+            resultBox.className = 'error-box';
+            resultBox.textContent = '错误：' + err.message;
+            document.getElementById('resultSection').style.display = 'block';
+        } finally {
+            btn.disabled = false;
+            btn.classList.remove('loading');
+        }
+    }
+
+    // Toast
+    function showToast(msg, type) {
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position:fixed;top:80px;right:20px;
+            padding:12px 20px;
+            background:${type === 'error'?'#f5222d':'#52c41a'};
+            color:white;border-radius:6px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.15);
+            z-index:10000;font-size:14px;
+        `;
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.transition = 'opacity 0.3s'; toast.style.opacity='0'; setTimeout(()=>toast.remove(),300); }, 3000);
+    }
+
+</script>
+</body>
+</html>

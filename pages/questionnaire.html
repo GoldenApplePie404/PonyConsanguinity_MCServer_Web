@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问卷中心 - 万驹同源 | Minecraft 服务器官网</title>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <link rel="stylesheet" href="../css/style.css?v=3.19">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <style>
+        * { box-sizing:border-box; }
+        body {
+            background:#f0f2f5;
+            font-family:'Microsoft YaHei',Arial,sans-serif;
+            min-height:100vh;
+        }
+
+        /* ===== Banner ===== */
+        .qn-banner {
+            position:relative;
+            background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+            padding:60px 0 50px;
+            text-align:center;
+            overflow:hidden;
+            margin-bottom:30px;
+        }
+        .qn-banner::before {
+            content:'';
+            position:absolute; inset:0;
+            background:url('../assets/img/bg.webp') center/cover no-repeat;
+            opacity:0.15;
+        }
+        .qn-banner-grid {
+            position:absolute; inset:0;
+            background-image:
+                linear-gradient(rgba(102,126,234,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102,126,234,0.08) 1px, transparent 1px);
+            background-size:40px 40px;
+        }
+        .qn-banner-content { position:relative; z-index:2; }
+        .qn-banner-icon {
+            width:70px; height:70px; border-radius:18px;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            display:flex; align-items:center; justify-content:center;
+            margin:0 auto 18px; font-size:32px; color:#fff;
+            box-shadow:0 8px 30px rgba(102,126,234,0.4);
+        }
+        .qn-banner h1 {
+            font-size:1.8rem; font-weight:700; color:#fff;
+            margin:0 0 8px; letter-spacing:1px;
+        }
+        .qn-banner p {
+            font-size:0.95rem; color:rgba(255,255,255,0.7);
+            margin:0; line-height:1.6;
+        }
+
+        /* ===== 列表 ===== */
+        .qn-page { padding:0 0 50px; }
+        .qn-list { max-width:700px; margin:0 auto; }
+
+        .qn-card {
+            background:rgba(255,255,255,0.92);
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            border-radius:14px; padding:20px 24px;
+            margin-bottom:12px;
+            border:1px solid rgba(255,255,255,0.6);
+            display:flex; align-items:center; gap:16px;
+            transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+            cursor:pointer;
+            opacity:0; transform:translateY(20px);
+            animation:qnFadeIn 0.5s ease forwards;
+        }
+        .qn-card:nth-child(1) { animation-delay:0.05s; }
+        .qn-card:nth-child(2) { animation-delay:0.1s; }
+        .qn-card:nth-child(3) { animation-delay:0.15s; }
+        .qn-card:nth-child(4) { animation-delay:0.2s; }
+        .qn-card:nth-child(5) { animation-delay:0.25s; }
+        .qn-card:nth-child(6) { animation-delay:0.3s; }
+
+        @keyframes qnFadeIn {
+            to { opacity:1; transform:translateY(0); }
+        }
+
+        .qn-card:hover {
+            transform:translateY(-3px);
+            border-color:#c0c8ff;
+            box-shadow:0 8px 30px rgba(102,126,234,0.15);
+        }
+        .qn-card-info { flex:1; min-width:0; }
+        .qn-card-title { font-size:1.05rem; font-weight:700; color:#2c3e50; margin-bottom:4px; }
+        .qn-card-meta { font-size:0.78rem; color:#999; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+        .qn-status { padding:2px 10px; border-radius:12px; font-size:0.7rem; font-weight:600; }
+        .qn-status.active { background:#e8f5e9; color:#2e7d32; }
+        .qn-status.closed { background:#f5f5f5; color:#999; }
+        .qn-card-action { flex-shrink:0; width:28px; height:28px; border-radius:50%; background:#f5f5f5; display:flex; align-items:center; justify-content:center; transition:all 0.3s; }
+        .qn-card:hover .qn-card-action { background:rgba(102,126,234,0.12); }
+        .qn-card:hover .qn-card-action i { color:#667eea !important; }
+
+        /* ===== 答题页 ===== */
+        .qn-detail { max-width:640px; margin:0 auto; }
+        .qn-header { margin-bottom:24px; }
+        .qn-header h1 { font-size:1.4rem; font-weight:700; color:#2c3e50; margin-bottom:6px; }
+        .qn-header .desc { font-size:0.9rem; color:#888; line-height:1.6; }
+        .qn-question {
+            background:rgba(255,255,255,0.92);
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            border-radius:14px; padding:20px 22px;
+            margin-bottom:14px;
+            border:1px solid rgba(255,255,255,0.6);
+            transition:all 0.25s;
+        }
+        .qn-question:hover { border-color:#e0e4ff; }
+        .qn-q-title {
+            font-size:0.95rem; font-weight:600; color:#333; margin-bottom:12px;
+            display:flex; align-items:center; gap:6px;
+        }
+        .qn-q-title .required { color:#e74c3c; font-size:0.8rem; }
+        .qn-q-type-badge {
+            font-size:0.65rem; color:#999; background:#f0f0f0;
+            padding:1px 8px; border-radius:8px; font-weight:400; margin-left:auto;
+        }
+        .qn-option {
+            display:flex; align-items:center; gap:10px; padding:10px 14px;
+            border:1.5px solid #e0e0e0; border-radius:10px; margin-bottom:8px;
+            cursor:pointer; transition:all 0.2s;
+        }
+        .qn-option:hover { border-color:#667eea; background:#f8f9ff; }
+        .qn-option input { width:16px; height:16px; accent-color:#667eea; flex-shrink:0; }
+        .qn-option label { flex:1; font-size:0.9rem; color:#555; cursor:pointer; }
+        .qn-text-input {
+            width:100%; padding:10px 14px;
+            border:1.5px solid #e0e0e0; border-radius:10px;
+            font-size:0.9rem; resize:vertical; min-height:60px; font-family:inherit;
+            transition:border-color 0.2s, box-shadow 0.2s;
+        }
+        .qn-text-input:focus { outline:none; border-color:#667eea; box-shadow:0 0 0 3px rgba(102,126,234,0.08); }
+
+        .qn-submit-area { text-align:center; margin-top:20px; }
+        .qn-btn {
+            display:inline-flex; align-items:center; gap:8px;
+            padding:12px 36px; border:none; border-radius:10px;
+            background:linear-gradient(135deg,#667eea,#764ba2); color:#fff;
+            font-size:15px; font-weight:600; cursor:pointer;
+            transition:all 0.25s ease;
+        }
+        .qn-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(102,126,234,0.35); }
+
+        /* ===== 结果页 ===== */
+        .qn-result-bar { height:22px; background:#f0f0f0; border-radius:6px; overflow:hidden; position:relative; }
+        .qn-result-fill { height:100%; border-radius:6px; transition:width 0.6s cubic-bezier(0.16,1,0.3,1); }
+        .qn-result-text { font-size:0.82rem; color:#888; }
+
+        .hidden { display:none !important; }
+        .empty-state { text-align:center; padding:80px 20px; color:#bbb; }
+        .empty-state i { font-size:48px; display:block; margin-bottom:12px; opacity:0.3; }
+
+        /* ===== 已提交标识 ===== */
+        .submitted-badge {
+            display:inline-flex; align-items:center; gap:4px;
+            font-size:0.7rem; color:#2e7d32; background:#e8f5e9;
+            padding:2px 10px; border-radius:12px; font-weight:600;
+        }
+    </style>
+</head>
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+    <div id="app-navbar"></div>
+
+    <!-- Banner -->
+    <div class="qn-banner">
+        <div class="qn-banner-grid"></div>
+        <div class="qn-banner-content container">
+            <div class="qn-banner-icon"><i class="fas fa-poll-h"></i></div>
+            <h1>问卷中心</h1>
+            <p>参与问卷投票，表达你的想法，一起让服务器变得更好</p>
+        </div>
+    </div>
+
+    <div class="qn-page">
+        <div class="container">
+
+            <!-- 列表页 -->
+            <div id="qnListView">
+                <div id="qnListContainer" class="qn-list"></div>
+            </div>
+
+            <!-- 答题页 -->
+            <div id="qnDetailView" class="qn-detail hidden">
+                <a href="#" onclick="showList()" style="display:inline-flex;align-items:center;gap:6px;font-size:0.88rem;color:#667eea;text-decoration:none;margin-bottom:18px;padding:8px 14px;border-radius:8px;background:rgba(255,255,255,0.85);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.5);transition:all 0.2s;" onmouseover="this.style.background='rgba(102,126,234,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.85)'">
+                    <i class="fas fa-arrow-left"></i> 返回列表
+                </a>
+                <div id="qnDetailContent"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="app-footer"></div>
+    <script src="../js/main.js?v=3.4"></script>
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+    <script src="../js/navbar.js?v=1.0"></script>
+
+    <script>
+        let allQuestionnaires = [];
+
+        document.addEventListener('DOMContentLoaded', loadList);
+
+        async function loadList() {
+            const el = document.getElementById('qnListContainer');
+            el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-pulse"></i>加载中...</div>';
+            try {
+                const r = await fetch('../api/questionnaire.php?action=list');
+                const d = await r.json();
+                if (!d.success) { el.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i>加载失败</div>'; return; }
+                allQuestionnaires = d.data.questionnaires || [];
+                renderList();
+            } catch(e) { el.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i>加载失败</div>'; }
+        }
+
+        function renderList() {
+            const el = document.getElementById('qnListContainer');
+            if (!allQuestionnaires.length) { el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i>暂无问卷</div>'; return; }
+            el.innerHTML = allQuestionnaires.map((q, idx) => {
+                const active = q.status === 'active';
+                return '<div class="qn-card" onclick="openQn(\'' + q.id + '\')" style="animation-delay:' + (idx * 0.06) + 's">' +
+                    '<div class="qn-card-info">' +
+                    '<div class="qn-card-title">' + escHtml(q.title) + '</div>' +
+                    '<div class="qn-card-meta">' +
+                    '<span class="qn-status ' + q.status + '">' + (active ? '进行中' : '已关闭') + '</span>' +
+                    '<span><i class="far fa-file-alt" style="margin-right:3px;"></i>' + q.question_count + ' 题</span>' +
+                    '<span><i class="far fa-comments" style="margin-right:3px;"></i>' + q.response_count + ' 份回答</span>' +
+                    '</div></div>' +
+                    '<div class="qn-card-action"><i class="fas fa-chevron-right" style="color:#ccc;font-size:12px;"></i></div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        window.openQn = async function(id) {
+            try {
+                const r = await fetch('../api/questionnaire.php?action=get&id=' + id);
+                const d = await r.json();
+                if (!d.success) { showToast(d.message || '加载失败', 'error'); return; }
+                const qn = d.data;
+                if (qn.status !== 'active' && !qn.my_response) {
+                    showResultView(qn);
+                    return;
+                }
+                if (qn.my_response) {
+                    showResultView(qn);
+                    return;
+                }
+                showFormView(qn);
+            } catch(e) { showToast('加载失败', 'error'); }
+        };
+
+        function showFormView(qn) {
+            document.getElementById('qnListView').classList.add('hidden');
+            const detail = document.getElementById('qnDetailView');
+            detail.classList.remove('hidden');
+
+            let html = '<div class="qn-header"><h1><i class="fas fa-poll-h" style="color:#667eea;margin-right:6px;"></i>' + escHtml(qn.title) + '</h1>';
+            if (qn.desc) html += '<div class="desc">' + escHtml(qn.desc) + '</div>';
+            html += '</div><form id="qnForm">';
+
+            qn.questions.forEach((q, idx) => {
+                html += '<div class="qn-question">';
+                html += '<div class="qn-q-title"><span class="qn-q-num" style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">' + (idx + 1) + '</span> ' + escHtml(q.title) + (q.required ? ' <span class="required">*</span>' : '') + ' <span class="qn-q-type-badge">' + (q.type === 'radio' ? '单选' : q.type === 'checkbox' ? '多选' : '填空') + '</span></div>';
+
+                if (q.type === 'text') {
+                    html += '<textarea class="qn-text-input" name="' + q.id + '" placeholder="请输入你的回答..." ' + (q.required ? 'required' : '') + '></textarea>';
+                } else {
+                    (q.options || []).forEach(opt => {
+                        const type = q.type === 'radio' ? 'radio' : 'checkbox';
+                        const name = q.type === 'radio' ? q.id : q.id + '[]';
+                        // radio 用 required 至少选一项；checkbox 不用 required（否则浏览器要全部勾选），走 JS 验证
+                        const attr = (q.type !== 'checkbox' && q.required) ? 'required' : '';
+                        html += '<div class="qn-option"><input type="' + type + '" name="' + name + '" value="' + escHtml(opt) + '" id="' + q.id + '_' + escHtml(opt) + '" ' + attr + '><label for="' + q.id + '_' + escHtml(opt) + '">' + escHtml(opt) + '</label></div>';
+                    });
+                }
+
+                html += '</div>';
+            });
+
+            html += '<div class="qn-submit-area"><button type="submit" class="qn-btn"><i class="fas fa-paper-plane"></i> 提交问卷</button></div></form>';
+            document.getElementById('qnDetailContent').innerHTML = html;
+
+            document.getElementById('qnForm').onsubmit = async function(e) {
+                e.preventDefault();
+                const fd = new FormData(this);
+                const answers = {};
+                qn.questions.forEach(q => {
+                    if (q.type === 'checkbox') {
+                        answers[q.id] = fd.getAll(q.id + '[]');
+                    } else if (q.type === 'radio') {
+                        answers[q.id] = fd.get(q.id) || '';
+                    } else {
+                        answers[q.id] = fd.get(q.id) || '';
+                    }
+                });
+
+                // 手动验证：必填多选题至少选一项
+                for (const q of qn.questions) {
+                    if (q.type === 'checkbox' && q.required && (!answers[q.id] || !answers[q.id].length)) {
+                        showToast('请完成所有必填题目', 'error');
+                        return;
+                    }
+                }
+
+                const token = localStorage.getItem('authToken');
+                if (!token) { showToast('请先登录', 'error'); return; }
+                const r = await fetch('../api/questionnaire.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ action: 'submit', id: qn.id, answers })
+                });
+                const d = await r.json();
+                if (d.success) { showToast('提交成功！', 'success'); openQn(qn.id); }
+                else showToast(d.message || '提交失败', 'error');
+            };
+        }
+
+        function showResultView(qn) {
+            document.getElementById('qnListView').classList.add('hidden');
+            const detail = document.getElementById('qnDetailView');
+            detail.classList.remove('hidden');
+
+            let html = '<div class="qn-header"><h1><i class="fas fa-poll-h" style="color:#667eea;margin-right:6px;"></i>' + escHtml(qn.title) + '</h1>';
+            if (qn.desc) html += '<div class="desc">' + escHtml(qn.desc) + '</div>';
+            html += '<div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">';
+            html += '<span style="font-size:0.82rem;color:#999;"><i class="far fa-comments" style="margin-right:4px;"></i>共 ' + qn.response_count + ' 份回答</span>';
+            if (qn.my_response) html += '<span class="submitted-badge"><i class="fas fa-check-circle"></i> 你已提交</span>';
+            if (qn.status !== 'active') html += '<span class="qn-status closed" style="font-size:0.75rem;">已关闭</span>';
+            html += '</div></div>';
+
+            if (!qn.stats) {
+                html += '<div style="text-align:center;padding:40px;color:#bbb;">暂无统计数据</div>';
+            } else {
+                qn.questions.forEach((q, idx) => {
+                    const s = qn.stats[q.id];
+                    html += '<div class="qn-question">';
+                    html += '<div class="qn-q-title"><span class="qn-q-num" style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">' + (idx + 1) + '</span> ' + escHtml(q.title) + ' <span class="qn-q-type-badge">' + (q.type === 'radio' ? '单选' : q.type === 'checkbox' ? '多选' : '填空') + '</span></div>';
+
+                    if (q.type === 'text' && s) {
+                        (s.texts || []).forEach(t => {
+                            html += '<div style="font-size:0.88rem;color:#666;padding:10px 14px;background:#f8f9fa;border-radius:8px;margin-bottom:6px;border-left:3px solid #667eea;line-height:1.5;">' + escHtml(t) + '</div>';
+                        });
+                        if (!(s.texts || []).length) html += '<div style="font-size:0.82rem;color:#bbb;padding:20px;text-align:center;">暂无回答</div>';
+                    } else if (s && s.options) {
+                        const total = Object.values(s.options).reduce((a,b) => a + b, 0) || 1;
+                        Object.entries(s.options).forEach(([opt, count]) => {
+                            const pct = Math.round(count / total * 100);
+                            const color = count > 0 ? 'linear-gradient(90deg,#667eea,#764ba2)' : '#e0e0e0';
+                            html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">';
+                            html += '<span style="flex:1;font-size:0.85rem;color:#555;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(opt) + '</span>';
+                            html += '<div class="qn-result-bar" style="flex:2;"><div class="qn-result-fill" style="width:' + pct + '%;background:' + color + ';"></div></div>';
+                            html += '<span class="qn-result-text" style="min-width:50px;text-align:right;font-weight:600;">' + pct + '% <span style="font-weight:400;color:#bbb;">(' + count + ')</span></span>';
+                            html += '</div>';
+                        });
+                    }
+
+                    html += '</div>';
+                });
+            }
+
+            html += '<div style="text-align:center;margin-top:16px;"><button class="qn-btn" onclick="showList()" style="font-size:14px;padding:10px 28px;"><i class="fas fa-list"></i> 返回列表</button></div>';
+            document.getElementById('qnDetailContent').innerHTML = html;
+        }
+
+        window.showList = function() {
+            document.getElementById('qnDetailView').classList.add('hidden');
+            document.getElementById('qnListView').classList.remove('hidden');
+        };
+
+        function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    </script>
+</body>
+</html>

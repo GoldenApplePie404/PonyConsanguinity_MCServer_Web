@@ -1,0 +1,16 @@
+{
+    "id": "exp_pack",
+    "name": "经验值礼包",
+    "description": "快速提升等级，获得 100 点经验值，助你更快升级解锁特权",
+    "price": 50,
+    "stock": -1,
+    "status": "on_sale",
+    "level_requirement": 0,
+    "style": "fa-chart-line",
+    "category": "hot",
+    "sold": 0,
+    "effect": {
+        "type": "experience",
+        "value": 100
+    }
+}

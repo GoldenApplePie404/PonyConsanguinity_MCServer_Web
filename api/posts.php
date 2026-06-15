@@ -1,6 +1,8 @@
 <?php
 require_once 'config.php';
 require_once 'helper.php';
+require_once 'secure_data.php';
+require_once '../includes/auth_helper.php';
 
 // 设置 CORS 和安全头
 set_cors_headers();
@@ -31,8 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 // 创建新帖子
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 验证 Token
-    $token = get_token();
-    $session = verify_token($token);
+    $session = AuthHelper::requireLogin();
 
     if (!$session) {
         json_response(false, '未登录', null, 401);
