@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器回忆廊 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing:border-box; }
+        body { background:#f0f2f5; font-family:'Microsoft YaHei',Arial,sans-serif; }
+
+        /* Banner */
+        .gl-banner {
+            position:relative;
+            background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+            padding:64px 0 54px; text-align:center; overflow:hidden;
+        }
+        .gl-banner::before {
+            content:''; position:absolute; inset:0;
+            background:url('../assets/img/bg.webp') center/cover no-repeat;
+            opacity:0.12;
+        }
+        .gl-banner-grid {
+            position:absolute; inset:0;
+            background-image:
+                linear-gradient(rgba(102,126,234,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102,126,234,0.08) 1px, transparent 1px);
+            background-size:40px 40px;
+        }
+        .gl-banner-content { position:relative; z-index:2; }
+        .gl-banner-icon {
+            width:70px; height:70px; border-radius:18px;
+            background:linear-gradient(135deg,#f9b238,#e97a43);
+            display:flex; align-items:center; justify-content:center;
+            margin:0 auto 18px; font-size:32px; color:#fff;
+            box-shadow:0 8px 30px rgba(233,122,67,0.35);
+        }
+        .gl-banner h1 { font-size:1.8rem; font-weight:700; color:#fff; margin:0 0 8px; letter-spacing:1px; }
+        .gl-banner p { font-size:0.95rem; color:rgba(255,255,255,0.65); margin:0; line-height:1.6; max-width:500px; margin:0 auto; }
+
+        /* ===== 时间档案馆 ===== */
+        .gl-container { max-width:1200px; margin:0 auto; padding:40px 20px 60px; }
+
+        /* 年份隔断 */
+        .gl-era {
+            display:flex; align-items:center; gap:16px;
+            margin:40px 0 24px; font-size:1.2rem; font-weight:700;
+            color:#555; letter-spacing:2px;
+        }
+        .gl-era::after {
+            content:''; flex:1; height:1px;
+            background:linear-gradient(90deg,#ddd,transparent);
+        }
+        .gl-era:first-child { margin-top:0; }
+        .gl-era .era-icon { font-size:1.1rem; }
+
+        /* 档案馆网格 */
+        .gl-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));
+            gap:18px;
+        }
+
+        /* 档案卡片 */
+        .gl-card {
+            background:rgba(255,255,255,0.92);
+            backdrop-filter:blur(16px);
+            border-radius:14px;
+            border:1px solid rgba(255,255,255,0.6);
+            padding:20px 22px 18px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.03);
+            transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+            position:relative; overflow:hidden;
+            opacity:0; transform:translateY(24px);
+            cursor:default;
+        }
+        .gl-card.show {
+            opacity:1; transform:translateY(0);
+        }
+        .gl-card:hover {
+            transform:translateY(-4px);
+            box-shadow:0 12px 36px rgba(0,0,0,0.07);
+            border-color:#d0d8ff;
+        }
+
+        /* 档案标签 — 模拟文件夹凸出标签 */
+        .gl-card .tab {
+            position:absolute; top:0; left:16px;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            color:#fff; font-size:0.65rem; font-weight:700;
+            padding:4px 12px 3px;
+            border-radius:0 0 8px 8px;
+            letter-spacing:1px;
+        }
+
+        /* 日期戳 */
+        .gl-card .stamp {
+            display:inline-flex; align-items:center; gap:5px;
+            font-size:0.72rem; color:#999; font-weight:500;
+            margin-bottom:10px; padding-top:14px;
+        }
+        .gl-card .stamp i { opacity:0.5; }
+
+        .gl-card h3 {
+            font-size:1rem; font-weight:700; color:#2c3e50;
+            margin:0 0 6px; line-height:1.45;
+        }
+        .gl-card p {
+            font-size:0.8rem; color:#888; line-height:1.65;
+            margin:0 0 10px;
+        }
+        .gl-card .hl {
+            background:linear-gradient(135deg, rgba(102,126,234,0.06), rgba(118,75,162,0.06));
+            border-left:3px solid #667eea;
+            padding:6px 10px; border-radius:6px; margin-bottom:10px;
+            font-size:0.76rem; color:#666; line-height:1.5;
+        }
+        .gl-card .hl strong { color:#667eea; }
+        .gl-card .tags { display:flex; gap:4px; flex-wrap:wrap; }
+        .gl-card .tags span {
+            font-size:0.66rem; padding:2px 7px; border-radius:6px;
+            background:rgba(102,126,234,0.07); color:#667eea; font-weight:500;
+        }
+
+        /* 高亮卡片（重要事件） */
+        .gl-card.featured {
+            border-color:#f9b238;
+            background:linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,248,230,0.95));
+        }
+        .gl-card.featured .tab {
+            background:linear-gradient(135deg,#f9b238,#e97a43);
+        }
+
+        /* 档案馆底部 — 全宽 */
+        .gl-foot-wrap {
+            margin-top:48px; padding:28px 20px;
+            background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+            text-align:center;
+        }
+        .gl-foot {
+            max-width:1200px; margin:0 auto;
+            font-size:0.82rem; color:rgba(255,255,255,0.45); line-height:1.8;
+        }
+        .gl-foot i { font-size:0.9rem; opacity:0.3; margin:0 4px; }
+
+        /* 响应式 */
+        @media (max-width:600px) {
+            .gl-grid { grid-template-columns:1fr; }
+            .gl-banner h1 { font-size:1.3rem; }
+        }
+
+        /* 响应式 */
+        @media (max-width:768px) {
+            .gl-card { position:static !important; width:100% !important; margin:6px 0 20px !important; }
+            .gl-node:nth-child(odd) .gl-card { right:auto; left:auto; }
+            .gl-node:nth-child(even) .gl-card { left:auto; right:auto; }
+            .gl-dot { width:14px; height:14px; }
+            .gl-body { height:4px; }
+            .gl-turn { width:4px; height:24px; }
+            .gl-banner h1 { font-size:1.4rem; }
+        }
+
+        /* 日期徽章 */
+        .gl-date {
+            display:inline-flex; align-items:center; gap:6px;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            color:#fff; padding:5px 14px 5px 12px;
+            border-radius:20px; font-size:0.82rem; font-weight:600;
+            margin-bottom:14px; box-shadow:0 3px 12px rgba(102,126,234,0.25);
+        }
+        .gl-date i { font-size:0.75rem; }
+
+        .gl-card h2 {
+            font-size:1.2rem; font-weight:700; color:#2c3e50;
+            margin:0 0 10px; line-height:1.4;
+        }
+        .gl-card p {
+            font-size:0.88rem; color:#888; line-height:1.7;
+            margin:0 0 14px;
+        }
+
+        /* 高亮框 */
+        .gl-highlight {
+            background:linear-gradient(135deg, rgba(102,126,234,0.06), rgba(118,75,162,0.06));
+            border-left:3px solid #667eea;
+            padding:12px 14px; border-radius:8px; margin-bottom:14px;
+            font-size:0.84rem; color:#666; line-height:1.6;
+        }
+        .gl-highlight strong { color:#667eea; }
+
+        /* 标签 */
+        .gl-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+        .gl-tag {
+            font-size:0.75rem; padding:3px 10px; border-radius:10px;
+            background:rgba(102,126,234,0.08); color:#667eea; font-weight:500;
+            transition:all 0.2s;
+        }
+        .gl-tag:hover { background:rgba(102,126,234,0.15); transform:translateY(-1px); }
+
+        /* 图片网格 */
+        .gl-images {
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
+            gap:10px; margin-top:4px;
+        }
+        .gl-img-wrap {
+            position:relative; border-radius:10px; overflow:hidden;
+            cursor:pointer; aspect-ratio:16/9;
+            transition:all 0.3s;
+        }
+        .gl-img-wrap img {
+            width:100%; height:100%; object-fit:cover;
+            transition:transform 0.4s;
+        }
+        .gl-img-wrap:hover img { transform:scale(1.08); }
+        .gl-img-wrap::after {
+            content:''; position:absolute; inset:0;
+            background:linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.3));
+            opacity:0; transition:opacity 0.3s;
+        }
+        .gl-img-wrap:hover::after { opacity:1; }
+        .gl-img-wrap .gl-img-icon {
+            position:absolute; bottom:8px; right:8px;
+            width:28px; height:28px; border-radius:8px;
+            background:rgba(0,0,0,0.45); color:#fff;
+            display:flex; align-items:center; justify-content:center;
+            font-size:11px; z-index:2; opacity:0; transition:opacity 0.3s;
+            backdrop-filter:blur(4px);
+        }
+        .gl-img-wrap:hover .gl-img-icon { opacity:1; }
+
+        /* 空状态 */
+        .gl-empty { text-align:center; padding:80px 20px; color:#bbb; }
+        .gl-empty i { font-size:3.5rem; display:block; margin-bottom:14px; opacity:0.3; }
+
+        /* Lightbox */
+        .gl-lb {
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.85); z-index:999999;
+            display:none; align-items:center; justify-content:center;
+            backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+            cursor:pointer;
+        }
+        .gl-lb.active { display:flex; }
+        .gl-lb img {
+            max-width:90vw; max-height:85vh; border-radius:12px;
+            box-shadow:0 20px 80px rgba(0,0,0,0.5);
+            animation:glLbIn 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes glLbIn { 0%{opacity:0;transform:scale(0.85)} 100%{opacity:1;transform:scale(1)} }
+        .gl-lb .gl-lb-close {
+            position:absolute; top:20px; right:30px;
+            width:44px; height:44px; border-radius:50%;
+            background:rgba(255,255,255,0.1); border:none;
+            color:#fff; font-size:20px; cursor:pointer;
+            display:flex; align-items:center; justify-content:center;
+            transition:background 0.2s;
+        }
+        .gl-lb .gl-lb-close:hover { background:rgba(255,255,255,0.2); }
+
+        /* 响应式 */
+        @media (max-width:768px) {
+            .gl-snake-svg { display:none; }
+            .gl-dot { left:28px !important; top:28px !important; }
+            .gl-dot::after { display:none; }
+            .gl-card { width:calc(100% - 70px) !important; margin-left:56px !important; }
+            .gl-banner h1 { font-size:1.4rem; }
+        }
+    </style>
+</head>
+<body data-components="navbar,footer">
+    <div id="app-navbar"></div>
+
+    <!-- Banner -->
+    <div class="gl-banner">
+        <div class="gl-banner-grid"></div>
+        <div class="gl-banner-content">
+            <div class="gl-banner-icon"><i class="fas fa-camera-retro"></i></div>
+            <h1>服务器回忆廊</h1>
+            <p>记录服务器从创立至今的每一个珍贵瞬间<br>见证我们的成长与变迁</p>
+        </div>
+    </div>
+
+    <div class="gl-container" id="glContainer">
+
+        <!-- 2020 -->
+        <div class="gl-era">✦ 2020 · 起源</div>
+        <div class="gl-grid">
+            <div class="gl-card featured">
+                <div class="tab">✦ 纪元开端</div>
+                <div class="stamp"><i class="far fa-calendar-alt"></i> 2020.05</div>
+                <h3>α 版测试 · 三五个人的起点</h3>
+                <p>仅 3~4 人的小团队，在简陋的生存基地里开启了万驹同源的第一段旅程。没有华丽的界面，只有最纯粹的 Minecraft。</p>
+                <div class="hl"><strong>那时还不知道</strong> 这个小小的测试服，将承载数百人的回忆。</div>
+                <div class="tags"><span>α 测试</span><span>创始团队</span><span>最初的起点</span></div>
+            </div>
+        </div>
+
+        <!-- 2021 -->
+        <div class="gl-era">◈ 2021 · 三度清档</div>
+        <div class="gl-grid">
+            <div class="gl-card">
+                <div class="tab">一周目</div>
+                <div class="stamp"><i class="far fa-calendar-alt"></i> 2021.02</div>
+                <h3>β2 版本 · 生存服一周目</h3>
+                <p>经过沉淀与打磨，一周目正式开启。玩家们从头开始，在新的土地上搭建家园。第一次以完整形态面向玩家。</p>
+                <div class="tags"><span>β2</span><span>一周目</span><span>生存服</span></div>
+            </div>
+            <div class="gl-card">
+                <div class="tab">二周目</div>
+                <div class="stamp"><i class="far fa-calendar-alt"></i> 2021.05</div>
+                <h3>β3 版本 · 生存服二周目</h3>
+                <p>清档重来，一切归零。新老玩家站在同一起跑线上重新冒险。每一次清档都是一次告别，也是一次全新的开始。</p>
+                <div class="tags"><span>β3</span><span>二周目</span><span>新起点</span></div>
+            </div>
+            <div class="gl-card featured">
+                <div class="tab">✦ 正式版</div>
+                <div class="stamp"><i class="far fa-calendar-alt"></i> 2021.08</div>
+                <h3>正式版发布 · 生存服三周目</h3>
+                <p>从 α 到 β，从测试到正式。更稳定的架构、更丰富的玩法，迎接更多玩家的到来。</p>
+                <div class="hl"><strong>正式启航，</strong> 故事才刚刚开始。</div>
+                <div class="tags"><span>正式版</span><span>三周目</span><span>全新阶段</span></div>
+            </div>
+        </div>
+
+        <!-- 2023 -->
+        <div class="gl-era">⚡ 2023 · 大更新时代</div>
+        <div class="gl-grid">
+            <div class="gl-card featured">
+                <div class="tab">✦ 四周目</div>
+                <div class="stamp"><i class="far fa-calendar-alt"></i> 2023.01</div>
+                <h3>V2.0 · 生存服四周目</h3>
+                <p>五大玩法齐上线：生存服粘液科技、创造服自由建造、RPG 故事体验、空岛生存挑战、云马国地图探索。</p>
+                <div class="hl"><strong>五种玩法，</strong> 总有一种适合你。</div>
+                <div class="tags"><span>V2.0</span><span>四周目</span><span>粘液科技</span><span>云马国</span></div>
+            </div>
+            <div class="gl-card featured">
+                <div class="tab">✦ 五周目</div>
+                <div class="stamp"><i class="far fa-calendar-alt"></i> 2023.11</div>
+                <h3>V3.0 · 生存服五周目</h3>
+                <p>最大的一次更新！三服重启、专属 HMCL 客户端、梦幻卡池、每日任务、全新菜单……一代玩家的共同回忆。</p>
+                <div class="hl"><strong>移除了 Herobrine（x）</strong></div>
+                <div class="tags"><span>V3.0</span><span>五周目</span><span>HMCL 客户端</span></div>
+            </div>
+        </div>
+
+        <!-- 2024-2025 -->
+        <div class="gl-era">◆ 2024-2025 · 活动之年</div>
+        <div class="gl-grid">
+            <div class="gl-card">
+                <div class="tab">小游戏</div>
+                <div class="stamp"><i class="far fa-calendar-alt"></i> 2024.07</div>
+                <h3>躲猫猫邀请赛</h3>
+                <p>首个玩家小游戏活动！旧姐妹城堡遗址上的躲猫猫大战，玩家在庄园地图上斗智斗勇，笑声充满整个服务器。</p>
+                <div class="hl"><strong>玩家好评如潮，</strong> 年度最受欢迎活动之一。</div>
+                <div class="tags"><span>社区活动</span><span>躲猫猫</span><span>小游戏</span></div>
+            </div>
+            <div class="gl-card">
+                <div class="tab">跨年</div>
+                <div class="stamp"><i class="far fa-calendar-alt"></i> 2025.01</div>
+                <h3>除夕「烟火派对」</h3>
+                <p>辞旧迎新之夜，玩家齐聚烟花派对服，手持烟花弩在璀璨烟火中对决。跨年钟声敲响时，屏幕前的笑脸是最温暖的画面。</p>
+                <div class="hl"><strong>感谢所有除夕上线一起跨年的玩家</strong></div>
+                <div class="tags"><span>除夕活动</span><span>烟火派对</span><span>跨年</span></div>
+            </div>
+        </div>
+
+        <!-- 2026 -->
+        <div class="gl-era">☆ 2026 · 新章</div>
+        <div class="gl-grid">
+            <div class="gl-card featured">
+                <div class="tab">✦ 六周目</div>
+                <div class="stamp"><i class="far fa-calendar-alt"></i> 2026.02</div>
+                <h3>六周目 &amp; 「万马奔腾」</h3>
+                <p>新年新气象，生存服第六次清档重启。万马奔腾庆典同步开启——40+ 赛道、竞速对抗，限定称号点燃全服热情。</p>
+                <div class="hl"><strong>六周目，</strong> 依然是那个熟悉的万驹同源。</div>
+                <div class="tags"><span>六周目</span><span>新年庆典</span><span>万马奔腾</span></div>
+            </div>
+            <div class="gl-card">
+                <div class="tab">模组</div>
+                <div class="stamp"><i class="far fa-calendar-alt"></i> 2026.04</div>
+                <h3>模组服测试开启</h3>
+                <p>首次进军模组领域！1.20.1 Forge 模组服搭载拔刀剑、暮色森林、女仆、机械动力等经典模组，吸引大批玩家尝鲜。</p>
+                <div class="hl"><strong>未来可期，</strong> 故事还在继续。</div>
+                <div class="tags"><span>模组服</span><span>Forge</span><span>暮色森林</span><span>拔刀剑</span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="gl-foot-wrap">
+        <div class="gl-foot">
+            &nbsp;
+        </div>
+    </div>
+
+    <div class="gl-empty" id="glEmpty" style="display:none;">
+        <i class="fas fa-images"></i>
+        <h3>暂无回忆内容</h3>
+        <p>服务器回忆廊正在建设中，敬请期待！</p>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="gl-lb" id="glLightbox" onclick="closeLightbox(event)">
+        <button class="gl-lb-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+        <img id="glLbImg" src="" alt="">
+    </div>
+
+    <div id="app-footer"></div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js?v=1.0"></script>
+    <script src="../components/loader.js"></script>
+    <script>
+        // 滚动入场
+        const ob = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('show');
+                }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.gl-card').forEach(el => ob.observe(el));
+
+        // Lightbox
+        window.openLightbox = function(wrap) {
+            const img = wrap.querySelector('img');
+            if (!img || !img.src) return;
+            document.getElementById('glLbImg').src = img.src;
+            document.getElementById('glLightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        window.closeLightbox = function(e) {
+            if (e && e.target !== e.currentTarget && e.target.closest('.gl-lb-close') === null && e.target.id !== 'glLightbox') return;
+            document.getElementById('glLightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>

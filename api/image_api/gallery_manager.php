@@ -9,17 +9,9 @@ require_once 'ImageManager.php';
 set_cors_headers();
 set_security_headers();
 
-if (!AuthHelper::validateToken()) {
-    json_response(false, '未提供认证令牌', null, 401);
-}
-
-$username = AuthHelper::getUsernameFromToken();
-$userManager = new UserManager();
-$user = $userManager->getUser($username);
-
-if (!$user || $user['role'] !== 'admin') {
-    json_response(false, '权限不足', null, 403);
-}
+// 验证管理员权限
+AuthHelper::requireAdmin();
+$user = AuthHelper::getCurrentUser();
 
 $imageManager = new ImageManager();
 

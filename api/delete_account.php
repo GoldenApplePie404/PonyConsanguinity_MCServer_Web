@@ -4,6 +4,7 @@ require_once 'config.php';
 require_once 'helper.php';
 require_once 'secure_data.php';
 require_once __DIR__ . '/../includes/security_logger.php';
+require_once '../includes/auth_helper.php';
 
 $securityLog = SecurityLogger::getInstance();
 
@@ -11,27 +12,8 @@ $securityLog = SecurityLogger::getInstance();
 set_cors_headers();
 set_security_headers();
 
-function getCurrentUser() {
-    $headers = getallheaders();
-    $token = $headers['Authorization'] ?? '';
-    
-    if (strpos($token, 'Bearer ') === 0) {
-        $token = substr($token, 7);
-    }
-    
-    if (empty($token)) {
-        return null;
-    }
-    
-    $sessions = secureReadData(SESSIONS_FILE);
-    return $sessions[$token] ?? null;
-}
-
-$user = getCurrentUser();
-
-if (!$user) {
-    json_response(false, '请先登录', null, 401);
-}
+$session = AuthHelper::requireLogin();
+$user = $session; // 保持变量名一致
 
 $data = get_post_data();
 $password = $data['password'] ?? '';
@@ -96,6 +78,16 @@ $userNotificationFile = dirname(__DIR__) . '/data/user_notifications/' . $userna
 if (file_exists($userNotificationFile)) {
     if (!unlink($userNotificationFile)) {
         json_response(false, '删除用户通知文件失败', null, 500);
+    }
+}
+
+// 清理收藏数据（点赞/帖子/回复保留）
+$bookmarksFile = dirname(__DIR__) . '/data/bookmarks.json';
+if (file_exists($bookmarksFile)) {
+    $bookmarks = json_decode(file_get_contents($bookmarksFile), true) ?: [];
+    if (isset($bookmarks[$username])) {
+        unset($bookmarks[$username]);
+        file_put_contents($bookmarksFile, json_encode($bookmarks, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
 }
 

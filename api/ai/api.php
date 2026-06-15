@@ -444,6 +444,20 @@ $knowledge = $kb->getFormattedKnowledge($userMessage);
 // 构建提示词
 $systemPrompt = $promptBuilder->buildPrompt($knowledge, $userMessage);
 
+// 如果前端传了 MCP 工具列表，追加到系统提示词中
+$mcpTools = $data['mcp_tools'] ?? [];
+if (!empty($mcpTools) && is_array($mcpTools)) {
+    $toolList = "";
+    foreach ($mcpTools as $tool) {
+        $toolList .= "- {$tool['name']}: {$tool['description']}\n";
+    }
+    if (!empty($toolList)) {
+        $systemPrompt .= "\n\n【MCP 工具】\n你可以使用以下 MCP 工具来帮助管理员/玩家完成操作：\n{$toolList}\n";
+        $systemPrompt .= "工具调用格式：在回复中单独一行写 TOOL_CALL:{\"name\":\"工具名\",\"arguments\":{...}}\n";
+        $systemPrompt .= "工具执行后系统会把结果告诉你，你再根据结果回答用户。\n";
+    }
+}
+
 // 调用 DeepSeek API
 $apiData = [
     'model' => $model,
@@ -467,8 +481,53 @@ if ($model === 'deepseek-reasoner') {
     unset($apiData['temperature']);
 }
 
-// 发送请求到 DeepSeek
-$ch = curl_init();
+// ── 流式模式：直接转发 SSE ──────────────────────────
+$stream = $data['stream'] ?? false;
+
+if ($stream) {
+    // 关闭输出缓冲，实现逐 token 转发
+    @ini_set('output_buffering', 'off');
+    @ini_set('zlib.output_compression', false);
+    while (ob_get_level()) ob_end_flush();
+
+    header('Content-Type: text/event-stream; charset=utf-8');
+    header('Cache-Control: no-cache');
+    header('Connection: keep-alive');
+    header('X-Accel-Buffering: no'); // nginx 兼容
+
+    $apiData['stream'] = true;
+
+    $ch = curl_init('https://api.deepseek.com/chat/completions');
+    curl_setopt_array($ch, [
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => json_encode($apiData),
+        CURLOPT_HTTPHEADER     => [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $apiKey
+        ],
+        CURLOPT_RETURNTRANSFER => false,
+        CURLOPT_TIMEOUT        => 60,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_WRITEFUNCTION  => function($ch, $chunk) use (&$sent) {
+            echo $chunk;
+            if (ob_get_level()) ob_flush();
+            flush();
+            return strlen($chunk);
+        }
+    ]);
+
+    curl_exec($ch);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    if ($curlError) {
+        echo "data: " . json_encode(['error' => $curlError]) . "\n\n";
+        echo "data: [DONE]\n\n";
+        flush();
+    }
+    exit;
+}
 curl_setopt($ch, CURLOPT_URL, 'https://api.deepseek.com/chat/completions');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);

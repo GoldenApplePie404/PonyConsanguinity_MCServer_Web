@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器资源站 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing:border-box; }
+        body { background:#f0f2f5; font-family:'Microsoft YaHei',Arial,sans-serif; }
+
+        /* Banner */
+        .rs-banner {
+            position:relative;
+            background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+            padding:64px 0 54px; text-align:center; overflow:hidden;
+        }
+        .rs-banner::before {
+            content:''; position:absolute; inset:0;
+            background:url('../assets/img/bg.webp') center/cover no-repeat;
+            opacity:0.12;
+        }
+        .rs-banner-grid {
+            position:absolute; inset:0;
+            background-image:
+                linear-gradient(rgba(102,126,234,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102,126,234,0.08) 1px, transparent 1px);
+            background-size:40px 40px;
+        }
+        .rs-banner-content { position:relative; z-index:2; }
+        .rs-banner-icon {
+            width:70px; height:70px; border-radius:18px;
+            background:linear-gradient(135deg,#43e97b,#38f9d7);
+            display:flex; align-items:center; justify-content:center;
+            margin:0 auto 18px; font-size:32px; color:#fff;
+            box-shadow:0 8px 30px rgba(67,233,123,0.3);
+        }
+        .rs-banner h1 { font-size:1.8rem; font-weight:700; color:#fff; margin:0 0 8px; letter-spacing:1px; }
+        .rs-banner p { font-size:0.95rem; color:rgba(255,255,255,0.65); margin:0; line-height:1.6; }
+
+        /* 内容 */
+        .rs-wrap { max-width:1200px; margin:0 auto; padding:32px 20px 60px; }
+
+        /* 统计栏 */
+        .rs-stats {
+            display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+            margin-bottom:28px;
+        }
+        .rs-stat {
+            background:rgba(255,255,255,0.92);
+            backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+            border-radius:12px; padding:18px 12px; text-align:center;
+            border:1px solid rgba(255,255,255,0.6);
+            transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        .rs-stat:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,0.04); }
+        .rs-stat .num {
+            font-size:1.6rem; font-weight:700;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            background-clip:text; margin-bottom:2px;
+        }
+        .rs-stat .lbl { font-size:0.78rem; color:#999; font-weight:500; }
+
+        /* 工具栏 */
+        .rs-toolbar {
+            display:flex; gap:14px; align-items:center;
+            margin-bottom:28px; flex-wrap:wrap;
+        }
+        .rs-search {
+            flex:1; min-width:200px; position:relative;
+        }
+        .rs-search i {
+            position:absolute; left:14px; top:50%; transform:translateY(-50%);
+            color:#bbb; font-size:14px;
+        }
+        .rs-search input {
+            width:100%; padding:10px 14px 10px 38px;
+            border:1.5px solid #e0e0e0; border-radius:10px;
+            font-size:13px; background:rgba(255,255,255,0.92);
+            backdrop-filter:blur(10px); transition:all 0.2s;
+        }
+        .rs-search input:focus {
+            outline:none; border-color:#667eea;
+            box-shadow:0 0 0 3px rgba(102,126,234,0.08);
+        }
+        .rs-filters { display:flex; gap:6px; flex-wrap:wrap; }
+        .rs-filters button {
+            padding:8px 16px; border:1.5px solid #e0e0e0; border-radius:8px;
+            background:rgba(255,255,255,0.85); color:#666;
+            font-size:12px; font-weight:500; cursor:pointer;
+            transition:all 0.2s;
+        }
+        .rs-filters button:hover { border-color:#667eea; color:#667eea; }
+        .rs-filters button.active {
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            color:#fff; border-color:transparent;
+        }
+
+        /* 分类标题 */
+        .rs-cat {
+            display:flex; align-items:center; gap:12px;
+            margin:36px 0 18px; padding-bottom:12px;
+            border-bottom:1px solid #e8e8e8;
+        }
+        .rs-cat:first-of-type { margin-top:0; }
+        .rs-cat .cat-icon {
+            width:36px; height:36px; border-radius:10px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:16px; color:#fff; flex-shrink:0;
+        }
+        .rs-cat h2 { font-size:1.15rem; font-weight:700; color:#2c3e50; margin:0; }
+        .rs-cat .cat-count { font-size:0.78rem; color:#bbb; margin-left:auto; }
+
+        /* 资源网格 */
+        .rs-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+            gap:16px;
+        }
+
+        /* 资源卡片 */
+        .rs-card {
+            background:rgba(255,255,255,0.92);
+            backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+            border-radius:14px; padding:20px 22px;
+            border:1px solid rgba(255,255,255,0.6);
+            box-shadow:0 2px 8px rgba(0,0,0,0.03);
+            transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+            opacity:0; transform:translateY(20px);
+        }
+        .rs-card.show { opacity:1; transform:translateY(0); }
+        .rs-card:hover {
+            transform:translateY(-4px);
+            box-shadow:0 12px 36px rgba(0,0,0,0.07);
+            border-color:#d0d8ff;
+        }
+        .rs-card .ico {
+            width:44px; height:44px; border-radius:11px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:20px; margin-bottom:14px;
+        }
+        .rs-card h3 { font-size:0.95rem; font-weight:700; color:#2c3e50; margin:0 0 5px; line-height:1.4; }
+        .rs-card p { font-size:0.8rem; color:#999; line-height:1.6; margin:0 0 12px; }
+        .rs-card .meta {
+            display:flex; gap:12px; font-size:0.75rem; color:#bbb; margin-bottom:10px;
+        }
+        .rs-card .meta span { display:flex; align-items:center; gap:4px; }
+        .rs-card .tags { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:14px; }
+        .rs-card .tags span {
+            font-size:0.66rem; padding:2px 8px; border-radius:6px;
+            background:rgba(102,126,234,0.07); color:#667eea; font-weight:500;
+        }
+        .rs-card .acts { display:flex; gap:8px; }
+        .rs-card .acts a {
+            flex:1; padding:8px; border-radius:8px;
+            font-size:12px; font-weight:600; text-decoration:none;
+            text-align:center; transition:all 0.2s;
+            display:flex; align-items:center; justify-content:center; gap:5px;
+        }
+        .rs-card .acts .primary {
+            background:linear-gradient(135deg,#667eea,#764ba2); color:#fff;
+        }
+        .rs-card .acts .primary:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(102,126,234,0.3); }
+        .rs-card .acts .secondary {
+            background:#f5f5f5; color:#666;
+        }
+        .rs-card .acts .secondary:hover { background:#eee; }
+
+        /* 空状态 */
+        .rs-empty { text-align:center; padding:60px 20px; color:#bbb; display:none; }
+        .rs-empty i { font-size:3rem; display:block; margin-bottom:10px; opacity:0.25; }
+
+        /* 响应式 */
+        @media (max-width:768px) {
+            .rs-stats { grid-template-columns:repeat(2,1fr); }
+            .rs-toolbar { flex-direction:column; align-items:stretch; }
+            .rs-grid { grid-template-columns:1fr; }
+            .rs-banner h1 { font-size:1.4rem; }
+        }
+    </style>
+</head>
+<body data-components="navbar,footer">
+    <div id="app-navbar"></div>
+
+    <!-- Banner -->
+    <div class="rs-banner">
+        <div class="rs-banner-grid"></div>
+        <div class="rs-banner-content">
+            <div class="rs-banner-icon"><i class="fas fa-cloud"></i></div>
+            <h1>服务器资源站</h1>
+            <p>提供服务器客户端、工具软件、教程文档等各类资源下载</p>
+        </div>
+    </div>
+
+    <div class="rs-wrap">
+        <!-- 统计 -->
+        <div class="rs-stats">
+            <div class="rs-stat"><div class="num">24</div><div class="lbl">资源总数</div></div>
+            <div class="rs-stat"><div class="num">1.2GB</div><div class="lbl">总容量</div></div>
+            <div class="rs-stat"><div class="num">5,680</div><div class="lbl">下载次数</div></div>
+            <div class="rs-stat"><div class="num">8</div><div class="lbl">分类</div></div>
+        </div>
+
+        <!-- 搜索筛选 -->
+        <div class="rs-toolbar">
+            <div class="rs-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="rsSearch" placeholder="搜索资源..." oninput="rsFilter()">
+            </div>
+            <div class="rs-filters">
+                <button class="active" data-cat="all" onclick="rsFilterCat(this)">全部</button>
+                <button data-cat="client" onclick="rsFilterCat(this)">客户端</button>
+                <button data-cat="tool" onclick="rsFilterCat(this)">工具</button>
+                <button data-cat="tutorial" onclick="rsFilterCat(this)">教程</button>
+                <button data-cat="media" onclick="rsFilterCat(this)">媒体</button>
+            </div>
+        </div>
+
+        <!-- 客户端 -->
+        <div class="rs-cat" data-category="client">
+            <div class="cat-icon" style="background:linear-gradient(135deg,#4facfe,#00f2fe);"><i class="fas fa-desktop"></i></div>
+            <h2>客户端下载</h2>
+            <span class="cat-count">3 个资源</span>
+        </div>
+        <div class="rs-grid" data-category="client">
+            <div class="rs-card">
+                <div class="ico" style="background:rgba(79,172,254,0.12);color:#4facfe;"><i class="fas fa-cube"></i></div>
+                <h3>官方整合包 - 最新版</h3>
+                <p>服务器官方整合包，包含所有必需模组和配置文件，开箱即用，推荐新手使用。</p>
+                <div class="meta"><span><i class="fas fa-download"></i> 1,234</span><span><i class="fas fa-hdd"></i> 450MB</span><span><i class="far fa-calendar-alt"></i> 2024-12-01</span></div>
+                <div class="tags"><span>1.20.1</span><span>Forge</span><span>推荐</span></div>
+                <div class="acts"><a href="#" class="primary"><i class="fas fa-download"></i> 下载</a><a href="#" class="secondary"><i class="fas fa-info-circle"></i> 详情</a></div>
+            </div>
+            <div class="rs-card">
+                <div class="ico" style="background:rgba(82,196,26,0.12);color:#52c41a;"><i class="fas fa-gamepad"></i></div>
+                <h3>纯净客户端</h3>
+                <p>官方原版客户端，无任何模组。适合喜欢原版体验的玩家。</p>
+                <div class="meta"><span><i class="fas fa-download"></i> 856</span><span><i class="fas fa-hdd"></i> 120MB</span><span><i class="far fa-calendar-alt"></i> 2024-11-15</span></div>
+                <div class="tags"><span>1.20.4</span><span>原版</span></div>
+                <div class="acts"><a href="#" class="primary"><i class="fas fa-download"></i> 下载</a><a href="#" class="secondary"><i class="fas fa-info-circle"></i> 详情</a></div>
+            </div>
+            <div class="rs-card">
+                <div class="ico" style="background:rgba(250,140,22,0.12);color:#fa8c16;"><i class="fas fa-mobile-alt"></i></div>
+                <h3>手机版客户端</h3>
+                <p>适用于手机玩家的基岩版客户端，支持跨平台联机。</p>
+                <div class="meta"><span><i class="fas fa-download"></i> 2,103</span><span><i class="fas fa-hdd"></i> 180MB</span><span><i class="far fa-calendar-alt"></i> 2024-10-20</span></div>
+                <div class="tags"><span>基岩版</span><span>移动端</span></div>
+                <div class="acts"><a href="#" class="primary"><i class="fas fa-download"></i> 下载</a><a href="#" class="secondary"><i class="fas fa-info-circle"></i> 详情</a></div>
+            </div>
+        </div>
+
+        <!-- 工具 -->
+        <div class="rs-cat" data-category="tool">
+            <div class="cat-icon" style="background:linear-gradient(135deg,#722ed1,#b37feb);"><i class="fas fa-tools"></i></div>
+            <h2>工具软件</h2>
+            <span class="cat-count">2 个资源</span>
+        </div>
+        <div class="rs-grid" data-category="tool">
+            <div class="rs-card">
+                <div class="ico" style="background:rgba(114,46,209,0.12);color:#722ed1;"><i class="fas fa-paint-brush"></i></div>
+                <h3>材质包制作工具</h3>
+                <p>专业的材质包编辑工具，支持实时预览和批量处理。</p>
+                <div class="meta"><span><i class="fas fa-download"></i> 567</span><span><i class="fas fa-hdd"></i> 85MB</span><span><i class="far fa-calendar-alt"></i> 2024-09-10</span></div>
+                <div class="tags"><span>工具</span><span>材质</span></div>
+                <div class="acts"><a href="#" class="primary"><i class="fas fa-download"></i> 下载</a><a href="#" class="secondary"><i class="fas fa-info-circle"></i> 详情</a></div>
+            </div>
+            <div class="rs-card">
+                <div class="ico" style="background:rgba(245,34,45,0.12);color:#f5222d;"><i class="fas fa-map"></i></div>
+                <h3>地图生成器</h3>
+                <p>自定义地图生成工具，支持多种地形和建筑模板。</p>
+                <div class="meta"><span><i class="fas fa-download"></i> 423</span><span><i class="fas fa-hdd"></i> 156MB</span><span><i class="far fa-calendar-alt"></i> 2024-08-25</span></div>
+                <div class="tags"><span>工具</span><span>地图</span></div>
+                <div class="acts"><a href="#" class="primary"><i class="fas fa-download"></i> 下载</a><a href="#" class="secondary"><i class="fas fa-info-circle"></i> 详情</a></div>
+            </div>
+        </div>
+
+        <!-- 教程 -->
+        <div class="rs-cat" data-category="tutorial">
+            <div class="cat-icon" style="background:linear-gradient(135deg,#4facfe,#00f2fe);"><i class="fas fa-book"></i></div>
+            <h2>教程文档</h2>
+            <span class="cat-count">3 个资源</span>
+        </div>
+        <div class="rs-grid" data-category="tutorial">
+            <div class="rs-card">
+                <div class="ico" style="background:rgba(79,172,254,0.12);color:#4facfe;"><i class="fas fa-file-alt"></i></div>
+                <h3>新手入门指南</h3>
+                <p>从零开始的教学文档，包含基础操作、生存技巧、常见问题解答。</p>
+                <div class="meta"><span><i class="fas fa-download"></i> 3,456</span><span><i class="fas fa-file"></i> PDF</span><span><i class="far fa-calendar-alt"></i> 2024-11-01</span></div>
+                <div class="tags"><span>教程</span><span>新手</span><span>必读</span></div>
+                <div class="acts"><a href="#" class="primary"><i class="fas fa-download"></i> 下载</a><a href="#" class="secondary"><i class="fas fa-eye"></i> 查看</a></div>
+            </div>
+            <div class="rs-card">
+                <div class="ico" style="background:rgba(82,196,26,0.12);color:#52c41a;"><i class="fas fa-cogs"></i></div>
+                <h3>服务器设置教程</h3>
+                <p>详细的服务器配置教程，包含各种参数说明和优化建议。</p>
+                <div class="meta"><span><i class="fas fa-download"></i> 1,234</span><span><i class="fas fa-file"></i> PDF</span><span><i class="far fa-calendar-alt"></i> 2024-10-15</span></div>
+                <div class="tags"><span>教程</span><span>进阶</span></div>
+                <div class="acts"><a href="#" class="primary"><i class="fas fa-download"></i> 下载</a><a href="#" class="secondary"><i class="fas fa-eye"></i> 查看</a></div>
+            </div>
+            <div class="rs-card">
+                <div class="ico" style="background:rgba(250,140,22,0.12);color:#fa8c16;"><i class="fas fa-video"></i></div>
+                <h3>建筑技巧视频教程</h3>
+                <p>专业建筑师的技巧分享视频，从基础到高级的完整教程。</p>
+                <div class="meta"><span><i class="fas fa-download"></i> 2,890</span><span><i class="fas fa-film"></i> MP4</span><span><i class="far fa-calendar-alt"></i> 2024-09-20</span></div>
+                <div class="tags"><span>教程</span><span>视频</span><span>建筑</span></div>
+                <div class="acts"><a href="#" class="primary"><i class="fas fa-download"></i> 下载</a><a href="#" class="secondary"><i class="fas fa-play"></i> 播放</a></div>
+            </div>
+        </div>
+
+        <!-- 媒体 -->
+        <div class="rs-cat" data-category="media">
+            <div class="cat-icon" style="background:linear-gradient(135deg,#ed6ea0,#ec8c69);"><i class="fas fa-image"></i></div>
+            <h2>媒体资源</h2>
+            <span class="cat-count">2 个资源</span>
+        </div>
+        <div class="rs-grid" data-category="media">
+            <div class="rs-card">
+                <div class="ico" style="background:rgba(114,46,209,0.12);color:#722ed1;"><i class="fas fa-images"></i></div>
+                <h3>服务器宣传图</h3>
+                <p>高清服务器宣传图片，包含 LOGO、场景截图等素材。</p>
+                <div class="meta"><span><i class="fas fa-download"></i> 678</span><span><i class="fas fa-hdd"></i> 25MB</span><span><i class="far fa-calendar-alt"></i> 2024-08-10</span></div>
+                <div class="tags"><span>图片</span><span>宣传</span></div>
+                <div class="acts"><a href="#" class="primary"><i class="fas fa-download"></i> 下载</a><a href="#" class="secondary"><i class="fas fa-eye"></i> 预览</a></div>
+            </div>
+            <div class="rs-card">
+                <div class="ico" style="background:rgba(245,34,45,0.12);color:#f5222d;"><i class="fas fa-music"></i></div>
+                <h3>服务器背景音乐</h3>
+                <p>精选的游戏背景音乐合集，营造更好的游戏氛围。</p>
+                <div class="meta"><span><i class="fas fa-download"></i> 534</span><span><i class="fas fa-hdd"></i> 156MB</span><span><i class="far fa-calendar-alt"></i> 2024-07-25</span></div>
+                <div class="tags"><span>音频</span><span>音乐</span></div>
+                <div class="acts"><a href="#" class="primary"><i class="fas fa-download"></i> 下载</a><a href="#" class="secondary"><i class="fas fa-play"></i> 试听</a></div>
+            </div>
+        </div>
+
+        <div class="rs-empty" id="rsEmpty">
+            <i class="fas fa-box-open"></i>
+            <h3>暂无相关资源</h3>
+            <p>该分类下暂无资源，敬请期待！</p>
+        </div>
+    </div>
+
+    <div id="app-footer"></div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/navbar.js?v=1.0"></script>
+    <script src="../components/loader.js"></script>
+    <script>
+        // 滚动入场
+        const ob = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.rs-card').forEach(el => ob.observe(el));
+
+        // 分类筛选
+        window.rsFilterCat = function(btn) {
+            document.querySelectorAll('.rs-filters button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cat = btn.dataset.cat;
+            document.querySelectorAll('.rs-cat, .rs-grid[data-category]').forEach(el => {
+                el.style.display = (cat === 'all' || el.dataset.category === cat) ? '' : 'none';
+            });
+            document.getElementById('rsEmpty').style.display =
+                document.querySelector('.rs-grid:not([style*="none"])') ? 'none' : 'block';
+        };
+
+        // 搜索
+        window.rsFilter = function() {
+            const q = document.getElementById('rsSearch').value.toLowerCase();
+            document.querySelectorAll('.rs-card').forEach(card => {
+                card.style.display = (card.textContent.toLowerCase().includes(q)) ? '' : 'none';
+            });
+        };
+    </script>
+</body>
+</html>

@@ -87,6 +87,11 @@
                             <h2>最新帖子</h2>
                         </div>
                         <div class="card-body">
+                            <!-- 搜索框 -->
+                            <div class="forum-search-bar" style="margin-bottom: 20px; display: flex; gap: 10px;">
+                                <input type="text" id="forum-search-input" placeholder="搜索帖子标题..." style="flex: 1; padding: 10px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s;" oninput="searchPosts(this.value)">
+                                <button class="btn btn-primary" onclick="searchPosts(document.getElementById('forum-search-input').value)" style="padding: 10px 20px;"><i class="fas fa-search"></i> 搜索</button>
+                            </div>
                             <!-- 帖子列表 -->
                             <div id="forum-posts">
                                 <div class="forum-post">
@@ -219,13 +224,23 @@
         const postsPerPage = 10;
         let allPosts = [];
         let filteredPosts = [];
+        let searchKeyword = '';
+        let likesCache = {};      // {postId: {liked: bool, total: int}}
+        let bookmarksCache = {};  // {postId: {bookmarked: bool, total: int}}
 
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', () => {
             loadPosts();
+            loadLikesStatus().then(() => {
+                // 点赞状态加载完后重新渲染以显示正确数据
+                displayPosts();
+            });
+            loadBookmarksStatus().then(() => {
+                displayPosts();
+            });
             updateLoginButton();
-            initTitleCharCount();  // 初始化标题字数统计
-            initVditorEditor();  // 初始化 Vditor 编辑器组件
+            initTitleCharCount();
+            initVditorEditor();
             initAnnouncementBar();
             initCategoryTabs();
             initImageUpload();
@@ -338,25 +353,29 @@
 
         // 按分类过滤帖子
         function filterPostsByCategory(category) {
-            if (category === 'all') {
-                // 显示所有帖子
-                filteredPosts = allPosts;
-            } else {
-                // 只显示指定分类的帖子
-                filteredPosts = allPosts.filter(post => post.forum === category);
+            let filtered = allPosts;
+
+            // 分类过滤
+            if (category !== 'all') {
+                filtered = filtered.filter(post => post.forum === category);
             }
 
-            // 重置到第一页
+            // 关键词过滤
+            if (searchKeyword) {
+                filtered = filtered.filter(post =>
+                    post.title.toLowerCase().includes(searchKeyword)
+                );
+            }
+
+            filteredPosts = filtered;
+
             currentPage = 1;
-
-            // 显示过滤后的帖子
             displayPosts();
-
-            // 生成分页控件
             generatePagination();
 
-            // 显示提示信息
-            if (filteredPosts.length === 0) {
+            if (filteredPosts.length === 0 && searchKeyword) {
+                showToast(`没有找到包含"${searchKeyword}"的帖子`, 'info');
+            } else if (filteredPosts.length === 0) {
                 showToast(`"${getCategoryName(category)}"分类下暂无帖子`, 'info');
             }
         }
@@ -382,7 +401,143 @@
             return categoryColors[category] || '#95a5a6';
         }
 
-        // 删除帖子
+        // 搜索帖子
+        function searchPosts(keyword) {
+            searchKeyword = keyword.trim().toLowerCase();
+            
+            // 获取当前选中的分类
+            const activeTab = document.querySelector('.tab.active');
+            const category = activeTab ? activeTab.getAttribute('data-tab') : 'all';
+
+            if (!searchKeyword) {
+                // 空关键词时按当前分类显示
+                filterPostsByCategory(category);
+                return;
+            }
+
+            // 从 allPosts 中搜索
+            filteredPosts = allPosts.filter(post => {
+                // 分类过滤
+                if (category !== 'all' && post.forum !== category) return false;
+                // 标题关键词过滤
+                return post.title.toLowerCase().includes(searchKeyword);
+            });
+
+            currentPage = 1;
+            displayPosts();
+            generatePagination();
+
+            if (filteredPosts.length === 0) {
+                showToast(`没有找到包含"${keyword}"的帖子`, 'info');
+            }
+        }
+
+        // 切换点赞
+        async function toggleLike(postId, btn) {
+            if (!isLoggedin()) {
+                showToast('请先登录', 'error');
+                return;
+            }
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('../api/forum/like.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ post_id: postId })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    likesCache[postId] = result.data;
+                    updateLikeBtn(btn, result.data.liked, result.data.total);
+                }
+            } catch (e) {
+                console.error('点赞失败:', e);
+            }
+        }
+
+        // 切换收藏
+        async function toggleBookmark(postId, btn) {
+            if (!isLoggedin()) {
+                showToast('请先登录', 'error');
+                return;
+            }
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('../api/forum/bookmark.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ post_id: postId })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    bookmarksCache[postId] = result.data;
+                    updateBookmarkBtn(btn, result.data.bookmarked);
+                }
+            } catch (e) {
+                console.error('收藏失败:', e);
+            }
+        }
+
+        function updateLikeBtn(btn, liked, total) {
+            btn.innerHTML = '<i class="' + (liked ? 'fas' : 'far') + ' fa-thumbs-up"></i> ' + total;
+            btn.className = 'btn-like' + (liked ? ' liked' : '');
+        }
+
+        function updateBookmarkBtn(btn, bookmarked) {
+            btn.innerHTML = bookmarked ? '<i class="fas fa-bookmark"></i>' : '<i class="far fa-bookmark"></i>';
+            btn.className = 'btn-bookmark' + (bookmarked ? ' bookmarked' : '');
+        }
+
+        // 加载点赞状态（批量）
+        async function loadLikesStatus() {
+            if (!isLoggedin()) return;
+            try {
+                const token = localStorage.getItem('authToken');
+                // 获取用户点赞列表
+                const res = await fetch('../api/forum/like.php?action=list', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    data.data.likes.forEach(pid => {
+                        if (!likesCache[pid]) likesCache[pid] = {};
+                        likesCache[pid].liked = true;
+                    });
+                }
+                // 获取点赞统计
+                const statsRes = await fetch('../api/forum/like.php?action=stats');
+                const statsData = await statsRes.json();
+                if (statsData.success) {
+                    Object.keys(statsData.data.stats).forEach(pid => {
+                        if (!likesCache[pid]) likesCache[pid] = {};
+                        likesCache[pid].total = statsData.data.stats[pid];
+                    });
+                }
+            } catch (e) { console.error('加载点赞状态失败:', e); }
+        }
+
+        // 加载收藏状态
+        async function loadBookmarksStatus() {
+            if (!isLoggedin()) return;
+            try {
+                const token = localStorage.getItem('authToken');
+                const res = await fetch('../api/forum/bookmark.php?action=list', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    data.data.bookmarks.forEach(p => {
+                        bookmarksCache[p.id] = { bookmarked: true };
+                    });
+                }
+            } catch (e) { console.error('加载收藏状态失败:', e); }
+        }
         async function deletePost(postId, postAuthor) {
             try {
                 // 获取当前用户
@@ -539,18 +694,33 @@
                 const categoryName = getCategoryName(post.forum);
                 const categoryColor = getCategoryColor(post.forum);
 
+                const currentUser = getCurrentUser();
+                const isAuthor = currentUser && currentUser.username === post.author;
+                const isAdmin = currentUser && currentUser.role === 'admin';
+
                 postElement.innerHTML = `
-                    <h3>
-                        <a href="post-detail.html?id=${post.id}">${post.title}</a>
-                        <span class="post-category" style="background: ${categoryColor};">${categoryName}</span>
-                    </h3>
+                    <div class="forum-post-header">
+                        <h3>
+                            <a href="post-detail.html?id=${post.id}">${post.title}</a>
+                            <span class="post-category" style="background: ${categoryColor};">${categoryName}</span>
+                        </h3>
+                        <div class="forum-post-actions-right">
+                            <button class="btn-like ${likesCache[post.id]?.liked ? 'liked' : ''}" onclick="toggleLike('${post.id}', this)" title="点赞">
+                                <i class="${likesCache[post.id]?.liked ? 'fas' : 'far'} fa-thumbs-up"></i>
+                                <span class="like-count-${post.id}">${likesCache[post.id]?.total || 0}</span>
+                            </button>
+                            <button class="btn-bookmark ${bookmarksCache[post.id]?.bookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark('${post.id}', this)" title="收藏">
+                                <i class="${bookmarksCache[post.id]?.bookmarked ? 'fas' : 'far'} fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
                     <p class="post-meta">作者: ${post.author} | 浏览: ${post.views} | ${post.created_at}</p>
                     <div class="post-content-container">
                         <p class="post-content">${truncatedContent}</p>
                     </div>
                     <div class="post-actions">
-                        <button class="btn btn-sm btn-primary" style="margin-right: 10px;" onclick="window.location.href='post-detail.html?id=${post.id}'">查看详情</button>
-                        <button class="btn btn-sm btn-outline" style="color: #e74c3c;" onclick="deletePost('${post.id}', '${post.author}')">删除</button>
+                        <button class="btn btn-sm btn-primary" onclick="window.location.href='post-detail.html?id=${post.id}'">查看详情</button>
+                        ${(isAdmin || isAuthor) ? `<button class="btn btn-sm btn-outline" style="color: #e74c3c;" onclick="deletePost('${post.id}', '${post.author}')">删除</button>` : ''}
                     </div>
                 `;
                 postsContainer.appendChild(postElement);
@@ -794,11 +964,12 @@
         }
 
 
+        // ── 投票问卷 ──
         // 提交新帖
         async function submitNewPost() {
             const title = document.getElementById('post-title').value;
             const forum = document.getElementById('post-forum').value;
-            const content = VditorEditor.getValue();  // 从组件获取 Markdown 内容
+            const content = VditorEditor.getValue();
 
             if (!title || !content) {
                 showToast('请填写标题和内容', 'error');
@@ -806,19 +977,15 @@
             }
 
             try {
-                // 获取当前用户
                 const currentUser = getCurrentUser();
                 if (!currentUser) {
                     showToast('请先登录', 'error');
                     return;
                 }
 
-                // 发送请求到 PHP API
                 const response = await fetch('../api/forum.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         title: title,
                         forum: forum,

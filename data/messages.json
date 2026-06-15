@@ -1,0 +1,38 @@
+{
+    "conversations": {
+        "p_GoldenApplePie_ゴールデンアップルパイ": {
+            "type": "private",
+            "participants": [
+                "GoldenApplePie",
+                "ゴールデンアップルパイ"
+            ],
+            "created_at": "2026-06-11 14:11:33",
+            "last_message": null,
+            "last_time": "",
+            "unread": {
+                "GoldenApplePie": 0,
+                "ゴールデンアップルパイ": 0
+            }
+        },
+        "g_1781187107_1602": {
+            "type": "group",
+            "name": "测试群",
+            "participants": [
+                "GoldenApplePie",
+                "ゴールデンアップルパイ"
+            ],
+            "created_at": "2026-06-11 14:11:47",
+            "created_by": "GoldenApplePie",
+            "last_message": null,
+            "last_time": "",
+            "unread": {
+                "GoldenApplePie": 0,
+                "ゴールデンアップルパイ": 0
+            }
+        }
+    },
+    "messages": {
+        "p_GoldenApplePie_ゴールデンアップルパイ": [],
+        "g_1781187107_1602": []
+    }
+}

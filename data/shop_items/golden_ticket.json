@@ -1,0 +1,16 @@
+{
+    "id": "golden_ticket",
+    "name": "黄金券兑换",
+    "description": "使用后可获得黄金券 x1，可在游戏内获得50黄金券。",
+    "price": 500,
+    "stock": -1,
+    "status": "on_sale",
+    "level_requirement": 0,
+    "style": "fa-ticket-alt",
+    "category": "hot",
+    "sold": 0,
+    "effect": {
+        "type": "points",
+        "value": 50
+    }
+}

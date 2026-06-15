@@ -2,6 +2,7 @@
 require_once 'config.php';
 require_once 'helper.php';
 require_once 'secure_data.php';
+require_once '../includes/auth_helper.php';
 
 // 设置 CORS 和安全头
 set_cors_headers();
@@ -12,22 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     json_response(false, '只允许 GET 请求', null, 405);
 }
 
-// 获取 token
-$headers = getallheaders();
-$token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : '';
-
-if (!$token) {
-    json_response(false, '未提供认证令牌', null, 401);
-}
-
-// 读取会话数据
-$sessions = secureReadData(SESSIONS_FILE);
-
-if (!isset($sessions[$token])) {
-    json_response(false, '令牌无效或已过期', null, 401);
-}
-
-$session = $sessions[$token];
+// 验证登录
+$session = AuthHelper::requireLogin();
 $username = $session['username'];
 
 // 查找用户

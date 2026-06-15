@@ -6,20 +6,14 @@
 
 require_once 'config.php';
 require_once 'helper.php';
+require_once '../includes/auth_helper.php';
 
 // 设置 CORS 和安全头
 set_cors_headers();
 set_security_headers();
 
-// 检查用户是否已登录（可选，根据实际需求调整）
-/*
-session_start();
-if (!isset($_SESSION['username'])) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => '未授权访问']);
-    exit;
-}
-*/
+// 所有公告操作都需要管理员权限
+AuthHelper::requireAdmin();
 
 // 公告数据文件路径
 $announcementsFile = '../data/announcements.json';

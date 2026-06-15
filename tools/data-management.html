@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据管理 - 万驹同源</title>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <link rel="stylesheet" href="../css/modal.css?v=1.0">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <link rel="stylesheet" href="../css/data-management.css">
+    <style>
+        /* 主布局 */
+        .data-management-container {
+            display: flex;
+            max-width: 1600px;
+            margin: 80px auto 20px auto;
+            padding: 24px;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        /* 左侧导航栏 */
+        .data-sidebar {
+            width: 200px;
+            background: #f5f7fa;
+            border-radius: 8px;
+            padding: 20px 0;
+            border: 1px solid #e4e7ed;
+            flex-shrink: 0;
+            position: sticky;
+            top: 104px;
+        }
+
+        .data-sidebar h3 {
+            margin: 0 20px 20px 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e4e7ed;
+            color: #303133;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .data-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #606266;
+            text-decoration: none;
+            margin: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .data-nav-item:hover {
+            background: #ecf5ff;
+            color: #409EFF;
+        }
+
+        .data-nav-item.active {
+            background: #ecf5ff;
+            color: #409EFF;
+        }
+
+        .data-nav-item i {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        /* 右侧内容区 */
+        .data-content {
+            flex: 1;
+            min-width: 0;
+            background: white;
+            border-radius: 4px;
+            padding: 24px;
+            border: 1px solid #e4e7ed;
+        }
+
+        /* 数据卡片 */
+        .data-card {
+            background: #ffffff;
+            border: 1px solid #e4e7ed;
+        }
+
+        .data-card h2 {
+            margin: 0;
+            color: #303133;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e4e7ed;
+            font-weight: 600;
+            background: #fafafa;
+        }
+
+        .data-card h2 i {
+            color: #409EFF;
+            font-size: 16px;
+        }
+
+        /* 表格容器 */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* 数据表格 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .data-table thead {
+            background: transparent;
+        }
+
+        .data-table th {
+            padding: 12px 24px;
+            text-align: left;
+            font-weight: 400;
+            color: #c0c4cc;
+            font-size: 13px;
+            border: none;
+            border-bottom: 1px solid #e4e7ed;
+        }
+
+        .data-table td {
+            padding: 14px 24px;
+            border-bottom: 1px solid #ebeef5;
+            color: #606266;
+            font-size: 14px;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #409EFF;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #66b1ff;
+        }
+
+        .btn-success {
+            background: #67C23A;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #85ce61;
+        }
+
+        .btn-info {
+            background: #909399;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #a6a9ad;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid #dcdfe6;
+            color: #606266;
+        }
+
+        .btn-outline:hover {
+            border-color: #409EFF;
+            color: #409EFF;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        /* 备份卡片 */
+        .backup-card {
+            background: #f5f7fa;
+            border: 1px solid #e4e7ed;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .backup-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecf5ff;
+            border-radius: 8px;
+            color: #409EFF;
+            font-size: 24px;
+        }
+
+        .backup-card h3 {
+            margin: 0 0 10px 0;
+            color: #303133;
+            font-size: 16px;
+        }
+
+        .backup-card p {
+            color: #909399;
+            margin: 0 0 20px 0;
+            font-size: 14px;
+        }
+
+        /* 进度条 */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e4e7ed;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #67C23A;
+            width: 0%;
+        }
+
+        .status-text {
+            color: #909399;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* 文件列表 */
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border: 1px solid #e4e7ed;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            background: #ffffff;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecf5ff;
+            border-radius: 4px;
+            color: #409EFF;
+            font-size: 16px;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #303133;
+            font-size: 14px;
+        }
+
+        .file-size {
+            color: #909399;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .data-management-container {
+                flex-direction: column;
+                padding: 16px;
+            }
+
+            .data-sidebar {
+                width: 100%;
+                padding: 16px 0;
+                position: static;
+            }
+
+            .data-sidebar h3 {
+                margin: 0 20px 16px 20px;
+            }
+
+            .data-nav-item {
+                display: inline-flex;
+                margin: 4px 8px;
+            }
+
+            .data-content {
+                padding: 20px;
+            }
+
+            .data-table {
+                min-width: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .data-management-container {
+                padding: 12px;
+                gap: 16px;
+            }
+
+            .data-content {
+                padding: 16px;
+            }
+
+            .data-card {
+                padding: 16px;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+            
+            .btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body data-components="backToTop,navbar,footer">
+    <div id="app-navbar"></div>
+    
+    <div class="data-management-page">
+        <div class="data-management-container">
+            <!-- 左侧导航栏 -->
+            <div class="data-sidebar">
+                <h3>数据管理</h3>
+                <a class="data-nav-item active" onclick="switchTab('posts')">
+                    <i class="fas fa-file-alt"></i>帖子数据
+                </a>
+                <a class="data-nav-item" onclick="switchTab('replies')">
+                    <i class="fas fa-comments"></i>回复数据
+                </a>
+                <a class="data-nav-item" onclick="switchTab('users')">
+                    <i class="fas fa-users"></i>用户数据
+                </a>
+                <a class="data-nav-item" onclick="switchTab('backup')">
+                    <i class="fas fa-download"></i>数据备份
+                </a>
+            </div>
+
+            <!-- 右侧内容区 -->
+            <div class="data-content">
+                <!-- 帖子数据 -->
+                <div id="posts" class="data-section">
+                    <div class="data-card">
+                        <h2><i class="fas fa-file-alt"></i> 帖子列表</h2>
+                        <div class="table-responsive">
+                            <table class="data-table" id="posts-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>标题</th>
+                                        <th>作者</th>
+                                        <th>发布时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="5" style="text-align: center; padding: 40px;">加载中...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 回复数据 -->
+                <div id="replies" class="data-section" style="display: none;">
+                    <div class="data-card">
+                        <h2><i class="fas fa-comments"></i> 回复列表</h2>
+                        <div class="table-responsive">
+                            <table class="data-table" id="replies-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>内容</th>
+                                        <th>作者</th>
+                                        <th>时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="5" style="text-align: center; padding: 40px;">加载中...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 用户数据 -->
+                <div id="users" class="data-section" style="display: none;">
+                    <div class="data-card">
+                        <h2><i class="fas fa-users"></i> 用户列表</h2>
+                        <div class="table-responsive">
+                            <table class="data-table" id="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>用户名</th>
+                                        <th>邮箱</th>
+                                        <th>角色</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="5" style="text-align: center; padding: 40px;">加载中...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数据备份 -->
+                <div id="backup" class="data-section" style="display: none;">
+                    <div class="backup-card">
+                        <div class="backup-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <h3>数据备份</h3>
+                        <p>打包下载所有数据文件，包括帖子、回复、用户等信息</p>
+                        <button class="btn btn-primary" onclick="startBackup()">
+                            <i class="fas fa-download"></i> 开始备份
+                        </button>
+                        <div class="backup-status" id="backup-status" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="backup-progress"></div>
+                            </div>
+                            <p class="status-text" id="backup-status-text">准备中...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数据详情模态框 -->
+    <div class="modal" id="data-detail-modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="modal-title">数据详情</h2>
+                <button class="modal-close" onclick="closeModal('data-detail-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-content">加载中...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('data-detail-modal')">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-footer"></div>
+    <div id="app-back-to-top"></div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('数据管理页面加载');
+            console.log('localStorage authToken:', localStorage.getItem('authToken'));
+            console.log('localStorage currentUser:', localStorage.getItem('currentUser'));
+            
+            if (!checkAdminPermission()) {
+                return;
+            }
+            loadDataTables();
+        });
+
+        // 检查管理员权限
+        function checkAdminPermission() {
+            const currentUser = getCurrentUser();
+            if (!currentUser || currentUser.role !== 'admin') {
+                showToast('权限不足，需要管理员权限', 'error');
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 1500);
+                return false;
+            }
+            return true;
+        }
+
+        // 获取 API Token
+        function getApiToken() {
+            return localStorage.getItem('authToken');
+        }
+
+        // 切换选项卡
+        function switchTab(tabId) {
+            // 隐藏所有部分
+            document.querySelectorAll('.data-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // 移除所有按钮的激活状态
+            document.querySelectorAll('.data-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // 显示目标部分
+            document.getElementById(tabId).style.display = 'block';
+
+            // 激活对应按钮
+            event.target.closest('.data-nav-item').classList.add('active');
+        }
+
+        // 加载数据表格
+        async function loadDataTables() {
+            const token = getApiToken();
+            console.log('加载数据表格，token:', token ? token.substring(0, 8) + '...' : 'none');
+            
+            try {
+                const response = await fetch('../api/admin/data_api.php?action=categories&token=' + token);
+                console.log('API 响应状态:', response.status);
+                
+                const result = await response.json();
+                console.log('API 响应数据:', result);
+
+                if (!result.success) {
+                    showToast(result.message || '加载数据失败', 'error');
+                    return;
+                }
+
+                if (result.success) {
+                    renderPostsTable(result.data.posts || []);
+                    renderRepliesTable(result.data.replies || []);
+                    renderUsersTable(result.data.users || []);
+                }
+            } catch (error) {
+                console.error('加载数据表格失败:', error);
+                showToast('网络错误', 'error');
+            }
+        }
+
+        // 渲染帖子表格
+        function renderPostsTable(posts) {
+            const tbody = document.querySelector('#posts-table tbody');
+            if (!posts || posts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #999;">暂无数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = posts.slice(0, 100).map(post => `
+                <tr>
+                    <td>${post.id || '-'}</td>
+                    <td>${post.title || '无标题'}</td>
+                    <td>${post.author || '匿名'}</td>
+                    <td>${post.date || '-'}</td>
+                    <td>
+                        <button class="btn btn-info btn-sm" onclick="viewPostDetail('${post.id}')">
+                            <i class="fas fa-eye"></i> 查看
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 渲染回复表格
+        function renderRepliesTable(replies) {
+            const tbody = document.querySelector('#replies-table tbody');
+            if (!replies || replies.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #999;">暂无数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = replies.slice(0, 100).map(reply => `
+                <tr>
+                    <td>${reply.id || '-'}</td>
+                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${reply.content || '-'}</td>
+                    <td>${reply.author || '匿名'}</td>
+                    <td>${reply.date || '-'}</td>
+                    <td>
+                        <button class="btn btn-info btn-sm" onclick="viewReplyDetail('${reply.id}')">
+                            <i class="fas fa-eye"></i> 查看
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 渲染用户表格
+        function renderUsersTable(users) {
+            const tbody = document.querySelector('#users-table tbody');
+            if (!users || users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #999;">暂无数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.id || '-'}</td>
+                    <td>${user.username || '-'}</td>
+                    <td>${user.email || '-'}</td>
+                    <td><span style="padding: 4px 12px; background: ${user.role === 'admin' ? '#e3f2fd' : '#f5f5f5'}; color: ${user.role === 'admin' ? '#2196F3' : '#666'}; border-radius: 4px; font-size: 12px;">${user.role || 'user'}</span></td>
+                    <td>
+                        <button class="btn btn-info btn-sm" onclick="viewUserDetail('${user.id}')">
+                            <i class="fas fa-eye"></i> 查看
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 查看详情
+        function viewPostDetail(id) {
+            openModal('data-detail-modal');
+            document.getElementById('modal-title').textContent = '帖子详情';
+            document.getElementById('modal-content').innerHTML = '<div style="padding: 40px; text-align: center; color: #999;">加载中...</div>';
+            
+            const token = getApiToken();
+            fetch(`../api/admin/data_api.php?action=post&id=${id}&token=${token}`)
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        const post = result.data;
+                        document.getElementById('modal-content').innerHTML = `
+                            <div style="padding: 20px;">
+                                <h3 style="margin-bottom: 20px; color: #333;">${post.title || '无标题'}</h3>
+                                <div style="margin-bottom: 20px; color: #666;">
+                                    <p><strong>ID:</strong> ${post.id || '-'}</p>
+                                    <p><strong>作者:</strong> ${post.author || '-'}</p>
+                                    <p><strong>发布时间:</strong> ${post.date || '-'}</p>
+                                </div>
+                                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; color: #333; line-height: 1.8;">
+                                    ${post.content || '无内容'}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+        }
+
+        function viewReplyDetail(id) {
+            openModal('data-detail-modal');
+            document.getElementById('modal-title').textContent = '回复详情';
+            document.getElementById('modal-content').innerHTML = '<div style="padding: 40px; text-align: center; color: #999;">加载中...</div>';
+            
+            const token = getApiToken();
+            fetch(`../api/admin/data_api.php?action=reply&id=${id}&token=${token}`)
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        const reply = result.data;
+                        document.getElementById('modal-content').innerHTML = `
+                            <div style="padding: 20px;">
+                                <div style="margin-bottom: 20px; color: #666;">
+                                    <p><strong>ID:</strong> ${reply.id || '-'}</p>
+                                    <p><strong>作者:</strong> ${reply.author || '-'}</p>
+                                    <p><strong>时间:</strong> ${reply.date || '-'}</p>
+                                </div>
+                                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; color: #333; line-height: 1.8;">
+                                    ${reply.content || '无内容'}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+        }
+
+        function viewUserDetail(id) {
+            openModal('data-detail-modal');
+            document.getElementById('modal-title').textContent = '用户详情';
+            document.getElementById('modal-content').innerHTML = '<div style="padding: 40px; text-align: center; color: #999;">加载中...</div>';
+            
+            const token = getApiToken();
+            fetch(`../api/admin/data_api.php?action=user&id=${id}&token=${token}`)
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        const user = result.data;
+                        document.getElementById('modal-content').innerHTML = `
+                            <div style="padding: 20px;">
+                                <h3 style="margin-bottom: 20px; color: #333;">${user.username || '未知用户'}</h3>
+                                <div style="display: grid; gap: 15px;">
+                                    <div style="display: flex; justify-content: space-between; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                        <span style="color: #666;">用户 ID</span>
+                                        <span style="color: #333; font-weight: 600;">${user.id || '-'}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                        <span style="color: #666;">邮箱</span>
+                                        <span style="color: #333; font-weight: 600;">${user.email || '-'}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                        <span style="color: #666;">角色</span>
+                                        <span style="color: #333; font-weight: 600;">${user.role || 'user'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+        }
+
+        // 备份数据
+        function startBackup() {
+            const statusDiv = document.getElementById('backup-status');
+            const progressFill = document.getElementById('backup-progress');
+            const statusText = document.getElementById('backup-status-text');
+            
+            statusDiv.style.display = 'block';
+            progressFill.style.width = '0%';
+            statusText.textContent = '准备中...';
+            
+            const token = getApiToken();
+            console.log('开始备份，token:', token ? token.substring(0, 8) + '...' : 'none');
+            
+            // 直接下载备份文件
+            fetch('../api/admin/backup_api.php?action=download&token=' + token, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ type: 'all' })
+            })
+                .then(res => {
+                    console.log('备份 API 响应状态:', res.status);
+                    return res.text().then(text => {
+                        console.log('备份 API 原始响应:', text.substring(0, 200));
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            console.error('JSON 解析错误:', e);
+                            throw new Error('服务器返回了非 JSON 响应：' + text.substring(0, 100));
+                        }
+                    });
+                })
+                .then(result => {
+                    console.log('备份 API 响应数据:', result);
+                    if (result.success) {
+                        progressFill.style.width = '100%';
+                        statusText.textContent = '完成！开始下载';
+                        
+                        // 触发下载
+                        window.location.href = '../api/admin/backup_api.php?action=download&file=' + result.file + '&token=' + token;
+                        
+                        setTimeout(() => {
+                            statusDiv.style.display = 'none';
+                            progressFill.style.width = '0%';
+                        }, 3000);
+                    } else {
+                        statusText.textContent = '备份失败：' + result.message;
+                        progressFill.style.background = '#f44336';
+                    }
+                })
+                .catch(err => {
+                    console.error('备份错误:', err);
+                    statusText.textContent = '备份失败：' + err.message;
+                    progressFill.style.background = '#f44336';
+                });
+        }
+    </script>
+    <script src="../js/back-to-top.js?v=1.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+</body>
+
+</html>

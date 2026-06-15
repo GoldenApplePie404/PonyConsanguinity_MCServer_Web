@@ -3,15 +3,12 @@ header('Content-Type: application/json; charset=utf-8');
 
 // 引入配置文件
 require_once 'config.php';
-require_once 'secure_data.php';
+require_once 'helper.php';
+require_once '../includes/auth_helper.php';
 
 // 验证请求方法
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode([
-        'success' => false,
-        'message' => '方法不允许'
-    ]);
-    exit;
+    json_response(false, '方法不允许', null, 405);
 }
 
 // 获取请求数据
@@ -19,49 +16,11 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 // 验证必要参数
 if (!isset($data['title'], $data['type'], $data['content'])) {
-    echo json_encode([
-        'success' => false,
-        'message' => '缺少必要参数'
-    ]);
-    exit;
+    json_response(false, '缺少必要参数', null, 400);
 }
 
-// 验证用户登录状态
-$headers = getallheaders();
-$token = $headers['Authorization'] ?? '';
-
-if (strpos($token, 'Bearer ') === 0) {
-    $token = substr($token, 7);
-}
-
-if (empty($token)) {
-    echo json_encode([
-        'success' => false,
-        'message' => '请先登录'
-    ]);
-    exit;
-}
-
-// 检查会话
-$sessions = secureReadData(SESSIONS_FILE);
-$currentUser = $sessions[$token] ?? null;
-
-if (!$currentUser) {
-    echo json_encode([
-        'success' => false,
-        'message' => '请先登录'
-    ]);
-    exit;
-}
-
-// 检查管理员权限
-if ($currentUser['role'] !== 'admin') {
-    echo json_encode([
-        'success' => false,
-        'message' => '权限不足，只有管理员可以发送通知'
-    ]);
-    exit;
-}
+// 验证管理员权限
+AuthHelper::requireAdmin();
 
 // 读取现有通知
 $notifications = [];

@@ -11,10 +11,159 @@
     <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
     <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
     <link rel="stylesheet" href="../css/ai-assistant.css?v=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #667eea;
             --secondary-color: #764ba2;
+        }
+
+        /* 管理员悬浮按钮 */
+        .admin-float-btn {
+            position: fixed;
+            left: 20px;
+            bottom: 80px;
+            z-index: 9998;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .admin-float-btn a {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .admin-float-btn a::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: left 0.7s;
+            left: -100%;
+        }
+
+        .admin-float-btn:hover a {
+            transform: scale(1.15) translateY(-5px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .admin-float-btn:hover a::before {
+            left: 100%;
+        }
+
+        .admin-float-btn a i {
+            font-size: 22px;
+        }
+
+        /* 消息浮动按钮 */
+        .msg-float-btn {
+            position: fixed;
+            right: 20px;
+            bottom: 80px;
+            z-index: 999;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .msg-float-btn a {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .msg-float-btn a::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            transition: left 0.7s;
+            left: -100%;
+        }
+
+        .msg-float-btn:hover a {
+            transform: scale(1.15) translateY(-5px);
+            box-shadow: 0 8px 30px rgba(108, 92, 231, 0.6);
+        }
+
+        .msg-float-btn:hover a::before {
+            left: 100%;
+        }
+
+        .msg-float-btn a i {
+            font-size: 22px;
+        }
+
+        .msg-float-badge {
+            position: absolute;
+            top: 2px;
+            right: auto;
+            left: 26px;
+            background: #e74c3c;
+            color: #fff;
+            font-size: 10px;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.5);
+            animation: msgBadgePulse 1.5s ease-in-out infinite;
+            display: none;
+        }
+
+        @keyframes msgBadgePulse {
+
+            0%,
+            100% {
+                box-shadow: 0 2px 8px rgba(231, 76, 60, 0.5)
+            }
+
+            50% {
+                box-shadow: 0 2px 18px rgba(231, 76, 60, 0.8)
+            }
+        }
+
+        /* 管理员徽章图标（SVG） */
+        .admin-badge-icon {
+            width: 28px;
+            height: 28px;
+            fill: white;
         }
 
         /* 邮箱验证提示条 */
@@ -117,7 +266,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s;
         }
 
@@ -211,9 +360,12 @@
 
         /* 签到按钮脉冲动画 */
         @keyframes pulse-glow {
-            0%, 100% {
+
+            0%,
+            100% {
                 box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
             }
+
             50% {
                 box-shadow: 0 4px 25px rgba(102, 126, 234, 0.7), 0 0 30px rgba(118, 75, 162, 0.4);
             }
@@ -232,9 +384,310 @@
             animation: check-bounce 0.5s ease;
         }
 
+        /* 概览统计卡片 */
+        .ov-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .ov-stat {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 10px;
+            padding: 14px 12px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ov-stat::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--stat-bar, #667eea);
+            opacity: 0.5;
+        }
+
+        .ov-stat:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .ov-stat-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .ov-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+        .ov-stat-label {
+            font-size: 11px;
+            color: #999;
+            font-weight: 500;
+        }
+
+        @media (max-width:768px) {
+            .ov-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .ov-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width:480px) {
+            .ov-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .ov-stat {
+                padding: 10px 8px;
+            }
+
+            .ov-stat-value {
+                font-size: 17px;
+            }
+
+            .ov-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 功能卡片（邮箱验证 + 每日签到 + 积分商城） */
+        .ov-card {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 16px 18px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .ov-card.clickable {
+            cursor: pointer;
+        }
+
+        .ov-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            border-color: #d0d0d0;
+        }
+
+        .ov-card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .ov-card .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        .ov-card .info-label {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .ov-card .info-value {
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .ov-card .note {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 8px;
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        .ov-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        /* 积分商城在卡片内 */
+        .shop-card-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+        }
+
+        .shop-card-body .shop-icon-wrap {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(238, 90, 36, 0.25);
+        }
+
+        .shop-card-body .shop-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .shop-card-body .shop-desc {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .shop-card-body .shop-go-btn {
+            margin-top: 12px;
+            padding: 8px 22px;
+            border-radius: 8px;
+            background: transparent;
+            color: #7c6fba;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1.5px solid #b8b0da;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .ov-card.clickable:hover .shop-go-btn {
+            background: rgba(102, 126, 234, 0.06);
+            border-color: #7c6fba;
+            transform: scale(1.04);
+        }
+
+        /* 施工中卡片 — 工地警示带主题 */
+        .ov-card.cs-card {
+            border: 1.5px solid #e8c84a;
+            background:
+                repeating-linear-gradient(-45deg, transparent, transparent 24px, rgba(255, 215, 0, 0.05) 24px, rgba(255, 215, 0, 0.05) 48px),
+                rgba(255, 252, 240, 0.92);
+        }
+
+        .ov-card.cs-card:hover {
+            border-color: #d4b830;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 200, 74, 0.15);
+        }
+
+        /* 顶部警示带 */
+        .ov-card.cs-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: repeating-linear-gradient(90deg, #222, #222 10px, #ffd700 10px, #ffd700 20px);
+            border-radius: 12px 12px 0 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 施工中徽章 */
+        .ov-card.cs-card::after {
+            content: '🚧 施工中';
+            position: absolute;
+            top: 12px;
+            right: 10px;
+            background: #222;
+            color: #ffd700;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 10px 3px 8px;
+            border-radius: 5px;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            animation: csGlow 2.2s ease-in-out infinite;
+        }
+
+        @keyframes csGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 2px 18px rgba(255, 215, 0, 0.5);
+            }
+        }
+
+        .ov-card.cs-card .shop-desc {
+            color: #bbb;
+        }
+
+        .ov-card.cs-card .shop-title {
+            opacity: 0.7;
+        }
+
+        .shop-go-btn.cs-btn {
+            border-color: #d0d0d0 !important;
+            color: #ccc !important;
+            cursor: default !important;
+            background: transparent !important;
+        }
+
+        .ov-card.cs-card:hover .shop-go-btn.cs-btn {
+            background: transparent !important;
+            border-color: #d0d0d0 !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
         @keyframes check-bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+            }
         }
 
         .btn-secondary {
@@ -449,7 +902,7 @@
             background: #f0f0f0;
             border-radius: 4px;
             overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .level-progress-bar {
@@ -469,13 +922,18 @@
             right: 0;
             bottom: 0;
             left: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             animation: shimmer 2s infinite;
         }
 
         @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
 
         /* 积分框增强样式 */
@@ -492,7 +950,7 @@
 
         .stat-box-small:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             border-color: #4CAF50;
         }
 
@@ -1136,7 +1594,7 @@
                         </div>
                     </div>
 
-                    
+
 
                 </div>
 
@@ -1153,83 +1611,117 @@
                 <div class="profile-tabs">
                     <button class="profile-tab active" onclick="switchProfileTab('overview')">概览</button>
                     <button class="profile-tab" onclick="switchProfileTab('profile')">个人信息</button>
+                    <button class="profile-tab" onclick="switchProfileTab('mycontent')">我的内容</button>
                     <button class="profile-tab" onclick="switchProfileTab('notifications')">通知</button>
                 </div>
 
                 <!-- 概览 -->
                 <div id="tab-overview" class="tab-content active">
-                    <div id="admin-section" class="admin-panel" style="display: none;">
-                        <h3>管理员面板</h3>
-                        <p style="margin-bottom: 15px; color: #856404;">您拥有管理员权限，可以访问以下功能：</p>
-                        <div class="admin-actions">
-                            <button class="admin-btn"
-                                onclick="window.open('https://mcpanel.eqmemory.cn/mcs/', '_blank')">🖥️
-                                MCSManager</button>
 
-                            <button class="admin-btn" onclick="window.open(PATH_CONFIG.dbTest, '_blank')">📊
-                                数据库查询</button>
-                            <button class="admin-btn" onclick="window.open('https://botpanel.eqmemory.cn/', '_blank')">🤖 QQ机器人管理</button>
-                            <button class="admin-btn" onclick="openSendNotificationModal()">📢 发送通知</button>
-                            <button class="admin-btn"
-                                onclick="window.open('../tools/announcement-manager.html', '_blank')">📝 公告管理</button>
-                            <button class="admin-btn" onclick="window.open('../tools/auto_update.html', '_blank')">🔄
-                                订单更新</button>
-                            <button class="admin-btn" onclick="window.open('../tools/user-management.html', '_blank')">👥 用户管理</button>
-                            <button class="admin-btn" onclick="window.open('../tools/gallery-management.html', '_blank')">🖼️ 图库管理</button>
-
+                    <!-- 统计卡片 -->
+                    <div class="ov-stats" id="ovStats">
+                        <div class="ov-stat">
+                            <div class="ov-stat-icon" style="background:linear-gradient(135deg,#4facfe,#00f2fe);"><i
+                                    class="fas fa-file-alt"></i></div>
+                            <div class="ov-stat-value" id="ovPosts">-</div>
+                            <div class="ov-stat-label">我的帖子</div>
+                        </div>
+                        <div class="ov-stat">
+                            <div class="ov-stat-icon" style="background:linear-gradient(135deg,#e97a43,#f9b238);"><i
+                                    class="fas fa-comments"></i></div>
+                            <div class="ov-stat-value" id="ovReplies">-</div>
+                            <div class="ov-stat-label">我的回复</div>
+                        </div>
+                        <div class="ov-stat">
+                            <div class="ov-stat-icon" style="background:linear-gradient(135deg,#f093fb,#f5576c);"><i
+                                    class="fas fa-thumbs-up"></i></div>
+                            <div class="ov-stat-value" id="ovLikes">-</div>
+                            <div class="ov-stat-label">我的点赞</div>
+                        </div>
+                        <div class="ov-stat">
+                            <div class="ov-stat-icon" style="background:linear-gradient(135deg,#4facfe,#00f2fe);"><i
+                                    class="fas fa-bookmark"></i></div>
+                            <div class="ov-stat-value" id="ovFavs">-</div>
+                            <div class="ov-stat-label">我的收藏</div>
                         </div>
                     </div>
 
-                    <div class="info-grid">
-                        <div class="info-card">
-                            <h3>📧 邮箱验证</h3>
-                            <div class="info-item">
-                                <span class="info-label">验证状态</span>
-                                <span class="info-value" id="emailVerifyStatus">
-                                    <span class="verification-status unverified">加载中...</span>
-                                </span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">操作</span>
-                                <span class="info-value">
-                                    <button id="verifyEmailBtnInfo" class="btn btn-primary btn-sm"
-                                        style="display: none;">发送验证邮件</button>
-                                    <span id="verifiedText" style="display: none; color: #28a745;">✓ 已完成验证</span>
-                                </span>
-                            </div>
-                            <p class="note" style="font-size: 12px; color: #666; margin-top: 10px; margin-bottom: 0;">
-                                验证邮箱后可使用全部功能
-                            </p>
+                    <!-- 功能卡片 -->
+                    <div class="ov-cards">
+                        <div class="ov-card">
+                            <h3><i class="fas fa-envelope" style="color:#667eea;"></i>邮箱验证</h3>
+                            <div class="info-item"><span class="info-label">验证状态</span><span class="info-value"
+                                    id="emailVerifyStatus"><span
+                                        class="verification-status unverified">加载中...</span></span></div>
+                            <div class="info-item" style="margin-top:8px;"><span class="info-label">操作</span><span
+                                    class="info-value"><button id="verifyEmailBtnInfo" class="btn btn-primary btn-sm"
+                                        style="display:none;">发送验证邮件</button><span id="verifiedText"
+                                        style="display:none;color:#28a745;">✓ 已完成验证</span></span></div>
+                            <p class="note">验证邮箱后可使用全部功能</p>
                         </div>
-                        <div class="info-card">
-                            <h3>📅 每日签到</h3>
-                            <div class="info-item">
-                                <span class="info-label">今日状态</span>
-                                <span class="info-value" id="checkinStatus">加载中...</span>
+                        <div class="ov-card">
+                            <h3><i class="fas fa-calendar-check" style="color:#fa709a;"></i>每日签到</h3>
+                            <div class="info-item"><span class="info-label">今日状态</span><span class="info-value"
+                                    id="checkinStatus">加载中...</span></div>
+                            <div style="margin-top:14px;"><button id="checkinBtn" class="btn btn-checkin"
+                                    onclick="handleCheckin()" disabled><span class="checkin-text">立即签到</span></button>
                             </div>
-                            <div class="info-item" style="margin-top: 15px;">
-                                <button id="checkinBtn" class="btn btn-checkin" onclick="handleCheckin()" disabled>
-                                    <span class="checkin-text">立即签到</span>
-                                </button>
-                            </div>
-                            <p class="note" style="font-size: 12px; color: #666; margin-top: 10px; margin-bottom: 0;">
-                                每日签到可获得 10 积分，验证邮箱后方可签到
-                            </p>
+                            <p class="note">每日签到可获得 10 积分 · 验证邮箱后方可签到</p>
                         </div>
-                        <div class="info-card shop-entrance-card" onclick="window.location.href='../pages/shop.html'">
-                            <h3>🛒 积分商城</h3>
-                            <div class="shop-entrance-content">
-                                <div class="shop-icon">🎁</div>
-                                <div class="shop-description">
-                                    <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">使用积分兑换各种道具</p>
-                                    <p style="margin: 0; color: #999; font-size: 12px;">经验礼包 · 特殊效果 · 限时优惠</p>
+                        <!--<div class="ov-card clickable" onclick="window.location.href='../pages/shop.html'">
+                            <div class="shop-card-body">
+                                <div class="shop-icon-wrap"><i class="fas fa-gift"></i></div>
+                                <div class="shop-title">积分商城</div>
+                                <div class="shop-desc">使用积分兑换各种道具 · 经验礼包 · 限时优惠</div>
+                                <div class="shop-go-btn">进入商城 <i class="fas fa-arrow-right" style="font-size:12px;"></i></div>
+                            </div>
+                        </div>-->
+                        <div class="ov-card clickable" onclick="window.location.href='../pages/questionnaire.html'">
+                            <div class="shop-card-body">
+                                <div class="shop-icon-wrap" style="background:linear-gradient(135deg,#4facfe,#00f2fe);">
+                                    <i class="fas fa-poll-h"></i></div>
+                                <div class="shop-title">问卷中心</div>
+                                <div class="shop-desc">参与问卷投票 · 表达你的想法</div>
+                                <div class="shop-go-btn">参与问卷 <i class="fas fa-arrow-right" style="font-size:12px;"></i>
                                 </div>
                             </div>
-                            <button class="shop-btn" onclick="window.location.href='../pages/shop.html'">
-                                点击跳转 →
-                            </button>
+                        </div>
+                        <div class="ov-card clickable cs-card" onclick="showComingSoon('积分商城')">
+                            <div class="shop-card-body">
+                                <div class="shop-icon-wrap" style="background:linear-gradient(135deg,#ff6b6b,#ee5a24);">
+                                    <i class="fas fa-gift"></i></div>
+                                <div class="shop-title">积分商城</div>
+                                <div class="shop-desc">使用积分兑换各种道具 · 经验礼包 · 限时优惠</div>
+                                <div class="shop-go-btn cs-btn">即将上线 <i class="fas fa-clock"
+                                        style="font-size:12px;"></i></div>
+                            </div>
+                        </div>
+                        <!--<div class="ov-card clickable cs-card" onclick="showComingSoon('回忆廊')">
+                            <div class="shop-card-body">
+                                <div class="shop-icon-wrap" style="background:linear-gradient(135deg,#f9b238,#e97a43);"><i class="fas fa-camera-retro"></i></div>
+                                <div class="shop-title">回忆廊</div>
+                                <div class="shop-desc">浏览服务器历史截图 · 回忆精彩瞬间</div>
+                                <div class="shop-go-btn cs-btn">即将上线 <i class="fas fa-clock" style="font-size:12px;"></i></div>
+                            </div>
+                        </div>
+                        <div class="ov-card clickable cs-card" onclick="showComingSoon('资源站')">
+                            <div class="shop-card-body">
+                                <div class="shop-icon-wrap" style="background:linear-gradient(135deg,#43e97b,#38f9d7);"><i class="fas fa-cloud"></i></div>
+                                <div class="shop-title">资源站</div>
+                                <div class="shop-desc">下载服务器资源包 · 地图文件 · 实用工具 · 材质包</div>
+                                <div class="shop-go-btn cs-btn">即将上线 <i class="fas fa-clock" style="font-size:12px;"></i></div>
+                            </div>
+                        </div>-->
+                        <div class="ov-card clickable cs-card" onclick="showComingSoon('更多精彩')">
+                            <div class="shop-card-body">
+                                <div class="shop-icon-wrap" style="background:linear-gradient(135deg,#9790fa,#6c5ce7);">...</i></div>
+                                <div class="shop-title">更多内容即将上线</div>
+                                <div class="shop-desc">更多精彩功能正在开发中，敬请期待</div>
+                                <div class="shop-go-btn cs-btn">即将上线 <i class="fas fa-clock" style="font-size:12px;"></i></div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
                 <!-- 个人信息 -->
@@ -1262,27 +1754,95 @@
                                 <span class="info-value" id="profileAccountType">加载中...</span>
                             </div>
                         </div>
-                        
+
+                        <!-- EYPA 绑定卡片 -->
+                        <div class="info-card" id="eypaCard">
+                            <h3><i class="fas fa-cubes" style="color:#667eea;"></i> 马国记忆</h3>
+                            <div id="eypaNotBound" style="display:none;">
+                                <p style="color:#666;margin-bottom:16px;font-size:13px;line-height:1.6;">
+                                    绑定马国记忆账号后，可以使用马国记忆一键登录。</p>
+                                <button onclick="bindEypa()"
+                                    style="width:100%;padding:10px 20px;border:none;border-radius:8px;background:#667eea;color:#fff;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity 0.2s;"
+                                    onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                                    <i class="fas fa-link"></i> 绑定马国记忆账号
+                                </button>
+                            </div>
+                            <div id="eypaBound" style="display:none;">
+                                <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                                    <img id="eypaAvatarSmall" src="../assets/img/user.webp"
+                                        style="width:44px;height:44px;border-radius:50%;border:2px solid #667eea;object-fit:cover;">
+                                    <div>
+                                        <div style="font-size:14px;font-weight:600;color:#333;"
+                                            id="eypaNicknameDisplay">-</div>
+                                        <div style="font-size:12px;color:#999;" id="eypaBoundAt">绑定时间: -</div>
+                                    </div>
+                                </div>
+                                <button onclick="unbindEypa()"
+                                    style="width:100%;padding:10px 20px;border:none;border-radius:8px;background:#667eea;color:#fff;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity 0.2s;"
+                                    onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                                    <i class="fas fa-unlink"></i> 解绑马国记忆账号
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="info-card" id="completeProfileCard" style="display: none;">
                             <h3>📝 完善账户信息</h3>
                             <p style="color: #666; margin-bottom: 20px; font-size: 14px;">为了更好地使用网站功能，建议您完善邮箱和密码信息。</p>
                             <form id="completeProfileForm" onsubmit="handleCompleteProfile(event)">
                                 <div class="form-group" style="margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">邮箱地址</label>
-                                    <input type="email" id="completeEmail" placeholder="请输入邮箱地址" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                                    <label
+                                        style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">邮箱地址</label>
+                                    <input type="email" id="completeEmail" placeholder="请输入邮箱地址"
+                                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
                                 </div>
                                 <div class="form-group" style="margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">设置密码</label>
-                                    <input type="password" id="completePassword" placeholder="请设置密码（至少6位）" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                                    <label
+                                        style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">设置密码</label>
+                                    <input type="password" id="completePassword" placeholder="请设置密码（至少6位）"
+                                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
                                 </div>
                                 <div class="form-group" style="margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">确认密码</label>
-                                    <input type="password" id="completeConfirmPassword" placeholder="请再次输入密码" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                                    <label
+                                        style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">确认密码</label>
+                                    <input type="password" id="completeConfirmPassword" placeholder="请再次输入密码"
+                                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
                                 </div>
                                 <button type="submit" class="btn btn-primary" style="width: 100%;">保存信息</button>
                             </form>
-                            <div id="completeProfileMessage" style="margin-top: 15px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;"></div>
+                            <div id="completeProfileMessage"
+                                style="margin-top: 15px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;">
+                            </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- 我的内容 -->
+                <div id="tab-mycontent" class="tab-content">
+                    <div style="margin-bottom:16px;">
+                        <h3 style="margin-bottom:4px;">我的内容</h3>
+                        <p style="font-size:13px;color:#888;">管理你发布的帖子和回复</p>
+                    </div>
+                    <div id="myContentTabs" style="display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid #eee;">
+                        <button class="mc-tab active" onclick="switchMyContentTab('posts')"
+                            style="flex:1;padding:10px;border:none;background:transparent;font-size:14px;font-weight:500;cursor:pointer;color:#667eea;border-bottom:2px solid #667eea;transition:all 0.15s;"><i
+                                class="fas fa-file-alt"></i> 我的帖子 <span id="mcPostCount"
+                                style="font-size:12px;color:#999;"></span></button>
+                        <button class="mc-tab" onclick="switchMyContentTab('replies')"
+                            style="flex:1;padding:10px;border:none;background:transparent;font-size:14px;font-weight:500;cursor:pointer;color:#888;border-bottom:2px solid transparent;transition:all 0.15s;"><i
+                                class="fas fa-comments"></i> 我的回复 <span id="mcReplyCount"
+                                style="font-size:12px;color:#999;"></span></button>
+                        <button class="mc-tab" onclick="switchMyContentTab('bookmarks')"
+                            style="flex:1;padding:10px;border:none;background:transparent;font-size:14px;font-weight:500;cursor:pointer;color:#888;border-bottom:2px solid transparent;transition:all 0.15s;"><i
+                                class="fas fa-bookmark"></i> 我的收藏 <span id="mcBookmarkCount"
+                                style="font-size:12px;color:#999;"></span></button>
+                    </div>
+                    <div id="mcPostList" style="display:block;"></div>
+                    <div id="mcReplyList" style="display:none;"></div>
+                    <div id="mcBookmarkList" style="display:none;"></div>
+                    <div id="mcEmpty" style="display:none;text-align:center;padding:60px 20px;color:#999;">
+                        <i class="fas fa-inbox"
+                            style="font-size:40px;display:block;margin-bottom:12px;opacity:0.3;"></i>
+                        <span style="font-size:14px;">暂无数据</span>
                     </div>
                 </div>
 
@@ -1298,36 +1858,171 @@
     </div>
 
     <!-- 签到成功弹窗 -->
-    <div id="checkinModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; justify-content: center; align-items: center;">
-        <div id="checkinModalBackdrop" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0); backdrop-filter: blur(0px); transition: all 0.3s ease;"></div>
-        <div id="checkinModalContent" style="position: relative; background: white; border-radius: 16px; padding: 40px 50px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: scale(0.8); opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); max-width: 320px; width: 90%;">
-            <div style="font-size: 60px; margin-bottom: 15px; animation: checkinBounce 0.6s ease;">🎉</div>
-            <h3 style="margin: 0 0 10px 0; color: #333; font-size: 24px;">签到成功！</h3>
-            <p style="margin: 0 0 10px 0; color: #666; font-size: 16px;">获得 <span id="checkinReward" style="color: #ff6b6b; font-weight: bold; font-size: 20px;">10</span> 积分</p>
-            <p style="margin: 0 0 20px 0; color: #666; font-size: 16px;">获得 <span id="checkinExpReward" style="color: #4CAF50; font-weight: bold; font-size: 20px;">15</span> 经验</p>
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border-radius: 25px; font-weight: 600; font-size: 16px; margin-bottom: 10px;">
-                当前积分：<span id="checkinTotalPoints">0</span>
+    <div id="checkinModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; justify-content: center; align-items: center;">
+        <div id="checkinModalBackdrop"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); transition: all 0.3s ease;">
+        </div>
+        <div id="checkinModalContent"
+            style="position: relative; background: linear-gradient(180deg, #fff 0%, #f8f9ff 100%); border-radius: 20px; padding: 36px 44px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.25); transform: scale(0.8); opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); max-width: 320px; width: 90%; border: 1px solid rgba(102,126,234,0.15);">
+            <div
+                style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:28px;color:#fff;box-shadow:0 6px 20px rgba(102,126,234,0.35);animation:checkinBounce 0.6s ease;">
+                <i class="fas fa-check-circle"></i></div>
+            <h3 style="margin: 0 0 6px 0; color: #333; font-size: 22px; font-weight: 700;">签到成功！</h3>
+            <p style="margin: 0 0 4px 0; color: #888; font-size: 14px;">今日签到完成</p>
+            <div
+                style="margin: 18px 0; padding: 16px 0; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0;">
+                <div style="display:flex;justify-content:center;gap:30px;">
+                    <div style="text-align:center;">
+                        <div style="font-size:11px;color:#999;margin-bottom:4px;"><i class="fas fa-star"
+                                style="margin-right:3px;color:#ffc107;"></i>积分</div>
+                        <div style="font-size:22px;font-weight:700;color:#ff6b6b;" id="checkinReward">10</div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div style="font-size:11px;color:#999;margin-bottom:4px;"><i class="fas fa-bolt"
+                                style="margin-right:3px;color:#4CAF50;"></i>经验</div>
+                        <div style="font-size:22px;font-weight:700;color:#4CAF50;" id="checkinExpReward">15</div>
+                    </div>
+                </div>
             </div>
-            <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 12px 30px; border-radius: 25px; font-weight: 600; font-size: 16px;">
-                当前经验：<span id="checkinTotalExp">0</span>
+            <div
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; margin-bottom: 8px; display:flex;justify-content:space-between;">
+                <span>当前积分</span>
+                <span id="checkinTotalPoints" style="font-weight:700;">0</span>
             </div>
-            <button onclick="closeCheckinModal()" style="margin-top: 20px; padding: 8px 20px; border: 1px solid #ddd; background: white; border-radius: 20px; cursor: pointer; color: #666; font-size: 14px; transition: all 0.2s;">关闭</button>
+            <div
+                style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; display:flex;justify-content:space-between;">
+                <span>当前经验</span>
+                <span id="checkinTotalExp" style="font-weight:700;">0</span>
+            </div>
+            <button onclick="closeCheckinModal()"
+                style="margin-top: 18px; padding: 10px 28px; border: none; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.25s; box-shadow: 0 4px 12px rgba(102,126,234,0.3);">我知道了</button>
         </div>
     </div>
 
     <style>
         @keyframes checkinBounce {
-            0% { transform: scale(0) rotate(-180deg); }
-            50% { transform: scale(1.2) rotate(10deg); }
-            70% { transform: scale(0.9) rotate(-5deg); }
-            100% { transform: scale(1) rotate(0deg); }
+            0% {
+                transform: scale(0) rotate(-180deg);
+            }
+
+            50% {
+                transform: scale(1.15) rotate(8deg);
+            }
+
+            70% {
+                transform: scale(0.92) rotate(-3deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
         }
+
         #checkinModalContent button:hover {
-            background: #f5f5f5;
-            border-color: #667eea;
-            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 施工中弹窗 */
+        .cs-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 999999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .cs-overlay.active {
+            display: flex;
+        }
+
+        .cs-modal {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px 48px 36px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+            animation: csPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes csPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.85) translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .cs-modal .cs-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(245, 87, 108, 0.3);
+        }
+
+        .cs-modal h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0 0 8px;
+        }
+
+        .cs-modal p {
+            font-size: 14px;
+            color: #999;
+            margin: 0 0 24px;
+            line-height: 1.6;
+        }
+
+        .cs-modal .cs-btn-primary {
+            display: inline-block;
+            padding: 10px 36px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cs-modal .cs-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
         }
     </style>
+
+    <!-- 施工中弹窗 -->
+    <div class="cs-overlay" id="csOverlay" onclick="if(event.target===this)closeComingSoon()">
+        <div class="cs-modal">
+            <div class="cs-icon"><i class="fas fa-tools"></i></div>
+            <h3 id="csTitle">施工中</h3>
+            <p>这个功能正在紧锣密鼓地开发中<br>敬请期待～</p>
+            <button class="cs-btn-primary" onclick="closeComingSoon()">知道了</button>
+        </div>
+    </div>
 
     <!-- 页脚组件 -->
     <div id="app-footer"></div>
@@ -1399,6 +2094,7 @@
                             }
                             if (verifiedText) verifiedText.style.display = 'none';
 
+
                             // 显示验证提示条
                             showVerificationAlert();
                         }
@@ -1439,9 +2135,9 @@
             document.getElementById('dismissAlertBtn').addEventListener('click', function () {
                 // 添加关闭动画
                 alertContainer.style.animation = 'slideUp 0.3s ease-in forwards';
-                
+
                 // 动画完成后隐藏
-                setTimeout(function() {
+                setTimeout(function () {
                     alertContainer.style.display = 'none';
                     // 存储用户选择（30天内不再提示）
                     localStorage.setItem('dismissedEmailAlert', 'true');
@@ -1563,14 +2259,14 @@
             let level = 0;
             let requiredExp = 100; // 初始经验值
             let totalExp = experience;
-            
+
             while (totalExp >= requiredExp) {
                 totalExp -= requiredExp;
                 level++;
                 // 指数增长：每级增加50%的经验值
                 requiredExp = Math.floor(requiredExp * 1.5);
             }
-            
+
             return {
                 level: level,
                 currentExp: totalExp,
@@ -1589,15 +2285,15 @@
             const statLevel = document.getElementById('statLevel');
             const levelProgressBar = document.getElementById('levelProgressBar');
             const levelProgressText = document.getElementById('levelProgressText');
-            
+
             // 计算等级
             const levelInfo = calculateLevel(experience);
-            
+
             if (pointsEl) pointsEl.textContent = points;
             if (headerPoints) headerPoints.textContent = points;
             if (headerLevel) headerLevel.textContent = levelInfo.level;
             if (statLevel) statLevel.textContent = levelInfo.level;
-            
+
             // 更新等级进度条
             if (levelProgressBar) {
                 levelProgressBar.style.width = `${levelInfo.progress}%`;
@@ -2143,10 +2839,15 @@
                 if (tab === 'notifications') {
                     loadNotifications();
                 }
-                
+
                 // 加载个人信息
                 if (tab === 'profile') {
                     loadUserInfo();
+                }
+
+                // 加载我的内容
+                if (tab === 'mycontent') {
+                    loadMyContent();
                 }
             }, 50);
         }
@@ -2666,11 +3367,13 @@
                 roleEl.textContent = currentUser.role === 'admin' ? '管理员' : '普通用户';
                 if (currentUser.role === 'admin') {
                     roleEl.classList.add('admin');
-                    document.getElementById('admin-section').style.display = 'block';
                 }
-                
-                // 加载用户详细信息（包括马国记忆头像）
+
+                // 加载用户详细信息
                 loadUserInfo();
+
+                // 处理 EYPA 绑定回调
+                handleEypaBindCallback();
             }
 
             // 预加载通知数据，确保切换标签时能立即显示
@@ -2681,8 +3384,11 @@
             initEmailVerification();
 
             // 初始化签到功能
-        initCheckin();
-    });
+            initCheckin();
+
+            // 加载未读消息数
+            loadMsgUnread();
+        });
 
         // 加载用户详细信息
         async function loadUserInfo() {
@@ -2690,7 +3396,7 @@
             try {
                 const token = localStorage.getItem('authToken') || (currentUser ? currentUser.token : null);
                 console.log('Token状态:', token ? '存在' : '不存在');
-                
+
                 if (!token) {
                     console.log('无token，跳过加载用户信息');
                     return;
@@ -2701,15 +3407,15 @@
                         'Authorization': 'Bearer ' + token
                     }
                 });
-                
+
                 console.log('API响应状态:', response.status);
                 const data = await response.json();
                 console.log('用户信息API返回:', data);
-                
+
                 if (data.success && data.data && data.data.user) {
                     const user = data.data.user;
                     console.log('解析用户数据:', user);
-                    
+
                     // 更新头像
                     const avatarElement = document.querySelector('.user-avatar-large img');
                     if (avatarElement) {
@@ -2721,13 +3427,13 @@
                             console.log('使用默认头像');
                         }
                     }
-                    
+
                     // 用户名只显示username
                     const usernameElement = document.getElementById('profile-username');
                     if (usernameElement) {
                         usernameElement.textContent = user.username;
                     }
-                    
+
                     // 更新个人信息标签页
                     console.log('开始更新个人信息标签页...');
                     const profileUserId = document.getElementById('profileUserId');
@@ -2735,7 +3441,7 @@
                     const profileNickname = document.getElementById('profileNickname');
                     const profileEmail = document.getElementById('profileEmail');
                     const profileCreatedAt = document.getElementById('profileCreatedAt');
-                    
+
                     console.log('DOM元素状态:', {
                         profileUserId: !!profileUserId,
                         profileUsername: !!profileUsername,
@@ -2743,7 +3449,7 @@
                         profileEmail: !!profileEmail,
                         profileCreatedAt: !!profileCreatedAt
                     });
-                    
+
                     if (profileUserId) {
                         profileUserId.textContent = user.id || '未知';
                         console.log('用户ID已更新:', user.id);
@@ -2764,7 +3470,7 @@
                         profileCreatedAt.textContent = user.created_at || '未知';
                         console.log('创建时间已更新:', user.created_at);
                     }
-                    
+
                     // 更新账户类型
                     const profileAccountType = document.getElementById('profileAccountType');
                     if (profileAccountType) {
@@ -2772,7 +3478,7 @@
                         profileAccountType.textContent = isEypaUser ? 'EYPA 用户' : '普通用户';
                         console.log('账户类型已更新:', isEypaUser ? 'EYPA 用户' : '普通用户');
                     }
-                    
+
                     // 检查是否需要完善信息
                     const completeProfileCard = document.getElementById('completeProfileCard');
                     if (completeProfileCard) {
@@ -2780,8 +3486,14 @@
                         completeProfileCard.style.display = needsCompleteProfile ? 'block' : 'none';
                         console.log('是否需要完善信息:', needsCompleteProfile);
                     }
-                    
+
                     console.log('个人信息标签页更新完成');
+
+                    // 更新EYPA绑定状态
+                    updateEypaStatus(user);
+
+                    // 更新概览统计卡片
+                    updateOverviewStats();
                 } else {
                     console.error('API返回失败:', data);
                 }
@@ -2790,36 +3502,95 @@
             }
         }
 
+        // ── EYPA 绑定管理 ──
+        function updateEypaStatus(user) {
+            const notBound = document.getElementById('eypaNotBound');
+            const bound = document.getElementById('eypaBound');
+            if (!notBound || !bound) return;
+
+            if (user.eypa_uid) {
+                notBound.style.display = 'none';
+                bound.style.display = 'block';
+                const img = document.getElementById('eypaAvatarSmall');
+                if (img) img.src = user.eypa_avatar || '../assets/img/user.webp';
+                document.getElementById('eypaNicknameDisplay').textContent = user.eypa_nickname || user.username;
+                document.getElementById('eypaBoundAt').textContent = user.eypa_bound_at ? '绑定时间: ' + user.eypa_bound_at : '';
+            } else {
+                notBound.style.display = 'block';
+                bound.style.display = 'none';
+            }
+        }
+
+        function bindEypa() {
+            // 跳转到马国记忆授权页，callback 指向 bind.php 完成绑定
+            const callback = encodeURIComponent(window.location.origin + '/api/eypa/bind.php');
+            window.location.href = 'https://eqmemory.cn/eu-authorize?callback=' + callback;
+        }
+
+        async function unbindEypa() {
+            if (!confirm('确定解绑马国记忆账号？解绑后将无法使用马国记忆登录。')) return;
+            try {
+                const token = localStorage.getItem('authToken');
+                const resp = await fetch('../api/eypa/unbind.php', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const d = await resp.json();
+                if (d.success) {
+                    showToast('已解绑马国记忆账号', 'success');
+                    loadUserInfo(); // 刷新
+                } else {
+                    showToast(d.message || '解绑失败', 'error');
+                }
+            } catch (e) {
+                showToast('解绑失败，请稍后重试', 'error');
+            }
+        }
+
+        // 处理绑定回调（来自 bind.php 重定向）
+        function handleEypaBindCallback() {
+            const params = new URLSearchParams(window.location.search);
+            const status = params.get('eypa_bind');
+            if (status === 'success') {
+                showToast('马国记忆账号绑定成功！', 'success');
+                loadUserInfo();
+                history.replaceState({}, '', window.location.pathname);
+            } else if (status === 'error') {
+                const msg = params.get('msg') || '绑定失败';
+                showToast(msg, 'error');
+                history.replaceState({}, '', window.location.pathname);
+            }
+        }
+
         // 处理完善信息表单提交
         async function handleCompleteProfile(event) {
             event.preventDefault();
-            
+
             const email = document.getElementById('completeEmail').value;
             const password = document.getElementById('completePassword').value;
             const confirmPassword = document.getElementById('completeConfirmPassword').value;
             const messageDiv = document.getElementById('completeProfileMessage');
-            
+
             // 验证输入
             if (!email || !password || !confirmPassword) {
                 showCompleteProfileMessage('请填写所有字段', 'error');
                 return;
             }
-            
+
             if (!filterEmail(email)) {
                 showCompleteProfileMessage('邮箱格式不正确', 'error');
                 return;
             }
-            
+
             if (password.length < 6) {
                 showCompleteProfileMessage('密码长度不能少于6位', 'error');
                 return;
             }
-            
+
             if (password !== confirmPassword) {
                 showCompleteProfileMessage('两次输入的密码不一致', 'error');
                 return;
             }
-            
+
             try {
                 const token = localStorage.getItem('authToken');
                 const response = await fetch('../api/complete_profile.php', {
@@ -2834,10 +3605,10 @@
                         password: password
                     })
                 });
-                
+
                 const result = await response.json();
                 console.log('完善信息结果:', result);
-                
+
                 if (result.success) {
                     showCompleteProfileMessage('账户信息已完善！', 'success');
                     // 重新加载用户信息
@@ -2857,7 +3628,7 @@
             const messageDiv = document.getElementById('completeProfileMessage');
             messageDiv.textContent = message;
             messageDiv.style.display = 'block';
-            
+
             if (type === 'success') {
                 messageDiv.style.background = '#d4edda';
                 messageDiv.style.color = '#155724';
@@ -2955,9 +3726,272 @@
                 showMessage('发送失败，请重试', 'error');
             }
         }
+
+        // ── 我的内容 ──────────────────────────────
+        let myContentData = null;
+        let myBookmarkItems = [];
+        const mcPageSize = 5;
+        let mcPagePosts = 1, mcPageReplies = 1, mcPageBookmarks = 1;
+
+        async function loadMyContent() {
+            const postList = document.getElementById('mcPostList');
+            const replyList = document.getElementById('mcReplyList');
+            const bookmarkList = document.getElementById('mcBookmarkList');
+            const empty = document.getElementById('mcEmpty');
+            if (!postList) return;
+
+            postList.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">加载中...</div>';
+            replyList.innerHTML = '';
+            bookmarkList.innerHTML = '';
+
+            try {
+                const resp = await fetch('../api/profile/my_content.php', {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') }
+                });
+                const d = await resp.json();
+                if (!d.success) throw new Error(d.message);
+
+                myContentData = d.data;
+                const posts = d.data.posts || [];
+                const replies = d.data.replies || [];
+                mcPagePosts = 1;
+                mcPageReplies = 1;
+
+                document.getElementById('mcPostCount').textContent = '(' + posts.length + ')';
+                document.getElementById('mcReplyCount').textContent = '(' + replies.length + ')';
+
+                if (posts.length === 0 && replies.length === 0) {
+                    empty.style.display = 'block';
+                    postList.innerHTML = '';
+                    return;
+                }
+                empty.style.display = 'none';
+
+                renderMyPosts(posts, 1);
+                renderMyReplies(replies, 1);
+
+                // 加载收藏
+                loadMyBookmarks();
+
+                // 更新概览统计
+                const stats = d.data.stats || {};
+                const ovPosts = document.getElementById('ovPosts');
+                const ovReplies = document.getElementById('ovReplies');
+                if (ovPosts) ovPosts.textContent = stats.post_count ?? 0;
+                if (ovReplies) ovReplies.textContent = stats.reply_count ?? 0;
+
+                // 更新点赞/收藏统计
+                updateLikeBookmarkStats();
+            } catch (e) {
+                postList.innerHTML = '<div style="text-align:center;padding:40px;color:#e74c3c;">加载失败: ' + e.message + '</div>';
+            }
+        }
+
+        async function loadMyBookmarks() {
+            const el = document.getElementById('mcBookmarkList');
+            const countEl = document.getElementById('mcBookmarkCount');
+            if (!el) return;
+            mcPageBookmarks = 1;
+            try {
+                const resp = await fetch('../api/forum/bookmark.php?action=list', {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') }
+                });
+                const d = await resp.json();
+                if (!d.success) throw new Error(d.message);
+                const items = d.data.bookmarks || [];
+                myBookmarkItems = items;
+                if (countEl) countEl.textContent = '(' + items.length + ')';
+                renderMyBookmarks(items, 1);
+            } catch (e) {
+                el.innerHTML = '<div style="text-align:center;padding:40px;color:#e74c3c;">加载失败</div>';
+            }
+        }
+
+        async function updateLikeBookmarkStats() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const likeRes = await fetch('../api/forum/like.php', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const likeData = await likeRes.json();
+                if (likeData.success) {
+                    const ovLikes = document.getElementById('ovLikes');
+                    if (ovLikes) ovLikes.textContent = likeData.data.total || 0;
+                }
+                const bmRes = await fetch('../api/forum/bookmark.php', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const bmData = await bmRes.json();
+                if (bmData.success) {
+                    const ovFavs = document.getElementById('ovFavs');
+                    if (ovFavs) ovFavs.textContent = bmData.data.count || 0;
+                }
+            } catch (e) { }
+        }
+
+        async function loadMsgUnread() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+                const resp = await fetch('../api/message.php?action=unread', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const d = await resp.json();
+                if (d.success && d.data.total > 0) {
+                    const fBadge = document.getElementById('msgFloatBadge');
+                    if (fBadge) { fBadge.style.display = 'flex'; fBadge.textContent = d.data.total > 99 ? '99+' : d.data.total; }
+                }
+            } catch (e) { }
+        }
+
+        // ── 通用分页渲染 ──
+        function renderMcPagination(total, page, type) {
+            const totalPages = Math.ceil(total / mcPageSize);
+            if (totalPages <= 1) return '';
+            let h = '<div style="display:flex;justify-content:center;align-items:center;gap:4px;margin-top:16px;">';
+            h += `<button onclick="mcGoPage(${page - 1},'${type}')" ${page <= 1 ? 'disabled' : ''} style="padding:6px 12px;border:1px solid #ddd;border-radius:6px;background:#f8f9fa;cursor:pointer;font-size:13px;${page <= 1 ? 'opacity:0.4;cursor:default;' : ''}"><i class="fas fa-chevron-left"></i></button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                h += `<button onclick="mcGoPage(${i},'${type}')" style="padding:6px 12px;border:1px solid ${i === page ? '#667eea' : '#ddd'};border-radius:6px;background:${i === page ? '#667eea' : '#f8f9fa'};color:${i === page ? '#fff' : '#333'};cursor:pointer;font-size:13px;">${i}</button>`;
+            }
+            h += `<button onclick="mcGoPage(${page + 1},'${type}')" ${page >= totalPages ? 'disabled' : ''} style="padding:6px 12px;border:1px solid #ddd;border-radius:6px;background:#f8f9fa;cursor:pointer;font-size:13px;${page >= totalPages ? 'opacity:0.4;cursor:default;' : ''}"><i class="fas fa-chevron-right"></i></button>`;
+            h += `<span style="font-size:12px;color:#999;margin-left:8px;">共 ${total} 条</span>`;
+            h += '</div>';
+            return h;
+        }
+
+        function mcGoPage(page, type) {
+            const items = type === 'posts' ? (myContentData.posts || [])
+                : type === 'replies' ? (myContentData.replies || []) : null;
+            if (type === 'posts') { mcPagePosts = page; renderMyPosts(items, page); }
+            else if (type === 'replies') { mcPageReplies = page; renderMyReplies(items, page); }
+            else if (type === 'bookmarks') { mcPageBookmarks = page; renderMyBookmarks(myBookmarkItems, page); }
+        }
+
+        function renderMyPosts(posts, page) {
+            const el = document.getElementById('mcPostList');
+            if (!posts.length) {
+                el.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">暂无帖子</div>';
+                return;
+            }
+            const start = (page - 1) * mcPageSize;
+            const pageItems = posts.slice(start, start + mcPageSize);
+            el.innerHTML = pageItems.map(p => `
+                <div style="background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:16px;margin-bottom:10px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'" onmouseout="this.style.boxShadow='none'">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                        <div>
+                            <a href="../pages/post-detail.html?id=${p.id}" target="_blank" style="font-size:15px;font-weight:600;color:#333;text-decoration:none;">${escHtml(p.title)}</a>
+                            <div style="font-size:12px;color:#999;margin-top:6px;">
+                                <span style="margin-right:12px;"><i class="fas fa-folder-open" style="margin-right:3px;"></i>${p.forum}</span>
+                                <span style="margin-right:12px;"><i class="fas fa-calendar" style="margin-right:3px;"></i>${p.created_at}</span>
+                                <span style="margin-right:12px;"><i class="fas fa-comment" style="margin-right:3px;"></i>${p.replies} 回复</span>
+                                <span><i class="fas fa-eye" style="margin-right:3px;"></i>${p.views} 浏览</span>
+                            </div>
+                            ${p.summary ? '<div style="font-size:13px;color:#666;margin-top:8px;line-height:1.5;">' + escHtml(p.summary) + '</div>' : ''}
+                        </div>
+                        <a href="../pages/post-detail.html?id=${p.id}" target="_blank" style="flex-shrink:0;padding:6px 14px;border:1px solid #667eea;border-radius:6px;color:#667eea;font-size:12px;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='#667eea';this.style.color='white'" onmouseout="this.style.background='transparent';this.style.color='#667eea'">查看</a>
+                    </div>
+                </div>
+            `).join('') + renderMcPagination(posts.length, page, 'posts');
+        }
+
+        function renderMyReplies(replies, page) {
+            const el = document.getElementById('mcReplyList');
+            if (!replies.length) {
+                el.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">暂无回复</div>';
+                return;
+            }
+            const start = (page - 1) * mcPageSize;
+            const pageItems = replies.slice(start, start + mcPageSize);
+            el.innerHTML = pageItems.map(r => `
+                <div style="background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:16px;margin-bottom:10px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'" onmouseout="this.style.boxShadow='none'">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                        <div>
+                            <div style="font-size:13px;color:#999;margin-bottom:6px;">
+                                <i class="fas fa-reply" style="margin-right:4px;color:#667eea;"></i>
+                                回复了 <a href="../pages/post-detail.html?id=${r.post_id}" target="_blank" style="color:#667eea;text-decoration:none;font-weight:500;">${escHtml(r.post_title)}</a>
+                                <span style="margin-left:8px;"><i class="fas fa-calendar" style="margin-right:3px;"></i>${r.created_at}</span>
+                            </div>
+                            <div style="font-size:13px;color:#555;line-height:1.6;padding:8px 12px;background:#f8f9fa;border-radius:6px;border-left:3px solid #667eea;">${escHtml(r.content)}${r.content.length >= 150 ? '...' : ''}</div>
+                        </div>
+                        <a href="../pages/post-detail.html?id=${r.post_id}" target="_blank" style="flex-shrink:0;padding:6px 14px;border:1px solid #667eea;border-radius:6px;color:#667eea;font-size:12px;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='#667eea';this.style.color='white'" onmouseout="this.style.background='transparent';this.style.color='#667eea'">查看</a>
+                    </div>
+                </div>
+            `).join('') + renderMcPagination(replies.length, page, 'replies');
+        }
+
+        function renderMyBookmarks(items, page) {
+            const el = document.getElementById('mcBookmarkList');
+            if (!items || !items.length) {
+                el.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">暂无收藏</div>';
+                return;
+            }
+            const start = (page - 1) * mcPageSize;
+            const pageItems = items.slice(start, start + mcPageSize);
+            el.innerHTML = pageItems.map(p => `
+                <div style="background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:16px;margin-bottom:10px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'" onmouseout="this.style.boxShadow='none'">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                        <div>
+                            <a href="../pages/post-detail.html?id=${p.id}" target="_blank" style="font-size:15px;font-weight:600;color:#333;text-decoration:none;">${escHtml(p.title)}</a>
+                            <div style="font-size:12px;color:#999;margin-top:6px;">
+                                <span style="margin-right:12px;"><i class="fas fa-user" style="margin-right:3px;"></i>${escHtml(p.author)}</span>
+                                <span style="margin-right:12px;"><i class="fas fa-calendar" style="margin-right:3px;"></i>${p.created_at || ''}</span>
+                            </div>
+                        </div>
+                        <a href="../pages/post-detail.html?id=${p.id}" target="_blank" style="flex-shrink:0;padding:6px 14px;border:1px solid #667eea;border-radius:6px;color:#667eea;font-size:12px;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='#667eea';this.style.color='white'" onmouseout="this.style.background='transparent';this.style.color='#667eea'">查看</a>
+                    </div>
+                </div>
+            `).join('') + renderMcPagination(items.length, page, 'bookmarks');
+        }
+
+        function switchMyContentTab(tab) {
+            document.querySelectorAll('.mc-tab').forEach(t => {
+                if (t.getAttribute('onclick').includes(tab)) {
+                    t.style.color = '#667eea';
+                    t.style.borderBottomColor = '#667eea';
+                } else {
+                    t.style.color = '#888';
+                    t.style.borderBottomColor = 'transparent';
+                }
+            });
+            document.getElementById('mcPostList').style.display = tab === 'posts' ? 'block' : 'none';
+            document.getElementById('mcReplyList').style.display = tab === 'replies' ? 'block' : 'none';
+            document.getElementById('mcBookmarkList').style.display = tab === 'bookmarks' ? 'block' : 'none';
+        }
+
+        function escHtml(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // ── 概览统计更新 ──────────────────────────
+        function updateOverviewStats() {
+            // 积分由 updateCheckinUI 更新
+            // 异步加载帖子/回复数
+            loadOverviewContentStats();
+        }
+
+        async function loadOverviewContentStats() {
+            try {
+                const resp = await fetch('../api/profile/my_content.php', {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') }
+                });
+                const d = await resp.json();
+                if (!d.success) return;
+
+                const stats = d.data.stats || {};
+                const ovPosts = document.getElementById('ovPosts');
+                const ovReplies = document.getElementById('ovReplies');
+                if (ovPosts) ovPosts.textContent = stats.post_count ?? 0;
+                if (ovReplies) ovReplies.textContent = stats.reply_count ?? 0;
+
+                // 加载点赞/收藏统计
+                updateLikeBookmarkStats();
+            } catch (e) {
+                // 静默失败，不影响其他功能
+            }
+        }
     </script>
 
-    <!-- ========== Sidebar音乐播放器（模块化版本）========== -->
+    <!-- ========== Sidebar 音乐播放器（模块化版本）========== -->
 
 
 
@@ -2973,6 +4007,48 @@
     <!-- AI 客服按钮（在组件加载器后加载） -->
     <div id="app-ai-assistant"></div>
     <script src="../js/ai-assistant.js?v=1.0"></script>
+
+    <!-- 管理员悬浮按钮（仅管理员可见） -->
+    <div id="adminFloatBtn" class="admin-float-btn" style="display: none;">
+        <a href="../tools/admin-hub.html" title="管理总站">
+            <i class="fas fa-cogs"></i>
+        </a>
+    </div>
+
+    <!-- 消息浮动按钮 -->
+    <div id="msgFloatBtn" class="msg-float-btn">
+        <a href="../pages/messages.html" title="聊天中心">
+            <i class="fas fa-comment-dots"></i>
+            <span class="msg-float-badge" id="msgFloatBadge">0</span>
+        </a>
+    </div>
+
+    <script>
+        // 页面加载时检查管理员权限
+        document.addEventListener('DOMContentLoaded', function () {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                try {
+                    const user = JSON.parse(storedUser);
+                    if (user && user.role === 'admin') {
+                        document.getElementById('adminFloatBtn').style.display = 'block';
+                    }
+                } catch (e) {
+                    console.error('解析用户数据失败:', e);
+                }
+            }
+        });
+    </script>
+
+    <script>
+        window.showComingSoon = function (name) {
+            document.getElementById('csTitle').textContent = name + ' 施工中';
+            document.getElementById('csOverlay').classList.add('active');
+        };
+        window.closeComingSoon = function () {
+            document.getElementById('csOverlay').classList.remove('active');
+        };
+    </script>
 
 </body>
 

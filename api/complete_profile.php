@@ -3,6 +3,7 @@ require_once 'config.php';
 require_once 'helper.php';
 require_once 'secure_data.php';
 require_once __DIR__ . '/../includes/security_logger.php';
+require_once '../includes/auth_helper.php';
 
 $securityLog = SecurityLogger::getInstance();
 
@@ -19,12 +20,11 @@ $data = get_post_data();
 $email = trim($data['email'] ?? '');
 $password = $data['password'] ?? '';
 
-// 获取token（支持从Authorization header或POST body中获取）
-$headers = getallheaders();
-$token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : ($data['token'] ?? '');
+// 验证登录
+$session = AuthHelper::requireLogin();
 
 // 验证输入
-if (empty($token) || empty($email) || empty($password)) {
+if (empty($email) || empty($password)) {
     json_response(false, '缺少必要参数', null, 400);
 }
 
@@ -36,21 +36,6 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 // 验证密码长度
 if (strlen($password) < 6) {
     json_response(false, '密码长度不能少于6位', null, 400);
-}
-
-// 读取会话数据
-$sessions = secureReadData(SESSIONS_FILE);
-$session = null;
-
-foreach ($sessions as $sessionToken => $sessionData) {
-    if ($sessionToken === $token) {
-        $session = $sessionData;
-        break;
-    }
-}
-
-if (!$session) {
-    json_response(false, '无效的令牌', null, 401);
 }
 
 // 读取用户数据

@@ -11,17 +11,34 @@ ini_set('display_errors', 0);
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 // 处理预检请求
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../helper.php';
+require_once __DIR__ . '/../secure_data.php';
+require_once __DIR__ . '/../../includes/auth_helper.php';
 require_once __DIR__ . '/PointsManager.php';
 
 $action = $_GET['action'] ?? '';
-$userId = $_GET['user_id'] ?? $_POST['user_id'] ?? 'guest';
+
+// 先用 AuthHelper 验证登录，从会话中获取用户名
+$pointsManager = new PointsManager();
+
+try {
+    $session = AuthHelper::requireLogin();
+    $username = $session['username'];
+} catch (Exception $e) {
+    echo json_encode([
+        'success' => false,
+        'message' => '未登录'
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 // 如果是 POST 请求且 Content-Type 包含 application/json，需要手动解析
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -31,32 +48,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $jsonData = json_decode($input, true);
         if ($jsonData) {
             $action = $jsonData['action'] ?? $action;
-            $userId = $jsonData['user_id'] ?? $userId;
             $_POST = $jsonData;
         }
     }
 }
 
-$pointsManager = new PointsManager();
-
 switch ($action) {
     case 'get_user_info':
-        getUserInfo($userId, $pointsManager);
+        getUserInfo($username, $pointsManager);
         break;
     
     case 'add_points':
         $amount = intval($_POST['amount'] ?? 0);
-        addPoints($userId, $amount, $pointsManager);
+        addPoints($username, $amount, $pointsManager);
         break;
     
     case 'reduce_points':
         $amount = intval($_POST['amount'] ?? 0);
-        reducePoints($userId, $amount, $pointsManager);
+        reducePoints($username, $amount, $pointsManager);
         break;
     
     case 'add_experience':
         $exp = intval($_POST['experience'] ?? 0);
-        addExperience($userId, $exp, $pointsManager);
+        addExperience($username, $exp, $pointsManager);
         break;
     
     default:
@@ -69,22 +83,31 @@ switch ($action) {
 /**
  * 获取用户信息
  */
-function getUserInfo($userId, $pointsManager) {
-    $userInfo = $pointsManager->getUserInfo($userId);
+function getUserInfo($username, $pointsManager) {
+    $users = secureReadData(USERS_FILE);
+    if (!isset($users[$username])) {
+        echo json_encode([
+            'success' => false,
+            'message' => '用户不存在'
+        ], JSON_UNESCAPED_UNICODE);
+        return;
+    }
+    $user = $users[$username];
     
     echo json_encode([
         'success' => true,
-        'user_id' => $userId,
-        'points' => $userInfo['points'],
-        'level' => $userInfo['level'],
-        'experience' => $userInfo['experience']
+        'user_id' => $user['id'] ?? '',
+        'username' => $username,
+        'points' => $user['points'] ?? 0,
+        'level' => $pointsManager->getUserLevelByUsername($username),
+        'experience' => $user['experience'] ?? 0
     ], JSON_UNESCAPED_UNICODE);
 }
 
 /**
  * 增加积分
  */
-function addPoints($userId, $amount, $pointsManager) {
+function addPoints($username, $amount, $pointsManager) {
     if ($amount <= 0) {
         echo json_encode([
             'success' => false,
@@ -93,8 +116,8 @@ function addPoints($userId, $amount, $pointsManager) {
         return;
     }
     
-    $pointsManager->addPoints($userId, $amount);
-    $newPoints = $pointsManager->getUserPoints($userId);
+    $pointsManager->addPointsByUsername($username, $amount);
+    $newPoints = $pointsManager->getUserPointsByUsername($username);
     
     echo json_encode([
         'success' => true,
@@ -107,7 +130,7 @@ function addPoints($userId, $amount, $pointsManager) {
 /**
  * 减少积分
  */
-function reducePoints($userId, $amount, $pointsManager) {
+function reducePoints($username, $amount, $pointsManager) {
     if ($amount <= 0) {
         echo json_encode([
             'success' => false,
@@ -116,7 +139,7 @@ function reducePoints($userId, $amount, $pointsManager) {
         return;
     }
     
-    $currentPoints = $pointsManager->getUserPoints($userId);
+    $currentPoints = $pointsManager->getUserPointsByUsername($username);
     if ($currentPoints < $amount) {
         echo json_encode([
             'success' => false,
@@ -127,8 +150,8 @@ function reducePoints($userId, $amount, $pointsManager) {
         return;
     }
     
-    $pointsManager->reducePoints($userId, $amount);
-    $newPoints = $pointsManager->getUserPoints($userId);
+    $pointsManager->reducePointsByUsername($username, $amount);
+    $newPoints = $pointsManager->getUserPointsByUsername($username);
     
     echo json_encode([
         'success' => true,
@@ -141,7 +164,7 @@ function reducePoints($userId, $amount, $pointsManager) {
 /**
  * 增加经验值
  */
-function addExperience($userId, $exp, $pointsManager) {
+function addExperience($username, $exp, $pointsManager) {
     if ($exp <= 0) {
         echo json_encode([
             'success' => false,
@@ -150,7 +173,7 @@ function addExperience($userId, $exp, $pointsManager) {
         return;
     }
     
-    $result = $pointsManager->addExperience($userId, $exp);
+    $result = $pointsManager->addExperienceByUsername($username, $exp);
     
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
 }

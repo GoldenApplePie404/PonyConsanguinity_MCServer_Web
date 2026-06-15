@@ -16,20 +16,12 @@
         .shop-banner {
             position: relative;
             min-height: 400px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            background-size: 200% 200%;
-            animation: gradientShift 15s ease infinite;
+            background: url('../assets/img/bg2.webp') center center / cover no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             box-shadow: 0 4px 30px rgba(102, 126, 234, 0.3);
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         /* 动态背景粒子 */
@@ -105,15 +97,24 @@
             font-size: 3.5rem;
             font-weight: 800;
             margin-bottom: 20px;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-            animation: titleGlow 3s ease-in-out infinite;
+            color: #fffbe6;
             letter-spacing: 2px;
         }
 
-        @keyframes titleGlow {
-            0%, 100% { text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255,255,255,0.3); }
-            50% { text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3), 0 0 40px rgba(255,255,255,0.6); }
+        .shop-banner-badge {
+            display:inline-block;
+            background:linear-gradient(135deg,#ff6b6b,#ee5a6f);
+            color:#fff;
+            padding:6px 20px;
+            border-radius:20px;
+            font-size:0.9rem;
+            font-weight:600;
+            margin-bottom:16px;
+            box-shadow:0 4px 15px rgba(255,107,107,0.4);
+            animation:badgePulse 2s infinite;
         }
+
+        @keyframes badgePulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
 
         .shop-banner-subtitle {
             font-size: 1.4rem;
@@ -411,6 +412,35 @@
             box-shadow: 0 12px 40px rgba(102, 126, 234, 0.25);
         }
 
+        /* 电商 hover 遮罩 */
+        .product-hover-overlay {
+            position: absolute;
+            top:0; left:0; right:0; bottom:0;
+            background:rgba(0,0,0,0.45);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            opacity:0;
+            transition:opacity 0.3s;
+            z-index:5;
+        }
+        .product-card:hover .product-hover-overlay { opacity:1; }
+        .product-hover-overlay .quick-buy-btn {
+            padding:10px 22px;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            color:#fff;
+            border:none;
+            border-radius:25px;
+            font-size:0.85rem;
+            font-weight:600;
+            cursor:pointer;
+            transform:translateY(12px);
+            transition:all 0.3s;
+            box-shadow:0 4px 15px rgba(0,0,0,0.3);
+        }
+        .product-card:hover .quick-buy-btn { transform:translateY(0); }
+        .quick-buy-btn:hover { transform:scale(1.05) !important; }
+
         /* 商品标签 */
         .product-tags {
             position: absolute;
@@ -500,6 +530,121 @@
             animation: shine 3s infinite;
         }
 
+        /* 电商风格折扣标签 */
+        .product-discount-badge {
+            position:absolute;
+            top:12px;
+            right:12px;
+            background:linear-gradient(135deg,#ff6b6b,#ee5a6f);
+            color:#fff;
+            padding:4px 10px;
+            border-radius:8px;
+            font-size:0.75rem;
+            font-weight:700;
+            z-index:10;
+            box-shadow:0 2px 8px rgba(255,107,107,0.3);
+        }
+
+        .product-sold {
+            font-size:0.75rem;
+            color:#999;
+            margin-bottom:6px;
+        }
+
+        .product-original-price {
+            font-size:0.85rem;
+            color:#bbb;
+            text-decoration:line-through;
+            margin-left:6px;
+        }
+
+        /* 商品入场动画 */
+        .product-card {
+            animation:cardFadeIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        .product-card:nth-child(1) { animation-delay:0.02s; }
+        .product-card:nth-child(2) { animation-delay:0.06s; }
+        .product-card:nth-child(3) { animation-delay:0.10s; }
+        .product-card:nth-child(4) { animation-delay:0.14s; }
+        .product-card:nth-child(5) { animation-delay:0.18s; }
+        .product-card:nth-child(6) { animation-delay:0.22s; }
+        @keyframes cardFadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+        /* 浮动购物车 */
+        .shop-cart-float {
+            position:fixed;
+            right:24px;
+            bottom:100px;
+            z-index:9999;
+            width:52px;
+            height:52px;
+            border-radius:50%;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            color:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:20px;
+            box-shadow:0 4px 20px rgba(102,126,234,0.4);
+            cursor:pointer;
+            transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+            border:none;
+        }
+        .shop-cart-float:hover { transform:scale(1.1) translateY(-3px); box-shadow:0 8px 30px rgba(102,126,234,0.5); }
+
+        /* 未登录遮罩 */
+        .login-overlay {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.55); z-index:99999;
+            align-items:center; justify-content:center;
+            backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+        }
+        .login-overlay.show { display:flex; }
+        .login-modal {
+            background:#fff; border-radius:20px; padding:44px 48px 40px;
+            max-width:380px; width:90%; text-align:center;
+            box-shadow:0 24px 80px rgba(0,0,0,0.25);
+            animation:lmPop 0.35s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes lmPop {
+            0% { opacity:0; transform:scale(0.85) translateY(20px); }
+            100% { opacity:1; transform:scale(1) translateY(0); }
+        }
+        .login-modal-icon {
+            width:60px; height:60px; border-radius:16px;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            display:flex; align-items:center; justify-content:center;
+            margin:0 auto 16px; font-size:26px; color:#fff;
+            box-shadow:0 6px 20px rgba(102,126,234,0.3);
+        }
+        .login-modal h3 { font-size:18px; font-weight:700; color:#2c3e50; margin:0 0 8px; }
+        .login-modal p { font-size:14px; color:#999; margin:0 0 24px; line-height:1.6; }
+        .login-modal-btn {
+            display:inline-flex; align-items:center; gap:8px;
+            padding:12px 36px; border:none; border-radius:10px;
+            background:linear-gradient(135deg,#667eea,#764ba2); color:#fff;
+            font-size:15px; font-weight:600; cursor:pointer; text-decoration:none;
+            transition:all 0.2s;
+        }
+        .login-modal-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(102,126,234,0.35); }
+
+        .shop-cart-float .badge {
+            position:absolute;
+            top:-4px;
+            right:-4px;
+            width:20px;
+            height:20px;
+            border-radius:50%;
+            background:#ff6b6b;
+            color:#fff;
+            font-size:11px;
+            font-weight:700;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow:0 2px 6px rgba(255,107,107,0.3);
+        }
+
         @keyframes shine {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
@@ -512,6 +657,9 @@
 
         .product-info {
             padding: 20px;
+            flex:1;
+            display:flex;
+            flex-direction:column;
         }
 
         .product-name {
@@ -519,6 +667,10 @@
             font-weight: bold;
             color: #333;
             margin-bottom: 8px;
+            display:-webkit-box;
+            -webkit-line-clamp:1;
+            -webkit-box-orient:vertical;
+            overflow:hidden;
         }
 
         .product-description {
@@ -576,6 +728,7 @@
             justify-content: space-between;
             padding-top: 15px;
             border-top: 1px solid #eee;
+            margin-top:auto;
         }
 
         .product-price {
@@ -871,8 +1024,11 @@
         <div class="banner-glow"></div>
         <div class="container">
             <div class="shop-banner-content">
-                <h1 class="shop-banner-title">🎁 积分商城</h1>
-
+                <h1 class="shop-banner-title">积分商城</h1>
+                <p class="shop-banner-subtitle">用积分兑换各种珍稀道具 · 经验礼包 · 限时特惠</p>
+                <a class="shop-banner-btn" onclick="document.querySelector('.shop-section').scrollIntoView({behavior:'smooth'})">
+                    <span>立即选购</span> <i class="fas fa-arrow-right" style="margin-left:8px;"></i>
+                </a>
             </div>
         </div>
     </section>
@@ -882,7 +1038,7 @@
         <div class="container">
             <div class="user-info-card">
                 <div class="user-info-left">
-                    <div class="user-avatar">👤</div>
+                    <div class="user-avatar"><i class="fas fa-user"></i></div>
                     <div class="user-details">
                         <h3 id="shop-username">加载中...</h3>
                         <div class="user-level">等级 <span id="shop-level">-</span></div>
@@ -896,6 +1052,16 @@
         </div>
     </section>
 
+    <!-- 未登录遮罩 -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-modal">
+            <div class="login-modal-icon"><i class="fas fa-lock"></i></div>
+            <h3>请先登录</h3>
+            <p>积分商城需要登录后才能使用<br>登录后可查看积分并兑换商品</p>
+            <a href="../pages/login.html" class="login-modal-btn"><i class="fas fa-sign-in-alt"></i> 前往登录</a>
+        </div>
+    </div>
+
     <!-- 商城导航栏 -->
     <section class="shop-nav-section">
         <div class="container">
@@ -903,19 +1069,19 @@
                 <!-- 分类标签 -->
                 <div class="shop-categories">
                     <button class="shop-category-btn active" onclick="filterCategory('all')">
-                        <span class="category-icon">🏷️</span>
+                        <span class="category-icon"><i class="fas fa-tag"></i></span>
                         <span>全部商品</span>
                     </button>
                     <button class="shop-category-btn" onclick="filterCategory('hot')">
-                        <span class="category-icon">🔥</span>
+                        <span class="category-icon"><i class="fas fa-fire"></i></span>
                         <span>热销</span>
                     </button>
                     <button class="shop-category-btn" onclick="filterCategory('new')">
-                        <span class="category-icon">✨</span>
+                        <span class="category-icon"><i class="fas fa-star"></i></span>
                         <span>新品</span>
                     </button>
                     <button class="shop-category-btn" onclick="filterCategory('discount')">
-                        <span class="category-icon">💎</span>
+                        <span class="category-icon"><i class="fas fa-gem"></i></span>
                         <span>特惠</span>
                     </button>
                 </div>
@@ -937,18 +1103,41 @@
     <section class="shop-section">
         <div class="container">
 
+            <!-- 结果统计与排序 -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+                <div style="font-size:14px;color:#999;"><span id="shopResultCount" style="font-weight:600;color:#333;">0</span> 件商品</div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    <span style="font-size:13px;color:#999;">排序：</span>
+                    <select id="shopSortSelect" onchange="sortProducts(this.value)" style="padding:6px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;color:#555;background:#fff;outline:none;cursor:pointer;">
+                        <option value="default">默认</option>
+                        <option value="price-asc">价格 ↑</option>
+                        <option value="price-desc">价格 ↓</option>
+                        <option value="name">名称</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- 商品列表 -->
             <div class="shop-grid" id="productGrid">
-                <div class="product-card" data-category="hot" data-product="exp">
-                    <div class="product-image exp">❌️</div>
+                <div class="product-card" data-category="hot" data-product="exp" data-price="50">
+                    <div class="product-image-wrap">
+                        <div class="product-image exp"><span style="font-size:2rem;"><i class="fas fa-bolt"></i></span>
+                            <span class="product-discount-badge"><i class="fas fa-fire"></i> 热门</span>
+                        </div>
+                        <div class="product-hover-overlay">
+                            <button class="quick-buy-btn" onclick="openExchangeModal('exp', 50, '100经验值')"><i class="fas fa-shopping-cart"></i> 快速购买</button>
+                        </div>
+                    </div>
                     <div class="product-info">
                         <div class="product-name">ERROR！</div>
                         <div class="product-description">当你看到这个内容时说明出现了错误！</div>
+                        <div class="product-sold">已售 <strong>128</strong> 件</div>
 
                         <div class="product-footer">
                             <div class="product-price">
-                                <span class="price-icon">💰</span>
-                                <span>NULL</span>
+                                <span class="price-icon"><i class="fas fa-coins"></i></span>
+                                <span>50 积分</span>
+                                <span class="product-original-price">100 积分</span>
                             </div>
                             <button class="buy-btn product-exchange-btn" onclick="openExchangeModal('exp', 50, '100经验值')">立即兑换</button>
                         </div>
@@ -961,7 +1150,7 @@
     <!-- 兑换确认弹窗 -->
     <div class="modal-overlay" id="exchangeModal">
         <div class="modal-content">
-            <div class="modal-icon">🛒</div>
+            <div class="modal-icon"></div>
             <h3 class="modal-title">确认兑换</h3>
             <p class="modal-message" id="modalMessage">确定要兑换该商品吗？</p>
             <div class="modal-buttons">
@@ -970,6 +1159,12 @@
             </div>
         </div>
     </div>
+
+    <!-- 浮动购物车按钮 -->
+    <button class="shop-cart-float" onclick="document.querySelector('.shop-section').scrollIntoView({behavior:'smooth'})" title="回到商城">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="badge" id="cartCount">0</span>
+    </button>
 
     <!-- 侧边栏播放器 -->
     <div id="app-sidebar-player"></div>
@@ -992,158 +1187,84 @@
         let userLevel = 0;
         let productInfo = {};
 
-        // 获取用户 ID（从 localStorage 或 cookie）
-        function getUserId() {
-            // 方法 1: 从 currentUser 对象中获取
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-                try {
-                    const userData = JSON.parse(currentUser);
-                    if (userData.user_id) return userData.user_id;
-                    if (userData.id) return userData.id;
-                } catch (e) {
-                    console.error('解析 currentUser 失败:', e);
-                }
-            }
-            
-            // 方法 2: 从 authToken 获取（token 本身就是 UUID）
-            const token = localStorage.getItem('authToken');
-            if (token && token.length > 0) {
-                return token;
-            }
-            
-            return 'guest';
-        }
+        // 获取 auth token
+        function getToken() { return localStorage.getItem('authToken'); }
 
         // 加载用户信息
         async function loadUserInfo() {
-            try {
-                const userId = getUserId();
-                
-                const response = await fetch(`../api/points/user.php?action=get_user_info&user_id=${encodeURIComponent(userId)}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                const data = await response.json();
-
-                if (data.success) {
-                    userPoints = data.points;
-                    userLevel = data.level;
-                    
-                    document.getElementById('shop-points').textContent = userPoints;
-                    document.getElementById('shop-level').textContent = userLevel;
-                    
-                    // 获取用户名
-                    let username = '玩家';
-                    
-                    // 方法 1: 从 localStorage 的 username 字段获取
-                    const storedUsername = localStorage.getItem('username');
-                    if (storedUsername) {
-                        username = storedUsername;
-                    }
-                    
-                    // 方法 2: 从 currentUser 对象获取
-                    if (username === '玩家') {
-                        const currentUser = localStorage.getItem('currentUser');
-                        if (currentUser) {
-                            try {
-                                const userData = JSON.parse(currentUser);
-                                username = userData.username || userData.nickname || '玩家';
-                            } catch (e) {
-                                console.error('解析 currentUser 失败:', e);
-                            }
-                        }
-                    }
-                    
-                    document.getElementById('shop-username').textContent = username;
-                } else {
-                    document.getElementById('shop-username').textContent = '未登录';
-                    document.getElementById('shop-points').textContent = '0';
-                    document.getElementById('shop-level').textContent = '0';
-                }
-            } catch (err) {
-                console.error('加载用户信息失败:', err);
-                document.getElementById('shop-username').textContent = '加载失败';
+            const token = getToken();
+            if (!token) {
+                document.getElementById('shop-username').textContent = '未登录';
                 document.getElementById('shop-points').textContent = '0';
                 document.getElementById('shop-level').textContent = '0';
+                document.getElementById('loginOverlay').classList.add('show');
+                return;
             }
+            try {
+                const r = await fetch('../api/points/user.php?action=get_user_info', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const d = await r.json();
+                if (d.success) {
+                    document.getElementById('loginOverlay').classList.remove('show');
+                    userPoints = d.points;
+                    userLevel = d.level;
+                    document.getElementById('shop-points').textContent = userPoints;
+                    document.getElementById('shop-level').textContent = userLevel;
+                    let uname = localStorage.getItem('username');
+                    if (!uname) {
+                        try { const cu = JSON.parse(localStorage.getItem('currentUser') || '{}'); uname = cu.username || cu.nickname || '玩家'; } catch(e) {}
+                    }
+                    document.getElementById('shop-username').textContent = uname || '玩家';
+                } else {
+                    document.getElementById('loginOverlay').classList.add('show');
+                }
+            } catch (err) { console.error('加载用户信息失败:', err); }
         }
 
         // 动态加载商品列表
         async function loadProducts() {
             try {
-                const userId = getUserId();
-                const response = await fetch(`../api/points/shop.php?action=get_products&user_id=${encodeURIComponent(userId)}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    renderProducts(data.products);
-                } else {
-                    console.error('加载商品失败:', data.message);
-                    showToast('加载商品列表失败', 'error');
-                }
-            } catch (err) {
-                console.error('加载商品列表失败:', err);
-                showToast('加载商品列表失败', 'error');
-            }
+                const r = await fetch('../api/points/shop.php?action=get_products');
+                const d = await r.json();
+                if (d.success) renderProducts(d.data.products);
+                else showToast('加载商品列表失败', 'error');
+            } catch (err) { console.error('加载商品列表失败:', err); showToast('加载商品列表失败', 'error'); }
         }
 
         // 渲染商品列表
         function renderProducts(products) {
-            const productGrid = document.getElementById('productGrid');
-            if (!productGrid) return;
-            
-            if (!products || products.length === 0) {
-                productGrid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: white; border-radius: 16px;">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🈚</div>
-                        <h3 style="color: #333; margin-bottom: 10px; font-size: 1.5rem;">暂无可购买商品</h3>
-                        <p style="color: #666;">敬请期待后续更新！</p>
-                    </div>
-                `;
+            const grid = document.getElementById('productGrid');
+            if (!grid) return;
+            if (!products || !products.length) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;background:white;border-radius:16px;"><div style="font-size:3rem;margin-bottom:15px;color:#ccc;"><i class="fas fa-box-open"></i></div><h3 style="color:#333;margin-bottom:10px;font-size:1.5rem;">暂无可购买商品</h3><p style="color:#666;">敬请期待后续更新！</p></div>';
                 return;
             }
-            
-            let html = '';
-            products.forEach(product => {
-                const style = product.style || '📦';
-                const categoryClass = getCategoryClass(product.category);
-                const levelReq = product.level_requirement || 0;
-                const stockInfo = getStockInfo(product.stock);
-                const tags = getProductTags(product);
-                
-                html += `
-                    <div class="product-card" data-category="${product.category}" data-product="${product.id}">
-                        ${tags}
-                        <div class="product-image ${categoryClass}">${style}</div>
-                        <div class="product-info">
-                            <div class="product-name">${product.name}</div>
-                            <div class="product-description">${product.description}</div>
-                            <div class="product-meta">
-                                ${levelReq > 0 ? `<span class="meta-tag level">🔒 ${levelReq}级</span>` : ''}
-                                ${stockInfo.show ? `<span class="meta-tag stock ${stockInfo.low ? 'low' : ''}">${stockInfo.text}</span>` : ''}
-                            </div>
-                            <div class="product-footer">
-                                <div class="product-price">
-                                    <span class="price-icon">💰</span>
-                                    <span>${product.price}</span>
-                                </div>
-                                <button class="buy-btn product-exchange-btn" onclick="openExchangeModal('${product.id}', ${product.price}, '${product.name}')">立即兑换</button>
-                            </div>
+            grid.innerHTML = products.map(p => {
+                const s = p.style || 'fa-gift';
+                const cc = getCategoryClass(p.category);
+                const tags = getProductTags(p);
+                const lr = p.level_requirement || 0;
+                return `<div class="product-card" data-category="${p.category}" data-product="${p.id}" data-price="${p.price||0}">
+                    ${tags}
+                    <div class="product-image-wrap">
+                        <div class="product-image ${cc}"><i class="fas ${s}" style="font-size:3.5rem;"></i>${p.discount?`<span class="product-discount-badge">-${p.discount}%</span>`:''}</div>
+                        <div class="product-hover-overlay"><button class="quick-buy-btn" onclick="openExchangeModal('${p.id}',${p.price},'${escHtml(p.name)}')"><i class="fas fa-shopping-cart"></i> 快速购买</button></div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${escHtml(p.name)}</div>
+                        <div class="product-description">${escHtml(p.description||'')}</div>
+                        <div class="product-sold">已售 <strong>${p.sold||0}</strong> 件</div>
+                        ${lr>0?`<div class="product-meta"><span class="meta-tag level"><i class="fas fa-lock"></i> ${lr}级</span></div>`:''}
+                        <div class="product-footer">
+                            <div class="product-price"><span class="price-icon"><i class="fas fa-coins"></i></span><span>${p.price} 积分</span>${p.original_price?`<span class="product-original-price">${p.original_price} 积分</span>`:''}</div>
+                            <button class="buy-btn product-exchange-btn" onclick="openExchangeModal('${p.id}',${p.price},'${escHtml(p.name)}')">立即兑换</button>
                         </div>
                     </div>
-                `;
-            });
-            
-            productGrid.innerHTML = html;
+                </div>`;
+            }).join('');
+            const el = document.getElementById('shopResultCount');
+            if (el) el.textContent = products.length;
         }
 
         // 获取商品标签
@@ -1151,16 +1272,16 @@
             const tags = [];
             
             if (product.category === 'hot') {
-                tags.push('<span class="product-tag hot">🔥 热销</span>');
+                tags.push('<span class="product-tag hot"><i class="fas fa-fire"></i> 热销</span>');
             }
             if (product.category === 'new') {
-                tags.push('<span class="product-tag new">✨ 新品</span>');
+                tags.push('<span class="product-tag new"><i class="fas fa-star"></i> 新品</span>');
             }
             if (product.category === 'discount') {
-                tags.push('<span class="product-tag discount">💎 特惠</span>');
+                tags.push('<span class="product-tag discount"><i class="fas fa-gem"></i> 特惠</span>');
             }
             if (product.stock !== -1 && product.stock < 10 && product.stock > 0) {
-                tags.push('<span class="product-tag urgent">⚡ 急售</span>');
+                tags.push('<span class="product-tag urgent"> 急售</span>');
             }
             
             return tags.length > 0 ? `<div class="product-tags">${tags.join('')}</div>` : '';
@@ -1177,6 +1298,8 @@
             };
             return classMap[category] || '';
         }
+
+        function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
         // 获取库存信息
         function getStockInfo(stock) {
@@ -1264,64 +1387,38 @@
         // 确认兑换
         async function confirmExchange() {
             if (!selectedProduct) return;
-            
-            // 禁用按钮防止重复提交
-            const confirmBtn = document.querySelector('#exchangeModal .modal-btn.confirm');
-            if (confirmBtn) {
-                confirmBtn.disabled = true;
-                confirmBtn.textContent = '兑换中...';
-            }
-            
+            const token = getToken();
+            if (!token) { showToast('请先登录', 'error'); return; }
+
+            const btn = document.querySelector('#exchangeModal .modal-btn.confirm');
+            if (btn) { btn.disabled = true; btn.textContent = '兑换中...'; }
+
             try {
-                const userId = getUserId();
-                console.log('开始购买 - userId:', userId, 'productId:', selectedProduct.type);
-                
-                // 调用购买 API
-                const response = await fetch('../api/points/shop.php', {
+                const r = await fetch('../api/points/shop.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'buy_product',
-                        user_id: userId,
-                        product_id: selectedProduct.type
+                        product_id: selectedProduct.type,
+                        token: token
                     })
                 });
-                
-                console.log('响应状态:', response.status);
-                const text = await response.text();
-                console.log('原始响应:', text);
-                
-                const data = JSON.parse(text);
-                
-                if (data.success) {
-                    // 更新显示
-                    userPoints = data.remaining_points;
+                const d = await r.json();
+                if (d.success) {
+                    userPoints = d.remaining_points;
                     document.getElementById('shop-points').textContent = userPoints;
-                    
-                    // 重新加载商品列表（更新库存等）
                     await loadProducts();
-                    
-                    // 显示成功弹窗
-                    showSuccessModal(data.product_name);
+                    showSuccessModal(d.product_name);
                     closeExchangeModal();
-                    
-                    // 显示 Toast 提示
-                    showToast(`兑换成功！获得 ${data.product_name}`, 'success');
+                    showToast(d.message || '兑换成功！', 'success');
                 } else {
-                    console.error('购买失败:', data.message);
-                    showToast(data.message, 'error');
+                    showToast(d.message, 'error');
                 }
             } catch (err) {
                 console.error('兑换失败:', err);
                 showToast('兑换失败，请稍后重试', 'error');
             } finally {
-                // 恢复按钮
-                if (confirmBtn) {
-                    confirmBtn.disabled = false;
-                    confirmBtn.textContent = '确定';
-                }
+                if (btn) { btn.disabled = false; btn.textContent = '确定'; }
             }
         }
         
@@ -1332,7 +1429,7 @@
             modal.style.display = 'flex';
             modal.innerHTML = `
                 <div class="modal-content">
-                    <div class="modal-icon">🎉</div>
+                    <div class="modal-icon"></div>
                     <h3 class="modal-title">兑换成功！</h3>
                     <p class="modal-message">恭喜您获得 ${reward}</p>
                     <div class="modal-buttons">
@@ -1361,7 +1458,7 @@
             const toast = document.createElement('div');
             toast.className = `shop-toast toast-${type}`;
             
-            const icon = type === 'success' ? '✅' : '❌';
+            const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
             toast.innerHTML = `
                 <span class="toast-icon">${icon}</span>
                 <span class="toast-message">${message}</span>
@@ -1464,12 +1561,37 @@
             if (visibleCount === 0) {
                 productGrid.innerHTML = `
                     <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: white; border-radius: 16px;">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🔍</div>
+                        <div style="font-size: 3rem; margin-bottom: 15px;"></div>
                         <h3 style="color: #333; margin-bottom: 10px; font-size: 1.5rem;">未找到相关商品</h3>
                         <p style="color: #666;">试试其他关键词或分类吧～</p>
                     </div>
                 `;
             }
+
+            // 更新结果计数
+            const countEl = document.getElementById('shopResultCount');
+            if (countEl) countEl.textContent = visibleCount;
+        }
+
+        // 排序功能
+        function sortProducts(order) {
+            const grid = document.getElementById('productGrid');
+            const cards = Array.from(grid.querySelectorAll('.product-card'));
+            if (!cards.length) return;
+            
+            cards.sort((a, b) => {
+                const priceA = parseInt(a.dataset.price || '0');
+                const priceB = parseInt(b.dataset.price || '0');
+                const nameA = (a.querySelector('.product-name')?.textContent || '');
+                const nameB = (b.querySelector('.product-name')?.textContent || '');
+                
+                if (order === 'price-asc') return priceA - priceB;
+                if (order === 'price-desc') return priceB - priceA;
+                if (order === 'name') return nameA.localeCompare(nameB, 'zh');
+                return 0;
+            });
+            
+            cards.forEach(card => grid.appendChild(card));
         }
     </script>
 </body>

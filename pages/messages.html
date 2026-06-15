@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息 - 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=3.22">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.0">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <style>
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { background:url('../assets/img/8.webp') center/cover fixed; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; height:100vh; display:flex; flex-direction:column; }
+        /* 顶栏 */
+        .msg-topbar { background:rgba(255,255,255,0.75); backdrop-filter:blur(10px); border-bottom:1px solid rgba(232,232,232,0.5); padding:0 20px; height:48px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+        .msg-topbar a { text-decoration:none; font-size:13px; color:#667eea; display:flex; align-items:center; gap:6px; transition:color 0.2s; }
+        .msg-topbar a:hover { color:#764ba2; }
+        .msg-topbar-title { font-size:14px; font-weight:600; color:#333; display:flex; align-items:center; gap:8px; }
+        .msg-container { display:flex; flex:1; max-width:1200px; width:100%; margin:0 auto; background:rgba(255,255,255,0.5); backdrop-filter:blur(20px); border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.08); overflow:hidden; height:calc(100vh - 100px); margin-top:8px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.4); }
+        .msg-sidebar { width:320px; min-width:320px; border-right:1px solid #e8e8e8; display:flex; flex-direction:column; background:#fafbfc; }
+        .msg-sidebar-header { padding:16px 16px 12px; border-bottom:1px solid #e8e8e8; background:#fff; position:relative; }
+        .msg-sidebar-header::after { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#667eea,#764ba2); }
+        .msg-sidebar-header h2 { font-size:16px; font-weight:700; color:#333; }
+        .msg-sidebar-header .sub { font-size:12px; color:#999; margin-top:2px; }
+        .msg-search-wrap { padding:10px 16px; position:relative; }
+        .msg-search-wrap input { width:100%; padding:9px 14px 9px 36px; border:1.5px solid #e0e0e0; border-radius:10px; font-size:13px; outline:none; transition:all 0.2s; background:#fff; }
+        .msg-search-wrap input:focus { border-color:#667eea; box-shadow:0 0 0 3px rgba(102,126,234,0.1); }
+        .msg-search-wrap .search-icon { position:absolute; left:28px; top:50%; transform:translateY(-50%); color:#bbb; font-size:13px; pointer-events:none; }
+        .msg-actions { display:flex; gap:8px; padding:6px 16px 12px; }
+        .msg-actions button { flex:1; padding:8px; border:1.5px solid #e0e0e0; border-radius:8px; background:#fff; font-size:13px; cursor:pointer; font-weight:500; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:6px; }
+        .msg-actions .btn-private { color:#667eea; }
+        .msg-actions .btn-private:hover { background:#f0f2ff; border-color:#667eea; }
+        .msg-actions .btn-group { color:#43e97b; }
+        .msg-actions .btn-group:hover { background:#f0fff4; border-color:#43e97b; }
+        .msg-conv-list { flex:1; overflow-y:auto; }
+        .msg-conv-list::-webkit-scrollbar { width:4px; }
+        .msg-conv-list::-webkit-scrollbar-thumb { background:#ddd; border-radius:2px; }
+        .msg-conv { display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; transition:all 0.15s; border-bottom:1px solid #f0f0f0; }
+        .msg-conv:hover { background:#f0f2ff; }
+        .msg-conv.active { background:linear-gradient(135deg,#f0f2ff,#e8ecff); border-left:3px solid #667eea; padding-left:13px; }
+        .msg-conv-avatar { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; color:#fff; flex-shrink:0; position:relative; }
+        .msg-conv-avatar.private { background:linear-gradient(135deg,#667eea,#764ba2); }
+        .msg-conv-avatar.group { background:linear-gradient(135deg,#43e97b,#38f9d7); }
+        .msg-conv-info { flex:1; min-width:0; }
+        .msg-conv-name { font-size:14px; font-weight:600; color:#333; display:flex; align-items:center; gap:6px; }
+        .msg-conv-name .badge-group { font-size:10px; background:#e0e0e0; color:#666; padding:1px 6px; border-radius:4px; }
+        .msg-conv-last { font-size:12px; color:#999; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:2px; }
+        .msg-conv-time { font-size:11px; color:#bbb; flex-shrink:0; }
+        .msg-conv-unread { background:#e74c3c; color:#fff; font-size:11px; min-width:20px; height:20px; border-radius:10px; display:flex; align-items:center; justify-content:center; padding:0 5px; font-weight:700; box-shadow:0 2px 8px rgba(231,76,60,0.4); animation:unreadPulse 1.5s ease-in-out infinite; }
+        @keyframes unreadPulse { 0%,100%{box-shadow:0 2px 8px rgba(231,76,60,0.4)} 50%{box-shadow:0 2px 16px rgba(231,76,60,0.7)} }
+        .msg-main { flex:1; display:flex; flex-direction:column; }
+        .msg-main-header { padding:14px 20px; border-bottom:1px solid #e8e8e8; display:flex; align-items:center; justify-content:space-between; background:#fff; position:relative; }
+        .msg-main-header::after { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#667eea,#764ba2); }
+        .msg-main-header .conv-title { font-size:16px; font-weight:700; color:#333; }
+        .msg-main-header .conv-meta { font-size:12px; color:#999; margin-top:2px; }
+        .msg-main-header .conv-actions { display:flex; gap:6px; }
+        .msg-main-header .conv-actions button { background:none; border:1px solid #e0e0e0; border-radius:8px; padding:6px 14px; font-size:12px; cursor:pointer; color:#666; transition:all 0.2s; }
+        .msg-main-header .conv-actions button:hover { background:#f5f5f5; border-color:#667eea; color:#667eea; }
+        .msg-messages { flex:1; overflow-y:auto; padding:20px; background:#f8f9fb; display:flex; flex-direction:column; gap:12px; }
+        .msg-messages::-webkit-scrollbar { width:4px; }
+        .msg-messages::-webkit-scrollbar-thumb { background:#ddd; border-radius:2px; }
+        .msg-empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#ccc; gap:12px; }
+        .msg-empty-state i { font-size:64px; opacity:0.25; }
+        .msg-empty-state span { font-size:15px; }
+        .msg-bubble { max-width:72%; padding:10px 16px; border-radius:14px; font-size:14px; line-height:1.6; word-break:break-word; position:relative; animation:msgIn 0.2s ease; }
+        @keyframes msgIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        .msg-bubble.self { align-self:flex-end; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border-bottom-right-radius:4px; }
+        .msg-bubble.other { align-self:flex-start; background:#fff; color:#333; border:1px solid #e8e8e8; border-bottom-left-radius:4px; box-shadow:0 1px 4px rgba(0,0,0,0.04); }
+        .msg-bubble.system { align-self:center; background:transparent; color:#bbb; font-size:12px; padding:4px 12px; border:none; box-shadow:none; }
+        .msg-bubble .msg-from { font-size:11px; font-weight:600; margin-bottom:3px; opacity:0.7; }
+        .msg-bubble.other .msg-from { color:#667eea; }
+        .msg-bubble .msg-time { font-size:10px; opacity:0.5; margin-top:4px; text-align:right; }
+        .msg-input-area { padding:12px 20px; border-top:1px solid #e8e8e8; display:flex; gap:10px; align-items:flex-end; background:#fff; }
+        .msg-input-area textarea { flex:1; padding:10px 14px; border:1.5px solid #e0e0e0; border-radius:12px; font-size:14px; outline:none; resize:none; min-height:42px; max-height:120px; line-height:1.5; font-family:inherit; transition:all 0.2s; }
+        .msg-input-area textarea:focus { border-color:#667eea; box-shadow:0 0 0 3px rgba(102,126,234,0.08); }
+        .msg-input-area button { padding:10px 24px; border:none; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; white-space:nowrap; display:flex; align-items:center; gap:6px; }
+        .msg-input-area button:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(102,126,234,0.35); }
+        .msg-input-area button:disabled { opacity:0.5; cursor:default; transform:none; box-shadow:none; }
+        .msg-select-hint { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#ccc; gap:8px; background:linear-gradient(180deg,#f8f9fb,#fff); }
+        .msg-select-hint i { font-size:56px; opacity:0.2; }
+        .msg-select-hint span { font-size:14px; }
+        /* Modal */
+        .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+        .modal-overlay.show { display:flex; }
+        .modal-box { background:#fff; border-radius:16px; width:90%; max-width:420px; padding:28px; box-shadow:0 20px 60px rgba(0,0,0,0.25); animation:modalIn 0.2s ease; }
+        @keyframes modalIn { from { opacity:0; transform:scale(0.95) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
+        .modal-box h3 { font-size:16px; font-weight:700; margin-bottom:16px; color:#333; display:flex; align-items:center; gap:8px; }
+        .modal-box input { width:100%; padding:10px 14px; border:1.5px solid #e0e0e0; border-radius:10px; font-size:14px; outline:none; margin-bottom:12px; transition:border-color 0.2s; }
+        .modal-box input:focus { border-color:#667eea; box-shadow:0 0 0 3px rgba(102,126,234,0.08); }
+        .modal-box .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:16px; }
+        .modal-box .modal-actions button { padding:10px 22px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:all 0.2s; }
+        .modal-box .modal-actions .btn-cancel { background:#f0f0f0; color:#666; }
+        .modal-box .modal-actions .btn-cancel:hover { background:#e0e0e0; }
+        .modal-box .modal-actions .btn-confirm { background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; }
+        .modal-box .modal-actions .btn-confirm:hover { box-shadow:0 4px 12px rgba(102,126,234,0.3); }
+        .user-tag { display:inline-flex; align-items:center; gap:4px; background:#f0f2ff; border:1px solid #d0d5ff; border-radius:8px; padding:5px 12px; font-size:12px; color:#667eea; margin:3px; cursor:default; }
+        .user-tag i { cursor:pointer; font-size:11px; color:#999; margin-left:4px; }
+        .user-tag i:hover { color:#e74c3c; }
+        .search-result-item { padding:10px 14px; cursor:pointer; border-radius:8px; display:flex; align-items:center; gap:10px; transition:background 0.15s; }
+        .search-result-item:hover { background:#f0f2ff; }
+        .search-result-item .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#667eea,#764ba2); display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; }
+        @media(max-width:768px) { .msg-sidebar { width:100%; min-width:100%; } .msg-main { display:none; } .msg-main.show { display:flex; } .msg-sidebar.hide { display:none; } }
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <div id="app-navbar"></div>
+
+    <!-- 顶栏 -->
+    <div class="msg-topbar">
+        <div class="msg-topbar-title"><i class="fas fa-comment-dots" style="color:#667eea;"></i> 聊天中心</div>
+        <a href="../pages/profile.html"><i class="fas fa-arrow-left"></i> 返回个人中心</a>
+    </div>
+
+    <div class="msg-container" id="msgApp">
+        <!-- 侧栏 -->
+        <div class="msg-sidebar" id="msgSidebar">
+            <div class="msg-sidebar-header">
+                <h2><i class="fas fa-comment-dots" style="color:#667eea;"></i> 聊天</h2>
+                <div class="sub">私聊 · 群组讨论</div>
+            </div>
+            <div class="msg-search-wrap">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="msgSearch" placeholder="搜索用户..." oninput="searchUsers(this.value)">
+            </div>
+            <!-- 搜索结果 -->
+            <div id="searchResults" style="display:none;max-height:200px;overflow-y:auto;padding:4px 12px;"></div>
+            <!-- 功能按钮 -->
+            <div class="msg-actions">
+                <button class="btn-private" onclick="showNewPrivateModal()"><i class="fas fa-user-plus"></i> 新私聊</button>
+                <button class="btn-group" onclick="showNewGroupModal()"><i class="fas fa-users"></i> 新建群</button>
+            </div>
+            <!-- 会话列表 -->
+            <div class="msg-conv-list" id="convList"></div>
+        </div>
+
+        <!-- 主区域 -->
+        <div class="msg-main" id="msgMain">
+            <div class="msg-select-hint" id="msgSelectHint">
+                <i class="fas fa-comment-dots"></i>
+                <span>选择一个会话开始聊天</span>
+            </div>
+            <div id="msgChatArea" style="display:none;flex-direction:column;height:100%;">
+                <div class="msg-main-header">
+                    <div>
+                        <div class="conv-title" id="chatTitle">加载中...</div>
+                        <div class="conv-meta" id="chatMeta"></div>
+                    </div>
+                    <div class="conv-actions" id="chatActions"></div>
+                </div>
+                <div class="msg-messages" id="msgMessages"></div>
+                <div class="msg-input-area">
+                    <textarea id="msgInput" placeholder="输入消息..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+                    <button id="sendBtn" onclick="sendMsg()"><i class="fas fa-paper-plane"></i> 发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新私聊弹窗 -->
+    <div class="modal-overlay" id="newPrivateModal">
+        <div class="modal-box">
+            <h3><i class="fas fa-user-plus" style="color:#667eea;"></i> 发起私聊</h3>
+            <input type="text" id="newPrivateUser" placeholder="输入对方用户名">
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('newPrivateModal')">取消</button>
+                <button class="btn-confirm" onclick="startPrivate()">开始聊天</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新建群弹窗 -->
+    <div class="modal-overlay" id="newGroupModal">
+        <div class="modal-box">
+            <h3><i class="fas fa-users" style="color:#43e97b;"></i> 创建群聊</h3>
+            <input type="text" id="newGroupName" placeholder="群名称">
+            <div style="font-size:12px;color:#999;margin-bottom:6px;">搜索并选择成员</div>
+            <input type="text" id="groupMemberSearch" placeholder="搜索用户..." oninput="searchGroupMembers(this.value)">
+            <div id="groupMemberResults" style="max-height:120px;overflow-y:auto;margin-bottom:8px;"></div>
+            <div id="groupMemberTags"></div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('newGroupModal')">取消</button>
+                <button class="btn-confirm" onclick="createGroup()">创建群聊</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 邀请成员弹窗 -->
+    <div class="modal-overlay" id="inviteModal">
+        <div class="modal-box">
+            <h3><i class="fas fa-user-plus" style="color:#667eea;"></i> 邀请成员</h3>
+            <div style="font-size:12px;color:#999;margin-bottom:6px;">搜索用户并添加到群聊</div>
+            <input type="text" id="inviteSearch" placeholder="搜索用户..." oninput="searchInviteMembers(this.value)">
+            <div id="inviteResults" style="max-height:150px;overflow-y:auto;margin-bottom:8px;"></div>
+            <div id="inviteTags"></div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('inviteModal')">取消</button>
+                <button class="btn-confirm" onclick="confirmInvite()">邀请</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 组件 -->
+    <script src="../js/navbar.js?v=1.0"></script>
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+
+    <script>
+        let conversations = [];
+        let currentConvId = null;
+        let currentConv = null;
+        let groupMembers = [];
+        let searchTimer = null;
+
+        // ── 获取认证头 ──
+        function authHeaders() {
+            const t = localStorage.getItem('authToken');
+            return t ? { 'Authorization': 'Bearer ' + t, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
+        }
+
+        async function api(path, body) {
+            const opt = { headers: authHeaders() };
+            if (body) { opt.method = 'POST'; opt.body = JSON.stringify(body); }
+            const r = await fetch('../api/message.php' + path, opt);
+            return r.json();
+        }
+
+        // ── 加载会话列表 ──
+        async function loadConversations() {
+            const d = await api('?action=list');
+            if (!d.success) return;
+            conversations = d.data.conversations || [];
+            renderConvList();
+            if (currentConvId) {
+                const stillExists = conversations.find(c => c.id === currentConvId);
+                if (!stillExists) { currentConvId = null; showChatArea(false); }
+            }
+        }
+
+        function renderConvList() {
+            const el = document.getElementById('convList');
+            if (!conversations.length) {
+                el.innerHTML = '<div style="text-align:center;padding:50px 20px;color:#ccc;"><i class="fas fa-inbox" style="font-size:40px;display:block;margin-bottom:12px;opacity:0.25;"></i><span style="font-size:14px;">暂无会话</span><span style="font-size:12px;color:#ddd;display:block;margin-top:6px;">点击上方按钮发起聊天</span></div>';
+                return;
+            }
+            el.innerHTML = conversations.map(c => {
+                const isPrivate = c.type === 'private';
+                const avatar = isPrivate ? '<i class="fas fa-user"></i>' : '<i class="fas fa-users"></i>';
+                const lastText = c.last_message ? (c.last_message.from + ': ' + c.last_message.text) : '';
+                return '<div class="msg-conv' + (c.id === currentConvId ? ' active' : '') + '" onclick="selectConv(\'' + c.id + '\')">' +
+                    '<div class="msg-conv-avatar ' + c.type + '">' + avatar + '</div>' +
+                    '<div class="msg-conv-info">' +
+                    '<div class="msg-conv-name">' + escHtml(c.name || '未知') + (c.type === 'group' ? '<span class="badge-group">群</span>' : '') + '</div>' +
+                    '<div class="msg-conv-last">' + escHtml(lastText) + '</div>' +
+                    '</div>' +
+                    (c.last_time ? '<div class="msg-conv-time">' + formatTime(c.last_time) + '</div>' : '') +
+                    (c.unread > 0 ? '<div class="msg-conv-unread">' + (c.unread > 99 ? '99+' : c.unread) + '</div>' : '') +
+                    '</div>';
+            }).join('');
+        }
+
+        // ── 选择会话 ──
+        async function selectConv(convId) {
+            currentConvId = convId;
+            const d = await api('?action=history&conv_id=' + convId);
+            if (!d.success) return;
+            currentConv = d.data.conversation;
+            const msgs = d.data.messages || [];
+            lastMsgCount = msgs.length;
+            renderConvList();
+
+            // 更新标题
+            const conv = conversations.find(c => c.id === convId);
+            document.getElementById('chatTitle').textContent = conv ? (conv.name || '聊天') : '聊天';
+            document.getElementById('chatMeta').textContent = currentConv.type === 'group' ?
+                (currentConv.participants.length + ' 位成员') : '';
+
+            // 操作按钮
+            const actions = document.getElementById('chatActions');
+            if (currentConv.type === 'group') {
+                actions.innerHTML = '<button onclick="showInviteModal()"><i class="fas fa-user-plus"></i> 邀请</button>' +
+                    '<button onclick="showGroupMembers()"><i class="fas fa-users"></i> 成员</button>' +
+                    '<button onclick="leaveGroup()"><i class="fas fa-sign-out-alt"></i> 退出</button>';
+            } else {
+                actions.innerHTML = '';
+            }
+
+            renderMessages(msgs);
+            showChatArea(true);
+            scrollToBottom();
+
+            // 移动端处理
+            if (window.innerWidth <= 768) {
+                document.getElementById('msgSidebar').classList.add('hide');
+                document.getElementById('msgMain').classList.add('show');
+            }
+        }
+
+        function showChatArea(show) {
+            document.getElementById('msgSelectHint').style.display = show ? 'none' : 'flex';
+            document.getElementById('msgChatArea').style.display = show ? 'flex' : 'none';
+        }
+
+        function renderMessages(msgs) {
+            const el = document.getElementById('msgMessages');
+            if (!msgs.length) { el.innerHTML = '<div class="msg-empty-state"><i class="fas fa-comment-dots"></i><span>暂无消息</span></div>'; return; }
+            el.innerHTML = msgs.map(m => {
+                if (m.type === 'system') return '<div class="msg-bubble system">' + escHtml(m.content) + ' <span class="msg-time">' + m.time + '</span></div>';
+                const isSelf = m.from === getCurrentUser()?.username;
+                return '<div class="msg-bubble ' + (isSelf ? 'self' : 'other') + '">' +
+                    (!isSelf ? '<div class="msg-from">' + escHtml(m.from) + '</div>' : '') +
+                    escHtml(m.content) +
+                    '<div class="msg-time">' + formatTime(m.time) + '</div></div>';
+            }).join('');
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                const el = document.getElementById('msgMessages');
+                el.scrollTop = el.scrollHeight;
+            }, 50);
+        }
+
+        // ── 发送消息 ──
+        async function sendMsg() {
+            const input = document.getElementById('msgInput');
+            const content = input.value.trim();
+            if (!content || !currentConvId) return;
+            input.value = '';
+            document.getElementById('sendBtn').disabled = true;
+
+            const d = await api('', { action: 'send', conv_id: currentConvId, content: content });
+            document.getElementById('sendBtn').disabled = false;
+            if (d.success) {
+                // 添加消息到列表
+                const el = document.getElementById('msgMessages');
+                const isSelf = d.data.message.from === getCurrentUser()?.username;
+                el.innerHTML += '<div class="msg-bubble ' + (isSelf ? 'self' : 'other') + '">' +
+                    escHtml(d.data.message.content) +
+                    '<div class="msg-time">' + formatTime(d.data.message.time) + '</div></div>';
+                scrollToBottom();
+                loadConversations(); // 更新会话列表排序
+            } else {
+                showToast(d.message || '发送失败', 'error');
+            }
+        }
+
+        // ── 搜索用户 ──
+        async function searchUsers(q) {
+            const el = document.getElementById('searchResults');
+            if (!q.trim()) { el.style.display = 'none'; return; }
+            const d = await api('?action=search&q=' + encodeURIComponent(q));
+            if (!d.success || !d.data.users.length) { el.style.display = 'none'; return; }
+            el.style.display = 'block';
+            el.innerHTML = d.data.users.map(u =>
+                '<div class="search-result-item" onclick="startPrivateWith(\'' + u.username + '\')">' +
+                '<div class="avatar"><i class="fas fa-user"></i></div>' +
+                '<span style="font-size:13px;">' + escHtml(u.username) + (u.nickname !== u.username ? ' (' + escHtml(u.nickname) + ')' : '') + '</span>' +
+                '</div>'
+            ).join('');
+        }
+
+        window.startPrivateWith = async function(user) {
+            const d = await api('', { action: 'start_private', to: user });
+            if (d.success) {
+                document.getElementById('searchResults').style.display = 'none';
+                document.getElementById('msgSearch').value = '';
+                await loadConversations();
+                selectConv(d.data.conv_id);
+            } else {
+                showToast(d.message || '失败', 'error');
+            }
+        }
+
+        // ── 搜索群成员 ──
+        window.searchGroupMembers = function(q) {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(async () => {
+                const el = document.getElementById('groupMemberResults');
+                if (!q.trim()) { el.innerHTML = ''; return; }
+                const d = await api('?action=search&q=' + encodeURIComponent(q));
+                if (!d.success) return;
+                el.innerHTML = d.data.users.map(u =>
+                    '<div class="search-result-item" onclick="addGroupMember(\'' + u.username + '\')">' +
+                    '<div class="avatar"><i class="fas fa-user"></i></div>' +
+                    '<span style="font-size:13px;">' + escHtml(u.username) + '</span>' +
+                    '</div>'
+                ).join('');
+            }, 200);
+        }
+
+        window.addGroupMember = function(user) {
+            if (groupMembers.includes(user)) return;
+            groupMembers.push(user);
+            document.getElementById('groupMemberTags').innerHTML = groupMembers.map(u =>
+                '<span class="user-tag">' + escHtml(u) + ' <i class="fas fa-times" onclick="removeGroupMember(\'' + u + '\')"></i></span>'
+            ).join('');
+            document.getElementById('groupMemberSearch').value = '';
+            document.getElementById('groupMemberResults').innerHTML = '';
+        }
+
+        window.removeGroupMember = function(user) {
+            groupMembers = groupMembers.filter(u => u !== user);
+            document.getElementById('groupMemberTags').innerHTML = groupMembers.map(u =>
+                '<span class="user-tag">' + escHtml(u) + ' <i class="fas fa-times" onclick="removeGroupMember(\'' + u + '\')"></i></span>'
+            ).join('');
+        }
+
+        // ── 弹窗操作 ──
+        window.showNewPrivateModal = function() { document.getElementById('newPrivateModal').classList.add('show'); };
+        window.showNewGroupModal = function() { document.getElementById('newGroupModal').classList.add('show'); };
+        window.closeModal = function(id) { document.getElementById(id).classList.remove('show'); };
+
+        window.startPrivate = async function() {
+            const user = document.getElementById('newPrivateUser').value.trim();
+            if (!user) { showToast('请输入用户名', 'error'); return; }
+            await startPrivateWith(user);
+            closeModal('newPrivateModal');
+            document.getElementById('newPrivateUser').value = '';
+        };
+
+        window.createGroup = async function() {
+            const name = document.getElementById('newGroupName').value.trim();
+            if (!name) { showToast('请输入群名称', 'error'); return; }
+            if (!groupMembers.length) { showToast('请选择至少 1 位成员', 'error'); return; }
+            const d = await api('', { action: 'create_group', name: name, participants: groupMembers });
+            if (d.success) {
+                showToast('群聊已创建', 'success');
+                closeModal('newGroupModal');
+                document.getElementById('newGroupName').value = '';
+                groupMembers = [];
+                document.getElementById('groupMemberTags').innerHTML = '';
+                await loadConversations();
+                selectConv(d.data.conv_id);
+            } else {
+                showToast(d.message || '创建失败', 'error');
+            }
+        };
+
+        window.showGroupMembers = function() {
+            if (!currentConv) return;
+            const list = currentConv.participants.map(p => escHtml(p)).join('、');
+            showToast('群成员: ' + list, 'info');
+        };
+
+        window.leaveGroup = async function() {
+            if (!confirm('确定退出该群聊？')) return;
+            const d = await api('', { action: 'leave_group', conv_id: currentConvId });
+            if (d.success) {
+                showToast('已退出群聊', 'success');
+                currentConvId = null;
+                showChatArea(false);
+                loadConversations();
+            } else {
+                showToast(d.message || '失败', 'error');
+            }
+        };
+
+        let inviteMembers = [];
+        window.showInviteModal = function() {
+            inviteMembers = [];
+            document.getElementById('inviteTags').innerHTML = '';
+            document.getElementById('inviteResults').innerHTML = '';
+            document.getElementById('inviteSearch').value = '';
+            document.getElementById('inviteModal').classList.add('show');
+        };
+        window.searchInviteMembers = function(q) {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(async () => {
+                const el = document.getElementById('inviteResults');
+                if (!q.trim()) { el.innerHTML = ''; return; }
+                const d = await api('?action=search&q=' + encodeURIComponent(q));
+                if (!d.success) return;
+                // 过滤已在群里的成员
+                const existing = currentConv ? currentConv.participants : [];
+                const filtered = (d.data.users || []).filter(u => !existing.includes(u.username));
+                el.innerHTML = filtered.map(u =>
+                    '<div class="search-result-item" onclick="addInviteMember(\'' + u.username + '\')">' +
+                    '<div class="avatar"><i class="fas fa-user"></i></div>' +
+                    '<span style="font-size:13px;">' + escHtml(u.username) + '</span>' +
+                    '</div>'
+                ).join('');
+                if (!filtered.length) el.innerHTML = '<div style="padding:10px;color:#999;font-size:13px;text-align:center;">没有可邀请的用户</div>';
+            }, 200);
+        };
+        window.addInviteMember = function(user) {
+            if (inviteMembers.includes(user)) return;
+            inviteMembers.push(user);
+            document.getElementById('inviteTags').innerHTML = inviteMembers.map(u =>
+                '<span class="user-tag">' + escHtml(u) + ' <i class="fas fa-times" onclick="removeInviteMember(\'' + u + '\')"></i></span>'
+            ).join('');
+            document.getElementById('inviteSearch').value = '';
+            document.getElementById('inviteResults').innerHTML = '';
+        };
+        window.removeInviteMember = function(user) {
+            inviteMembers = inviteMembers.filter(u => u !== user);
+            document.getElementById('inviteTags').innerHTML = inviteMembers.map(u =>
+                '<span class="user-tag">' + escHtml(u) + ' <i class="fas fa-times" onclick="removeInviteMember(\'' + u + '\')"></i></span>'
+            ).join('');
+        };
+        window.confirmInvite = async function() {
+            if (!inviteMembers.length) { showToast('请选择要邀请的用户', 'error'); return; }
+            if (!currentConvId) return;
+            let success = 0, fail = 0;
+            for (const user of inviteMembers) {
+                const d = await api('', { action: 'add_member', conv_id: currentConvId, username: user });
+                if (d.success) success++; else fail++;
+            }
+            showToast('邀请完成: ' + success + ' 成功' + (fail ? ', ' + fail + ' 失败' : ''), fail ? 'error' : 'success');
+            closeModal('inviteModal');
+            // 刷新
+            const d = await api('?action=history&conv_id=' + currentConvId);
+            if (d.success) currentConv = d.data.conversation;
+            document.getElementById('chatMeta').textContent = currentConv.participants.length + ' 位成员';
+        };
+
+        // ── 工具 ──
+        function formatTime(t) {
+            if (!t) return '';
+            const d = new Date(t.replace(/-/g, '/'));
+            const now = new Date();
+            const diff = (now - d) / 1000;
+            if (diff < 60) return '刚刚';
+            if (diff < 3600) return Math.floor(diff / 60) + '分钟前';
+            if (diff < 86400) return Math.floor(diff / 3600) + '小时前';
+            if (diff < 172800) return '昨天';
+            return (d.getMonth() + 1) + '/' + d.getDate();
+        }
+
+        function escHtml(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function getCurrentUser() {
+            try {
+                const u = localStorage.getItem('currentUser');
+                return u ? JSON.parse(u) : null;
+            } catch (e) { return null; }
+        }
+
+        function showToast(msg, type) {
+            const d = document.createElement('div');
+            d.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:10px 24px;border-radius:10px;font-size:14px;z-index:99999;color:#fff;' +
+                (type === 'error' ? 'background:#e74c3c;' : type === 'success' ? 'background:#27ae60;' : 'background:#667eea;') +
+                'box-shadow:0 4px 16px rgba(0,0,0,0.15);animation:fadeIn 0.3s;';
+            d.textContent = msg;
+            document.body.appendChild(d);
+            setTimeout(() => { d.style.opacity = '0'; d.style.transition = 'opacity 0.3s'; setTimeout(() => d.remove(), 300); }, 2500);
+        }
+
+        // ── 轮询新消息 ──
+        let pollTimer = null;
+        let lastConvData = '';
+        let lastMsgCount = 0;
+        function startPolling() {
+            pollTimer = setInterval(async () => {
+                // 增量更新会话列表
+                try {
+                    const d = await api('?action=list');
+                    if (d.success) {
+                        const newData = JSON.stringify(d.data.conversations);
+                        if (newData !== lastConvData) {
+                            lastConvData = newData;
+                            conversations = d.data.conversations || [];
+                            // 只更新时间、最后消息和未读数，避免整个列表闪烁
+                            const el = document.getElementById('convList');
+                            const items = el.querySelectorAll('.msg-conv');
+                            let needsFullRefresh = false;
+                            for (let i = 0; i < conversations.length; i++) {
+                                const c = conversations[i];
+                                const item = items[i];
+                                if (item) {
+                                    const timeEl = item.querySelector('.msg-conv-time');
+                                    const lastEl = item.querySelector('.msg-conv-last');
+                                    const unreadEl = item.querySelector('.msg-conv-unread');
+                                    const lastText = c.last_message ? (c.last_message.from + ': ' + c.last_message.text) : '';
+                                    if (timeEl) timeEl.textContent = c.last_time ? formatTime(c.last_time) : '';
+                                    if (lastEl) lastEl.textContent = lastText;
+                                    if (c.unread > 0) {
+                                        if (!unreadEl) {
+                                            const div = document.createElement('div');
+                                            div.className = 'msg-conv-unread';
+                                            div.textContent = c.unread > 99 ? '99+' : c.unread;
+                                            item.appendChild(div);
+                                        } else {
+                                            unreadEl.textContent = c.unread > 99 ? '99+' : c.unread;
+                                        }
+                                    } else if (unreadEl) { unreadEl.remove(); }
+                                } else {
+                                    needsFullRefresh = true;
+                                    break;
+                                }
+                            }
+                            if (needsFullRefresh) renderConvList();
+                        }
+                    }
+                } catch(e) {}
+
+                // 增量更新消息
+                if (currentConvId) {
+                    try {
+                        const d = await api('?action=history&conv_id=' + currentConvId);
+                        if (d.success) {
+                            const msgs = d.data.messages || [];
+                            if (msgs.length > lastMsgCount) {
+                                // 只追加新消息
+                                const el = document.getElementById('msgMessages');
+                                for (let i = lastMsgCount; i < msgs.length; i++) {
+                                    const m = msgs[i];
+                                    const isSelf = m.from === getCurrentUser()?.username;
+                                    if (m.type === 'system') {
+                                        el.innerHTML += '<div class="msg-bubble system">' + escHtml(m.content) + ' <span class="msg-time">' + m.time + '</span></div>';
+                                    } else {
+                                        el.innerHTML += '<div class="msg-bubble ' + (isSelf ? 'self' : 'other') + '">' +
+                                            (!isSelf ? '<div class="msg-from">' + escHtml(m.from) + '</div>' : '') +
+                                            escHtml(m.content) +
+                                            '<div class="msg-time">' + formatTime(m.time) + '</div></div>';
+                                    }
+                                }
+                                lastMsgCount = msgs.length;
+                                scrollToBottom();
+                            }
+                        }
+                    } catch(e) {}
+                }
+            }, 3000);
+        }
+
+        // ── 初始化 ──
+        document.addEventListener('DOMContentLoaded', () => {
+            loadConversations().then(() => {
+                // 检查 URL 参数（从其他页面跳转过来）
+                const params = new URLSearchParams(window.location.search);
+                const toUser = params.get('to');
+                if (toUser) {
+                    startPrivateWith(toUser);
+                }
+            });
+            startPolling();
+        });
+
+        // 回车发送
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('msgInput')?.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMsg();
+                }
+            });
+        });
+
+        // 点击弹窗外关闭
+        document.querySelectorAll('.modal-overlay').forEach(el => {
+            el.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('show');
+            });
+        });
+
+        // 移动端返回
+        function backToSidebar() {
+            document.getElementById('msgSidebar').classList.remove('hide');
+            document.getElementById('msgMain').classList.remove('show');
+        }
+    </script>
+</body>
+</html>

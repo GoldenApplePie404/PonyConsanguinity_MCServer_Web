@@ -4,180 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>完善账户信息 - 万驹同源服务器</title>
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Microsoft YaHei', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: url('../assets/img/bg.webp') center/cover fixed;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        
         .container {
-            background: white;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 40px;
-            max-width: 450px;
+            padding: 44px 36px 36px;
+            max-width: 420px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.6);
+            animation: popIn 0.5s cubic-bezier(0.16,1,0.3,1);
         }
-        
-        .icon {
-            font-size: 60px;
-            margin-bottom: 20px;
+        @keyframes popIn {
+            from { opacity:0; transform:scale(0.92) translateY(16px); }
+            to   { opacity:1; transform:scale(1) translateY(0); }
         }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 24px;
+
+        .icon-wrap {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px; font-size: 28px; color: #fff;
+            box-shadow: 0 4px 16px rgba(102,126,234,0.3);
         }
-        
-        p {
-            color: #666;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        
+
+        h1 { color:#2c3e50; margin-bottom:8px; font-size:22px; font-weight:700; }
+        p { color:#888; margin-bottom:28px; line-height:1.6; font-size:14px; }
+
+        .form-group { margin-bottom:18px; text-align: left; }
         label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
+            display: block; margin-bottom:6px;
+            color:#555; font-size:13px; font-weight:600;
         }
-        
         input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
+            width:100%; padding:11px 14px;
+            border: 1.5px solid #e0e0e0; border-radius:10px;
+            font-size:14px; transition: all 0.2s; outline:none;
+            font-family:inherit;
         }
-        
         input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color:#667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
         }
-        
+
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: all 0.3s ease;
+            display:block; width:100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff; border: none;
+            padding: 12px 20px; border-radius: 10px;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            transition: all 0.25s ease;
+            font-family:inherit;
         }
-        
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
         }
-        
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+        .btn:disabled { opacity:0.5; cursor:default; transform:none; box-shadow:none; }
+
+        .btn-skip {
+            background: transparent; color: #888;
+            border: 1px solid #ddd; margin-top: 10px;
         }
-        
-        .message {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
+        .btn-skip:hover {
+            background: rgba(0,0,0,0.03); color:#666;
+            box-shadow:none; transform:none;
         }
-        
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+
+        .msg-box {
+            margin-top: 18px; padding: 12px 16px;
+            border-radius: 10px; font-size: 13px; display:none;
         }
-        
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        .msg-box.success {
+            display:block; background: #d4edda; color:#155724; border:1px solid #c3e6cb;
         }
-        
-        .password-strength {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #666;
+        .msg-box.error {
+            display:block; background: #f8d7da; color:#721c24; border:1px solid #f5c6cb;
         }
-        
-        .password-strength.weak {
-            color: #dc3545;
+
+        .pw-strength {
+            margin-top: 5px; font-size: 12px; color:#999;
         }
-        
-        .password-strength.medium {
-            color: #ffc107;
-        }
-        
-        .password-strength.strong {
-            color: #28a745;
-        }
-        
-        .skip-btn {
-            background: transparent;
-            color: #666;
-            border: 1px solid #ddd;
-            margin-top: 10px;
-        }
-        
-        .skip-btn:hover {
-            background: #f8f9fa;
-            box-shadow: none;
-        }
+        .pw-strength.weak { color:#e74c3c; }
+        .pw-strength.medium { color:#f39c12; }
+        .pw-strength.strong { color:#27ae60; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="icon">🔐</div>
+        <div class="icon-wrap"><i class="fas fa-shield-alt"></i></div>
         <h1>完善账户信息</h1>
-        <p>为了确保您的账户安全，请设置密码和邮箱。这些信息将用于密码找回和重要通知。</p>
+        <p>为了确保您的账户安全，请设置密码和邮箱。<br>这些信息将用于密码找回和重要通知。</p>
         
         <form id="completeForm" onsubmit="handleSubmit(event)">
             <div class="form-group">
-                <label for="email">邮箱地址</label>
+                <label for="email"><i class="fas fa-envelope" style="color:#667eea;margin-right:4px;"></i>邮箱地址</label>
                 <input type="email" id="email" placeholder="请输入邮箱地址" required>
             </div>
             
             <div class="form-group">
-                <label for="password">设置密码</label>
-                <input type="password" id="password" placeholder="请设置密码（至少6位）" required oninput="checkPasswordStrength(this.value)">
-                <div id="passwordStrength" class="password-strength">密码强度：请输入密码</div>
+                <label for="password"><i class="fas fa-lock" style="color:#667eea;margin-right:4px;"></i>设置密码</label>
+                <input type="password" id="password" placeholder="至少 6 位，建议包含字母和数字" required oninput="checkPasswordStrength(this.value)">
+                <div id="passwordStrength" class="pw-strength">密码强度：请输入密码</div>
             </div>
             
             <div class="form-group">
-                <label for="confirmPassword">确认密码</label>
+                <label for="confirmPassword"><i class="fas fa-check-circle" style="color:#667eea;margin-right:4px;"></i>确认密码</label>
                 <input type="password" id="confirmPassword" placeholder="请再次输入密码" required>
             </div>
             
-            <button type="submit" class="btn" id="submitBtn">保存信息</button>
-            <button type="button" class="btn skip-btn" onclick="skipSetup()">暂不设置</button>
+            <button type="submit" class="btn" id="submitBtn"><i class="fas fa-save" style="margin-right:6px;"></i>保存信息</button>
+            <button type="button" class="btn btn-skip" onclick="skipSetup()"><i class="fas fa-forward" style="margin-right:6px;"></i>暂不设置</button>
         </form>
         
-        <div id="message" class="message" style="display: none;"></div>
+        <div id="message" class="msg-box"></div>
     </div>
     
     <script>
@@ -212,7 +165,7 @@
             }
             
             strengthElement.textContent = message;
-            strengthElement.className = `password-strength ${strength}`;
+            strengthElement.className = 'pw-strength ' + strength;
         }
         
         async function handleSubmit(event) {
@@ -276,10 +229,9 @@
         }
         
         function showMessage(message, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = message;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
+            const el = document.getElementById('message');
+            el.textContent = message;
+            el.className = 'msg-box ' + type;
         }
     </script>
 </body>

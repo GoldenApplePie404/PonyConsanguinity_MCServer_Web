@@ -4,194 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>马国记忆登录 - 万驹同源服务器</title>
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Microsoft YaHei', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: url('../assets/img/bg.webp') center/cover fixed;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        
         .container {
-            background: white;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 40px;
-            max-width: 450px;
+            padding: 44px 40px 36px;
+            max-width: 420px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.6);
+            animation: containerPop 0.5s cubic-bezier(0.16,1,0.3,1);
         }
-        
-        .icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            animation: bounceIn 0.6s ease;
+        @keyframes containerPop {
+            from { opacity:0; transform:scale(0.92) translateY(16px); }
+            to   { opacity:1; transform:scale(1) translateY(0); }
         }
-        
-        @keyframes bounceIn {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+
+        .icon-wrap {
+            width: 72px; height: 72px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 18px; font-size: 30px;
         }
-        
-        .icon.success {
-            color: #28a745;
-        }
-        
-        .icon.loading {
-            color: #667eea;
+        .icon-wrap.loading {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
             animation: spin 1s linear infinite;
         }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .icon-wrap.success {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: #fff;
+            animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
         }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 28px;
+        .icon-wrap.fail {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: #fff;
         }
-        
-        .message {
-            color: #666;
-            margin-bottom: 25px;
-            line-height: 1.6;
+        @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+        @keyframes popIn {
+            0%   { transform:scale(0) rotate(-30deg); }
+            60%  { transform:scale(1.15) rotate(5deg); }
+            100% { transform:scale(1) rotate(0); }
         }
-        
-        .user-info {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
+
+        h1 { color:#2c3e50; margin-bottom:10px; font-size:24px; font-weight:700; }
+        .message { color:#888; margin-bottom:24px; line-height:1.7; font-size:14px; }
+
+        .user-card {
+            background: rgba(248,249,250,0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 14px; padding: 18px 20px;
+            margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.05);
+            display: flex; align-items: center; gap: 16px; text-align: left;
         }
-        
-        .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-            border: 3px solid #667eea;
+        .user-card img {
+            width: 54px; height: 54px; border-radius: 50%;
+            border: 3px solid #667eea; object-fit: cover; flex-shrink:0;
+            box-shadow: 0 3px 10px rgba(102,126,234,0.2);
         }
-        
-        .nickname {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
+        .user-card .info { flex:1; min-width:0; }
+        .user-card .nickname { font-size:17px; font-weight:700; color:#2c3e50; }
+        .user-card .username { font-size:13px; color:#999; margin-top:2px; }
+        .user-card .badge {
+            display: inline-block; margin-top:6px;
+            background: linear-gradient(135deg,#667eea,#764ba2);
+            color:#fff; padding:2px 10px; border-radius:10px; font-size:11px;
         }
-        
-        .username {
-            font-size: 14px;
-            color: #888;
-        }
-        
-        .badge {
-            display: inline-block;
+
+        .btn-ghost {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px 32px; border-radius: 12px;
             background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            margin-top: 10px;
+            color: #fff; text-decoration: none; font-weight: 600; font-size: 15px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 16px rgba(102,126,234,0.3);
         }
-        
-        .btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 14px 40px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn:hover {
+        .btn-ghost:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 8px 24px rgba(102,126,234,0.45);
         }
-        
-        .debug-info {
-            margin-top: 20px;
-            padding: 15px;
-            background: #fff3cd;
-            border-radius: 8px;
-            text-align: left;
-            font-size: 12px;
-            color: #856404;
-        }
-        
-        .debug-info h3 {
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        
-        .debug-info pre {
-            white-space: pre-wrap;
-            word-break: break-all;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        
-        .countdown {
-            margin-top: 15px;
-            color: #888;
-            font-size: 14px;
-        }
+
+        .countdown { margin-top: 14px; color: #bbb; font-size: 13px; }
+        .countdown span { color: #667eea; font-weight:700; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="icon loading" id="icon">⏳</div>
-        <h1 id="title">正在处理...</h1>
-        <p class="message" id="message">请稍候，正在完成登录</p>
-        
-        <div id="userInfo" class="user-info" style="display: none;">
-            <img id="avatar" class="avatar" src="" alt="头像">
-            <div class="nickname" id="nickname"></div>
-            <div class="username" id="username"></div>
-            <span class="badge" id="badge"></span>
+        <!-- 加载态 -->
+        <div id="loadingState">
+            <div class="icon-wrap loading"><i class="fas fa-spinner"></i></div>
+            <h1>正在处理...</h1>
+            <p class="message">请稍候，正在完成登录</p>
         </div>
-        
-        <a href="../pages/profile.html" class="btn" id="homeBtn" style="display: none;">前往个人中心</a>
-        
-        <div class="countdown" id="countdown" style="display: none;">
-            <span id="countdownNum">5</span>秒后自动跳转...
+
+        <!-- 成功态 -->
+        <div id="successState" class="hidden">
+            <div class="icon-wrap success"><i class="fas fa-check"></i></div>
+            <h1 id="successTitle">登录成功！</h1>
+            <p class="message" id="successMsg">欢迎回来！您已成功登录。</p>
+
+            <div id="userInfo" class="user-card hidden">
+                <img id="avatar" src="" alt="头像">
+                <div class="info">
+                    <div class="nickname" id="nickname"></div>
+                    <div class="username" id="displayUsername"></div>
+                    <span class="badge" id="userBadge">马国记忆用户</span>
+                </div>
+            </div>
+
+            <a href="../pages/profile.html" class="btn-ghost"><i class="fas fa-arrow-right"></i> 前往个人中心</a>
+            <div class="countdown"><span id="countdownNum">5</span> 秒后自动跳转...</div>
+        </div>
+
+        <!-- 失败态 -->
+        <div id="failState" class="hidden">
+            <div class="icon-wrap fail"><i class="fas fa-times"></i></div>
+            <h1>登录失败</h1>
+            <p class="message" id="failMsg">未能获取登录信息，请重试</p>
+            <a href="../pages/login.html" class="btn-ghost"><i class="fas fa-redo"></i> 返回重试</a>
         </div>
     </div>
-    
+
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        const username = urlParams.get('username');
-        const nickname = urlParams.get('nickname');
-        const avatar = urlParams.get('avatar');
-        const role = urlParams.get('role') || 'user';
-        const isNew = urlParams.get('is_new') === '1';
-        const debugData = urlParams.get('debug');
-        
-        console.log('=== 马国记忆登录回调 ===');
-        console.log('Token:', token ? '存在' : '不存在');
-        console.log('Username:', username);
-        console.log('Nickname:', nickname);
-        console.log('Avatar:', avatar);
-        console.log('Is New User:', isNew);
-        
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        const username = params.get('username');
+        const nickname = params.get('nickname');
+        const avatar = params.get('avatar');
+        const role = params.get('role') || 'user';
+        const isNew = params.get('is_new') === '1';
+
+        document.getElementById('loadingState').classList.add('hidden');
+
         if (token && username) {
-            // 存储用户信息（兼容现有登录逻辑）
             const userInfo = {
                 username: username,
                 role: role,
@@ -199,57 +158,44 @@
             };
             localStorage.setItem('currentUser', JSON.stringify(userInfo));
             localStorage.setItem('isLoggedIn', 'true');
-            
-            // 同时存储单独的token和username（用于兼容性）
             localStorage.setItem('authToken', token);
             localStorage.setItem('username', username);
-            
-            console.log('用户信息已保存到localStorage');
-            console.log('保存的用户信息:', userInfo);
-            
-            document.getElementById('icon').textContent = '✓';
-            document.getElementById('icon').className = 'icon success';
-            document.getElementById('title').textContent = '登录成功！';
-            
+
+            document.getElementById('successState').classList.remove('hidden');
+
             if (isNew) {
-                document.getElementById('message').textContent = '欢迎加入万驹同源服务器！您的账号已自动创建。';
+                document.getElementById('successTitle').textContent = '欢迎加入！';
+                document.getElementById('successMsg').textContent = '您的账号已通过马国记忆自动创建。';
             } else {
-                document.getElementById('message').textContent = '欢迎回来！您已成功登录。';
+                document.getElementById('successTitle').textContent = '登录成功！';
+                document.getElementById('successMsg').textContent = '欢迎回来，' + (nickname || username);
             }
-            
-            document.getElementById('userInfo').style.display = 'block';
+
+            const info = document.getElementById('userInfo');
+            info.classList.remove('hidden');
             document.getElementById('avatar').src = avatar || '../assets/img/user.webp';
+            document.getElementById('avatar').onerror = function() { this.src = '../assets/img/user.webp'; };
             document.getElementById('nickname').textContent = nickname || username;
-            document.getElementById('username').textContent = '@' + username;
-            document.getElementById('badge').textContent = isNew ? '新用户' : '马国记忆用户';
-            
-            document.getElementById('homeBtn').style.display = 'inline-block';
-            document.getElementById('countdown').style.display = 'block';
-            
-            let countdown = 5;
-            const countdownEl = document.getElementById('countdownNum');
+            document.getElementById('displayUsername').textContent = '@' + username;
+            document.getElementById('userBadge').textContent = isNew ? '新用户' : '马国记忆用户';
+
+            let count = 5;
+            const el = document.getElementById('countdownNum');
             const timer = setInterval(() => {
-                countdown--;
-                countdownEl.textContent = countdown;
-                if (countdown <= 0) {
+                count--;
+                el.textContent = count;
+                if (count <= 0) {
                     clearInterval(timer);
-                    // 如果是新用户，跳转到完善信息页面
-                    if (isNew) {
-                        window.location.href = 'complete_profile.html?token=' + token + '&username=' + username + '&is_new=1';
-                    } else {
-                        window.location.href = '../pages/profile.html';
-                    }
+                    const target = isNew
+                        ? 'complete_profile.html?token=' + encodeURIComponent(token) + '&username=' + encodeURIComponent(username) + '&is_new=1'
+                        : '../pages/profile.html';
+                    window.location.href = target;
                 }
             }, 1000);
-            
         } else {
-            document.getElementById('icon').textContent = '✗';
-            document.getElementById('icon').className = 'icon';
-            document.getElementById('icon').style.color = '#dc3545';
-            document.getElementById('title').textContent = '登录失败';
-            document.getElementById('message').textContent = '未能获取登录信息，请重试';
-            document.getElementById('homeBtn').style.display = 'inline-block';
-            document.getElementById('homeBtn').textContent = '返回重试';
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('failState').classList.remove('hidden');
+            document.getElementById('failMsg').textContent = '未能获取登录信息（缺少token或用户名），请重试';
         }
     </script>
 </body>
