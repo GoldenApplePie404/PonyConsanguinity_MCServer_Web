@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器状态 - 万驹同源</title>
+    <meta name="description" content="实时查看万驹同源 Minecraft 服务器的在线状态、玩家数量和运行信息。">
+    <meta property="og:title" content="服务器状态 - 万驹同源">
+    <meta property="og:description" content="实时查看万驹同源 Minecraft 服务器的在线状态、玩家数量和运行信息。">
+    <meta property="og:image" content="https://mcpc.goldenapplepie.xyz/assets/img/m.webp">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="万驹同源">
+    <link rel="stylesheet" href="../css/style.css?v=4.12">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.1">
+    <link rel="stylesheet" href="../css/back-to-top.css?v=1.0">
+    <link rel="preload" href="../assets/img/1.webp" as="image">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <script src="../lib/chart.min.js"></script>
+    <style>
+        :root {
+            --brand: #2e6fdb;
+            --brand-deep: #1d4fa0;
+            --brand-darkest: #123a7a;
+            --lemon: #f2b705;
+            --lemon-light: #ffc53d;
+            --lemon-deep: #c99705;
+            --green: #3da555;
+            --page: #f5f8ff;
+            --card: #ffffff;
+            --line: #e3e9f5;
+            --muted: #5f6b85;
+            --ink: #1d4fa0;
+        }
+
+        .status-page {
+            padding: 50px 0 70px;
+        }
+
+        .bottom-text{
+            margin-top: 30px;
+            text-align: center;
+            color: #a1a1a1 ;
+        }
+
+        .bottom-text a{
+            color: #5e5e5e ;
+            text-decoration: none;
+        }
+
+        .block-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 0 0 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .block-title i {
+            color: var(--brand);
+        }
+
+        /* ===== 全宽状态条 ===== */
+        .status-strip {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px 28px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 18px 26px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 22px rgba(18, 58, 122, 0.06);
+        }
+
+        .ss-online {
+            display: flex;
+            align-items: center;
+        }
+
+        .ss-item {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .ss-label {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .ss-value {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--brand);
+        }
+
+        .ss-metric {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1 1 160px;
+            min-width: 150px;
+        }
+
+        .ss-metric .ss-label {
+            min-width: 34px;
+        }
+
+        .ss-metric .ss-value {
+            font-size: 1rem;
+            min-width: 48px;
+            text-align: right;
+        }
+
+        .mini-bar {
+            flex: 1;
+            height: 8px;
+            background: #eef2f9;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .mini-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .mini-fill.cpu {
+            background: var(--brand);
+        }
+
+        .mini-fill.memory {
+            background: var(--lemon);
+        }
+
+        .ss-refresh {
+            margin-left: auto;
+            background: var(--brand);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 111, 219, 0.3);
+        }
+
+        .ss-refresh:hover {
+            background: var(--brand-deep);
+        }
+
+        .ss-refresh:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* 小号刷新按钮（服务器状态卡标题栏） */
+        .ss-refresh-sm {
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            box-shadow: 0 3px 10px rgba(46, 111, 219, 0.25);
+        }
+        /* 覆盖 .status-card h2 i 的蔚蓝着色，保证按钮图标为白色（与按钮底色区分） */
+        .status-card h2 .ss-refresh i {
+            color: #fff;
+        }
+
+        /* ===== 服务器信息 3x2 ===== */
+        .info-section {
+            margin-bottom: 36px;
+        }
+
+        .server-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .info-item {
+            background: var(--card);
+            padding: 22px 24px;
+            border-radius: 14px;
+            text-align: left;
+            border: 1px solid var(--line);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--lemon);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .info-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(18, 58, 122, 0.1);
+        }
+
+        .info-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .info-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .info-label i { color: var(--brand); font-size: 0.9rem; }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--brand);
+            margin-bottom: 8px;
+            display: block;
+            word-break: break-all;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #eef2f9;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .progress-bar.players {
+            background-color: var(--brand);
+        }
+
+        .progress-bar.cpu {
+            background-color: var(--lemon);
+        }
+
+        .progress-bar.memory {
+            background-color: var(--brand);
+        }
+
+        /* ===== 整宽双图监控 ===== */
+        .monitor-section {
+            margin-bottom: 36px;
+        }
+
+        .monitor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .chart-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 20px 22px 24px;
+        }
+
+        .chart-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .chart-card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-card-title i {
+            color: var(--brand);
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 14px;
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+
+        .chart-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chart-legend i {
+            width: 14px;
+            height: 3px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        .chart-wrapper {
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-wrapper canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* ===== 底部双卡（与上方监控图表同宽对齐） ===== */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .status-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 26px;
+            border: 1px solid var(--line);
+            box-shadow: 0 4px 18px rgba(18, 58, 122, 0.06);
+        }
+
+        .status-card h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 0 0 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-card h2 i {
+            color: var(--brand);
+        }
+
+        .srv-block {
+            background: #f7faff;
+            border: 1px solid #e3e9f5;
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            transition: border-color .25s, box-shadow .25s, transform .25s;
+        }
+        .srv-block:last-child { margin-bottom: 0; }
+        .srv-block:hover {
+            border-color: #2e6fdb;
+            box-shadow: 0 8px 22px rgba(46,111,219,0.12);
+            transform: translateY(-2px);
+        }
+        .srv-block-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .srv-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1d4fa0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .srv-name i { color: #2e6fdb; }
+        .srv-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .srv-meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .srv-meta-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+        .srv-meta-val {
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+        .srv-meta-val.core { color: #c99705; }
+
+        /* ===== 子服一览（MCSManager 实例） ===== */
+        .instance-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .instance-list .srv-block { margin-bottom: 0; }
+        .instances-hint {
+            text-align: center;
+            padding: 18px 0;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .instances-hint p { margin: 8px 0 0; }
+
+        @media (max-width: 560px) {
+            .srv-meta { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        }
+
+        /* ===== 状态徽章（共用样式） ===== */
+        .status-badge {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px !important;
+            border-radius: 10px;
+            font-size: 0.78rem !important;
+            font-weight: 600;
+            line-height: 1 !important;
+            white-space: nowrap;
+            box-sizing: border-box;
+            vertical-align: middle;
+        }
+        /* 钉死：避免被全局 .loading 或其它规则撑大 */
+        .status-badge.loading,
+        .status-badge.online,
+        .status-badge.offline {
+            padding: 3px 10px !important;
+            font-size: 0.78rem !important;
+            line-height: 1 !important;
+            box-sizing: border-box;
+        }
+
+        .status-badge.loading {
+            background-color: rgba(242, 183, 5, 0.12);
+            border: 1px solid rgba(242, 183, 5, 0.3);
+        }
+
+        .status-badge.online {
+            background-color: rgba(61, 165, 85, 0.12);
+            border: 1px solid rgba(61, 165, 85, 0.3);
+        }
+
+        .status-badge.offline {
+            background-color: rgba(220, 53, 69, 0.12);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-badge.loading .status-dot {
+            background-color: var(--lemon);
+        }
+
+        .status-badge.online .status-dot {
+            background-color: var(--green);
+        }
+
+        .status-badge.offline .status-dot {
+            background-color: #dc3545;
+        }
+
+        .status-text-small {
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .status-badge.loading .status-text-small {
+            color: var(--lemon-deep);
+        }
+
+        .status-badge.online .status-text-small {
+            color: var(--green);
+        }
+
+        .status-badge.offline .status-text-small {
+            color: #dc3545;
+        }
+
+        /* ===== 财富排行榜（沿用） ===== */
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-table th {
+            background-color: var(--lemon);
+            color: #3a2c00;
+            padding: 12px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .ranking-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .ranking-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .ranking-table tr:hover {
+            background-color: #f1f5ff;
+        }
+
+        .rank-number {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .rank-1 {
+            color: var(--lemon-deep);
+        }
+
+        .rank-2 {
+            color: #9aa4b8;
+        }
+
+        .rank-3 {
+            color: #cd7f32;
+        }
+
+        .points {
+            font-weight: 700;
+            color: var(--lemon-deep);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin: 16px 0;
+        }
+
+        .pagination button {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .pagination button.active {
+            background-color: var(--lemon);
+            color: #3a2c00;
+            border-color: var(--lemon);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #e74c3c;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .note {
+            text-align: center;
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 14px;
+        }
+
+        /* ===== 卫星云图入口（改蔚蓝） ===== */
+        .satellite-toggle {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: var(--brand);
+            box-shadow:
+                0 4px 16px rgba(46, 111, 219, 0.38),
+                0 0 0 2px rgba(255, 255, 255, 0.22) inset;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+            text-decoration: none;
+            overflow: visible;
+        }
+
+        .satellite-toggle::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 1.8px dashed rgba(46, 111, 219, 0.55);
+            pointer-events: none;
+            z-index: 0;
+            animation: satOrbit 14s linear infinite;
+        }
+
+        .satellite-toggle::after {
+            content: '';
+            position: absolute;
+            inset: -18px;
+            border-radius: 50%;
+            border: 1px solid rgba(46, 111, 219, 0.4);
+            pointer-events: none;
+            z-index: 0;
+            animation: satPulse 2.6s ease-out infinite;
+        }
+
+        .satellite-toggle:hover {
+            transform: translateY(-5px) scale(1.12);
+            box-shadow:
+                0 8px 28px rgba(46, 111, 219, 0.55),
+                0 0 0 2px rgba(255, 255, 255, 0.35) inset;
+            background: var(--brand-deep);
+        }
+
+        .satellite-toggle:hover::before {
+            animation-duration: 5s;
+            border-color: rgba(46, 111, 219, 0.85);
+        }
+
+        .satellite-toggle:active {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow:
+                0 4px 14px rgba(46, 111, 219, 0.42),
+                0 0 0 2px rgba(255, 255, 255, 0.28) inset;
+        }
+
+        .satellite-toggle .icon {
+            position: relative;
+            z-index: 1;
+            font-size: 24px;
+            color: #ffffff;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .satellite-toggle:hover .icon {
+            transform: scale(1.15) rotate(-15deg);
+        }
+
+        .satellite-toggle .sat-label {
+            position: absolute;
+            left: 62px;
+            bottom: 50%;
+            transform: translateY(50%) translateX(6px);
+            white-space: nowrap;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(29, 79, 160, 0.92);
+            padding: 4px 12px;
+            border-radius: 99px;
+            letter-spacing: 0.06em;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .satellite-toggle:hover .sat-label {
+            opacity: 1;
+            transform: translateY(50%) translateX(0);
+        }
+
+        @keyframes satOrbit {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes satPulse {
+            0% {
+                transform: scale(0.88);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.15);
+                opacity: 0;
+            }
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 1100px) {
+            .monitor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .server-info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .status-strip {
+                gap: 12px 18px;
+            }
+
+            .ss-refresh {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .server-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-wrapper {
+                height: 240px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .satellite-toggle::before,
+            .satellite-toggle::after {
+                animation: none !important;
+            }
+        }
+    </style>
+
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <style>
+        /* 导航图标间距（status.html 不走组件，单独补充） */
+        .nav-menu .nav-link i {
+            margin-right: 6px;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+
+<body data-components="sidebarPlayer,backToTop,footer">
+
+    <!-- 导航栏组件 -->
+    <!-- 这里比较特殊，components里的navbar组件放这里容易出现无法加载的问题，所以直接写入即可 -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="nav-brand">
+                <span class="server-name"><span class="brand-pony">万驹</span><span class="brand-rest">同源</span></span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="../index.html" class="nav-link" data-page="home"><i class="fa-solid fa-house"></i>首页</a>
+                </li>
+                <li><a href="forum.html" class="nav-link" data-page="forum"><i class="fa-solid fa-comments"></i>论坛</a>
+                </li>
+                <li><a href="status.html" class="nav-link" data-page="status"><i
+                            class="fa-solid fa-heart-pulse"></i>状态</a></li>
+                <!--<li><a href="payment.html" class="nav-link" data-page="payment">充值</a></li>-->
+                <li><a href="skin.html" class="nav-link" data-page="skin"><i class="fa-solid fa-shirt"></i>皮肤站</a></li>
+                <li><a href="login.html" class="nav-link btn-login" data-page="login"><i
+                            class="fa-solid fa-right-to-bracket"></i>登录</a></li>
+            </ul>
+            <button class="mobile-toggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 状态页面 Banner 区域 -->
+    <section class="status-banner common-banner">
+        <div class="status-banner-bg"></div>
+        <div class="status-banner-particles"></div>
+        <div class="container">
+            <div class="status-banner-content">
+                <h1 class="status-banner-title">服务器状态</h1>
+                <p class="status-banner-subtitle">实时监控 · 数据可视 · 状态透明</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 状态内容区 -->
+    <div class="section status-page">
+        <div class="container">
+
+            <!-- 全宽状态条 -->
+            <div class="status-strip">
+                <div class="ss-online">
+                    <span class="status-badge loading">
+                        <span class="status-dot" id="status-indicator"></span>
+                        <span class="status-text-small" id="status-text">加载中</span>
+                    </span>
+                </div>
+                <div class="ss-item">
+                    <span class="ss-label">玩家</span>
+                    <span class="ss-value" id="players-count">--/--</span>
+                </div>
+                <div class="ss-item">
+                    <span class="ss-label">版本</span>
+                    <span class="ss-value" id="server-version">--</span>
+                </div>
+                <div class="ss-metric">
+                    <span class="ss-label">CPU</span>
+                    <span class="ss-value" id="cpu-usage">--%</span>
+                    <div class="mini-bar"><div class="mini-fill cpu" id="cpu-progress" style="width: 0%"></div></div>
+                </div>
+                <div class="ss-metric">
+                    <span class="ss-label">内存</span>
+                    <span class="ss-value" id="memory-usage">--%</span>
+                    <div class="mini-bar"><div class="mini-fill memory" id="memory-progress" style="width: 0%"></div></div>
+                </div>
+                <button id="refresh-btn" class="ss-refresh">
+                    <i class="fa-solid fa-rotate"></i> 刷新数据
+                </button>
+            </div>
+
+            <!-- 服务器信息 3x2 -->
+            <div class="info-section">
+                <h2 class="block-title"><i class="fa-solid fa-server"></i>服务器信息</h2>
+                <div class="server-info-grid">
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-desktop"></i>系统信息</span>
+                        <span class="info-value">Windows_NT win32</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-microchip"></i>CPU信息</span>
+                        <span class="info-value">Intel Xeon Platinum 8280</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-hard-drive"></i>主机名</span>
+                        <span class="info-value">DELL-R730-Win</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-tag"></i>服务器版本</span>
+                        <span class="info-value" id="server-version-grid">--</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-gauge-high"></i>CPU使用率</span>
+                        <span class="info-value" id="cpu-usage-grid">--%</span>
+                        <div class="progress-container">
+                            <div class="progress-bar cpu" id="cpu-progress-grid" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-memory"></i>内存使用率</span>
+                        <span class="info-value" id="memory-usage-grid">--%</span>
+                        <div class="progress-container">
+                            <div class="progress-bar memory" id="memory-progress-grid" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="note">* 数据每 30 秒自动更新一次</p>
+            </div>
+
+            <!-- 整宽双图监控 -->
+            <div class="monitor-section">
+                <h2 class="block-title"><i class="fa-solid fa-chart-line"></i>实时监控</h2>
+                <div class="monitor-grid">
+                    <div class="chart-card">
+                        <div class="chart-card-head">
+                            <span class="chart-card-title"><i class="fa-solid fa-microchip"></i>CPU 与内存</span>
+                            <span class="chart-legend">
+                                <span><i style="background:#2e6fdb;"></i>CPU</span>
+                                <span><i style="background:#f2b705;"></i>内存</span>
+                            </span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="performance-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-card-head">
+                            <span class="chart-card-title"><i class="fa-solid fa-users"></i>玩家在线曲线</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="players-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <p class="note">* 数据每 5 分钟自动记录一次，显示最近 30 分钟趋势</p>
+            </div>
+
+            <!-- 底部双卡 -->
+            <div class="bottom-grid">
+                <!-- 黄金券排行榜 -->
+                <div class="status-card">
+                    <h2><i class="fa-solid fa-trophy"></i>黄金券排行榜</h2>
+                    <div id="ranking-container" class="loading">
+                        <div class="spinner"></div>
+                        <p>加载中...</p>
+                    </div>
+                    <div id="ranking-pagination" class="pagination"></div>
+                    <p class="note">服务器财富排行榜 · 每 12 小时自动刷新</p>
+                </div>
+
+                <!-- 服务器状态卡（子服状态：MCSManager 实例，只读代理 mc-instances.php） -->
+                <div class="status-card">
+                    <h2 style="justify-content: space-between;">
+                        <span><i class="fa-solid fa-circle-info"></i>服务器状态</span>
+                        <button class="ss-refresh ss-refresh-sm" id="instances-refresh" title="手动刷新子服状态">
+                            <i class="fa-solid fa-rotate"></i> 刷新
+                        </button>
+                    </h2>
+                    <div id="instance-list" class="instance-list">
+                        <div class="instances-hint"><div class="spinner"></div><p>正在加载子服状态…</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部小字 -->
+            <div class="bottom-text">
+                <p>
+                    服务器状态页面状态数据由 <a href="https://mcpc.goldenapplepie.xyz/mcstatus/" target="_blank">MC-Server-Status-API</a> 提供支持。
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 回到顶部组件 -->
+    <div id="app-back-to-top"></div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+
+    <script src="../js/main.js?v=3.5"></script>
+    <script src="../js/config.js"></script>
+    <script>
+        // 使用统一配置
+        const API_BASE_URL = API_CONFIG.baseUrl;
+
+        // 初始化状态页
+        document.addEventListener('DOMContentLoaded', () => {
+            initNavbar();
+            initStatusPage();
+        });
+
+        // 初始化状态页面
+        function initStatusPage() {
+            // 确保只初始化一次图表
+            if (!performanceChart) {
+                initPerformanceChart();
+            }
+            if (!playersChart) {
+                initPlayersChart();
+            }
+
+            loadServerStatus();
+            loadInstances();
+            loadSystemResources();
+            initRanking();
+            updatePerformanceData();
+
+            // 为刷新按钮添加点击事件处理
+            const refreshBtn = document.getElementById('refresh-btn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', async () => {
+                    refreshBtn.innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i> 刷新中...';
+                    refreshBtn.disabled = true;
+
+                    try {
+                        await Promise.all([
+                            loadServerStatus(),
+                            loadInstances(),
+                            loadSystemResources(),
+                            updatePerformanceData()
+                        ]);
+                    } finally {
+                        setTimeout(() => {
+                            refreshBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> 刷新数据';
+                            refreshBtn.disabled = false;
+                        }, 1000);
+                    }
+                });
+            }
+
+            // 服务器状态卡标题栏的手动刷新按钮（仅刷新子服状态）
+            const instBtn = document.getElementById('instances-refresh');
+            if (instBtn) {
+                instBtn.addEventListener('click', async () => {
+                    instBtn.disabled = true;
+                    instBtn.innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i> 刷新';
+                    try {
+                        await loadInstances();
+                    } finally {
+                        instBtn.disabled = false;
+                        instBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> 刷新';
+                    }
+                });
+            }
+
+            // 每30秒自动刷新基本数据和性能数据
+            setInterval(() => {
+                Promise.all([
+                    loadServerStatus(),
+                    loadInstances(),
+                    loadSystemResources(),
+                    updatePerformanceData()
+                ]);
+            }, 30000);
+
+            // 每5分钟额外更新一次图表数据（冗余保险）
+            setInterval(() => {
+                updatePerformanceData();
+            }, 300000);
+        }
+
+        // 加载服务器状态
+        async function loadServerStatus() {
+            const indicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+            const statusBadge = indicator.parentElement;
+
+            statusBadge.className = 'status-badge loading';
+            statusText.textContent = '加载中';
+
+            try {
+                const response = await fetch(API_BASE_URL + '/mcstatus.php');
+                const data = await response.json();
+
+                if (data.online) {
+                    statusBadge.className = 'status-badge online';
+                    statusText.textContent = '在线';
+
+                    const playersOnline = data.players?.online || 0;
+                    const playersMax = data.players?.max || 0;
+                    const playersText = playersOnline + '/' + playersMax;
+                    document.getElementById('players-count').textContent = playersText;
+                    // 硬编码服务器版本
+                    const versionText = '1.12.x~1.21.1';
+                    document.getElementById('server-version').textContent = versionText;
+                    document.getElementById('server-version-grid').textContent = versionText;
+
+                    // 更新玩家数量进度条（状态条内）
+                    if (playersMax > 0) {
+                        const progressPercentage = Math.min((playersOnline / playersMax) * 100, 100);
+                        const pp = document.getElementById('players-progress');
+                        if (pp) pp.style.width = progressPercentage + '%';
+                    } else {
+                        const pp = document.getElementById('players-progress');
+                        if (pp) pp.style.width = '0%';
+                    }
+                } else {
+                    statusBadge.className = 'status-badge offline';
+                    statusText.textContent = '离线';
+                    const versionText = '1.12.x~1.21.1';
+                    document.getElementById('server-version').textContent = versionText;
+                    document.getElementById('server-version-grid').textContent = versionText;
+                    const ppOff = document.getElementById('players-progress');
+                    if (ppOff) ppOff.style.width = '0%';
+                }
+            } catch (error) {
+                console.error('获取服务器状态失败:', error);
+                statusBadge.className = 'status-badge offline';
+                statusText.textContent = '无法获取';
+                const versionText = '1.12.x~1.21.1';
+                document.getElementById('server-version').textContent = versionText;
+                document.getElementById('server-version-grid').textContent = versionText;
+                const ppErr = document.getElementById('players-progress');
+                if (ppErr) ppErr.style.width = '0%';
+            }
+        }
+
+        // 子服一览（MCSManager 实例，走只读代理 mc-instances.php）
+        function escapeHtml(str) {
+            return String(str == null ? '' : str)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        async function loadInstances() {
+            const listEl = document.getElementById('instance-list');
+            if (!listEl) return;
+            // 已有数据则静默刷新（不清空、不显示加载中），避免卡片闪烁
+            const hasData = listEl.dataset.loaded === '1';
+            if (!hasData) {
+                listEl.innerHTML = '<div class="instances-hint"><div class="spinner"></div><p>正在加载子服状态…</p></div>';
+            }
+            try {
+                const response = await fetch(API_BASE_URL + '/mc-instances.php');
+                const data = await response.json();
+                if (!data || !data.success) {
+                    if (!hasData) listEl.innerHTML = '<div class="instances-hint"><p>无法获取子服状态</p></div>';
+                    return;
+                }
+                const list = data.instances || [];
+                if (!list.length) {
+                    if (!hasData) listEl.innerHTML = '<div class="instances-hint"><p>暂无子服数据</p></div>';
+                    return;
+                }
+                const statusMap = {
+                    '-1': { cls: 'offline', label: '异常', icon: 'fa-exclamation-circle' },
+                    '0':  { cls: 'offline', label: '已停止', icon: 'fa-stop' },
+                    '1':  { cls: 'loading', label: '停止中', icon: 'fa-spinner fa-spin' },
+                    '2':  { cls: 'loading', label: '启动中', icon: 'fa-spinner fa-spin' },
+                    '3':  { cls: 'online',  label: '运行中', icon: 'fa-play' },
+                    '4':  { cls: 'offline', label: '异常', icon: 'fa-exclamation-circle' }
+                };
+                // 渲染新数据（原地替换，不经过加载中状态）
+                listEl.dataset.loaded = '1';
+                listEl.innerHTML = list.map(function (inst) {
+                    const s = statusMap[String(inst.status_code)] || { cls: 'offline', label: inst.status || '未知', icon: 'fa-circle-question' };
+                    const pl = inst.players || {};
+                    const cur = (pl.current >= 0) ? pl.current : '-';
+                    const max = (pl.max >= 0) ? pl.max : '-';
+                    const players = (inst.running && cur !== '-') ? (cur + '/' + max) : '-/-';
+                    const core = inst.core || '';
+                    return '<div class="srv-block">'
+                        + '<div class="srv-block-head">'
+                        + '<span class="srv-name"><i class="fa-solid fa-server"></i>' + escapeHtml(inst.name) + '</span>'
+                        + '<span class="status-badge ' + s.cls + '"><span class="status-dot"></span><span class="status-text-small">' + s.label + '</span></span>'
+                        + '</div>'
+                        + '<div class="srv-meta">'
+                        + '<div class="srv-meta-item"><span class="srv-meta-label">版本</span><span class="srv-meta-val">' + escapeHtml(inst.version || '-') + '</span></div>'
+                        + '<div class="srv-meta-item"><span class="srv-meta-label">核心</span><span class="srv-meta-val core">' + escapeHtml(core || '—') + '</span></div>'
+                        + '<div class="srv-meta-item"><span class="srv-meta-label">人数</span><span class="srv-meta-val">' + players + '</span></div>'
+                        + '</div>'
+                        + '</div>';
+                }).join('');
+            } catch (error) {
+                console.error('获取子服状态失败:', error);
+                // 已有数据时刷新失败保留旧卡片，不清空
+                if (!hasData) listEl.innerHTML = '<div class="instances-hint"><p>无法获取子服状态</p></div>';
+            }
+        }
+
+        // 性能监控数据 - CPU和内存
+        let performanceData = {
+            labels: [],
+            datasets: [
+                {
+                    label: 'CPU使用率 (%)',
+                    data: [],
+                    borderColor: '#2e6fdb',
+                    backgroundColor: 'rgba(46, 111, 219, 0.12)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: '内存使用率 (%)',
+                    data: [],
+                    borderColor: '#f2b705',
+                    backgroundColor: 'rgba(242, 183, 5, 0.12)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        };
+
+        // 玩家人数数据
+        let playersData = {
+            labels: [],
+            datasets: [
+                {
+                    label: '玩家人数',
+                    data: [],
+                    borderColor: '#2e6fdb',
+                    backgroundColor: 'rgba(46, 111, 219, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        };
+
+        let performanceChart;
+        let playersChart;
+
+        // 初始化性能监控图表
+        function initPerformanceChart() {
+            const ctx = document.getElementById('performance-chart').getContext('2d');
+
+            // 销毁已存在的图表
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: performanceData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    stacked: false,
+                    plugins: {
+                        title: {
+                            display: false
+                        },
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '时间'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: '使用率 (%)'
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // 初始化玩家人数图表
+        function initPlayersChart() {
+            const ctx = document.getElementById('players-chart').getContext('2d');
+
+            // 销毁已存在的图表
+            if (playersChart) {
+                playersChart.destroy();
+            }
+
+            playersChart = new Chart(ctx, {
+                type: 'line',
+                data: playersData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    stacked: false,
+                    plugins: {
+                        title: {
+                            display: false
+                        },
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '时间'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: '玩家人数'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // 记录新的性能数据
+        async function recordPerformanceData() {
+            try {
+                await fetch(API_BASE_URL + '/performance.php');
+            } catch (error) {
+                console.error('记录性能数据失败:', error);
+            }
+        }
+
+        // 更新性能监控数据
+        async function updatePerformanceData() {
+            try {
+                console.log('开始更新性能监控数据...');
+
+                // 首先记录新的数据
+                console.log('记录新的性能数据...');
+                await recordPerformanceData();
+
+                // 然后获取最新的数据
+                console.log('获取性能数据...');
+                const response = await fetch(API_BASE_URL + '/get_performance.php');
+
+                if (!response.ok) {
+                    throw new Error('网络响应错误: ' + response.status);
+                }
+
+                const result = await response.json();
+                console.log('获取到的性能数据:', result);
+
+                if (result.success) {
+                    const chartData = result.data;
+
+                    // 更新CPU和内存图表
+                    performanceData.labels = chartData.labels || [];
+                    performanceData.datasets[0].data = chartData.cpu || [];
+                    performanceData.datasets[1].data = chartData.memory || [];
+
+                    // 更新玩家人数图表
+                    playersData.labels = chartData.labels || [];
+                    playersData.datasets[0].data = chartData.players || [];
+
+                    // 如果没有数据，添加默认数据点
+                    if (performanceData.labels.length === 0) {
+                        const now = new Date();
+                        const timeLabel = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+                        performanceData.labels = [timeLabel];
+                        performanceData.datasets[0].data = [0];
+                        performanceData.datasets[1].data = [0];
+
+                        playersData.labels = [timeLabel];
+                        playersData.datasets[0].data = [0];
+                    }
+
+                    // 更新两个图表
+                    performanceChart.update();
+                    playersChart.update();
+                    console.log('图表更新成功');
+
+                    return true;
+                } else {
+                    console.error('API返回失败:', result.message);
+                    return false;
+                }
+            } catch (error) {
+                console.error('更新性能监控数据失败:', error);
+
+                // 出错时显示默认数据
+                if (performanceData.labels.length === 0) {
+                    const now = new Date();
+                    const timeLabel = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+                    performanceData.labels = [timeLabel];
+                    performanceData.datasets[0].data = [0];
+                    performanceData.datasets[1].data = [0];
+
+                    playersData.labels = [timeLabel];
+                    playersData.datasets[0].data = [0];
+
+                    performanceChart.update();
+                    playersChart.update();
+                }
+
+                return false;
+            }
+        }
+
+        // 加载系统资源
+        async function loadSystemResources() {
+            try {
+                const response = await fetch(API_BASE_URL + '/system.php');
+                const data = await response.json();
+
+                if (data.success) {
+                    if (typeof data.cpu === 'number' && !isNaN(data.cpu)) {
+                        const cpuText = data.cpu.toFixed(1) + '%';
+                        const cpuPercentage = Math.min(data.cpu, 100);
+                        document.getElementById('cpu-usage').textContent = cpuText;
+                        document.getElementById('cpu-usage-grid').textContent = cpuText;
+                        document.getElementById('cpu-progress').style.width = cpuPercentage + '%';
+                        document.getElementById('cpu-progress-grid').style.width = cpuPercentage + '%';
+                        /* s2-cpu removed */
+                    } else {
+                        document.getElementById('cpu-usage').textContent = '--%';
+                        document.getElementById('cpu-usage-grid').textContent = '--%';
+                        document.getElementById('cpu-progress').style.width = '0%';
+                        document.getElementById('cpu-progress-grid').style.width = '0%';
+                        /* s2-cpu removed */
+                    }
+
+                    if (typeof data.memory === 'number' && !isNaN(data.memory)) {
+                        const memoryText = data.memory.toFixed(1) + '%';
+                        const memoryPercentage = Math.min(data.memory, 100);
+                        document.getElementById('memory-usage').textContent = memoryText;
+                        document.getElementById('memory-usage-grid').textContent = memoryText;
+                        document.getElementById('memory-progress').style.width = memoryPercentage + '%';
+                        document.getElementById('memory-progress-grid').style.width = memoryPercentage + '%';
+                        /* s2-mem removed */
+                    } else {
+                        document.getElementById('memory-usage').textContent = '--%';
+                        document.getElementById('memory-usage-grid').textContent = '--%';
+                        document.getElementById('memory-progress').style.width = '0%';
+                        document.getElementById('memory-progress-grid').style.width = '0%';
+                        /* s2-mem removed */
+                    }
+                } else {
+                    document.getElementById('cpu-usage').textContent = '--%';
+                    document.getElementById('cpu-usage-grid').textContent = '--%';
+                    document.getElementById('memory-usage').textContent = '--%';
+                    document.getElementById('memory-usage-grid').textContent = '--%';
+                    document.getElementById('cpu-progress').style.width = '0%';
+                    document.getElementById('cpu-progress-grid').style.width = '0%';
+                    document.getElementById('memory-progress').style.width = '0%';
+                    document.getElementById('memory-progress-grid').style.width = '0%';
+                    /* s2 removed */
+                }
+            } catch (error) {
+                document.getElementById('cpu-usage').textContent = '--%';
+                document.getElementById('cpu-usage-grid').textContent = '--%';
+                document.getElementById('memory-usage').textContent = '--%';
+                document.getElementById('memory-usage-grid').textContent = '--%';
+                document.getElementById('cpu-progress').style.width = '0%';
+                document.getElementById('cpu-progress-grid').style.width = '0%';
+                document.getElementById('memory-progress').style.width = '0%';
+                document.getElementById('memory-progress-grid').style.width = '0%';
+                /* s2 removed */
+            }
+        }
+
+        // 黄金券排行榜相关变量
+        let rankingCurrentPage = 1;
+        const rankingItemsPerPage = 10;
+
+        // 加载排行榜数据
+        async function loadRankingData(page = 1) {
+            // 更新当前页码
+            rankingCurrentPage = page;
+
+            try {
+                const response = await fetch(API_BASE_URL + '/golden-ticket.php?action=get_ranking&page=' + page + '&limit=' + rankingItemsPerPage);
+                const result = await response.json();
+
+                const container = document.getElementById('ranking-container');
+                // 移除loading类，停止旋转动画
+                container.classList.remove('loading');
+
+                if (result.success) {
+                    displayRankingData(result.data);
+                    generateRankingPagination(result.data.total);
+                    updateLastUpdated();
+                } else {
+                    container.innerHTML = '<div class="error">' + result.message + '</div>';
+                }
+            } catch (error) {
+                console.error('加载排行榜数据失败:', error);
+                const container = document.getElementById('ranking-container');
+                // 移除loading类，停止旋转动画
+                container.classList.remove('loading');
+                container.innerHTML = '<div class="error">加载失败: ' + error.message + '</div>';
+            }
+        }
+
+        // 显示排行榜数据
+        function displayRankingData(data) {
+            const container = document.getElementById('ranking-container');
+
+            // 移除loading类，停止旋转动画
+            container.classList.remove('loading');
+
+            if (data.data.length === 0) {
+                container.innerHTML = '<div class="no-data">暂无黄金券数据</div>';
+                return;
+            }
+
+            let html = `
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>玩家名</th>
+                            <th>黄金券</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.data.forEach((item, index) => {
+                const rank = (rankingCurrentPage - 1) * rankingItemsPerPage + index + 1;
+                let rankClass = '';
+                if (rank === 1) rankClass = 'rank-1';
+                else if (rank === 2) rankClass = 'rank-2';
+                else if (rank === 3) rankClass = 'rank-3';
+
+                html += `
+                    <tr>
+                        <td class="rank-number ${rankClass}">${rank}</td>
+                        <td>${item.username || '未知'}</td>
+                        <td class="points">${item.points}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                    </tbody>
+                </table>
+                <p style="text-align: right; margin-top: 10px; color: #666;">共 ${data.total} 名玩家</p>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // 生成分页控件
+        function generateRankingPagination(total) {
+            const paginationContainer = document.getElementById('ranking-pagination');
+            const totalPages = Math.ceil(total / rankingItemsPerPage);
+
+            if (totalPages <= 1) {
+                paginationContainer.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+
+            // 上一页按钮
+            html += `<button onclick="loadRankingData(${rankingCurrentPage - 1})" ${rankingCurrentPage === 1 ? 'disabled' : ''}>&laquo; 上一页</button>`;
+
+            // 页码按钮
+            const startPage = Math.max(1, rankingCurrentPage - 2);
+            const endPage = Math.min(totalPages, startPage + 4);
+
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button onclick="loadRankingData(${i})" ${i === rankingCurrentPage ? 'class="active"' : ''}>${i}</button>`;
+            }
+
+            // 下一页按钮
+            html += `<button onclick="loadRankingData(${rankingCurrentPage + 1})" ${rankingCurrentPage === totalPages ? 'disabled' : ''}>下一页 &raquo;</button>`;
+
+            paginationContainer.innerHTML = html;
+        }
+
+        // 更新最后更新时间
+        function updateLastUpdated() {
+            const now = new Date();
+            const formattedDate = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const el = document.getElementById('last-updated');
+            if (el) el.textContent = `最后更新: ${formattedDate}`;
+        }
+
+        // 初始化排行榜
+        function initRanking() {
+            loadRankingData();
+
+            // 检查是否需要刷新（每天中午12点和晚上零点）
+            checkRefreshTime();
+
+            // 每分钟检查一次时间
+            setInterval(checkRefreshTime, 60000);
+        }
+
+        // 检查是否到了刷新时间
+        function checkRefreshTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+
+            // 每天中午12点和晚上零点刷新
+            if ((hours === 12 && minutes === 0) || (hours === 0 && minutes === 0)) {
+                loadRankingData(rankingCurrentPage);
+            }
+        }
+    </script>
+
+    <!-- ========== Sidebar音乐播放器（模块化版本）========== -->
+
+    <!-- 导航栏 -->
+    <script src="../js/navbar.js?v=1.3"></script>
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+
+    <!-- 卫星云图入口按钮（仅状态页专属） -->
+    <a href="map.html" class="satellite-toggle" title="查看卫星云图">
+        <i class="fa-solid fa-satellite-dish icon"></i>
+        <span class="sat-label">卫星云图</span>
+    </a>
+
+</body>
+
+</html>

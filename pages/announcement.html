@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最新公告 - 万驹同源</title>
+    <meta name="description" content="万驹同源服务器最新公告、版本更新、活动通知，第一时间了解服务器动态。">
+    <meta property="og:title" content="公告 - 万驹同源">
+    <meta property="og:description" content="万驹同源服务器最新公告、版本更新、活动通知，第一时间了解服务器动态。">
+    <meta property="og:image" content="https://mcpc.goldenapplepie.xyz/assets/img/m.webp">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="万驹同源">
+    <link rel="stylesheet" href="../css/style.css?v=4.12">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.1">
+    <style>
+        /* ========== Banner 专属美化（announcement-banner） ========== */
+        .announcement-banner {
+            min-height: 330px;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            background:
+                radial-gradient(120% 130% at 50% -10%, #243056 0%, #16213e 48%, #0e1626 100%);
+        }
+
+        /* 极光氛围层 */
+        .announcement-banner-aurora {
+            position: absolute;
+            inset: -10%;
+            z-index: 0;
+            background:
+                radial-gradient(38% 55% at 20% 22%, rgba(102,126,234,0.45), transparent 70%),
+                radial-gradient(42% 50% at 80% 28%, rgba(240,147,251,0.28), transparent 72%),
+                radial-gradient(48% 58% at 55% 95%, rgba(79,172,254,0.22), transparent 72%);
+            filter: blur(8px);
+            animation: abAurora 16s ease-in-out infinite alternate;
+        }
+        @keyframes abAurora {
+            0%   { transform: translate3d(0,0,0) scale(1);    opacity: .85; }
+            100% { transform: translate3d(0,-14px,0) scale(1.06); opacity: 1; }
+        }
+
+        /* 漂浮光晕球 */
+        .announcement-banner-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(45px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .announcement-banner-orb--1 {
+            width: 300px; height: 300px; top: -80px; left: 6%;
+            background: radial-gradient(circle, rgba(102,126,234,0.55), transparent 70%);
+            animation: abOrb1 15s ease-in-out infinite alternate;
+        }
+        .announcement-banner-orb--2 {
+            width: 260px; height: 260px; bottom: -70px; right: 10%;
+            background: radial-gradient(circle, rgba(240,147,251,0.42), transparent 70%);
+            animation: abOrb2 19s ease-in-out infinite alternate;
+        }
+        @keyframes abOrb1 { from { transform: translate(0,0); }     to { transform: translate(44px,32px); } }
+        @keyframes abOrb2 { from { transform: translate(0,0); }     to { transform: translate(-34px,-28px); } }
+
+        /* 浮动粒子 */
+        .banner-particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .banner-particles span {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.28);
+            animation: floatUp linear infinite;
+        }
+        .banner-particles span:nth-child(1)  { left:10%;  width:5px;  height:5px;  animation-duration:8s;  animation-delay:0s; }
+        .banner-particles span:nth-child(2)  { left:22%;  width:7px;  height:7px;  animation-duration:11s; animation-delay:1.2s; }
+        .banner-particles span:nth-child(3)  { left:38%;  width:4px;  height:4px;  animation-duration:7s;  animation-delay:2.5s; }
+        .banner-particles span:nth-child(4)  { left:52%;  width:8px;  height:8px;  animation-duration:10s; animation-delay:0.8s; }
+        .banner-particles span:nth-child(5)  { left:66%;  width:5px;  height:5px;  animation-duration:9s;  animation-delay:3.2s; }
+        .banner-particles span:nth-child(6)  { left:78%;  width:6px;  height:6px;  animation-duration:12s; animation-delay:1.8s; }
+        .banner-particles span:nth-child(7)  { left:88%;  width:4px;  height:4px;  animation-duration:8s;  animation-delay:4s; }
+        .banner-particles span:nth-child(8)  { left:45%;  width:9px;  height:9px;  animation-duration:14s; animation-delay:2.2s; }
+        .banner-particles span:nth-child(9)  { left:5%;   width:5px;  height:5px;  animation-duration:9s;  animation-delay:5s; }
+        .banner-particles span:nth-child(10) { left:72%;  width:3px;  height:3px;  animation-duration:6s;  animation-delay:3.5s; }
+        @keyframes floatUp {
+            0%   { transform: translateY(100vh) scale(0); opacity:0; }
+            15%  { opacity:0.6; }
+            85%  { opacity:0.6; }
+            100% { transform: translateY(-30px) scale(1); opacity:0; }
+        }
+
+        /* 底部流光描边 */
+        .announcement-banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 3px;
+            z-index: 3;
+            background: linear-gradient(90deg, transparent, #667eea 28%, #f093fb 50%, #667eea 72%, transparent);
+            background-size: 220% 100%;
+            animation: abLine 5s linear infinite;
+        }
+        @keyframes abLine { to { background-position: -220% 0; } }
+
+        .announcement-banner-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 330px;
+            padding: 2.5rem 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.2s;
+        }
+        .announcement-banner-content.animate-in { opacity: 1; transform: translateY(0); }
+
+        /* 顶部玻璃徽章 */
+        .announcement-banner-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.88);
+            padding: 6px 16px;
+            margin-bottom: 1.1rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.16);
+            backdrop-filter: blur(10px) saturate(160%);
+            -webkit-backdrop-filter: blur(10px) saturate(160%);
+            box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+        }
+        .announcement-banner-badge i { color: #8ea2ff; }
+
+        /* 流光标题 */
+        .announcement-banner-title {
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 800;
+            margin: 0 0 1rem;
+            letter-spacing: 3px;
+            background: linear-gradient(100deg, #ffffff 18%, #c9d4ff 40%, #f3c6ff 55%, #ffffff 78%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            text-shadow: 0 6px 30px rgba(102,126,234,0.35);
+            animation: abTitleShine 6s linear infinite;
+        }
+        @keyframes abTitleShine { to { background-position: 200% center; } }
+
+        /* 玻璃副标题 */
+        .announcement-banner-subtitle {
+            display: inline-block;
+            font-size: clamp(0.9rem, 2.4vw, 1.12rem);
+            color: rgba(255,255,255,0.92);
+            letter-spacing: 3px;
+            padding: 8px 22px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+
+        /* ========== Banner 第二轮精修：信息中枢式布局 ========== */
+        .announcement-banner {
+            min-height: 370px;
+        }
+
+        .announcement-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+            background-size: 52px 52px;
+            mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 76%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 76%, transparent);
+        }
+
+        .announcement-banner::after {
+            height: 3px;
+            background: #667eea;
+            animation: none;
+            box-shadow: 0 -6px 24px rgba(102,126,234,0.35);
+        }
+
+        .announcement-banner-content {
+            width: min(760px, calc(100% - 48px));
+            min-height: 370px;
+            margin: 0 auto;
+            padding: 3rem 44px;
+        }
+
+        .announcement-banner-content::before,
+        .announcement-banner-content::after {
+            content: '';
+            position: absolute;
+            top: 68px;
+            bottom: 68px;
+            width: 34px;
+            pointer-events: none;
+            opacity: 0.58;
+        }
+
+        .announcement-banner-content::before {
+            left: 0;
+            border-top: 1px solid rgba(255,255,255,0.38);
+            border-left: 1px solid rgba(255,255,255,0.38);
+            border-bottom: 1px solid rgba(255,255,255,0.38);
+        }
+
+        .announcement-banner-content::after {
+            right: 0;
+            border-top: 1px solid rgba(255,255,255,0.38);
+            border-right: 1px solid rgba(255,255,255,0.38);
+            border-bottom: 1px solid rgba(255,255,255,0.38);
+        }
+
+        .announcement-banner-badge {
+            margin-bottom: 1.25rem;
+            background: rgba(12,20,38,0.38);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: none;
+        }
+
+        .announcement-banner-heading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 0.9rem;
+        }
+
+        .announcement-banner-symbol {
+            width: 58px;
+            height: 58px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            border-radius: 18px;
+            color: #fff;
+            font-size: 1.35rem;
+            background: rgba(102,126,234,0.18);
+            border: 1px solid rgba(174,189,255,0.34);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 12px 34px rgba(0,0,0,0.2);
+            transform: rotate(-4deg);
+        }
+
+        .announcement-banner-title {
+            margin: 0;
+            color: #fff;
+            background: none;
+            -webkit-text-fill-color: currentColor;
+            animation: none;
+            text-shadow: 0 8px 28px rgba(0,0,0,0.32);
+        }
+
+        .announcement-banner-title::after {
+            content: '';
+            display: block;
+            width: 52px;
+            height: 3px;
+            margin: 10px auto 0;
+            border-radius: 99px;
+            background: #91a3ff;
+            box-shadow: 0 0 18px rgba(145,163,255,0.5);
+        }
+
+        .announcement-banner-subtitle {
+            margin: 0;
+            padding: 0;
+            color: rgba(255,255,255,0.78);
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+
+        .announcement-banner-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+            margin-top: 1.35rem;
+            color: rgba(255,255,255,0.66);
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+        }
+
+        .announcement-banner-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .announcement-banner-meta i {
+            color: #9eafff;
+        }
+
+        .announcement-banner-side-label,
+        .announcement-banner-signal {
+            position: absolute;
+            z-index: 2;
+            top: 50%;
+            color: rgba(255,255,255,0.52);
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            pointer-events: none;
+        }
+
+        .announcement-banner-side-label {
+            left: max(24px, calc((100vw - 1220px) / 2));
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: center;
+        }
+
+        .announcement-banner-side-label strong {
+            color: rgba(255,255,255,0.88);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .announcement-banner-signal {
+            right: max(24px, calc((100vw - 1220px) / 2));
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            transform: translateY(-50%);
+        }
+
+        .announcement-banner-signal-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #9eafff;
+            box-shadow: 0 0 0 5px rgba(158,175,255,0.12);
+            animation: abSignal 2.4s ease-in-out infinite;
+        }
+
+        @keyframes abSignal {
+            0%, 100% { transform: scale(0.9); opacity: 0.65; }
+            50% { transform: scale(1.12); opacity: 1; }
+        }
+
+        @media (max-width: 900px) {
+            .announcement-banner-side-label,
+            .announcement-banner-signal {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .announcement-banner,
+            .announcement-banner-content {
+                min-height: 330px;
+            }
+
+            .announcement-banner-content {
+                width: calc(100% - 24px);
+                padding: 2.4rem 28px;
+            }
+
+            .announcement-banner-content::before,
+            .announcement-banner-content::after {
+                top: 48px;
+                bottom: 48px;
+                width: 20px;
+            }
+
+            .announcement-banner-heading {
+                gap: 12px;
+            }
+
+            .announcement-banner-symbol {
+                width: 46px;
+                height: 46px;
+                border-radius: 14px;
+                font-size: 1.05rem;
+            }
+
+            .announcement-banner-title {
+                font-size: clamp(2rem, 12vw, 2.75rem);
+                letter-spacing: 2px;
+            }
+
+            .announcement-banner-subtitle {
+                letter-spacing: 1.5px;
+                line-height: 1.7;
+            }
+
+            .announcement-banner-meta {
+                max-width: 250px;
+                gap: 8px;
+                line-height: 1.5;
+            }
+
+            .banner-particles span:nth-child(n+7),
+            .announcement-banner-orb--2 {
+                display: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .announcement-banner-aurora,
+            .announcement-banner-orb,
+            .banner-particles span,
+            .announcement-banner-signal-dot {
+                animation: none !important;
+            }
+
+            .announcement-banner-content {
+                transition: opacity 0.2s ease;
+                transform: none;
+            }
+        }
+
+        /* ========== 公告内容区 ========== */
+        .announcement-page {
+            padding: 36px 0;
+            background: #f0f2f5;
+            min-height: 400px;
+        }
+        .announcement-list { max-width: 860px; margin: 0 auto; min-height: 200px; }
+
+        /* 加载占位 */
+        .loading-placeholder { text-align: center; padding: 60px 20px; color: #999; font-size: 14px; }
+        .loading-placeholder i { font-size: 32px; display: block; margin-bottom: 10px; opacity: 0.3; }
+
+        /* ── 页面顶部统计条 ── */
+        .announcement-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .announcement-topbar .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .announcement-topbar .left h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+        .announcement-topbar .left h2 i {
+            color: #667eea;
+            margin-right: 6px;
+        }
+        .announcement-topbar .count-badge {
+            font-size: 0.75rem;
+            color: #999;
+            background: #e8eaed;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .announcement-topbar .filters {
+            display: flex;
+            gap: 6px;
+        }
+        .announcement-topbar .filters button {
+            padding: 5px 14px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: #fff;
+            color: #888;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .announcement-topbar .filters button:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        .announcement-topbar .filters button.active {
+            background: #667eea;
+            color: #fff;
+            border-color: transparent;
+        }
+        .announcement-topbar .filters button.active:hover {
+            background: #5566d4;
+        }
+
+        /* ===== 公告卡片 ===== */
+        .announcement-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px 22px;
+            margin-bottom: 14px;
+            border: 1px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+            position: relative;
+            overflow: hidden;
+        }
+        .announcement-item::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            transition: opacity 0.35s;
+            opacity: 0.6;
+        }
+        .announcement-item.type-update::before { background: #667eea; }
+        .announcement-item.type-event::before  { background: #f5576c; }
+        .announcement-item.type-notice::before { background: #4facfe; }
+
+        /* 光效扫过动画 */
+        .announcement-item::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            transform: skewX(-25deg);
+            pointer-events: none;
+        }
+        .announcement-item:hover::after {
+            animation: lightSweep 0.7s ease;
+        }
+        @keyframes lightSweep {
+            0%   { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        .announcement-item:hover {
+            border-color: #d0d0d0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+        }
+        .announcement-item:hover::before { opacity: 1; }
+
+        /* 滚动入场的初始状态 */
+        .announcement-item.scroll-wait {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        .announcement-item.scroll-wait.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* 筛选退场动画 */
+        .announcement-item.filter-exit {
+            opacity: 0;
+            transform: translateX(-20px) scale(0.96);
+        }
+
+        /* 左侧信息区 */
+        .announcement-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .announcement-info .title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .announcement-info .title-row h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            line-height: 1.5;
+        }
+        .announcement-info .title-row h2 i {
+            color: #667eea;
+            font-size: 0.85rem;
+            margin-right: 4px;
+        }
+        .announcement-info .badges {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .announcement-tag {
+            padding: 3px 11px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .announcement-tag.update { background: rgba(102,126,234,0.12); color: #667eea; }
+        .announcement-tag.event  { background: rgba(245,87,108,0.12); color: #f5576c; }
+        .announcement-tag.notice { background: rgba(79,172,254,0.12); color: #4facfe; }
+        .announcement-date {
+            font-size: 0.78rem;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+        .announcement-date i { font-size: 0.72rem; color: #aaa; }
+        .announcement-info .summary {
+            font-size: 0.88rem;
+            color: #777;
+            line-height: 1.6;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        /* 右侧按钮 */
+        .announcement-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 20px;
+            background: #667eea;
+            color: #fff !important;
+            text-decoration: none !important;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+            white-space: nowrap;
+            border: none;
+            transition: all 0.25s ease;
+            position: static !important;
+        }
+        .announcement-link::after { display: none !important; }
+        .announcement-link:hover {
+            transform: translateY(-1px);
+            background: #5566d4;
+            box-shadow: 0 4px 16px rgba(102,126,234,0.4);
+            color: #fff !important;
+        }
+        .announcement-link i {
+            font-size: 11px;
+            transition: transform 0.2s;
+        }
+        .announcement-item:hover .announcement-link i {
+            transform: translateX(3px);
+        }
+
+        /* 淡入动画 */
+        .fade-in { opacity: 0; transform: translateY(16px); animation: fadeInUp 0.45s ease forwards; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* ===== 分页 ===== */
+        .pagination {
+            display: flex; justify-content: center; align-items: center;
+            margin-top: 30px; gap: 6px; flex-wrap: wrap;
+        }
+        .pagination-btn {
+            padding: 7px 15px; border: 1.5px solid #ddd; border-radius: 8px;
+            background: #fff; color: #888; font-weight: 500; cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s;
+        }
+        .pagination-btn:hover:not(:disabled) {
+            border-color: #667eea; color: #667eea;
+        }
+        .pagination-btn.active {
+            background: #667eea;
+            color: #fff; border-color: transparent;
+        }
+        .pagination-btn:disabled { opacity: 0.35; cursor: default; }
+
+        /* 返回论坛按钮 */
+        .back-to-forum {
+            position: fixed; right: 20px; bottom: 90px; z-index: 999;
+        }
+        .back-to-forum-btn {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: #667eea;
+            border: none; box-shadow: 0 4px 14px rgba(102,126,234,0.35);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.25s; color: #fff;
+        }
+        .back-to-forum-btn:hover { transform: scale(1.08); }
+        .back-to-forum-btn svg { width: 20px; height: 20px; fill: #fff; display: block; }
+
+        /* 错误/空 */
+        .error-message, .empty-message {
+            text-align: center; padding: 60px 30px; color: #999;
+            background: #fff; border-radius: 12px;
+        }
+        .error-icon, .empty-icon { font-size: 2.8rem; margin-bottom: 14px; }
+    </style>
+</head>
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 返回论坛按钮 -->
+    <div class="back-to-forum">
+        <button class="back-to-forum-btn" onclick="window.location.href='forum.html'">
+            <span class="icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </span>
+        </button>
+    </div>
+
+    <!-- 公告Banner区域 -->
+    <section class="subpage-banner announcement-banner">
+        <div class="announcement-banner-aurora"></div>
+        <div class="announcement-banner-orb announcement-banner-orb--1"></div>
+        <div class="announcement-banner-orb announcement-banner-orb--2"></div>
+        <div class="banner-particles" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="announcement-banner-side-label" aria-hidden="true"><strong>ANNOUNCEMENT</strong><span>万驹同源</span></div>
+        <div class="announcement-banner-signal" aria-hidden="true"><span class="announcement-banner-signal-dot"></span><span>信息持续更新</span></div>
+        <div class="container">
+            <div class="announcement-banner-content">
+                <div class="announcement-banner-badge"><i class="fas fa-tower-broadcast"></i>官方信息发布中心</div>
+                <div class="announcement-banner-heading">
+                    <span class="announcement-banner-symbol" aria-hidden="true"><i class="fas fa-bullhorn"></i></span>
+                    <h1 class="announcement-banner-title">最新公告</h1>
+                </div>
+                <p class="announcement-banner-subtitle">汇集服务器动态、版本更新与活动安排</p>
+                <div class="announcement-banner-meta" aria-label="公告内容范围">
+                    <span><i class="fas fa-circle-info"></i>权威发布</span>
+                    <span><i class="fas fa-clock-rotate-left"></i>持续更新</span>
+                    <span><i class="fas fa-layer-group"></i>分类归档</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 公告内容区 -->
+    <div class="announcement-page">
+        <div class="container">
+            <!-- 顶部栏 -->
+            <div class="announcement-topbar">
+                <div class="left">
+                    <h2><i class="fas fa-bullhorn"></i>公告列表</h2>
+                    <span class="count-badge" id="announcementCountBadge">共 0 条</span>
+                </div>
+                <div class="filters">
+                    <button class="active" data-filter="all" onclick="filterAnnouncements('all')">全部</button>
+                    <button data-filter="update" onclick="filterAnnouncements('update')">版本更新</button>
+                    <button data-filter="event" onclick="filterAnnouncements('event')">活动</button>
+                    <button data-filter="notice" onclick="filterAnnouncements('notice')">通知</button>
+                </div>
+            </div>
+
+            <div class="announcement-list" id="announcement-list">
+                <div class="loading-placeholder"><i class="fas fa-spinner fa-pulse"></i>加载公告中...</div>
+            </div>
+            
+            <!-- 分页控件 -->
+            <div class="pagination" id="pagination">
+                <!-- 动态生成分页按钮 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.4"></script>
+
+    <!-- ========== Sidebar音乐播放器（模块化版本）========== -->
+
+
+
+    <!-- 导航栏 -->
+    <script src="../js/navbar.js?v=1.3"></script>
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+
+    <!-- 公告列表动态加载和分页 -->
+    <script>
+        const CONFIG = { itemsPerPage: 5, jsonUrl: '../data/announcements.json' };
+
+        let announcements = [];
+        let currentPage = 1;
+        let currentFilter = 'all';
+
+        async function initPage() {
+            try {
+                const response = await fetch(CONFIG.jsonUrl);
+                const data = await response.json();
+                
+                if (data && data.announcements) {
+                    let arr = data.announcements;
+                    if (!Array.isArray(arr)) {
+                        const tmp = [];
+                        for (let key in arr) {
+                            if (arr.hasOwnProperty(key) && typeof arr[key] === 'object') tmp.push(arr[key]);
+                        }
+                        arr = tmp;
+                    }
+                    announcements = arr.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                    
+                    // 更新总数
+                    document.getElementById('announcementCountBadge').textContent = '共 ' + announcements.length + ' 条';
+                    
+                    renderAnnouncements(1);
+                    generatePagination();
+                }
+            } catch (error) {
+                console.error('加载公告数据失败:', error);
+                document.getElementById('announcement-list').innerHTML = `
+                    <div class="error-message">
+                        <div class="error-icon"><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i></div>
+                        <p>加载公告失败，请稍后重试</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 分类过滤（带过渡动画）
+        window.filterAnnouncements = function(type) {
+            const listContainer = document.getElementById('announcement-list');
+            // 现有卡片退场
+            const cards = listContainer.querySelectorAll('.announcement-item');
+            cards.forEach((c, i) => {
+                c.style.transitionDelay = (i * 0.04) + 's';
+                c.classList.add('filter-exit');
+            });
+            // 延迟切换
+            setTimeout(() => {
+                currentFilter = type;
+                currentPage = 1;
+                document.querySelectorAll('.announcement-topbar .filters button').forEach(b => {
+                    b.classList.toggle('active', b.dataset.filter === type);
+                });
+                renderAnnouncements(1);
+                generatePagination();
+            }, 300);
+        };
+
+        function getFilteredPosts() {
+            if (currentFilter === 'all') return announcements;
+            return announcements.filter(a => a.type === currentFilter);
+        }
+
+        function renderAnnouncements(page) {
+            const listContainer = document.getElementById('announcement-list');
+            listContainer.innerHTML = '';
+
+            const filtered = getFilteredPosts();
+            const startIndex = (page - 1) * CONFIG.itemsPerPage;
+            const endIndex = startIndex + CONFIG.itemsPerPage;
+            const pageItems = filtered.slice(startIndex, endIndex);
+
+            if (!pageItems.length) {
+                listContainer.innerHTML = `
+                    <div class="empty-message">
+                        <div class="empty-icon"><i class="fas fa-inbox" style="color:#ccc;"></i></div>
+                        <p>当前没有公告</p>
+                    </div>
+                `;
+                return;
+            }
+
+            pageItems.forEach((a, i) => {
+                let typeClass = 'notice', typeText = '通知';
+                if (a.type === 'update') { typeClass = 'update'; typeText = '版本更新'; }
+                else if (a.type === 'event') { typeClass = 'event'; typeText = '活动'; }
+
+                let summary = a.summary || a.title;
+                if (summary.length > 120) summary = summary.substring(0, 120) + '...';
+
+                const el = document.createElement('div');
+                el.className = 'announcement-item type-' + typeClass + ' scroll-wait';
+                el.innerHTML = `
+                    <div class="announcement-info">
+                        <div class="title-row">
+                            <h2>${a.title}</h2>
+                            <div class="badges">
+                                <span class="announcement-tag ${typeClass}">${typeText}</span>
+                                <span class="announcement-date"><i class="fas fa-calendar-alt"></i>${a.created_at}</span>
+                            </div>
+                        </div>
+                        <div class="summary">${summary}</div>
+                    </div>
+                    <a href="announcement-detail.html?id=${a.id}" class="announcement-link">查看详情 <i class="fas fa-arrow-right"></i></a>
+                `;
+                el.style.transitionDelay = (i * 0.06) + 's';
+                listContainer.appendChild(el);
+
+                // 交错入场
+                setTimeout(() => el.classList.add('visible'), 20 + i * 60);
+            });
+        }
+
+        function generatePagination() {
+            const container = document.getElementById('pagination');
+            container.innerHTML = '';
+
+            const totalPages = Math.ceil(getFilteredPosts().length / CONFIG.itemsPerPage);
+            if (totalPages <= 1) return;
+
+            const prev = document.createElement('button');
+            prev.className = 'pagination-btn';
+            prev.textContent = '‹ 上一页';
+            prev.disabled = currentPage === 1;
+            prev.onclick = () => { if (currentPage > 1) { currentPage--; render(); } };
+            container.appendChild(prev);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'pagination-btn' + (i === currentPage ? ' active' : '');
+                btn.textContent = i;
+                btn.onclick = () => { currentPage = i; render(); };
+                container.appendChild(btn);
+            }
+
+            const next = document.createElement('button');
+            next.className = 'pagination-btn';
+            next.textContent = '下一页 ›';
+            next.disabled = currentPage === totalPages;
+            next.onclick = () => { if (currentPage < totalPages) { currentPage++; render(); } };
+            container.appendChild(next);
+
+            function render() {
+                renderAnnouncements(currentPage);
+                generatePagination();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initPage();
+            setTimeout(() => {
+                const bc = document.querySelector('.announcement-banner-content');
+                if (bc) bc.classList.add('animate-in');
+            }, 100);
+
+            // 滚动触发卡片入场（翻页后新卡片）
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+            // 观察后续动态添加的卡片
+            const listEl = document.getElementById('announcement-list');
+            new MutationObserver(() => {
+                listEl.querySelectorAll('.scroll-wait:not(.visible)').forEach(el => observer.observe(el));
+            }).observe(listEl, { childList: true });
+        });
+    </script>
+</body>
+</html>

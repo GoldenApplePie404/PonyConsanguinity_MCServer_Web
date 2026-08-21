@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录/注册 - 万驹同源 | Minecraft 服务器官网</title>
+    <link rel="stylesheet" href="../css/style.css?v=4.12">
+    <link rel="stylesheet" href="../css/captcha.css">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.1">
+    
+    <link rel="preload" href="../assets/img/bg.webp" as="image">
+    <style>
+        .auth-container {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 90px 20px 40px;
+            background-image: url('../assets/img/bg.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /*background: rgba(46, 111, 219, 0.85);*/
+            z-index: 1;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            box-shadow: 0 16px 48px rgba(46, 111, 219, 0.14), 0 2px 8px rgba(46, 111, 219, 0.06);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .auth-sidebar {
+            background: #2e6fdb;
+            color: white;
+            padding: 45px 45px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 浮动装饰：两颗淡色星星（克制点缀） */
+        .auth-sidebar::before,
+        .auth-sidebar::after {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.35);
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .auth-sidebar::before {
+            content: "\f005";
+            top: 30px;
+            right: 30px;
+            font-size: 28px;
+            transform: rotate(-15deg);
+        }
+        .auth-sidebar::after {
+            content: "\f005";
+            bottom: 40px;
+            left: 24px;
+            font-size: 18px;
+            opacity: 0.7;
+            transform: rotate(20deg);
+        }
+
+        /* 小马勋章（品牌 logo + 白圆底） */
+        .auth-medal {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 4px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 8px 24px rgba(18, 58, 122, 0.28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 22px;
+            position: relative;
+            z-index: 1;
+        }
+        .auth-medal img {
+            width: 78%;
+            height: 78%;
+            object-fit: contain;
+        }
+
+        .auth-sidebar h2 {
+            font-size: 1.7rem;
+            margin-bottom: 14px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .auth-sidebar p {
+            opacity: 0.92;
+            line-height: 1.75;
+            margin-bottom: 24px;
+            text-align: center;
+            font-size: 0.92rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-features {
+            list-style: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-features li {
+            padding: 9px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.92rem;
+            opacity: 0.95;
+        }
+
+        /* feature 图标化：蓝色勾胶囊（替代原 # 字符） */
+        .auth-features li::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f00c";
+            color: #ffffff;
+            background: rgba(242, 183, 5, 0.95);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .auth-form-section {
+            padding: 45px 45px 50px;
+            position: relative;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 26px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-header h1 {
+            font-size: 1.65rem;
+            margin-bottom: 6px;
+            color: #2e6fdb;
+            font-weight: 700;
+        }
+
+        .auth-header p {
+            font-size: 0.88rem;
+            color: #8492ab;
+            margin-top: 4px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 28px;
+            border-bottom: 2px solid #e6ecf5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 14px 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.05rem;
+            color: #8492ab;
+            position: relative;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .auth-tab:hover {
+            color: #2e6fdb;
+        }
+
+        .auth-tab.active {
+            color: #2e6fdb;
+            font-weight: 700;
+        }
+
+        /* tab 下划线：纯蔚蓝 */
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            background: #2e6fdb;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+            color: #2a3550;
+            font-size: 0.9rem;
+        }
+
+        /* 输入框柔化：淡蓝底 + 大圆角 + focus 发光 */
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e6ecf5;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #f5f8ff;
+            transition: all 0.25s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2e6fdb;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(46, 111, 219, 0.12);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-actions label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: #55637c;
+            font-size: 0.9rem;
+        }
+
+        .forgot-link {
+            color: #2e6fdb;
+            text-decoration: none;
+            font-size: 0.88rem;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .terms-link {
+            color: #2e6fdb;
+            text-decoration: none;
+            margin: 0 2px;
+        }
+
+        .terms-link:hover {
+            text-decoration: underline;
+        }
+
+        /* 主按钮：品牌蔚蓝纯色 + 大圆角 + hover 浮起 */
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: #2e6fdb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.02rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(46, 111, 219, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-auth:hover {
+            background: #3a82ec;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(46, 111, 219, 0.4);
+        }
+
+        .btn-auth:active {
+            background: #1d4fa0;
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 3px 10px rgba(46, 111, 219, 0.3);
+        }
+
+        .social-login {
+            margin-top: 28px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-login p {
+            color: #8492ab;
+            margin-bottom: 14px;
+            font-size: 0.88rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            padding: 10px 20px;
+            border: 1px solid #e6ecf5;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            color: #2a3550;
+        }
+
+        .social-btn:hover {
+            background: #f5f8ff;
+        }
+
+        .form-content {
+            display: none;
+        }
+
+        .form-content.active {
+            display: block;
+        }
+
+        .test-credentials {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .test-credentials h4 {
+            color: #856404;
+            margin-bottom: 5px;
+        }
+
+        .test-credentials code {
+            display: block;
+            margin: 5px 0;
+            padding: 5px;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        /* EYPA 登录按钮（紧凑次级：品牌金底小按钮，不抢主按钮风头） */
+        .eypa-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 22px;
+            background: #f2b705;
+            color: #123a7a;
+            font-weight: 600;
+            font-size: 0.92rem;
+            letter-spacing: 0.3px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(242, 183, 5, 0.3);
+            transition: all 0.25s ease;
+        }
+
+        .eypa-btn::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f02d";
+            font-size: 0.95em;
+        }
+
+        .eypa-btn:hover {
+            background: #ffc61a;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(242, 183, 5, 0.35);
+        }
+
+        .eypa-btn:active {
+            background: #e09d00;
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 6px rgba(242, 183, 5, 0.25);
+        }
+
+        /* 骥忆云笺 NFC 登录按钮（Flow② 主动请求） */
+        .nfc-btn {
+            border-color: #D4AF37;
+            color: #B8932E;
+        }
+
+        .nfc-btn:hover {
+            background: #D4AF37;
+            color: #fff;
+            border-color: #D4AF37;
+        }
+
+        .nfc-btn:disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        /* ── 忘记密码 / 重置密码 弹窗 ─────────────────────────── */
+        .auth-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(18, 58, 122, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-modal-overlay.active {
+            display: flex;
+        }
+
+        .auth-modal {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(18, 58, 122, 0.25);
+            width: 100%;
+            max-width: 420px;
+            padding: 34px 32px 30px;
+            position: relative;
+            animation: authModalIn 0.28s ease;
+        }
+
+        @keyframes authModalIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .auth-modal .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: #8492ab;
+            cursor: pointer;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-modal .modal-close:hover {
+            background: #f0f4ff;
+            color: #2e6fdb;
+        }
+
+        .auth-modal .modal-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2e6fdb, #1d4fa0);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            margin: 0 auto 16px;
+        }
+
+        .auth-modal h3 {
+            text-align: center;
+            color: #2a3550;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .auth-modal .modal-sub {
+            text-align: center;
+            color: #8492ab;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .auth-modal .form-group input {
+            background: #f5f8ff;
+            border: 1.5px solid #e6ecf5;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            width: 100%;
+            transition: all 0.25s ease;
+        }
+
+        .auth-modal .form-group input:focus {
+            outline: none;
+            border-color: #2e6fdb;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(46, 111, 219, 0.12);
+        }
+
+        .auth-modal .modal-back {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            color: #8492ab;
+            font-size: 0.85rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-modal .modal-back:hover {
+            color: #2e6fdb;
+        }
+
+        .auth-modal .modal-success {
+            text-align: center;
+            padding: 8px 0 4px;
+        }
+
+        .auth-modal .modal-success i {
+            font-size: 3rem;
+            color: #3da555;
+            display: block;
+            margin-bottom: 14px;
+        }
+
+        .auth-modal .modal-success p {
+            color: #2a3550;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 8px;
+        }
+
+        .auth-modal .modal-success .sub {
+            color: #8492ab;
+            font-size: 0.83rem;
+        }
+
+        /* ── 滑块验证组件样式见 ../css/captcha.css（公共） ── */
+
+        @media (max-width: 768px) {
+            .auth-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-sidebar {
+                display: none;
+            }
+
+            .auth-form-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+
+</head>
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-layout">
+                <div class="auth-sidebar">
+                    <div class="auth-medal">
+                        <img src="../assets/img/logo.webp" alt="PonyConsanguinity">
+                    </div>
+                    <h2>欢迎回来</h2>
+                    <p>登录你的账户，继续你的冒险之旅。还没有账户？立即注册，加入我们的社区！</p>
+                    <ul class="auth-features">
+                        <li>了解最新动态</li>
+                        <li>参与社区讨论</li>
+                        <li>用户专属福利</li>
+                        <li>充值和购买</li>
+                    </ul>
+                </div>
+
+                <div class="auth-form-section">
+                    <div class="auth-header">
+                        <h1>万驹同源服务器</h1>
+                        <p>登录 / 注册</p>
+                    </div>
+
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
+                        <button class="auth-tab" onclick="switchAuthTab('register')">注册</button>
+                    </div>
+
+                    <!-- 登录表单 -->
+                    <div id="login-form" class="form-content active">
+                        <form onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label for="login-username">用户名</label>
+                                <input type="text" id="login-username" placeholder="请输入用户名" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password">密码</label>
+                                <input type="password" id="login-password" placeholder="请输入密码" required>
+                            </div>
+                            <div class="form-actions">
+                                <label>
+                                    <input type="checkbox" id="remember">
+                                    记住我
+                                </label>
+                                <a href="#" class="forgot-link" id="forgot-link">忘记密码？</a>
+                            </div>
+                            <div id="login-captcha"></div>
+                            <button type="submit" class="btn-auth">登录</button>
+                        </form>
+
+                        <!--<div class="test-credentials">
+                            <h4>测试账号（管理员）：</h4>
+                            <code>用户名：admin</code>
+                            <code>密码：admin123</code>
+                        </div>-->
+
+                        <div class="social-login">
+                            <p>或使用其他方式登录</p>
+                            <div class="social-buttons">
+                                <!--<button class="social-btn" onclick="showToast('此功能开发中……', 'info')">EYPA</button>-->
+                                <button class="social-btn eypa-btn" onclick="handleEypaLogin()">
+                                    EYPA登录
+                                </button>
+                                <!--<button type="button" class="social-btn nfc-btn" id="nfc-login-btn" onclick="handleNfcLogin()">
+                                    <i class="fas fa-wifi"></i> 碰一下 NFC 登录
+                                </button>-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 注册表单 -->
+                    <div id="register-form" class="form-content">
+                        <form onsubmit="handleRegister(event)">
+                            <div class="form-group">
+                                <label for="reg-username">用户名</label>
+                                <input type="text" id="reg-username" placeholder="请输入用户名" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-email">邮箱</label>
+                                <input type="email" id="reg-email" placeholder="请输入邮箱" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-password">密码</label>
+                                <input type="password" id="reg-password" placeholder="请输入密码（至少6位）" required minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-confirm">确认密码</label>
+                                <input type="password" id="reg-confirm" placeholder="请再次输入密码" required>
+                            </div>
+                            <div class="form-actions">
+                                <label>
+                                    <input type="checkbox" id="agree" required>
+                                    我已阅读并同意 <a href="user-agreement.html" target="_blank" class="terms-link">用户协议</a> 和 <a href="privacy-policy.html" target="_blank" class="terms-link">隐私政策</a>
+                                </label>
+                            </div>
+                            <div id="register-captcha"></div>
+                            <button type="submit" class="btn-auth">注册</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <!-- ── 忘记密码 / 重置密码 弹窗 ── -->
+    <div class="auth-modal-overlay" id="auth-modal-overlay">
+        <div class="auth-modal">
+            <button class="modal-close" onclick="closeAuthModal()" aria-label="关闭">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- 视图一：输入邮箱请求重置 -->
+            <div id="modal-view-request">
+                <div class="modal-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <h3>忘记密码</h3>
+                <p class="modal-sub">请输入注册时使用的邮箱，我们将发送一封密码重置邮件</p>
+                <form onsubmit="handleForgotPassword(event)">
+                    <div class="form-group">
+                        <label for="forgot-email">邮箱</label>
+                        <input type="email" id="forgot-email" placeholder="请输入注册邮箱" required>
+                    </div>
+                    <!-- 多账号场景：补充用户名精确定位 -->
+                    <div class="form-group" id="forgot-username-group" style="display: none;">
+                        <label for="forgot-username">用户名</label>
+                        <input type="text" id="forgot-username" placeholder="请输入用户名">
+                    </div>
+                    <div id="forgot-captcha"></div>
+                    <button type="submit" class="btn-auth">发送重置邮件</button>
+                </form>
+                <a class="modal-back" onclick="closeAuthModal()">返回登录</a>
+            </div>
+
+            <!-- 视图二：设置新密码 -->
+            <div id="modal-view-reset" style="display: none;">
+                <div class="modal-icon">
+                    <i class="fas fa-unlock-alt"></i>
+                </div>
+                <h3>设置新密码</h3>
+                <p class="modal-sub">请设置新密码（至少8位，需包含大小写字母和数字）</p>
+                <form onsubmit="handleResetPassword(event)">
+                    <div class="form-group">
+                        <label for="reset-password">新密码</label>
+                        <input type="password" id="reset-password" placeholder="请输入新密码" required minlength="8">
+                    </div>
+                    <div class="form-group">
+                        <label for="reset-confirm">确认新密码</label>
+                        <input type="password" id="reset-confirm" placeholder="请再次输入新密码" required minlength="8">
+                    </div>
+                    <div id="reset-captcha"></div>
+                    <button type="submit" class="btn-auth">重置密码</button>
+                </form>
+                <a class="modal-back" onclick="closeAuthModal()">返回登录</a>
+            </div>
+
+            <!-- 视图三：提交成功 -->
+            <div id="modal-view-success" style="display: none;">
+                <div class="modal-success">
+                    <i class="fas fa-check-circle"></i>
+                    <p id="modal-success-text">操作成功</p>
+                    <p class="sub">如果未收到邮件，请检查垃圾箱</p>
+                </div>
+                <button type="button" class="btn-auth" style="margin-top: 20px;" onclick="closeAuthModal()">好的</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js?v=3.3"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/captcha.js"></script>
+    <script>
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
+
+            if (tab === 'login') {
+                document.querySelector('.auth-tab:first-child').classList.add('active');
+                document.getElementById('login-form').classList.add('active');
+            } else {
+                document.querySelector('.auth-tab:last-child').classList.add('active');
+                document.getElementById('register-form').classList.add('active');
+                // 注册表单从隐藏变为可见，重渲染滑块缺口
+                setTimeout(() => { if (captchaRegister) captchaRegister.render(); }, 50);
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            // 滑块验证
+            const captchaToken = await requireCaptchaToken(captchaLogin);
+            if (!captchaToken) return;
+
+            try {
+                const response = await loginUser(username, password, captchaToken);
+
+                if (response.success) {
+                    window.isLoggedIn = true;
+                    window.currentUser = response.data.user;
+                    showMessage('登录成功！欢迎回来，' + response.data.user.username, 'success');
+                    setTimeout(() => {
+                        window.location.href = 'profile.html';
+                    }, 1000);
+                } else {
+                    showMessage(response.message || '登录失败', 'error');
+                    // 登录失败：token 已消费，重置滑块重新验证
+                    if (captchaLogin) captchaLogin.reset();
+                }
+            } catch (error) {
+                console.error('登录错误:', error);
+                showMessage('登录过程中发生错误', 'error');
+                if (captchaLogin) captchaLogin.reset();
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const confirm = document.getElementById('reg-confirm').value;
+
+            if (password !== confirm) {
+                showMessage('两次输入的密码不一致', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('密码长度不能少于6位', 'error');
+                return;
+            }
+
+            // 滑块验证
+            const captchaToken = await requireCaptchaToken(captchaRegister);
+            if (!captchaToken) return;
+
+            try {
+                const response = await registerUser(username, email, password, captchaToken);
+
+                if (response.success) {
+                    showMessage('注册成功！请登录', 'success');
+                    switchAuthTab('login');
+                } else {
+                    showMessage(response.message || '注册失败', 'error');
+                    if (captchaRegister) captchaRegister.reset();
+                }
+            } catch (error) {
+                console.error('注册错误:', error);
+                showMessage('注册过程中发生错误', 'error');
+                if (captchaRegister) captchaRegister.reset();
+            }
+        }
+
+        async function handleEypaLogin() {
+            console.log('=== 马国记忆登录 ===');
+            
+            try {
+                const response = await fetch('../api/eypa/login.php');
+                const data = await response.json();
+                
+                console.log('EYPA登录响应:', data);
+                
+                if (data.success) {
+                    console.log('跳转到授权页面:', data.auth_url);
+                    window.location.href = data.auth_url;
+                } else {
+                    showMessage(data.message || '马国记忆登录失败', 'error');
+                }
+            } catch (error) {
+                console.error('马国记忆登录错误:', error);
+                showMessage('马国记忆登录失败，请稍后重试', 'error');
+            }
+        }
+
+        /* ── 忘记密码 / 重置密码 弹窗逻辑 ── */
+        let currentResetToken = '';
+
+        /* ── 滑块验证组件初始化 ── */
+        let captchaLogin, captchaRegister, captchaForgot, captchaReset;
+
+        function initCaptchas() {
+            captchaLogin = new CaptchaSlider('login-captcha', { apiBase: '../api/captcha.php' });
+            captchaRegister = new CaptchaSlider('register-captcha', { apiBase: '../api/captcha.php' });
+            captchaForgot = new CaptchaSlider('forgot-captcha', { apiBase: '../api/captcha.php' });
+            captchaReset = new CaptchaSlider('reset-captcha', { apiBase: '../api/captcha.php' });
+
+            captchaLogin.init();
+            captchaRegister.init();
+            captchaForgot.init();
+            captchaReset.init();
+        }
+
+        // 页面加载完成后初始化（等组件/导航加载不影响滑块）
+        if (document.readyState === 'complete') {
+            initCaptchas();
+        } else {
+            window.addEventListener('load', initCaptchas);
+        }
+
+        /**
+         * 获取滑块 token，失败则提示并返回 null
+         */
+        async function requireCaptchaToken(captcha) {
+            try {
+                return await captcha.getToken();
+            } catch (err) {
+                showMessage(err.message || '请先完成滑块验证', 'error');
+                return null;
+            }
+        }
+
+        // 读取 URL 中的 reset_token
+        (function checkResetToken() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('reset_token');
+            if (token) {
+                currentResetToken = token;
+                // 打开重置视图
+                openAuthModal('reset');
+                // 清理 URL，避免刷新后 token 重复使用
+                history.replaceState(null, '', window.location.pathname);
+            }
+        })();
+
+        function openAuthModal(view) {
+            document.getElementById('modal-view-request').style.display = 'none';
+            document.getElementById('modal-view-reset').style.display = 'none';
+            document.getElementById('modal-view-success').style.display = 'none';
+
+            if (view === 'request') {
+                document.getElementById('modal-view-request').style.display = 'block';
+                document.getElementById('forgot-email').value = '';
+                // 重置用户名辅助输入（多账号场景）
+                document.getElementById('forgot-username').value = '';
+                document.getElementById('forgot-username-group').style.display = 'none';
+                document.getElementById('forgot-username').required = false;
+                // 弹窗可见后重渲染滑块缺口（隐藏时宽度为 0）
+                setTimeout(() => { if (captchaForgot) captchaForgot.render(); }, 50);
+            } else if (view === 'reset') {
+                document.getElementById('modal-view-reset').style.display = 'block';
+                document.getElementById('reset-password').value = '';
+                document.getElementById('reset-confirm').value = '';
+                setTimeout(() => { if (captchaReset) captchaReset.render(); }, 50);
+            } else if (view === 'success') {
+                // 清理上一次动态追加的链接（开发模式）
+                const oldLink = document.querySelector('.modal-success .dev-reset-link');
+                if (oldLink) oldLink.remove();
+                document.getElementById('modal-view-success').style.display = 'block';
+            }
+
+            document.getElementById('auth-modal-overlay').classList.add('active');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal-overlay').classList.remove('active');
+        }
+
+        // 忘记密码：点击链接打开弹窗
+        document.getElementById('forgot-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            openAuthModal('request');
+        });
+
+        // 点击遮罩关闭
+        document.getElementById('auth-modal-overlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAuthModal();
+            }
+        });
+
+        // ESC 关闭
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAuthModal();
+            }
+        });
+
+        // 提交：请求重置邮件
+        async function handleForgotPassword(e) {
+            e.preventDefault();
+            const email = document.getElementById('forgot-email').value.trim();
+            const username = document.getElementById('forgot-username').value.trim();
+            const btn = e.target.querySelector('.btn-auth');
+            const originalText = btn.textContent;
+
+            if (!email) {
+                showMessage('请输入邮箱', 'error');
+                return;
+            }
+
+            // 滑块验证
+            const captchaToken = await requireCaptchaToken(captchaForgot);
+            if (!captchaToken) return;
+
+            btn.disabled = true;
+            btn.textContent = '发送中...';
+
+            try {
+                const response = await fetch('../api/forgot_password.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, username: username, captcha_token: captchaToken })
+                });
+                const data = await response.json();
+
+                // 多账号场景：需要补充用户名
+                if (!data.success && data.data && data.data.need_username) {
+                    document.getElementById('forgot-username-group').style.display = 'block';
+                    document.getElementById('forgot-username').required = true;
+                    document.getElementById('forgot-username').focus();
+                    showMessage(data.message || '该邮箱绑定多个账号，请同时输入用户名', 'info');
+                    // 验证码 token 已被消费，需重新验证
+                    if (captchaForgot) captchaForgot.reset();
+                    return;
+                }
+
+                if (data.success) {
+                    // 频率限制：data.wait_seconds 存在时提示等待，不误导用户
+                    if (data.data && data.data.wait_seconds) {
+                        showMessage('请求过于频繁，请 ' + data.data.wait_seconds + ' 秒后再试', 'info');
+                        if (captchaForgot) captchaForgot.reset();
+                        return;
+                    }
+                    // 开发模式下后端会返回 reset_link，方便本地测试
+                    if (data.data && data.data.reset_link) {
+                        showMessage('开发模式：请使用返回的重置链接', 'info');
+                        document.getElementById('modal-success-text').textContent =
+                            '开发模式：请复制以下链接进行重置\n' + data.data.reset_link;
+                        openAuthModal('success');
+                        // 小窗口展示链接
+                        const linkEl = document.createElement('div');
+                        linkEl.className = 'dev-reset-link';
+                        linkEl.style.cssText = 'word-break:break-all;font-size:0.8rem;color:#2e6fdb;background:#eef4ff;padding:10px;border-radius:8px;margin-top:8px;text-align:left;';
+                        linkEl.textContent = data.data.reset_link;
+                        document.querySelector('.modal-success').appendChild(linkEl);
+                    } else {
+                        document.getElementById('modal-success-text').textContent = data.message || '重置邮件已发送';
+                        openAuthModal('success');
+                    }
+                } else {
+                    showMessage(data.message || '请求失败，请稍后再试', 'error');
+                    if (captchaForgot) captchaForgot.reset();
+                }
+            } catch (error) {
+                console.error('请求重置密码错误:', error);
+                showMessage('网络错误，请稍后再试', 'error');
+                if (captchaForgot) captchaForgot.reset();
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        // 提交：执行重置密码
+        async function handleResetPassword(e) {
+            e.preventDefault();
+            const password = document.getElementById('reset-password').value;
+            const confirm = document.getElementById('reset-confirm').value;
+            const btn = e.target.querySelector('.btn-auth');
+            const originalText = btn.textContent;
+
+            if (password !== confirm) {
+                showMessage('两次输入的密码不一致', 'error');
+                return;
+            }
+
+            if (password.length < 8) {
+                showMessage('密码长度不能少于8位', 'error');
+                return;
+            }
+
+            if (!/[A-Z]/.test(password)) {
+                showMessage('密码必须包含至少一个大写字母', 'error');
+                return;
+            }
+
+            if (!/[a-z]/.test(password)) {
+                showMessage('密码必须包含至少一个小写字母', 'error');
+                return;
+            }
+
+            if (!/[0-9]/.test(password)) {
+                showMessage('密码必须包含至少一个数字', 'error');
+                return;
+            }
+
+            if (!currentResetToken) {
+                showMessage('重置令牌缺失，请重新申请', 'error');
+                closeAuthModal();
+                return;
+            }
+
+            // 滑块验证
+            const captchaToken = await requireCaptchaToken(captchaReset);
+            if (!captchaToken) return;
+
+            btn.disabled = true;
+            btn.textContent = '重置中...';
+
+            try {
+                const response = await fetch('../api/reset_password.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: currentResetToken,
+                        password: password,
+                        captcha_token: captchaToken
+                    })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    currentResetToken = '';
+                    document.getElementById('modal-success-text').textContent = data.message || '密码重置成功';
+                    openAuthModal('success');
+                    // 稍后跳转登录
+                    setTimeout(() => {
+                        closeAuthModal();
+                        switchAuthTab('login');
+                    }, 2000);
+                } else {
+                    showMessage(data.message || '重置失败，请重新申请', 'error');
+                    // token 已消费，重置滑块
+                    if (captchaReset) captchaReset.reset();
+                    if (data.message && (data.message.includes('无效') || data.message.includes('过期'))) {
+                        // 令牌失效，回到请求视图
+                        setTimeout(() => {
+                            currentResetToken = '';
+                            openAuthModal('request');
+                        }, 800);
+                    }
+                }
+            } catch (error) {
+                console.error('重置密码错误:', error);
+                showMessage('网络错误，请稍后再试', 'error');
+                if (captchaReset) captchaReset.reset();
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+    </script>
+
+    <!-- ========== Sidebar音乐播放器（模块化版本）========== -->
+
+
+
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    
+    <!-- 组件加载器 -->
+    <script src="../components/loader.js?v=3.0"></script>
+    
+    <!-- 导航栏 -->
+    <script src="../js/navbar.js?v=1.3"></script>
+
+    <!-- 骥忆云笺 NFC 主动请求登录（Flow②，模块化） -->
+    <script src="../js/nfc_login.js"></script>
+
+</body>
+</html>
+
+

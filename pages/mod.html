@@ -1,0 +1,2397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>炉边茶社</title>
+    <meta name="description" content="炉边茶社：车万女仆养成与恋爱结婚、机械动力全系（柴油/核能/电网/深海）、航空飞艇探险、三层巨型地牢、网络音乐社交、双货币经济，以及光影与性能优化。NeoForge 1.21.1 综合子服，服务器地址 mc.goldenapplepie.xyz。">
+    <meta property="og:title" content="炉边茶社">
+    <meta property="og:description" content="女仆养成 × 机械动力全系 × 航空飞艇 × 三层地牢 × 网络音乐 × 双货币经济 × 光影优化，炉边茶社 NeoForge 1.21.1 综合子服。">
+    <meta property="og:image" content="https://mcpc.goldenapplepie.xyz/assets/img/m.webp">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="万驹同源">
+    <link rel="stylesheet" href="../css/style.css?v=4.12">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.1">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <!-- 360 全景查看器 Pannellum（已本地化至 lib/pannellum/） -->
+    <link rel="stylesheet" href="../lib/pannellum/pannellum.css">
+    <script src="../lib/pannellum/pannellum.js"></script>
+
+    <style>
+        :root {
+            /* 网站主题配色：蔚蓝(primary) → 深蔚蓝(secondary)，点缀柠檬黄 */
+            --brand: #2e6fdb;
+            /* 主色 · 蔚蓝 */
+            --brand2: #1d4fa0;
+            /* 辅色 · 深蔚蓝 */
+            --accent: #f2b705;
+            /* 点缀 · 柠檬黄 */
+            --ink: #2d2b4a;
+            /* 正文 · 深靛 */
+            --ink2: #6b6790;
+            /* 次级文字 */
+            --line: rgba(46, 111, 219, 0.18);
+        }
+
+        /* ===== 顶部全景头图 · 海报主视觉 ===== */
+        .mod-hero {
+            position: relative;
+            width: 100%;
+            height: 92vh;
+            min-height: 560px;
+            overflow: hidden;
+            background: #0f0c29;
+        }
+
+        .pano-viewer {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 把 Pannellum 控件下移到 navbar 下方安全区 */
+        .mod-hero .pnlm-controls-container {
+            top: 72px !important;
+            bottom: auto !important;
+            left: 16px;
+            z-index: 10;
+        }
+
+        .pano-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+            color: #fff;
+            background: rgba(13,15,26,0.5);
+            pointer-events: none;
+        }
+
+        .pano-overlay .hero-badge {
+            pointer-events: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 22px;
+            animation: badgeFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes badgeFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes stickerFloat {
+
+            0%,
+            100% {
+                transform: rotate(8deg) translateY(0);
+            }
+
+            50% {
+                transform: rotate(8deg) translateY(-6px);
+            }
+        }
+
+        /* 旋转贴纸标 */
+        .poster-sticker {
+            position: absolute;
+            top: 16%;
+            right: 7%;
+            z-index: 7;
+            transform: rotate(8deg);
+            animation: stickerFloat 5s ease-in-out infinite;
+            background: linear-gradient(135deg, var(--brand), var(--brand2));
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.82rem;
+            letter-spacing: 1px;
+            line-height: 1.3;
+            padding: 12px 16px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(46, 111, 219, 0.42);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .poster-sticker small {
+            display: block;
+            font-size: 0.62rem;
+            opacity: 0.9;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        /* 巨幅海报标题：实色 + 描边 */
+        .poster-title {
+            pointer-events: none;
+            display: flex;
+            gap: 0.12em;
+            font-size: clamp(3.4rem, 11vw, 7rem);
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: 2px;
+            margin: 0 0 6px 0;
+            text-shadow: 0 8px 40px rgba(0, 0, 0, 0.55);
+        }
+
+        .poster-title .solid {
+            color: #fff;
+        }
+
+        .poster-title .out {
+            color: transparent;
+            -webkit-text-stroke: 2px #fff;
+            text-stroke: 2px #fff;
+        }
+
+        .poster-pinyin {
+            pointer-events: none;
+            font-size: clamp(0.7rem, 2vw, 0.95rem);
+            letter-spacing: 6px;
+            color: rgba(255, 255, 255, 0.82);
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+
+        .pano-overlay p {
+            font-size: clamp(0.95rem, 2vw, 1.18rem);
+            max-width: 700px;
+            line-height: 1.75;
+            margin: 0 0 28px 0;
+            opacity: 0.96;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+        }
+
+        .pano-overlay .hero-actions {
+            pointer-events: auto;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        @keyframes heroRise {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .pano-overlay .poster-title,
+        .pano-overlay .poster-pinyin,
+        .pano-overlay p,
+        .pano-overlay .hero-actions {
+            animation: heroRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .pano-overlay .poster-pinyin {
+            animation-delay: 0.10s;
+        }
+
+        .pano-overlay p {
+            animation-delay: 0.18s;
+        }
+
+        .pano-overlay .hero-actions {
+            animation-delay: 0.26s;
+        }
+
+        /* 底部跑马灯 */
+        .pano-ticker {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 6;
+            overflow: hidden;
+            padding: 11px 0;
+            background: rgba(13, 15, 26, 0.5);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-top: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .pano-ticker .track {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: ticker 26s linear infinite;
+        }
+
+        .pano-ticker .track span {
+            color: #fff;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            padding: 0 30px;
+            opacity: 0.92;
+        }
+
+        .pano-ticker .track span i {
+            color: var(--accent);
+            margin-right: 8px;
+            font-style: normal;
+        }
+
+        @keyframes ticker {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ===== 内容区（暖奶油底 · 海报编辑式） ===== */
+        .mod-page {
+            position: relative;
+            padding: 0 0 96px;
+            background: #f3f3f8;
+        }
+
+        .mod-page::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.04;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .poster-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 66px 28px 0;
+        }
+
+        .feature-section {
+            margin-bottom: 72px;
+        }
+
+        .feature-section:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== 大字数据条 ===== */
+        .poster-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 2px solid transparent;
+            border-bottom: 2px solid transparent;
+            border-top-color: var(--brand); border-bottom-color: var(--brand);
+            margin-bottom: 70px;
+        }
+
+        .poster-stats .stat {
+            transition: background 0.3s ease;
+        }
+
+        .poster-stats .stat:hover {
+            background: rgba(46, 111, 219, 0.05);
+        }
+
+        .poster-stats .stat {
+            text-align: center;
+            padding: 26px 10px;
+            position: relative;
+        }
+
+        .poster-stats .stat+.stat::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 18%;
+            width: 1px;
+            height: 64%;
+            background: var(--line);
+        }
+
+        .stat .num {
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 900;
+            line-height: 1;
+            background: var(--brand);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: var(--brand);
+        }
+
+        .stat .lbl {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: var(--ink2);
+            font-weight: 600;
+        }
+
+        /* ===== 招牌玩法 · 杂志跨页大色块 ===== */
+        .pillar {
+            --mx: 50%;
+            --my: 50%;
+            --rx: 0deg;
+            --ry: 0deg;
+            position: relative;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 36px;
+            align-items: center;
+            padding: 32px 36px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.66);
+            border: 1px solid rgba(46, 111, 219, 0.18);
+            overflow: hidden;
+            margin-bottom: 26px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s, border-color 0.4s, background 0.4s;
+        }
+
+        .pillar:nth-child(even) {
+            grid-template-columns: 1fr 200px;
+        }
+
+        .pillar:nth-child(even) .pillar-visual {
+            order: 2;
+        }
+
+        .pillar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: rgba(46,111,219,0.24);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .pillar:hover {
+            transform: perspective(900px) rotateX(var(--ry)) rotateY(var(--rx)) translateY(-6px);
+            box-shadow: 0 24px 60px rgba(46, 111, 219, 0.18), 0 0 0 1px rgba(46, 111, 219, 0.30);
+            border-color: rgba(46, 111, 219, 0.45);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .pillar:hover::after {
+            opacity: 1;
+        }
+
+        /* 招牌玩法图标：去掉彩色背景框，仅保留图标并放大 */
+        .pillar-visual {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pillar-visual.v1,
+        .pillar-visual.v2,
+        .pillar-visual.v3 {
+            background: none;
+        }
+
+        .pillar-visual .gv {
+            display: none;
+        }
+
+        .pillar-visual i {
+            position: relative;
+            z-index: 1;
+            font-size: 7rem;
+            color: var(--brand2);
+        }
+
+        .pillar-visual .pillar-ic {
+            position: relative;
+            z-index: 1;
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.16));
+        }
+
+        .pillar-body {
+            position: relative;
+            z-index: 1;
+        }
+
+        .pillar-body .p-index {
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: var(--brand);
+        }
+
+        .pillar-body h3 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 900;
+            color: var(--ink);
+            margin: 6px 0 4px;
+        }
+
+        .pillar-body .p-sub {
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            color: var(--ink2);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .pillar-body p {
+            color: var(--ink2);
+            line-height: 1.8;
+            font-size: 0.96rem;
+            margin: 0;
+        }
+
+        /* ===== 编辑式编号板块标题 ===== */
+        .feature-title {
+            position: relative;
+            font-size: 1.7rem;
+            font-weight: 900;
+            color: var(--ink);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .feature-title .ft-no {
+            font-size: 2.6rem;
+            font-weight: 900;
+            line-height: 1;
+            background: var(--brand);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: var(--brand);
+        }
+
+        .feature-title i {
+            flex: 0 0 auto;
+            width: 46px;
+            height: 46px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            color: var(--brand);
+            background: rgba(46,111,219,0.16);
+            border-radius: 12px;
+            transition: transform 0.35s ease, background 0.35s ease;
+        }
+
+        .feature-title:hover i {
+            transform: rotate(-5deg) scale(1.05);
+            background: var(--brand);
+            color: #fff;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            --mx: 50%;
+            --my: 50%;
+            --rx: 0deg;
+            --ry: 0deg;
+            background: rgba(255, 255, 255, 0.66);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 28px 26px;
+            border-radius: 16px;
+            border: 1px solid rgba(46, 111, 219, 0.16);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s, border-color 0.35s, background 0.35s;
+            position: relative;
+            overflow: hidden;
+            transform: perspective(900px) rotateX(var(--ry)) rotateY(var(--rx)) translateY(0);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--brand);
+            border-radius: 4px 0 0 4px;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: rgba(46,111,219,0.26);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+        }
+
+        .feature-card:hover {
+            transform: perspective(900px) rotateX(var(--ry)) rotateY(var(--rx)) translateY(-6px);
+            box-shadow: 0 26px 60px rgba(46, 111, 219, 0.18), 0 0 0 1px rgba(46, 111, 219, 0.30);
+            border-color: rgba(46, 111, 219, 0.45);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+
+        .feature-card .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: rgba(46,111,219,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 1.25rem;
+            color: var(--brand);
+            transition: all 0.35s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card:hover .card-icon {
+            background: var(--brand);
+            color: #fff;
+            transform: scale(1.05) rotate(-4deg);
+            box-shadow: 0 6px 20px rgba(46, 111, 219, 0.4);
+        }
+
+        .feature-card h4 {
+            position: relative;
+            z-index: 1;
+            font-size: 1.1rem;
+            color: var(--ink);
+            margin: 0 0 8px 0;
+            font-weight: 800;
+        }
+
+        .feature-card p {
+            position: relative;
+            z-index: 1;
+            color: var(--ink2);
+            line-height: 1.7;
+            font-size: 0.93rem;
+            margin: 0;
+        }
+
+        /* ===== 即将推出 · 研发路线图 ===== */
+        .roadmap {
+            position: relative;
+            margin-top: 24px;
+            padding-left: 4px;
+        }
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            left: 27px;
+            top: 12px;
+            bottom: 12px;
+            width: 2px;
+            background: var(--brand);
+            opacity: 0.28;
+        }
+        .rm-item {
+            position: relative;
+            display: flex;
+            gap: 20px;
+            padding-bottom: 24px;
+        }
+        .rm-item:last-child { padding-bottom: 0; }
+        .rm-node {
+            position: relative;
+            z-index: 1;
+            flex: 0 0 auto;
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #fff;
+            background: var(--brand);
+            box-shadow: 0 8px 22px rgba(46, 111, 219, 0.3);
+        }
+        .rm-node.pulse::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            box-shadow: 0 0 0 0 rgba(46, 111, 219, 0.5);
+            animation: rmPing 2.4s ease-out infinite;
+        }
+        @keyframes rmPing {
+            0% { box-shadow: 0 0 0 0 rgba(46, 111, 219, 0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(46, 111, 219, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 111, 219, 0); }
+        }
+        .rm-body {
+            flex: 1;
+            min-width: 0;
+            background: rgba(255, 255, 255, 0.66);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(46, 111, 219, 0.16);
+            border-radius: 16px;
+            padding: 18px 22px;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s, border-color 0.35s, background 0.35s;
+        }
+        .rm-body:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 22px 50px rgba(46, 111, 219, 0.16), 0 0 0 1px rgba(46, 111, 219, 0.28);
+            border-color: rgba(46, 111, 219, 0.4);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .rm-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .rm-title {
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: var(--ink);
+        }
+        .rm-stage {
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 2px 10px;
+            border-radius: 999px;
+            color: #fff;
+            white-space: nowrap;
+        }
+        .rm-stage.s-plan { background: #7e88ac; }
+        .rm-stage.s-dev { background: #e8953e; }
+        .rm-stage.s-beta { background: var(--brand); }
+        .rm-desc {
+            color: var(--ink2);
+            font-size: 0.9rem;
+            line-height: 1.65;
+            margin: 10px 0 14px;
+        }
+        /* [disabled] 进度条已隐藏 - 2026-07-20
+        .rm-progress {
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(46, 111, 219, 0.12);
+            overflow: hidden;
+        }
+        .rm-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 999px;
+            background: var(--brand);
+            transition: width 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        */
+        .rm-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        /* [disabled] 进度百分比文字随进度条一起隐藏 - 2026-07-20
+        .rm-pct {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--brand);
+            font-variant-numeric: tabular-nums;
+        }
+        */
+        .rm-wish {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            border: 1px solid rgba(46, 111, 219, 0.3);
+            background: rgba(46, 111, 219, 0.06);
+            color: var(--brand);
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 6px 13px;
+            border-radius: 999px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .rm-wish:hover {
+            background: rgba(46, 111, 219, 0.14);
+            transform: translateY(-1px);
+        }
+        .rm-wish i { font-size: 0.85rem; transition: transform 0.25s; }
+        .rm-wish.wished {
+            background: var(--brand);
+            border-color: transparent;
+            color: #fff;
+        }
+        .rm-wish.wished i { transform: scale(1.15); }
+        .roadmap-note {
+            margin: 18px 0 0; padding: 12px 16px; border-radius: 12px;
+            background: rgba(46, 111, 219, 0.07); border: 1px solid rgba(46, 111, 219, 0.16);
+            color: var(--ink2); font-size: 0.86rem; line-height: 1.6;
+        }
+
+        /* ===== 吉祥物 · 酒狐 主视觉条 ===== */
+        .mascot-banner {
+            --mx: 50%;
+            --my: 50%;
+            margin-top: 24px;
+            display: flex;
+            gap: 26px;
+            align-items: stretch;
+            padding: 24px 26px;
+            border-radius: 20px;
+            background: rgba(46,111,219,0.12);
+            border: 1px solid rgba(242, 183, 5, 0.30);
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.35s, box-shadow 0.35s, background 0.35s;
+        }
+
+        .mascot-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: rgba(242,183,5,0.22);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+        }
+
+        .mascot-banner:hover {
+            border-color: rgba(242, 183, 5, 0.55);
+            box-shadow: 0 18px 48px rgba(242, 183, 5, 0.20), 0 0 0 1px rgba(242, 183, 5, 0.25);
+            background: rgba(46,111,219,0.16);
+        }
+
+        .mascot-banner:hover::after {
+            opacity: 1;
+        }
+
+        .mascot-figure {
+            flex: 0 0 260px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .mascot-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 14px;
+            box-shadow: 0 10px 28px rgba(242, 183, 5, 0.22);
+        }
+
+        .mascot-text {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .mascot-text h4 {
+            font-size: 1.25rem;
+            color: var(--ink);
+            margin: 0 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mascot-text h4 i {
+            color: var(--accent);
+        }
+
+        .mascot-text p {
+            color: var(--ink2);
+            line-height: 1.8;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            gap: 10px;
+        }
+
+        .feature-list li {
+            position: relative;
+            padding: 18px 22px 18px 58px;
+            background: rgba(255, 255, 255, 0.62);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            border: 1px solid rgba(46, 111, 219, 0.14);
+            border-left: 4px solid transparent;
+            color: var(--ink2);
+            line-height: 1.7;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 0.95rem;
+        }
+
+        .feature-list li .li-ic {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: rgba(46,111,219,0.16);
+            color: var(--brand);
+            font-size: 0.82rem;
+        }
+
+        .feature-list li:hover {
+            transform: translateX(6px);
+            border-left-color: var(--brand);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 16px rgba(46, 111, 219, 0.14);
+        }
+
+        .feature-list li strong {
+            color: var(--brand);
+            font-weight: 800;
+        }
+
+        .highlight-box {
+            background: #2e6fdb;
+            color: white;
+            padding: 34px 36px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: transparent;
+            border-radius: 50%;
+        }
+
+        .highlight-box::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -10%;
+            width: 220px;
+            height: 220px;
+            background: rgba(242,183,5,0.25);
+            border-radius: 50%;
+        }
+
+        .highlight-box h4 {
+            font-size: 1.25rem;
+            margin: 0 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlight-box p {
+            line-height: 1.8;
+            margin: 0 0 10px 0;
+            opacity: 0.96;
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlight-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0 0 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlight-box ul li {
+            padding: 10px 0;
+            opacity: 0.96;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .highlight-box ul li:last-child {
+            border-bottom: none;
+        }
+
+        .highlight-box ul li strong {
+            color: #fff;
+        }
+
+        /* ===== 如何加入 · 玻璃双栏步骤 ===== */
+        .join-section {
+            position: relative;
+            overflow: hidden;
+            padding: 44px 40px 48px;
+            border-radius: 24px;
+            background: #fbfbfd;
+            border: 1px solid rgba(46, 111, 219, 0.18);
+            box-shadow: 0 24px 70px rgba(46, 111, 219, 0.16);
+            color: var(--ink);
+        }
+
+        .join-section::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            left: -80px;
+            width: 320px;
+            height: 320px;
+            background: rgba(29,79,160,0.16);
+            border-radius: 50%;
+        }
+
+        .join-section::after {
+            content: '';
+            position: absolute;
+            bottom: -140px;
+            right: -90px;
+            width: 360px;
+            height: 360px;
+            background: rgba(46,111,219,0.14);
+            border-radius: 50%;
+        }
+
+        .join-head {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 34px;
+        }
+
+        .join-eyebrow {
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: var(--brand);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: var(--brand);
+        }
+
+        .join-head h3 {
+            font-size: clamp(1.6rem, 4vw, 2.3rem);
+            font-weight: 900;
+            margin: 0 0 12px;
+            letter-spacing: 1px;
+            color: var(--ink);
+        }
+
+        .join-head p {
+            color: var(--ink2);
+            line-height: 1.75;
+            font-size: 0.98rem;
+            margin: 0;
+        }
+
+        .join-head p strong {
+            color: var(--brand);
+        }
+
+        .join-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 26px;
+            align-items: start;
+        }
+
+        .join-step {
+            display: flex;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .step-badge {
+            flex: 0 0 auto;
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brand);
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.05rem;
+            box-shadow: 0 8px 20px rgba(46, 111, 219, 0.3);
+        }
+
+        .step-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .step-body h4 {
+            margin: 4px 0 2px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .step-tip {
+            margin: 8px 0 0;
+            font-size: 0.82rem;
+            color: var(--ink2);
+            opacity: 0.9;
+        }
+
+        .join-address {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 12px 0 6px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: rgba(46,111,219,0.08);
+            border: 1px solid rgba(46, 111, 219, 0.35);
+            color: var(--ink);
+            font-family: 'Courier New', monospace;
+            font-size: 1.08rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            user-select: none;
+            transition: box-shadow 0.25s, border-color 0.25s, transform 0.25s, background 0.25s;
+        }
+
+        .join-address:hover {
+            transform: translateY(-2px);
+            border-color: var(--brand2);
+            background: rgba(46,111,219,0.14);
+            box-shadow: 0 12px 30px rgba(46, 111, 219, 0.22);
+        }
+
+        .join-address.copied {
+            border-color: rgba(167, 139, 250, 0.8);
+            box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.4);
+        }
+
+        .join-address .addr-text {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .join-address i {
+            color: var(--brand);
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            margin-left: auto;
+            color: var(--brand);
+            font-size: 1rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: transform 0.2s ease, color 0.2s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .copy-btn:hover {
+            color: var(--brand2);
+            transform: scale(1.15);
+        }
+
+        .join-step .download-box {
+            margin: 12px 0 0;
+            max-width: none;
+            width: 100%;
+            box-sizing: border-box;
+            border-color: rgba(46, 111, 219, 0.22);
+            box-shadow: 0 14px 40px rgba(46, 111, 219, 0.12);
+        }
+
+        /* 复制地址步骤内的实时服务器状态条 */
+        .join-server-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: rgba(46,111,219,0.07);
+            border: 1px solid rgba(46, 111, 219, 0.16);
+            font-size: 0.88rem;
+            color: var(--ink2);
+            flex-wrap: wrap;
+        }
+
+        .join-server-status .ss-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--ink2);
+            opacity: 0.4;
+            flex-shrink: 0;
+        }
+
+        .join-server-status.loading .ss-dot {
+            background: #f0ad4e;
+            opacity: 1;
+            animation: ssBlink 1.3s ease-in-out infinite;
+        }
+
+        .join-server-status.online .ss-dot {
+            background: #5cb85c;
+            opacity: 1;
+            box-shadow: 0 0 0 0 rgba(92, 184, 92, 0.55);
+            animation: ssPing 2s ease-out infinite;
+        }
+
+        .join-server-status.offline .ss-dot {
+            background: #e35d6a;
+            opacity: 1;
+        }
+
+        .join-server-status .ss-state {
+            font-weight: 700;
+        }
+
+        .join-server-status.loading .ss-state {
+            color: #c9821f;
+        }
+
+        .join-server-status.online .ss-state {
+            color: #3f9d4f;
+        }
+
+        .join-server-status.offline .ss-state {
+            color: #d34a58;
+        }
+
+        .join-server-status .ss-sep {
+            opacity: 0.4;
+        }
+
+        .join-server-status .ss-players {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .join-server-status .ss-players i {
+            color: var(--brand);
+            font-size: 0.82rem;
+        }
+
+        .join-server-status .ss-players strong {
+            color: var(--ink);
+            font-variant-numeric: tabular-nums;
+        }
+
+        @keyframes ssBlink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+        }
+
+        @keyframes ssPing {
+            0% {
+                box-shadow: 0 0 0 0 rgba(92, 184, 92, 0.55);
+            }
+
+            70% {
+                box-shadow: 0 0 0 7px rgba(92, 184, 92, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(92, 184, 92, 0);
+            }
+        }
+
+        @media (max-width: 720px) {
+            .join-grid {
+                grid-template-columns: 1fr;
+                gap: 22px;
+            }
+
+            .join-section {
+                padding: 34px 22px 38px;
+            }
+
+            .rm-body { padding: 16px 16px; }
+            .rm-node { width: 46px; height: 46px; font-size: 1.15rem; }
+            .roadmap::before { left: 22px; }
+            .rm-item { gap: 14px; }
+        }
+
+        /* ===== 专属整合包下载占位区块 ===== */
+        .download-box {
+            --mx: 50%;
+            --my: 50%;
+            --rx: 0deg;
+            --ry: 0deg;
+            position: relative;
+            z-index: 1;
+            margin: 28px auto 0;
+            max-width: 580px;
+            padding: 24px 26px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            text-align: left;
+            color: var(--ink);
+            transform: perspective(900px) rotateX(var(--ry)) rotateY(var(--rx));
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+        }
+
+        .download-box::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: rgba(46,111,219,0.24);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .download-box:hover {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .download-box:hover::after {
+            opacity: 1;
+        }
+
+        .dl-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dl-head i {
+            color: var(--brand);
+        }
+
+        .dl-desc {
+            color: var(--ink2);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 10px 0 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dl-actions {
+            display: block;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dl-btn.primary {
+            width: 100%;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .dl-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 18px;
+            border-radius: 12px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s, background 0.25s, border-color 0.25s;
+            background: #fff;
+            color: var(--ink);
+            border: 1px solid rgba(46, 111, 219, 0.3);
+        }
+
+        .dl-btn::after {
+            display: none !important;
+        }
+
+        .dl-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(46, 111, 219, 0.22);
+            background: #fff;
+            color: var(--ink);
+        }
+
+        .dl-btn.primary {
+            background: var(--brand);
+            color: #fff;
+            border: none;
+        }
+
+        .dl-btn.primary:hover {
+            box-shadow: 0 12px 30px rgba(46, 111, 219, 0.5);
+            color: #fff;
+        }
+
+        .dl-meta {
+            margin: 14px 0;
+            font-size: 0.8rem;
+            color: var(--ink2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .survival-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 32px;
+            background: linear-gradient(135deg, var(--brand), var(--brand2));
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 18px rgba(46, 111, 219, 0.4);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .survival-btn::after {
+            content: none !important;
+        }
+
+        .survival-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            transition: left 0.5s ease;
+        }
+
+        .survival-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 26px rgba(46, 111, 219, 0.42);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .survival-btn:hover::before {
+            left: 100%;
+        }
+
+        .survival-btn.secondary {
+            background: rgba(255, 255, 255, 0.85);
+            color: var(--brand);
+            border: 1px solid rgba(46, 111, 219, 0.5);
+            box-shadow: none;
+        }
+
+        .survival-btn.secondary:hover {
+            background: var(--brand);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 8px 30px rgba(46, 111, 219, 0.5);
+        }
+
+        .back-actions {
+            text-align: center;
+            margin-top: 44px;
+            padding-top: 34px;
+            border-top: 1px solid var(--line);
+        }
+
+        .mod-note {
+            margin-top: 14px;
+            font-size: 0.82rem;
+            color: var(--ink2);
+            position: relative;
+            z-index: 1;
+            opacity: 0.85;
+        }
+
+        /* ===== 滚动进场动画 ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .reveal.in-view {
+            opacity: 1;
+            transform: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+
+            .feature-card,
+            .pillar,
+            .download-box {
+                transform: none !important;
+            }
+
+            .pano-ticker .track {
+                animation: none;
+            }
+
+            .pano-overlay h1,
+            .pano-overlay .poster-title,
+            .pano-overlay .poster-pinyin,
+            .pano-overlay p,
+            .pano-overlay .hero-actions {
+                animation: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mod-hero {
+                height: 80vh;
+                min-height: 460px;
+            }
+
+            .poster-sticker {
+                display: none;
+            }
+
+            .poster-wrap {
+                padding: 44px 18px 0;
+            }
+
+            .poster-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .poster-stats .stat:nth-child(3)::before,
+            .poster-stats .stat:nth-child(1)::before {
+                display: none;
+            }
+
+            .pillar,
+            .pillar:nth-child(even) {
+                grid-template-columns: 1fr;
+                gap: 22px;
+            }
+
+            .pillar:nth-child(even) .pillar-visual {
+                order: 0;
+            }
+
+            .pillar-visual {
+                width: 100%;
+                height: 160px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mascot-banner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .mascot-banner .mascot-figure {
+                flex: none;
+                width: 100%;
+                aspect-ratio: 16 / 9;
+            }
+
+            .feature-title {
+                font-size: 1.4rem;
+            }
+
+            .feature-title .ft-no {
+                font-size: 2rem;
+            }
+
+            .highlight-box {
+                padding: 24px 20px;
+            }
+        }
+
+        /* ===== 装饰层 · 环境光斑 / 星点 / 分隔饰品 =====
+           严格遵守品牌铁律：按钮·卡片保持纯色；渐变仅用于「背景装饰」与「Hero 品牌字装饰」。
+           所有装饰层 pointer-events:none，不参与交互、不增加点击热区。 */
+        .deco-field {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .deco-field span {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.55;
+            will-change: transform;
+        }
+
+        .deco-field span:nth-child(1) {
+            width: 440px;
+            height: 440px;
+            top: 3%;
+            left: -7%;
+            background: radial-gradient(circle at 50% 50%, rgba(46, 111, 219, 0.42), rgba(46, 111, 219, 0) 70%);
+            animation: blobFloat1 17s ease-in-out infinite;
+        }
+
+        .deco-field span:nth-child(2) {
+            width: 360px;
+            height: 360px;
+            top: 40%;
+            right: -5%;
+            background: radial-gradient(circle at 50% 50%, rgba(242, 183, 5, 0.38), rgba(242, 183, 5, 0) 70%);
+            animation: blobFloat2 21s ease-in-out infinite;
+        }
+
+        .deco-field span:nth-child(3) {
+            width: 320px;
+            height: 320px;
+            top: 72%;
+            left: 14%;
+            background: radial-gradient(circle at 50% 50%, rgba(29, 79, 160, 0.32), rgba(29, 79, 160, 0) 70%);
+            animation: blobFloat3 24s ease-in-out infinite;
+        }
+
+        @keyframes blobFloat1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(42px, 34px);
+            }
+        }
+
+        @keyframes blobFloat2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-38px, 28px);
+            }
+        }
+
+        @keyframes blobFloat3 {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(30px, -32px);
+            }
+        }
+
+        /* 区块分隔饰品：居中菱形 + 两侧实色短线（纯品牌色，无渐变） */
+        .feature-section {
+            position: relative;
+        }
+
+        .feature-section + .feature-section::before {
+            content: '';
+            position: absolute;
+            top: -42px;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            transform: translateX(-50%) rotate(45deg);
+            background: #f3f3f8;
+            border: 2px solid var(--brand);
+            box-shadow: 0 0 0 5px #f3f3f8;
+        }
+
+        .feature-section + .feature-section::after {
+            content: '';
+            position: absolute;
+            top: -37px;
+            left: 50%;
+            width: 150px;
+            height: 1px;
+            transform: translateX(-50%);
+            background: var(--line);
+        }
+
+        /* Hero 环境辉光：标题背后径向柔光（背景装饰渐变） */
+        .pano-overlay::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 92vw;
+            height: 92vh;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(46, 111, 219, 0.26), rgba(46, 111, 219, 0) 58%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Hero 标题星光：两枚闪烁 ✦（Hero 品牌字装饰） */
+        .poster-title {
+            position: relative;
+        }
+
+        .poster-title::before,
+        .poster-title::after {
+            content: '✦';
+            position: absolute;
+            color: var(--brand);
+            text-shadow: 0 0 12px rgba(46, 111, 219, 0.7);
+            font-size: 1.15rem;
+            animation: twinkle 2.6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .poster-title::before {
+            top: -0.45em;
+            left: -1.15em;
+        }
+
+        .poster-title::after {
+            bottom: -0.35em;
+            right: -0.95em;
+            font-size: 0.85rem;
+            animation-delay: 1.3s;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.35;
+                transform: scale(0.8) rotate(0deg);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.15) rotate(15deg);
+            }
+        }
+
+        /* Hero 漂浮星点：3 枚缓缓飘动的小星 */
+        .deco-spark {
+            position: absolute;
+            inset: 0;
+            z-index: 6;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .deco-spark i {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.72);
+            text-shadow: 0 0 10px rgba(46, 111, 219, 0.85);
+            animation: sparkDrift 10s ease-in-out infinite;
+        }
+
+        .deco-spark i:nth-child(1) {
+            top: 22%;
+            left: 14%;
+            font-size: 0.85rem;
+        }
+
+        .deco-spark i:nth-child(2) {
+            top: 64%;
+            left: 82%;
+            font-size: 0.7rem;
+            animation-duration: 13s;
+            animation-delay: 2s;
+        }
+
+        .deco-spark i:nth-child(3) {
+            top: 40%;
+            left: 70%;
+            font-size: 0.58rem;
+            animation-duration: 16s;
+            animation-delay: 4s;
+        }
+
+        @keyframes sparkDrift {
+
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: translateY(-18px);
+                opacity: 0.9;
+            }
+        }
+    </style>
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <div id="app-navbar"></div>
+
+    <!-- ===== 顶部 360 全景头图 · 海报主视觉 ===== -->
+    <section class="mod-hero">
+        <div id="pano" class="pano-viewer"></div>
+        <div class="poster-sticker">测试进行中~</div>
+        <div class="pano-overlay">
+            <span class="hero-badge">女仆 · 机械 · 航空 · 地牢 · 综合整合服</span>
+            <h1 class="poster-title"><span class="solid">炉边</span><span class="out">茶社</span></h1>
+            <div class="poster-pinyin">LÚBIĀN CHÁSHÈ · MAID SERVER</div>
+            <p>一个主打「女仆养成 + 机械动力 + 航空飞艇」的 NeoForge 整合服：用齿轮搭起柴油与核能驱动的自动化大工业，亲手拼出飞艇冲上云霄，再钻进巨型地牢寻宝，并且和女仆一起经营你的小天地——多种玩法，一服搞定。</p>
+            <div class="hero-actions">
+                <a href="#join" class="survival-btn"><i class="fas fa-play"></i> 立即加入</a>
+                <a href="#features" class="survival-btn secondary"><i class="fas fa-star"></i> 探索玩法</a>
+            </div>
+        </div>
+        <div class="pano-ticker">
+            <div class="track">
+                <span><i>◆</i>女仆养成</span><span><i>◆</i>Galgame</span><span><i>◆</i>机械动力</span><span><i>◆</i>柴油·核能·电能</span><span><i>◆</i>航空飞艇</span><span><i>◆</i>更多地牢</span><span><i>◆</i>网络音乐</span><span><i>◆</i>经济</span><span><i>◆</i>光影&内存优化</span><span><i>◆</i>酒狐</span><span><i>◆</i>地形大改</span><span><i>◆</i>村庄改造</span><span><i>◆</i>玩家模型</span>
+                <span><i>◆</i>女仆养成</span><span><i>◆</i>Galgame</span><span><i>◆</i>机械动力</span><span><i>◆</i>柴油·核能·电能</span><span><i>◆</i>航空飞艇</span><span><i>◆</i>更多地牢</span><span><i>◆</i>网络音乐</span><span><i>◆</i>经济</span><span><i>◆</i>光影&内存优化</span><span><i>◆</i>酒狐</span><span><i>◆</i>地形大改</span><span><i>◆</i>村庄改造</span><span><i>◆</i>玩家模型</span>                
+            </div>
+        </div>
+        <div class="deco-spark" aria-hidden="true"><i>✦</i><i>✦</i><i>✦</i></div>
+    </section>
+
+    <div class="section mod-page" id="features">
+        <div class="deco-field" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="poster-wrap">
+
+            <!-- ===== 大字数据条 ===== -->
+            <div class="poster-stats reveal">
+                <div class="stat">
+                    <div class="num">45+</div>
+                    <div class="lbl">整合模组</div>
+                </div>
+                <div class="stat">
+                    <div class="num">10+</div>
+                    <div class="lbl">玩法板块</div>
+                </div>
+                <div class="stat">
+                    <div class="num"><span id="serverDays">—</span></div>
+                    <div class="lbl">开服天数</div>
+                </div>
+                <div class="stat">
+                    <div class="num">1.21.1</div>
+                    <div class="lbl">游戏版本</div>
+                </div>
+            </div>
+
+            <!-- ===== 招牌玩法 · 杂志跨页大色块 ===== -->
+            <div class="signature-section reveal">
+                <!-- 机械动力 · 招牌第一 -->
+                <div class="pillar sig-card">
+                    <div class="pillar-visual v2"><span class="gv">01</span><img src="../assets/img/create_icon.webp" alt="机械动力" class="pillar-ic"></div>
+                    <div class="pillar-body">
+                        <div class="p-index">SIGNATURE 01</div>
+                        <h3>机械动力</h3>
+                        <div class="p-sub">CREATE · 自动科技</div>
+                        <p>从挖矿到冶炼的全自动产线，还能接入电能系统，把工厂升级成更高效的大工业。</p>
+                    </div>
+                </div>
+                <!-- 航空学 · 招牌第二 -->
+                <div class="pillar sig-card">
+                    <div class="pillar-visual v3"><span class="gv">02</span><img src="../assets/img/Aeronautics_icon.webp" alt="航空学" class="pillar-ic"></div>
+                    <div class="pillar-body">
+                        <div class="p-index">SIGNATURE 02</div>
+                        <h3>航空学</h3>
+                        <div class="p-sub">AERONAUTICS · 飞艇</div>
+                        <p>机械动力的航空拓展：用齿轮、帆布亲手拼出飞艇与飞行器，真实物理托起航行，汽车到飞机都能造。</p>
+                    </div>
+                </div>
+                <!-- 女仆羁绊 · 招牌第三 -->
+                <div class="pillar sig-card">
+                    <div class="pillar-visual v1"><span class="gv">03</span><img src="../assets/img/touhou_maid.webp" alt="车万女仆" class="pillar-ic"></div>
+                    <div class="pillar-body">
+                        <div class="p-index">SIGNATURE 03</div>
+                        <h3>女仆羁绊</h3>
+                        <div class="p-sub">MAID · 养成陪伴</div>
+                        <p>可养成、可带出门的女仆：帮你采集搬运、陪你战斗，好感越高，解锁的互动越多。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 女仆系统（核心） ===== -->
+            <div class="feature-section reveal">
+                <div class="feature-title"><span class="ft-no">01</span><i class="fas fa-female"></i> 女仆系统</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-child"></i></div>
+                        <h4>能帮忙的女仆</h4>
+                        <p>女仆可以帮你采集资源、搬运物品、甚至参与战斗，还能上手摇曲柄帮你发电——与你的女仆一起经营你的小世界。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-heart"></i></div>
+                        <h4>羁绊到家庭</h4>
+                        <p>喂食、互动提升好感，一路培养到表白、交换戒指、缔结誓约，最终共同养育孩子。亲密互动让女仆不只是伙伴，更是同住的家人。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-magic"></i></div>
+                        <h4>女仆也会法术</h4>
+                        <p>女仆能习得专属法术战斗，在冒险中与你并肩作战；同时支持自定义玩家模型，换上喜欢的形象再出发。</p>
+                    </div>
+                </div>
+
+                <!-- 吉祥物 · 酒狐插画 -->
+                <div class="mascot-banner reveal">
+                    <div class="mascot-figure">
+                        <img src="../assets/img/jiuhu (1).gif" alt="酒狐" class="mascot-img">
+                    </div>
+                    <div class="mascot-text">
+                        <h4><i class="fas fa-paw"></i> 吉祥物 · 酒狐</h4>
+                        <p>酒狐是车万女仆（Touhou Little
+                            Maid）模组的吉祥物，由模组作者亲自设计的原创角色——一只有着大尾巴的狐娘，也是这方块世界最会找乐子的氛围担当。养女仆、搭工厂、开飞艇的日子里，她总在角落里陪着你。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 机械动力科技 ===== -->
+            <div class="feature-section reveal">
+                <div class="feature-title"><span class="ft-no">02</span><i class="fas fa-cogs"></i> 机械动力</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-cog"></i></div>
+                        <h4>自动化工厂</h4>
+                        <p>用齿轮和传送带搭自动化产线，从挖矿、冶炼到制造全程自动跑；物流网络与自动农场自动收割、封装，产能拉满。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-bolt"></i></div>
+                        <h4>能源矩阵</h4>
+                        <p>在机械之上接入电能：柴油发电机炼油供能、核能反应堆产出百万 SU 的澎湃动力，再经电网把电流送到每个角落。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-water"></i></div>
+                        <h4>深海与物流</h4>
+                        <p>机械动力延伸到深海——驾驶潜艇下潜、探索深渊维度，把海陆空的产业链全部打通。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 航空学 ===== -->
+            <div class="feature-section reveal">
+                <div class="feature-title"><span class="ft-no">03</span><i class="fas fa-plane"></i> 航空学</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-tools"></i></div>
+                        <h4>亲手拼出载具</h4>
+                        <p>基于机械动力拓展，用齿轮、帆布等零件亲手拼出飞艇骨架，从汽车到飞机，每个部件都自己搭。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-wind"></i></div>
+                        <h4>物理托起的航行</h4>
+                        <p>真实物理引擎模拟重量与升力，载具真的受重力影响，开起来很有实感，也能越野穿越地形。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-map-marked-alt"></i></div>
+                        <h4>天空属于充满创造力的你</h4>
+                        <p>巨大的天空，一定能装下你的奇思妙想，在天空中自由翱翔，探索未知的世界。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 冒险与挑战 ===== -->
+            <div class="feature-section reveal">
+                <div class="feature-title"><span class="ft-no">04</span><i class="fas fa-dungeon"></i> 冒险与地牢</div>
+                <ul class="feature-list">
+                    <li><i class="li-ic fas fa-layer-group"></i><strong>生物群系地牢</strong> -- 按群系主题重做的原生地牢，搭配新刷怪笼类型，转角就有不一样的地下迷宫。</li>
+                    <li><i class="li-ic fas fa-dungeon"></i><strong>巨型结构地牢</strong> -- 当地牢遇上 roguelike 设计，优雅又危险的巨型建筑与深层迷宫散布世界，等你迷失其中。</li>
+                    <li><i class="li-ic fas fa-skull"></i><strong>致命随机地牢</strong> -- 多层随机生成、难度递进的致命地牢，藏着丰厚战利品与守关 BOSS，敢不敢挑战到底？</li>
+                    <li><i class="li-ic fas fa-dragon"></i><strong>强化版末影龙</strong> -- 末影龙战重做加强，保留原版味道却更硬核，是终局真正的试炼。</li>
+                    <li><i class="li-ic fas fa-warehouse"></i><strong>重制的村庄与据点</strong> -- 村庄和掠夺者前哨内容大改，探索时转角就有新发现。</li>
+                    <li><i class="li-ic fas fa-paw"></i><strong>丰富的生物</strong> -- 投票重返的人形生物加入游戏，拥有多种外观变体；世界更热闹，也更有温度。</li>
+                    <li><i class="li-ic fas fa-fire"></i><strong>营火安全区</strong> -- 营火范围内不刷怪并灼烧靠近的敌对生物，冒险累了有地方安心歇脚。</li>
+                </ul>
+            </div>
+
+            <!-- ===== 社交与娱乐 ===== -->
+            <div class="feature-section reveal">
+                <div class="feature-title"><span class="ft-no">05</span><i class="fas fa-comments"></i> 社交与娱乐</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-music"></i></div>
+                        <h4>网络音乐</h4>
+                        <p>内置音乐播放器模组：在游戏世界里随时点播背景音乐与氛围音效，建造、冒险、社交时都有合适的旋律相伴。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+                        <h4>内置街机小游戏</h4>
+                        <p>游戏卡带模组把经典街机搬进服务器，打累了随时来一局，放松身心。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 经济与便利 ===== -->
+            <div class="feature-section reveal">
+                <div class="feature-title"><span class="ft-no">06</span><i class="fas fa-gem"></i> 经济与便利</div>
+                <div class="highlight-box">
+                    <h4><i class="fas fa-coins"></i> 货币流通，工具随行</h4>
+                    <p>梦幻币与黄金券双轨流通，和主服务器经济互通。交易、囤货、开店，物价由玩家共同决定。</p>
+                    <ul>
+                        <li><strong>传送石</strong> -- 激活后绑定坐标，随时一键传送，省去跑图。</li>
+                        <li><strong>配方查阅</strong> -- 一键查询所有物品合成表，新手也能快速上手。</li>
+                        <li><strong>实时小地图</strong> -- 游戏内小地图自动记录已探索地形，配合路标再也不迷路。</li>
+                        <li><strong>物品信息显示</strong> -- 准星指向方块或生物即显示详情，省去背资料。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===== 性能与体验 ===== -->
+            <div class="feature-section reveal">
+                <div class="feature-title"><span class="ft-no">07</span><i class="fas fa-tachometer-alt"></i> 性能与体验</div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-bolt"></i></div>
+                        <h4>流畅三件套</h4>
+                        <p>Sodium 提升帧率、Lithium 优化游戏逻辑、FerriteCore 压缩内存占用，三管齐下让大整合包也能稳稳高帧。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-sun"></i></div>
+                        <h4>光影与高清截图</h4>
+                        <p>Iris 支持主流 OptiFine 光影包，配合飞轮兼容与高清 / 全景截图指令，随手记录旅途风光。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-icon"><i class="fas fa-map"></i></div>
+                        <h4>地图与信息查询</h4>
+                        <p>小地图、Jade 显示准星所指详情、JEI 查阅全部配方，探索与建造都更顺手。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 如何加入 · 海报 CTA ===== -->
+            <div class="feature-section reveal" id="join">
+                <div class="feature-title"><span class="ft-no">08</span><i class="fas fa-sign-in-alt"></i> 如何加入</div>
+                <div class="join-section">
+                    <div class="join-head">
+                        <div class="join-eyebrow">START YOUR JOURNEY</div>
+                        <h3>两步加入炉边茶社</h3>
+                        <p>下载我们的专属整合包并用启动器导入，再复制服务器地址添加进服务器，即可进入茶社。</p>
+                    </div>
+                    <div class="join-grid">
+                        <div class="join-step">
+                            <div class="step-badge">01</div>
+                            <div class="step-body">
+                                <h4>下载并导入整合包</h4>
+                                <div class="download-box">
+                                    <div class="dl-head"><i class="fas fa-download"></i> 专属整合包</div>
+                                    <p class="dl-desc">本服为模组整合包，下载后用主流启动器导入即可进入。</p>
+                                    <div class="dl-actions">
+                                        <a href="https://1812629426.share.123pan.cn/123pan/nUR0Vv-XOp13"
+                                            class="dl-btn primary"><i class="fas fa-compact-disc"></i>[Modrinth]下载整合包</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="join-step">
+                            <div class="step-badge">02</div>
+                            <div class="step-body">
+                                <h4>复制服务器地址</h4>
+                                 <p class="step-tip">在启动器内「添加服务器」时粘贴此地址即可。</p>
+                                <div class="join-address" id="serverAddr" title="点击复制服务器地址" role="button" tabindex="0">
+                                    <i class="fas fa-network-wired"></i>
+                                    <span class="addr-text">mc.goldenapplepie.xyz</span>
+                                    <button type="button" class="copy-btn" id="copyAddrBtn" aria-label="复制服务器地址"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                                <div class="join-server-status" id="joinServerStatus">
+                                    <span class="ss-dot" id="ssDot"></span>
+                                    <span class="ss-state" id="ssState">连接中…</span>
+                                    <span class="ss-sep">·</span>
+                                    <span class="ss-players"><i class="fas fa-users"></i> 在线玩家 <strong
+                                            id="ssPlayers">--/--</strong></span>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 即将推出 · 研发路线图 ===== -->
+            <div class="feature-section reveal">
+                <div class="feature-title"><span class="ft-no">09</span><i class="fas fa-road"></i> 即将推出 · 研发路线图</div>
+                <div class="roadmap">
+                    <div class="rm-item">
+                        <div class="rm-node pulse"><i class="fas fa-rocket"></i></div>
+                        <div class="rm-body">
+                            <div class="rm-top">
+                                <span class="rm-title">机械动力 · 航天</span>
+                                <span class="rm-stage s-beta">测试中</span>
+                            </div>
+                            <p class="rm-desc">造火箭、上太空、探索行星与轨道空间站，把机械动力的版图从地面推向外层空间。</p>
+                            <!-- [disabled] 进度条已隐藏(2026-07-20): <div class="rm-progress"><div class="rm-bar" data-pct="80"></div></div> -->
+                            <div class="rm-foot">
+                                <!-- [disabled] 进度百分比文字已隐藏: <span class="rm-pct">研发进度 80%</span> -->
+                                <button type="button" class="rm-wish" data-key="aero"><i class="far fa-star"></i> 加入期待</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-item">
+                        <div class="rm-node"><i class="fas fa-khanda"></i></div>
+                        <div class="rm-body">
+                            <div class="rm-top">
+                                <span class="rm-title">拔刀剑</span>
+                                <span class="rm-stage s-dev">研发中</span>
+                            </div>
+                            <p class="rm-desc">拔刀斩击、刀光流转的华丽刀剑战斗系统，让近战更有仪式感与观赏性。</p>
+                            <!-- [disabled] 进度条已隐藏(2026-07-20): <div class="rm-progress"><div class="rm-bar" data-pct="45"></div></div> -->
+                            <div class="rm-foot">
+                                <!-- [disabled] 进度百分比文字已隐藏: <span class="rm-pct">研发进度 45%</span> -->
+                                <button type="button" class="rm-wish" data-key="katana"><i class="far fa-star"></i> 加入期待</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-item">
+                        <div class="rm-node"><i class="fas fa-fist-raised"></i></div>
+                        <div class="rm-body">
+                            <div class="rm-top">
+                                <span class="rm-title">更多内容敬请期待！</span>
+                                <span class="rm-stage s-plan">敬请期待</span>
+                            </div>
+                            <p class="rm-desc">还想加入什么有趣的玩法？跟我们留言！</p>
+                            <!-- [disabled] 进度条已隐藏(2026-07-20): <div class="rm-progress"><div class="rm-bar" data-pct="20"></div></div> -->
+                            <div class="rm-foot">
+                                <!-- [disabled] 进度百分比文字已隐藏: <span class="rm-pct">研发进度 20%</span> -->
+                                <button type="button" class="rm-wish" data-key="maid"><i class="far fa-star"></i> 加入期待</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="roadmap-note">以上模组已在整合包中预置但暂未启用，具体上线节奏以服务器公告为准。点击「加入期待」可记录你的心愿。</p>
+            </div>
+
+            <div class="back-actions">
+                <a href="../index.html" class="survival-btn secondary">
+                    <i class="fas fa-home"></i> 返回首页
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.4"></script>
+    <script src="../js/navbar.js?v=1.3"></script>
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+    <script src="../js/config.js"></script>
+
+    <!-- 初始化 360 全景头图 + 滚动进场动画 -->
+    <script>
+        (function () {
+            function initPano() {
+                if (typeof pannellum === 'undefined' || !document.getElementById('pano')) return;
+                pannellum.viewer('pano', {
+                    type: 'equirectangular',
+                    // ===== 全景图：等距全景图放在 assets/img/mod_bg.webp =====
+                    panorama: '../assets/img/mod_bg.webp',
+                    autoLoad: true,
+                    autoRotate: -2,
+                    compass: false,
+                    showZoomCtrl: true,
+                    showFullscreenCtrl: true,
+                    hfov: 105,
+                    minHfov: 70,
+                    maxHfov: 120,
+                    vaov: 92,
+                    // 限制俯仰角，避免 5:1 宽幅图被拖到上下极点露馅
+                    minPitch: -46,
+                    maxPitch: 45,
+                    backgroundColor: [246, 247, 251]
+                });
+            }
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                setTimeout(initPano, 300);
+            } else {
+                window.addEventListener('DOMContentLoaded', function () { setTimeout(initPano, 300); });
+            }
+
+            // 开服天数：按真实开服日期实时计算（2026-07-15 开服），每天自动更新，绝不编造
+            var SERVER_LAUNCH = '2026-07-15';
+            function updateServerDays() {
+                var el = document.getElementById('serverDays');
+                if (!el) return;
+                var launch = Date.parse(SERVER_LAUNCH + 'T00:00:00');
+                if (isNaN(launch)) { el.textContent = '—'; return; }
+                var days = Math.max(0, Math.floor((Date.now() - launch) / 86400000));
+                el.textContent = days;
+            }
+            updateServerDays();
+            window.addEventListener('load', updateServerDays);
+
+            // 滚动进场动画
+            var revealEls = document.querySelectorAll('.reveal');
+            if ('IntersectionObserver' in window && revealEls.length) {
+                var ro = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) {
+                            e.target.classList.add('in-view');
+                            ro.unobserve(e.target);
+                        }
+                    });
+                }, { threshold: 0.12 });
+                revealEls.forEach(function (el) { ro.observe(el); });
+            } else {
+                revealEls.forEach(function (el) { el.classList.add('in-view'); });
+            }
+
+            // 卡片鼠标跟随光晕 + 3D 微倾斜
+            var tiltEls = document.querySelectorAll('.feature-card, .sig-card, .download-box');
+            tiltEls.forEach(function (el) {
+                el.addEventListener('mousemove', function (e) {
+                    var r = el.getBoundingClientRect();
+                    var x = (e.clientX - r.left) / r.width;
+                    var y = (e.clientY - r.top) / r.height;
+                    el.style.setProperty('--mx', (x * 100).toFixed(1) + '%');
+                    el.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+                    el.style.setProperty('--ry', ((0.5 - y) * 8).toFixed(2) + 'deg');
+                    el.style.setProperty('--rx', ((x - 0.5) * 8).toFixed(2) + 'deg');
+                });
+                el.addEventListener('mouseleave', function () {
+                    el.style.setProperty('--ry', '0deg');
+                    el.style.setProperty('--rx', '0deg');
+                });
+            });
+
+            // 服务器地址一键复制
+            var addrEl = document.getElementById('serverAddr');
+            if (addrEl) {
+                var copyIcon = function () { return addrEl.querySelector('.copy-btn i'); };
+                var showCopied = function () {
+                    var ic = copyIcon();
+                    if (ic) { ic.classList.remove('fa-copy'); ic.classList.add('fa-check'); }
+                    addrEl.classList.add('copied');
+                    addrEl.setAttribute('title', '已复制 ✓');
+                    setTimeout(function () {
+                        var ic2 = copyIcon();
+                        if (ic2) { ic2.classList.remove('fa-check'); ic2.classList.add('fa-copy'); }
+                        addrEl.classList.remove('copied');
+                        addrEl.setAttribute('title', '点击复制服务器地址');
+                    }, 1500);
+                };
+                var doCopy = function () {
+                    var text = 'mc.goldenapplepie.xyz';
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(showCopied).catch(function () { fallbackCopy(text, showCopied); });
+                    } else {
+                        fallbackCopy(text, showCopied);
+                    }
+                };
+                addrEl.addEventListener('click', doCopy);
+                addrEl.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doCopy(); }
+                });
+            }
+            function fallbackCopy(text, cb) {
+                var ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.top = '-1000px';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.focus(); ta.select();
+                try { document.execCommand('copy'); } catch (err) { }
+                document.body.removeChild(ta);
+                if (cb) cb();
+            }
+
+            /* ===== 复制地址步骤：实时服务器状态（复用状态页 mcstatus.php 逻辑） ===== */
+            var ssBox = document.getElementById('joinServerStatus');
+            var ssState = document.getElementById('ssState');
+            var ssPlayers = document.getElementById('ssPlayers');
+            if (ssBox && ssState && ssPlayers) {
+                var apiBase = (window.API_CONFIG && API_CONFIG.baseUrl)
+                    ? API_CONFIG.baseUrl
+                    : 'https://mcpc.goldenapplepie.xyz/api';
+
+                function setSs(cls, stateText, playersText) {
+                    ssBox.className = 'join-server-status ' + cls;
+                    ssState.textContent = stateText;
+                    ssPlayers.textContent = playersText;
+                }
+
+                function loadJoinServerStatus() {
+                    setSs('loading', '连接中…', '--/--');
+                    fetch(apiBase + '/mcstatus.php?server=mc')
+                        .then(function (r) { return r.json(); })
+                        .then(function (data) {
+                            if (data && data.online) {
+                                var online = (data.players && data.players.online) || 0;
+                                var max = (data.players && data.players.max) || 0;
+                                setSs('online', '在线', online + '/' + max);
+                            } else {
+                                setSs('offline', '离线', '--/--');
+                            }
+                        })
+                        .catch(function () {
+                            setSs('offline', '无法获取', '--/--');
+                        });
+                }
+
+                loadJoinServerStatus();
+                setInterval(loadJoinServerStatus, 30000); // 与状态页一致：每 30s 刷新
+            }
+
+            /* ===== 09 即将推出 · 研发路线图 ===== */
+            /* [disabled] 进度条填充逻辑已停用 - 2026-07-20
+            // 进度条：进入视口时填充到目标值
+            var rmBars = document.querySelectorAll('.rm-bar');
+            if ('IntersectionObserver' in window && rmBars.length) {
+                var barObs = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) {
+                            var pct = e.target.getAttribute('data-pct') || '0';
+                            e.target.style.width = pct + '%';
+                            barObs.unobserve(e.target);
+                        }
+                    });
+                }, { threshold: 0.3 });
+                rmBars.forEach(function (b) { barObs.observe(b); });
+            } else {
+                rmBars.forEach(function (b) { b.style.width = (b.getAttribute('data-pct') || '0') + '%'; });
+            }
+            */
+
+            // 加入期待清单（仅记录本人心愿，本地存储）
+            var WISH_KEY = 'mod_roadmap_wishlist';
+            function getWish() {
+                try { return JSON.parse(localStorage.getItem(WISH_KEY) || '{}'); }
+                catch (err) { return {}; }
+            }
+            function setWish(obj) {
+                try { localStorage.setItem(WISH_KEY, JSON.stringify(obj)); } catch (err) {}
+            }
+            document.querySelectorAll('.rm-wish').forEach(function (btn) {
+                var key = btn.getAttribute('data-key');
+                var ic = btn.querySelector('i');
+                var label = btn.lastChild;
+                if (getWish()[key]) {
+                    btn.classList.add('wished');
+                    if (ic) { ic.classList.remove('far'); ic.classList.add('fas'); }
+                    if (label) label.textContent = ' 已在期待';
+                }
+                btn.addEventListener('click', function () {
+                    var cur = getWish();
+                    if (cur[key]) {
+                        delete cur[key];
+                        btn.classList.remove('wished');
+                        if (ic) { ic.classList.remove('fas'); ic.classList.add('far'); }
+                        if (label) label.textContent = ' 加入期待';
+                    } else {
+                        cur[key] = 1;
+                        btn.classList.add('wished');
+                        if (ic) { ic.classList.remove('far'); ic.classList.add('fas'); }
+                        if (label) label.textContent = ' 已在期待';
+                    }
+                    setWish(cur);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

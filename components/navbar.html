@@ -1,0 +1,30 @@
+<!-- 导航栏（全站通用组件，图标写死在此，所有页面生效） -->
+<nav class="navbar">
+    <div class="container">
+        <a href="{{BASE_PATH}}index.html" class="nav-brand">
+            <span class="server-name" aria-label="万驹同源">
+                <span class="bn-char b-pony" data-char="万">万</span><span class="bn-char b-pony" data-char="驹">驹</span><span class="bn-char b-rest" data-char="同">同</span><span class="bn-char b-rest" data-char="源">源</span>
+            </span>
+        </a>
+        <ul class="nav-menu">
+            <li><a href="{{BASE_PATH}}index.html" class="nav-link" data-page="home"><i class="fa-solid fa-house"></i>首页</a></li>
+            <li><a href="{{BASE_PATH}}pages/forum.html" class="nav-link" data-page="forum"><i class="fa-solid fa-comments"></i>论坛</a></li>
+            <li><a href="{{BASE_PATH}}pages/status.html" class="nav-link" data-page="status"><i class="fa-solid fa-heart-pulse"></i>状态</a></li>
+            <!--<li><a href="{{BASE_PATH}}pages/payment.html" class="nav-link" data-page="payment">充值</a></li>-->
+            <li><a href="{{BASE_PATH}}pages/skin.html" class="nav-link" data-page="skin"><i class="fa-solid fa-shirt"></i>皮肤站</a></li>
+            <li><a href="{{BASE_PATH}}pages/login.html" class="nav-link btn-login" data-page="login"><i class="fa-solid fa-right-to-bracket"></i>登录</a></li>
+        </ul>
+        <button class="mobile-toggle" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</nav>
+
+<style>
+    .nav-menu .nav-link i {
+        margin-right: 6px;
+        font-size: 0.85em;
+    }
+</style>

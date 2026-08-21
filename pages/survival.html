@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>生存服特色 - 万驹同源</title>
+    <meta name="description" content="粘液科技、梦幻卡池、20+新怪物、Herobrine BOSS、高级附魔，万驹同源生存服为你带来丰富的游戏体验。">
+    <meta property="og:title" content="生存服特色 - 万驹同源">
+    <meta property="og:description" content="粘液科技、梦幻卡池、20+新怪物、Herobrine BOSS、高级附魔，万驹同源生存服为你带来丰富的游戏体验。">
+    <meta property="og:image" content="https://mcpc.goldenapplepie.xyz/assets/img/m.webp">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="万驹同源">
+    <link rel="stylesheet" href="../css/style.css?v=4.12">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.1">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    
+    <link rel="preload" href="../assets/img/survival.webp" as="image">
+    <link rel="preload" href="../assets/img/1.webp" as="image">
+    <style>
+        .survival-page {
+            padding: 60px 0;
+            background: #eef4ff;
+        }
+
+        .content-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 50px;
+            border: 1px solid rgba(255,255,255,0.7);
+            box-shadow: 0 8px 40px rgba(18,58,122,0.06), 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        /* Hero 引导块（承接 subpage-banner，不放重复大标题） */
+        .hero-block {
+            margin-bottom: 36px;
+        }
+        .hero-sub {
+            font-size: 1.05rem;
+            color: #4a5568;
+            margin: 0 0 20px;
+            font-weight: 500;
+        }
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 16px;
+            border-radius: 999px;
+            background: #eef4ff;
+            border: 1px solid #2e6fdb;
+            color: #2e6fdb;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .hero-tag.lemon {
+            background: #f2b705;
+            border-color: #f2b705;
+            color: #123a7a;
+        }
+        .hero-pixel {
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            background: #f2b705;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #123a7a;
+            font-weight: 800;
+            font-size: 1.4rem;
+            margin-left: auto;
+        }
+
+        /* 速览数据条 */
+        .stat-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 50px;
+        }
+        .stat-item {
+            background: #eef4ff;
+            border: 1px solid rgba(46,111,219,0.15);
+            border-radius: 14px;
+            padding: 20px 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .stat-item:hover {
+            transform: translateY(-3px);
+        }
+        .stat-num {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #2e6fdb;
+            line-height: 1.1;
+        }
+        .stat-label {
+            font-size: 0.82rem;
+            color: #5a6b85;
+            margin-top: 4px;
+        }
+
+        /* 区块标题（统一竖条） */
+        .feature-section {
+            margin-bottom: 50px;
+        }
+        .feature-section:last-child {
+            margin-bottom: 0;
+        }
+        .block-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #123a7a;
+            margin: 0 0 22px;
+        }
+        .block-title::before {
+            content: '';
+            width: 5px;
+            height: 20px;
+            border-radius: 3px;
+            background: #2e6fdb;
+            display: inline-block;
+        }
+
+        /* 2 卡网格 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .feature-card {
+            background: #fff;
+            border: 1px solid rgba(46,111,219,0.12);
+            border-left: 5px solid #2e6fdb;
+            border-radius: 16px;
+            padding: 26px 24px;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(46,111,219,0.12);
+        }
+        .feature-card h4 {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin: 0 0 8px;
+            font-weight: 700;
+        }
+        .feature-card p {
+            color: #718096;
+            line-height: 1.7;
+            font-size: 0.93rem;
+            margin: 0;
+        }
+
+        /* 战斗公告横幅（图标左 / 文案右 / 柠檬黄按钮） */
+        .battle-banner {
+            background: #2e6fdb;
+            border-radius: 18px;
+            padding: 32px 36px;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .battle-icon {
+            flex: 0 0 auto;
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #fff;
+        }
+        .battle-body {
+            flex: 1;
+        }
+        .battle-body h4 {
+            font-size: 1.25rem;
+            margin: 0 0 10px;
+            font-weight: 700;
+        }
+        .battle-body p {
+            margin: 0 0 6px;
+            line-height: 1.7;
+            opacity: 0.95;
+            font-size: 0.95rem;
+        }
+        .battle-body p:last-child {
+            margin-bottom: 0;
+        }
+        .battle-btn {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 26px;
+            border-radius: 12px;
+            background: #f2b705;
+            color: #123a7a;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .battle-btn:hover {
+            background: #ffc53d;
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: #123a7a;
+        }
+
+        /* 2x2 玩法宫格 */
+        .play-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+        .play-card {
+            background: #fff;
+            border: 1px solid rgba(46,111,219,0.1);
+            border-radius: 16px;
+            padding: 22px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            transition: all 0.3s ease;
+        }
+        .play-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 26px rgba(46,111,219,0.1);
+            border-color: rgba(46,111,219,0.25);
+        }
+        .play-dot {
+            flex: 0 0 auto;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #2e6fdb;
+            margin-top: 5px;
+        }
+        .play-card h4 {
+            font-size: 1.05rem;
+            color: #2d3748;
+            margin: 0 0 6px;
+            font-weight: 700;
+        }
+        .play-card p {
+            color: #718096;
+            line-height: 1.6;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* 两栏清单 */
+        .feature-cols {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 30px;
+        }
+        .col-card {
+            background: #fff;
+            border: 1px solid rgba(46,111,219,0.1);
+            border-radius: 14px;
+            padding: 22px 24px;
+        }
+        .feature-cols ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 12px;
+        }
+        .feature-cols li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .feature-cols li::before {
+            content: '';
+            flex: 0 0 auto;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #2e6fdb;
+            margin-top: 7px;
+        }
+        .feature-cols li strong {
+            color: #2e6fdb;
+            font-weight: 700;
+        }
+
+        /* 柠檬黄 CTA */
+        .cta-lemon {
+            background: #f2b705;
+            border-radius: 18px;
+            padding: 34px 32px;
+            text-align: center;
+            color: #123a7a;
+        }
+        .cta-lemon h3 {
+            font-size: 1.35rem;
+            margin: 0 0 18px;
+            font-weight: 800;
+        }
+        .cta-lemon .survival-btn {
+            background: #123a7a;
+            box-shadow: none;
+        }
+        .cta-lemon .survival-btn:hover {
+            background: #0c2f5e;
+            color: #fff;
+        }
+
+        /* 三栏人群 */
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+        .audience-card {
+            background: #fff;
+            border: 1px solid rgba(46,111,219,0.1);
+            border-radius: 16px;
+            padding: 26px 22px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .audience-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(46,111,219,0.12);
+        }
+        .audience-card h4 {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin: 0 0 8px;
+            font-weight: 700;
+        }
+        .audience-card p {
+            color: #718096;
+            font-size: 0.9rem;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* 返回 */
+        .back-actions {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        /* 主按钮（纯蔚蓝） */
+        .survival-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 32px;
+            background: #2e6fdb;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 4px 18px rgba(46,111,219,0.35);
+            border: none;
+            cursor: pointer;
+        }
+        .survival-btn::after { content: none !important; }
+        .survival-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(46,111,219,0.5);
+            color: #fff;
+            text-decoration: none;
+        }
+        .survival-btn.secondary {
+            background: #fff;
+            color: #2e6fdb;
+            border: 2px solid #2e6fdb;
+            box-shadow: none;
+        }
+        .survival-btn.secondary:hover {
+            background: #2e6fdb;
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 8px 30px rgba(46,111,219,0.5);
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 30px 20px;
+                border-radius: 14px;
+            }
+            .stat-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .play-grid,
+            .feature-cols,
+            .audience-grid {
+                grid-template-columns: 1fr;
+            }
+            .battle-banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 18px;
+            }
+            .hero-pixel {
+                margin-left: 0;
+            }
+        }
+        /* ===== 生存服 Banner 专属美化（仅作用于本页，覆盖全局蓝紫底，不碰全局 .subpage-banner） ===== */
+        .subpage-banner.survival-banner {
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
+            /* 蔚蓝同色渐变，覆盖全局蓝紫 rgba(69,51,183) 底 */
+            background: linear-gradient(135deg, #2e6fdb 0%, #1d4fa0 100%);
+        }
+        /* 隐藏全局残留的青绿/蓝紫径向底，保留白色点阵粒子 */
+        .subpage-banner.survival-banner .subpage-banner-bg {
+            display: none;
+        }
+        .subpage-banner.survival-banner .subpage-banner-particles {
+            opacity: 0.5;
+        }
+        /* 极光光晕球：柠檬黄 + 蔚蓝，纯点缀 */
+        .subpage-banner.survival-banner::before {
+            content: "";
+            position: absolute;
+            top: -45%;
+            right: -6%;
+            width: 360px;
+            height: 360px;
+            background: radial-gradient(circle, rgba(242, 183, 5, 0.38) 0%, rgba(242, 183, 5, 0) 70%);
+            filter: blur(6px);
+            animation: survivalAurora 9s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .subpage-banner.survival-banner::after {
+            content: "";
+            position: absolute;
+            bottom: -55%;
+            left: -5%;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(46, 111, 219, 0.6) 0%, rgba(46, 111, 219, 0) 70%);
+            filter: blur(8px);
+            animation: survivalAurora2 12s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes survivalAurora {
+            0%, 100% { transform: translate(0, 0); opacity: 0.9; }
+            50% { transform: translate(-18px, 16px); opacity: 0.55; }
+        }
+        @keyframes survivalAurora2 {
+            0%, 100% { transform: translate(0, 0); opacity: 0.8; }
+            50% { transform: translate(22px, -14px); opacity: 0.5; }
+        }
+        /* 标题流光：白 → 柠檬黄 → 浅蔚蓝 → 白 */
+        .subpage-banner.survival-banner .subpage-banner-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            letter-spacing: 2px;
+            background: linear-gradient(100deg, #ffffff 0%, #ffe9a8 22%, #bcd4ff 50%, #ffffff 78%, #ffe9a8 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            text-shadow: none;
+            filter: drop-shadow(0 2px 14px rgba(18, 58, 122, 0.45));
+            animation: survivalTitleShine 6s linear infinite;
+        }
+        @keyframes survivalTitleShine {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        /* 玻璃质感副标题胶囊 */
+        .subpage-banner.survival-banner .subpage-banner-subtitle {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 8px 26px;
+            border-radius: 50px;
+            font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+            color: rgba(255, 255, 255, 0.96);
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(18, 58, 122, 0.25);
+            letter-spacing: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .subpage-banner.survival-banner::before,
+            .subpage-banner.survival-banner::after,
+            .subpage-banner.survival-banner .subpage-banner-title {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <div id="app-navbar"></div>
+
+    <section class="subpage-banner survival-banner">
+        <div class="subpage-banner-bg"></div>
+        <div class="subpage-banner-particles"></div>
+        <div class="container">
+            <div class="subpage-banner-content">
+                <h1 class="subpage-banner-title">生存游戏特色</h1>
+                <p class="subpage-banner-subtitle">自由探索 · 丰富玩法 · 无限可能</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section survival-page">
+        <div class="container">
+            <div class="content-wrapper fade-in">
+
+                <div class="hero-block">
+                    <p class="hero-sub">六大维度，带你玩转万驹同源生存服</p>
+                    <div class="hero-tags">
+                        <span class="hero-tag">公益服</span>
+                        <span class="hero-tag">版本 1.21</span>
+                        <span class="hero-tag lemon">实时在线</span>
+                        <span class="hero-tag">全新世界</span>
+                        <span class="hero-pixel">M</span>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-item">
+                        <div class="stat-num">20+</div>
+                        <div class="stat-label">新怪物</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">30+</div>
+                        <div class="stat-label">建筑结构</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">6</div>
+                        <div class="stat-label">大卡池</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">15+</div>
+                        <div class="stat-label">武器皮肤</div>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="block-title">全新生存世界</div>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>全新地形生成</h4>
+                            <p>更深邃的海洋、更雄伟的山峰、更壮观的地下河，每一处都是独特风景，等待你的探索。</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>神秘建筑结构</h4>
+                            <p>30+ 种新建筑结构隐藏在世界各地，每一座建筑都蕴含着神秘的故事和珍贵的宝藏。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="block-title">挑战极致战斗</div>
+                    <div class="battle-banner">
+                        <div class="battle-icon"><i class="fas fa-shield-halved"></i></div>
+                        <div class="battle-body">
+                            <h4>全新战斗体验</h4>
+                            <p>20+ 种新怪物带来更强的敌人、更刺激的战斗、更丰厚的奖励。</p>
+                            <p>终极 BOSS Herobrine -- 曾经的王，正等待着你的挑战。</p>
+                            <p>末影龙全面升级，全新战斗场景、震撼音乐效果、炫酷技能特效，体验史诗级对决。</p>
+                        </div>
+                        <a href="#" class="battle-btn">战斗详情</a>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="block-title">丰富玩法系统</div>
+                    <div class="play-grid">
+                        <div class="play-card">
+                            <span class="play-dot"></span>
+                            <div>
+                                <h4>完善经济体系</h4>
+                                <p>全球市场自由交易、兑换商店稀有物品、限时杂货店好物，构建繁荣玩家经济。</p>
+                            </div>
+                        </div>
+                        <div class="play-card">
+                            <span class="play-dot"></span>
+                            <div>
+                                <h4>梦幻卡池系统</h4>
+                                <p>六大卡池等你来抽，限时概率UP，稀有物品轻松获取。包含生存物资、粘液科技等多种类型。</p>
+                            </div>
+                        </div>
+                        <div class="play-card">
+                            <span class="play-dot"></span>
+                            <div>
+                                <h4>个性化装备</h4>
+                                <p>15+ 种武器皮肤，每款皮肤都有独特特效和属性加成。高级附魔系统超越原版，打造专属神器。</p>
+                            </div>
+                        </div>
+                        <div class="play-card">
+                            <span class="play-dot"></span>
+                            <div>
+                                <h4>专属资源包</h4>
+                                <p>精心设计的粘液科技专属材质，带来沉浸式视觉体验，让游戏世界更加绚丽多彩。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="block-title">核心特色功能</div>
+                    <div class="feature-cols">
+                        <div class="col-card">
+                            <ul>
+                                <li><strong>便捷菜单</strong> -- 传送、邮箱、商店、领地、签到、称号等功能一键搞定，告别繁琐指令</li>
+                                <li><strong>特色玩法</strong> -- 粘液科技、梦幻卡池、每日任务、高级附魔、药水扩展、玩家技能，玩法应有尽有</li>
+                                <li><strong>趣味系统</strong> -- 粒子特效、点歌系统、VIP 特权，打造专属个性化游戏体验</li>
+                            </ul>
+                        </div>
+                        <div class="col-card">
+                            <ul>
+                                <li><strong>传送功能</strong> -- 家园传送、公共传送点，快速移动到想去的地方</li>
+                                <li><strong>领地系统</strong> -- 圈地建设，保护你的建筑和财物</li>
+                                <li><strong>锁箱保护</strong> -- 保护你的珍贵物品，防止被他人拿取</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="block-title">卫星云图系统</div>
+                    <div class="cta-lemon">
+                        <h3>实时卫星云图 · 一键查看服务器地图</h3>
+                        <a href="#" class="survival-btn">
+                            <i class="fas fa-satellite"></i> 立即查看
+                        </a>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="block-title">适合所有玩家</div>
+                    <div class="audience-grid">
+                        <div class="audience-card">
+                            <h4>新手友好</h4>
+                            <p>便捷的操作菜单，完善的引导系统，让你快速上手</p>
+                        </div>
+                        <div class="audience-card">
+                            <h4>老玩家天堂</h4>
+                            <p>高级附魔、粘液科技、BOSS 挑战，不断挑战你的极限</p>
+                        </div>
+                        <div class="audience-card">
+                            <h4>社区活跃</h4>
+                            <p>定期举办活动，玩家互动频繁，打造温馨游戏社区</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="back-actions">
+                    <a href="../index.html" class="survival-btn secondary">
+                        <i class="fas fa-arrow-left"></i> 返回首页
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.4"></script>
+    <script src="../js/navbar.js?v=1.3"></script>
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+</body>
+
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完善账户信息 - 万驹同源服务器</title>
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: url('../assets/img/bg.webp') center/cover fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 44px 36px 36px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.6);
+            animation: popIn 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes popIn {
+            from { opacity:0; transform:scale(0.92) translateY(16px); }
+            to   { opacity:1; transform:scale(1) translateY(0); }
+        }
+
+        .icon-wrap {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px; font-size: 28px; color: #fff;
+            box-shadow: 0 4px 16px rgba(102,126,234,0.3);
+        }
+
+        h1 { color:#2c3e50; margin-bottom:8px; font-size:22px; font-weight:700; }
+        p { color:#888; margin-bottom:28px; line-height:1.6; font-size:14px; }
+
+        .form-group { margin-bottom:18px; text-align: left; }
+        label {
+            display: block; margin-bottom:6px;
+            color:#555; font-size:13px; font-weight:600;
+        }
+        input {
+            width:100%; padding:11px 14px;
+            border: 1.5px solid #e0e0e0; border-radius:10px;
+            font-size:14px; transition: all 0.2s; outline:none;
+            font-family:inherit;
+        }
+        input:focus {
+            border-color:#667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .btn {
+            display:block; width:100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff; border: none;
+            padding: 12px 20px; border-radius: 10px;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            transition: all 0.25s ease;
+            font-family:inherit;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        }
+        .btn:disabled { opacity:0.5; cursor:default; transform:none; box-shadow:none; }
+
+        .btn-skip {
+            background: transparent; color: #888;
+            border: 1px solid #ddd; margin-top: 10px;
+        }
+        .btn-skip:hover {
+            background: rgba(0,0,0,0.03); color:#666;
+            box-shadow:none; transform:none;
+        }
+
+        .msg-box {
+            margin-top: 18px; padding: 12px 16px;
+            border-radius: 10px; font-size: 13px; display:none;
+        }
+        .msg-box.success {
+            display:block; background: #d4edda; color:#155724; border:1px solid #c3e6cb;
+        }
+        .msg-box.error {
+            display:block; background: #f8d7da; color:#721c24; border:1px solid #f5c6cb;
+        }
+
+        .pw-strength {
+            margin-top: 5px; font-size: 12px; color:#999;
+        }
+        .pw-strength.weak { color:#e74c3c; }
+        .pw-strength.medium { color:#f39c12; }
+        .pw-strength.strong { color:#27ae60; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon-wrap"><i class="fas fa-shield-alt"></i></div>
+        <h1>完善账户信息</h1>
+        <p>为了确保您的账户安全，请设置密码和邮箱。<br>这些信息将用于密码找回和重要通知。</p>
+        
+        <form id="completeForm" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope" style="color:#667eea;margin-right:4px;"></i>邮箱地址</label>
+                <input type="email" id="email" placeholder="请输入邮箱地址" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password"><i class="fas fa-lock" style="color:#667eea;margin-right:4px;"></i>设置密码</label>
+                <input type="password" id="password" placeholder="至少 6 位，建议包含字母和数字" required oninput="checkPasswordStrength(this.value)">
+                <div id="passwordStrength" class="pw-strength">密码强度：请输入密码</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword"><i class="fas fa-check-circle" style="color:#667eea;margin-right:4px;"></i>确认密码</label>
+                <input type="password" id="confirmPassword" placeholder="请再次输入密码" required>
+            </div>
+            
+            <button type="submit" class="btn" id="submitBtn"><i class="fas fa-save" style="margin-right:6px;"></i>保存信息</button>
+            <button type="button" class="btn btn-skip" onclick="skipSetup()"><i class="fas fa-forward" style="margin-right:6px;"></i>暂不设置</button>
+        </form>
+        
+        <div id="message" class="msg-box"></div>
+    </div>
+    
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const username = urlParams.get('username');
+        const isNew = urlParams.get('is_new') === '1';
+        
+        console.log('=== 完善账户信息 ===');
+        console.log('Token:', token ? '存在' : '不存在');
+        console.log('Username:', username);
+        console.log('Is New:', isNew);
+        
+        if (!token || !username) {
+            showMessage('缺少必要参数，请重新登录', 'error');
+            document.getElementById('submitBtn').disabled = true;
+        }
+        
+        function checkPasswordStrength(password) {
+            const strengthElement = document.getElementById('passwordStrength');
+            let strength = 'weak';
+            let message = '密码强度：弱';
+            
+            if (password.length >= 6) {
+                if (password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password)) {
+                    strength = 'strong';
+                    message = '密码强度：强';
+                } else {
+                    strength = 'medium';
+                    message = '密码强度：中';
+                }
+            }
+            
+            strengthElement.textContent = message;
+            strengthElement.className = 'pw-strength ' + strength;
+        }
+        
+        async function handleSubmit(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (password !== confirmPassword) {
+                showMessage('两次输入的密码不一致', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('密码长度不能少于6位', 'error');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = '保存中...';
+            
+            try {
+                const response = await fetch('../api/complete_profile.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        token: token,
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const result = await response.json();
+                console.log('保存结果:', result);
+                
+                if (result.success) {
+                    showMessage('账户信息已完善，正在跳转到首页...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '../index.html';
+                    }, 2000);
+                } else {
+                    showMessage(result.message || '保存失败，请重试', 'error');
+                }
+            } catch (error) {
+                console.error('保存失败:', error);
+                showMessage('网络错误，请稍后重试', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '保存信息';
+            }
+        }
+        
+        function skipSetup() {
+            if (confirm('确定要跳过设置吗？您可以稍后在个人资料页面完善信息。')) {
+                window.location.href = '../index.html';
+            }
+        }
+        
+        function showMessage(message, type) {
+            const el = document.getElementById('message');
+            el.textContent = message;
+            el.className = 'msg-box ' + type;
+        }
+    </script>
+</body>
+</html>

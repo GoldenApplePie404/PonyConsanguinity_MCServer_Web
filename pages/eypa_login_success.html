@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>马国记忆登录 - 万驹同源服务器</title>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: url('../assets/img/bg.webp') center/cover fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 背景浮动光点 */
+        .bg-particles {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            overflow: hidden;
+        }
+        .bg-particles span {
+            position: absolute; border-radius: 50%; opacity: 0;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0%   { opacity:0; transform:translateY(100vh) scale(0.5); }
+            20%  { opacity:0.6; }
+            80%  { opacity:0.3; }
+            100% { opacity:0; transform:translateY(-20vh) scale(1.2); }
+        }
+
+        /* 撒花粒子 */
+        .confetti { position:fixed; inset:0; pointer-events:none; z-index:10; overflow:hidden; }
+        .confetti span {
+            position:absolute; top:-10px; width:8px; height:8px; border-radius:2px;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            0%   { opacity:1; transform:translateY(0) rotate(0deg) scale(1); }
+            100% { opacity:0; transform:translateY(110vh) rotate(720deg) scale(0.4); }
+        }
+
+        /* 主容器 */
+        .container {
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            border-radius: 24px;
+            padding: 48px 44px 40px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            box-shadow:
+                0 24px 80px rgba(0,0,0,0.18),
+                0 0 0 1px rgba(255,255,255,0.5);
+            animation: cardIn 0.6s cubic-bezier(0.16,1,0.3,1);
+            position: relative;
+            z-index: 2;
+        }
+        @keyframes cardIn {
+            from { opacity:0; transform:scale(0.88) translateY(24px); }
+            to   { opacity:1; transform:scale(1) translateY(0); }
+        }
+
+        /* 状态图标 */
+        .icon-ring {
+            width: 88px; height: 88px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; font-size: 36px; position: relative;
+        }
+        .icon-ring::after {
+            content:''; position:absolute; inset:-4px; border-radius:50%;
+            border: 3px solid transparent; opacity:0;
+        }
+
+        .icon-ring.loading {
+            background: #667eea;
+            color: #fff;
+            animation: spin 1.2s linear infinite;
+        }
+        .icon-ring.success {
+            background: #43e97b;
+            color: #fff;
+            animation: successPop 0.7s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .icon-ring.success::after {
+            border-color: rgba(67,233,123,0.25);
+            animation: ringPulse 2s ease-in-out infinite;
+        }
+        .icon-ring.fail {
+            background: #e74c3c;
+            color: #fff;
+            animation: failShake 0.5s ease;
+        }
+
+        @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+        @keyframes successPop {
+            0%   { transform:scale(0) rotate(-30deg); }
+            50%  { transform:scale(1.2) rotate(6deg); }
+            75%  { transform:scale(0.95) rotate(-2deg); }
+            100% { transform:scale(1) rotate(0); }
+        }
+        @keyframes ringPulse {
+            0%,100% { transform:scale(1); opacity:0.4; }
+            50%     { transform:scale(1.15); opacity:0.8; }
+        }
+        @keyframes failShake {
+            0%,100% { transform:translateX(0); }
+            20%     { transform:translateX(-6px); }
+            40%     { transform:translateX(6px); }
+            60%     { transform:translateX(-4px); }
+            80%     { transform:translateX(4px); }
+        }
+
+        h1 { color:#2c3e50; margin-bottom:8px; font-size:26px; font-weight:800; letter-spacing:-0.5px; }
+        .subtitle { color:#888; margin-bottom:28px; line-height:1.7; font-size:14px; }
+
+        /* 用户信息卡 */
+        .user-card {
+            background: rgba(102,126,234,0.05);
+            border-radius: 20px; padding: 24px 24px;
+            margin-bottom: 32px;
+            border: 1.5px solid rgba(102,126,234,0.15);
+            display: flex; align-items: center; gap: 18px; text-align: left;
+            transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+            position: relative; overflow: hidden;
+        }
+        .user-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:4px;
+            background: #667eea;
+            opacity:0.7;
+        }
+        .user-card:hover {
+            border-color: rgba(102,126,234,0.35);
+            transform:translateY(-3px);
+            box-shadow: 0 12px 36px rgba(102,126,234,0.15);
+        }
+
+        .user-card img {
+            width: 64px; height: 64px; border-radius: 50%;
+            border: 3px solid #fff; object-fit: cover; flex-shrink:0;
+            box-shadow: 0 6px 18px rgba(102,126,234,0.3);
+        }
+        .user-card .info { flex:1; min-width:0; }
+        .user-card .nickname {
+            font-size:18px; font-weight:700; color:#2c3e50; line-height:1.3;
+            display:flex; align-items:center; gap:6px;
+        }
+        .user-card .nickname .verified {
+            width:18px; height:18px; border-radius:50%;
+            background:#43e97b;
+            display:inline-flex; align-items:center; justify-content:center;
+            font-size:10px; color:#fff; flex-shrink:0;
+        }
+        .user-card .handle { font-size:13px; color:#999; margin-top:4px; }
+        .user-card .badges { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+        .user-card .badge {
+            display: inline-flex; align-items:center; gap:4px;
+            padding:4px 12px; border-radius:10px; font-size:11px; font-weight:600;
+        }
+        .user-card .badge.eypa {
+            background: #667eea;
+            color:#fff;
+        }
+        .user-card .badge.new-user {
+            background: #f5576c;
+            color:#fff;
+        }
+        .user-card .badge.level {
+            background: rgba(102,126,234,0.1);
+            color:#667eea; border:1px solid rgba(102,126,234,0.2);
+        }
+
+        /* 倒计时进度条 */
+        .countdown-wrap { margin-top:18px; }
+        .countdown-bar {
+            width:100%; height:4px; background:rgba(102,126,234,0.12); border-radius:2px;
+            overflow:hidden; margin-bottom:10px;
+        }
+        .countdown-bar-inner {
+            height:100%; width:100%;
+            background:#667eea;
+            border-radius:2px;
+            transform-origin:left;
+            transition: transform 1s linear;
+        }
+        .countdown-text { color:#bbb; font-size:13px; }
+        .countdown-text span { color:#667eea; font-weight:700; }
+
+        /* 按钮 */
+        .btn-main {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 16px 40px; border-radius: 16px;
+            background: #667eea;
+            color: #fff; text-decoration: none; font-weight: 700; font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 8px 28px rgba(102,126,234,0.4);
+            border: none; cursor: pointer;
+        }
+        .btn-main:hover {
+            background: #5566d4;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(102,126,234,0.55);
+        }
+        .btn-main:active { transform:translateY(-1px) scale(1); }
+
+        .btn-secondary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 13px 32px; border-radius: 14px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(102,126,234,0.25);
+            color: #667eea; text-decoration: none; font-weight: 600; font-size: 14px;
+            transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 2px 8px rgba(102,126,234,0.08);
+        }
+        .btn-secondary:hover {
+            background:rgba(102,126,234,0.1);
+            border-color:rgba(102,126,234,0.4);
+            transform:translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102,126,234,0.15);
+        }
+
+        .hidden { display: none !important; }
+
+        /* 响应式 */
+        @media (max-width:480px) {
+            .container { padding: 36px 24px 32px; }
+            .icon-ring { width:72px; height:72px; font-size:30px; }
+            h1 { font-size:22px; }
+            .btn-main { width:100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-particles" id="bgParticles"></div>
+    <div class="confetti" id="confetti"></div>
+
+    <div class="container">
+        <!-- 加载态 -->
+        <div id="loadingState">
+            <div class="icon-ring loading"><i class="fas fa-spinner"></i></div>
+            <h1>正在处理</h1>
+            <p class="subtitle">请稍候，正在完成马国记忆授权登录…</p>
+        </div>
+
+        <!-- 成功态 -->
+        <div id="successState" class="hidden">
+            <div class="icon-ring success"><i class="fas fa-check"></i></div>
+            <h1 id="successTitle">登录成功</h1>
+            <p class="subtitle" id="successMsg">欢迎回来，您已成功登录。</p>
+
+            <div id="userInfo" class="user-card hidden">
+                <img id="avatar" src="" alt="头像">
+                <div class="info">
+                    <div class="nickname" id="nickname"><span id="nicknameText"></span><span class="verified"><i class="fas fa-check" style="font-size:8px;"></i></span></div>
+                    <div class="handle" id="displayUsername"></div>
+                    <div class="badges">
+                        <span class="badge eypa" id="userBadge"><i class="fas fa-link"></i> 马国记忆</span>
+                        <span class="badge level"><i class="fas fa-shield-alt"></i> 已授权</span>
+                    </div>
+                </div>
+            </div>
+
+            <a href="../pages/profile.html" class="btn-main" id="gotoBtn">
+                <i class="fas fa-arrow-right"></i> 前往个人中心
+            </a>
+
+            <div class="countdown-wrap" id="countdownWrap">
+                <div class="countdown-bar"><div class="countdown-bar-inner" id="countdownBar"></div></div>
+                <div class="countdown-text"><span id="countdownNum">5</span> 秒后自动跳转</div>
+            </div>
+        </div>
+
+        <!-- 失败态 -->
+        <div id="failState" class="hidden">
+            <div class="icon-ring fail"><i class="fas fa-times"></i></div>
+            <h1>登录失败</h1>
+            <p class="subtitle" id="failMsg">未能获取登录信息，请重试</p>
+            <a href="../pages/login.html" class="btn-secondary"><i class="fas fa-redo"></i> 返回重试</a>
+        </div>
+    </div>
+
+    <script>
+        // ── 背景粒子 ──
+        (function() {
+            const wrap = document.getElementById('bgParticles');
+            for (let i = 0; i < 25; i++) {
+                const s = document.createElement('span');
+                const size = 3 + Math.random() * 6;
+                s.style.cssText = [
+                    'width:'+size+'px','height:'+size+'px',
+                    'left:'+Math.random()*100+'%',
+                    'background:'+(Math.random()>0.5?'rgba(102,126,234,0.3)':'rgba(240,147,251,0.25)'),
+                    'animation-duration:'+(8+Math.random()*12)+'s',
+                    'animation-delay:'+Math.random()*10+'s'
+                ].join(';');
+                wrap.appendChild(s);
+            }
+        })();
+
+        // ── 撒花 ──
+        function launchConfetti() {
+            const wrap = document.getElementById('confetti');
+            const colors = ['#667eea','#764ba2','#43e97b','#f9b238','#f093fb','#4facfe','#ff6b6b'];
+            for (let i = 0; i < 60; i++) {
+                const c = document.createElement('span');
+                const color = colors[Math.floor(Math.random()*colors.length)];
+                c.style.cssText = [
+                    'left:'+Math.random()*100+'%',
+                    'background:'+color,
+                    'width:'+(4+Math.random()*6)+'px',
+                    'height:'+(4+Math.random()*6)+'px',
+                    'border-radius:'+(Math.random()>0.5?'50%':'2px'),
+                    'animation-duration:'+(1.5+Math.random()*2)+'s',
+                    'animation-delay:'+Math.random()*0.8+'s'
+                ].join(';');
+                wrap.appendChild(c);
+            }
+            setTimeout(() => wrap.innerHTML = '', 5000);
+        }
+
+        // ── 主逻辑 ──
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        const username = params.get('username');
+        const nickname = params.get('nickname');
+        const avatar = params.get('avatar');
+        const role = params.get('role') || 'user';
+        const isNew = params.get('is_new') === '1';
+
+        if (token && username) {
+            localStorage.setItem('currentUser', JSON.stringify({ username, role, token }));
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('authToken', token);
+            localStorage.setItem('username', username);
+
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('successState').classList.remove('hidden');
+
+            if (isNew) {
+                document.getElementById('successTitle').textContent = '欢迎加入！';
+                document.getElementById('successMsg').textContent = '您的账号已通过马国记忆自动创建，欢迎来到万驹同源。';
+                document.getElementById('userBadge').innerHTML = '<i class="fas fa-star"></i> 新用户';
+                document.getElementById('userBadge').className = 'badge new-user';
+            } else {
+                document.getElementById('successTitle').textContent = '登录成功';
+                document.getElementById('successMsg').textContent = '欢迎回来，' + (nickname || username) + '！';
+            }
+
+            const info = document.getElementById('userInfo');
+            info.classList.remove('hidden');
+            document.getElementById('avatar').src = avatar || '../assets/img/user.webp';
+            document.getElementById('avatar').onerror = function() { this.src = '../assets/img/user.webp'; };
+            document.getElementById('nicknameText').textContent = nickname || username;
+            document.getElementById('displayUsername').textContent = '@' + username;
+
+            launchConfetti();
+
+            let count = 5;
+            const bar = document.getElementById('countdownBar');
+            const num = document.getElementById('countdownNum');
+            bar.style.transform = 'scaleX(1)';
+
+            const timer = setInterval(() => {
+                count--;
+                num.textContent = count;
+                bar.style.transform = 'scaleX(' + (count / 5) + ')';
+                if (count <= 0) {
+                    clearInterval(timer);
+                    const target = isNew
+                        ? 'complete_profile.html?token=' + encodeURIComponent(token) + '&username=' + encodeURIComponent(username) + '&is_new=1'
+                        : '../pages/profile.html';
+                    window.location.href = target;
+                }
+            }, 1000);
+        } else {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('failState').classList.remove('hidden');
+            document.getElementById('failMsg').textContent = '未能获取登录信息（缺少 token 或用户名），请重试';
+        }
+    </script>
+</body>
+</html>

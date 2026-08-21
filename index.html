@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="assets/img/m.webp">
+    <link rel="shortcut icon" href="assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>万驹同源 | Minecraft 服务器官网</title>
+    <meta name="description" content="万驹同源是一个小马主题的 Minecraft 社区服务器，提供生存、创造、小游戏、太空等多种玩法。自由探索，无限可能。">
+    <meta property="og:title" content="万驹同源 - Minecraft 小马主题服务器">
+    <meta property="og:description" content="万驹同源是一个小马主题的 Minecraft 社区服务器，提供生存、创造、小游戏、太空等多种玩法。自由探索，无限可能。">
+    <meta property="og:image" content="https://mcpc.goldenapplepie.xyz/assets/img/m.webp">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="万驹同源">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Montserrat:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=4.12">
+    <link rel="stylesheet" href="css/sidebar-player.css?v=2.3">
+    <link rel="stylesheet" href="css/back-to-top.css?v=1.0">
+    <link rel="stylesheet" href="css/font-awesome/all.min.css">
+
+    <style>
+        .page-loader {
+            background: linear-gradient(135deg, #2e6fdb 0%, #18b6d6 100%);
+        }
+        .loader-content {
+            color: #1d4fa0;
+        }
+        .loader-bar {
+            background: rgba(29, 79, 160, 0.22);
+        }
+        .loader-progress {
+            background: #ffffff;
+        }
+        .loader-subtitle {
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(18, 58, 122, 0.45);
+        }
+        .loader-text img {
+            filter: drop-shadow(0 2px 6px rgba(18, 58, 122, 0.35));
+        }
+
+        /* ============================================================
+           主页 Font Awesome 图标（本地库，伪元素注入，不改 HTML）
+           ============================================================ */
+        /* 导航图标已移入 components/navbar.html（<i> 方式，全站生效），此处不再用 ::before 注入 */
+
+        .hero-actions .btn-primary::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f14e";
+            margin-right: 8px;
+        }
+        .hero-actions .btn-outline::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f135";
+            margin-right: 8px;
+        }
+
+        .video-card-header h3::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f144";
+            margin-right: 8px;
+            color: #2e6fdb;
+        }
+
+        .address-label::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f120";
+            margin-right: 7px;
+            color: #3da555;
+        }
+        .copy-btn::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f0c5";
+            margin-right: 7px;
+        }
+
+        .qq-link::before {
+            font-family: "Font Awesome 6 Brands";
+            font-weight: 400;
+            content: "\f1d6";
+            margin-right: 6px;
+        }
+
+        .footer-section h3::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 8px;
+            font-size: 0.8em;
+            color: #ffc53d;
+        }
+        .footer-section:nth-child(1) h3::before {
+            content: "\f141";
+        }
+        .footer-section:nth-child(2) h3::before {
+            content: "\f0c1";
+        }
+        .footer-section:nth-child(3) h3::before {
+            content: "\f0e0";
+        }
+        .footer-section:nth-child(4) h3::before {
+            content: "\f005";
+        }
+
+        /* 团队链接图标 + 配色（原为蓝紫，按铁律清掉） */
+        .member-link {
+            color: #2e6fdb;
+        }
+        .member-link:hover {
+            color: #1d4fa0;
+        }
+        .member-link[href^="https://eqmemory.cn"]::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f02d";
+            margin-right: 6px;
+        }
+        .member-link[href^="https://space.bilibili.com"]::before {
+            font-family: "Font Awesome 6 Brands";
+            font-weight: 400;
+            content: "\e3d9";
+            margin-right: 6px;
+        }
+        .member-link[href^="https://github.com"]::before {
+            font-family: "Font Awesome 6 Brands";
+            font-weight: 400;
+            content: "\f09b";
+            margin-right: 6px;
+        }
+        /*占位链接*/
+        .member-link.ml-bili::before {
+            font-family: "Font Awesome 6 Brands";
+            font-weight: 400;
+            content: "\e3d9";
+            margin-right: 6px;
+        }
+        .member-link.ml-gh::before {
+            font-family: "Font Awesome 6 Brands";
+            font-weight: 400;
+            content: "\f09b";
+            margin-right: 6px;
+        }
+
+        .member-links {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+        .member-link {
+            padding: 7px 14px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            background: rgba(46, 111, 219, 0.08);
+        }
+        .member-link:hover {
+            background: rgba(46, 111, 219, 0.16);
+        }
+        .team-member:hover {
+            border-color: rgba(46, 111, 219, 0.3);
+        }
+        .team-member:hover .member-avatar {
+            border-color: rgba(46, 111, 219, 0.4);
+            box-shadow: 0 8px 28px rgba(46, 111, 219, 0.3);
+        }
+
+        .member-link {
+            font-size: 0;
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            border-radius: 10px;
+            line-height: 1;
+        }
+        .member-links .member-link::before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 15px;
+            margin: 0 !important;
+        }
+
+        .section-title::after {
+            background: linear-gradient(90deg, #2e6fdb, #f2b705);
+        }
+        .section-features .section-title::after {
+            background: linear-gradient(90deg, #ffffff, #f2b705);
+        }
+
+        .hero-actions .btn {
+            border-radius: 8px;
+        }
+        .hero-actions .btn::before {
+            display: none;
+        }
+        .hero-actions .btn-primary {
+            background: #2e6fdb;
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 15px rgba(46, 111, 219, 0.35);
+        }
+        .hero-actions .btn-primary::after {
+            display: none;
+        }
+        .hero-actions .btn-primary:hover {
+            background: #1d4fa0;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(46, 111, 219, 0.45);
+        }
+        .hero-actions .btn-outline {
+            border: 2px solid #2e6fdb;
+            color: #2e6fdb;
+            background: transparent;
+            box-shadow: none;
+        }
+        .hero-actions .btn-outline:hover {
+            background: #2e6fdb;
+            color: #fff;
+            border-color: #2e6fdb;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(46, 111, 219, 0.4);
+        }
+
+        /* ---------- 统计条 ---------- */
+        .stats-bar {
+            position: relative;
+            z-index: 10;
+            margin-top: -80px;
+            background: #fff;
+            border-bottom: 1px solid #dde6f5;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .stats-bar .stat-item {
+            padding: 16px 24px;
+            text-align: center;
+            border-left: 1px solid #dde6f5;
+        }
+        .stats-bar .stat-item:first-child {
+            border-left: none;
+        }
+        .stat-num {
+            font-size: clamp(1.4rem, 3vw, 1.9rem);
+            font-weight: 900;
+            color: #14233c;
+            line-height: 1.2;
+        }
+        .stat-num .grad {
+            background: linear-gradient(135deg, #f2b705, #c99705);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+        .stat-num #uptime-value {
+            white-space: nowrap;
+        }
+        .stats-bar .stat-label {
+            margin-top: 4px;
+            font-size: 13px;
+            color: #8492ab;
+            letter-spacing: 0.5px;
+            opacity: 1;
+        }
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stats-bar .stat-item:nth-child(3) {
+                border-left: none;
+            }
+            .stats-bar .stat-item:nth-child(n+3) {
+                border-top: 1px solid #dde6f5;
+            }
+        }
+
+        /* ---------- 团队卡 hover 浮起移除（内部 hover 保留） ---------- */
+        .team-member:hover {
+            transform: none;
+        }
+
+        /* ---------- 大标题下划线：纯蔚蓝（左对齐） ---------- */
+        .section-title::after {
+            background: #2e6fdb;
+            left: 0;
+            transform: none;
+        }
+        .section-features .section-title::after {
+            background: #2e6fdb;
+        }
+
+        /* ---------- 徽章（仿样例 badge） ---------- */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .badge-soon {
+            color: #8492ab;
+            background: #f1f2ee;
+            border: 1px dashed #c5d4ef;
+        }
+        .badge-dev {
+            color: #2e6fdb;
+            background: rgba(46, 111, 219, 0.12);
+            border: 1px solid rgba(46, 111, 219, 0.4);
+        }
+        .badge-hot {
+            color: #e0553d;
+            background: rgba(224, 85, 61, 0.1);
+            border: 1px solid rgba(224, 85, 61, 0.35);
+        }
+        .beta-badge {
+            background: linear-gradient(135deg, #f2b705, #e0a800);
+            color: #fff;
+            border-radius: 999px;
+            padding: 2px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .feature-card .beta-badge::before {
+            display: none;
+        }
+
+        /* ---------- 大标题上下说明（像素标签 + 副标题，左对齐商务风） ---------- */
+        .pixel-label {
+            font-family: 'MinecraftTen-VGORe', 'Noto Sans SC', sans-serif;
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #2e6fdb;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        .section-sub {
+            text-align: left;
+            font-size: 15px;
+            color: #8492ab;
+            margin-top: 22px;
+            margin-bottom: 2.5rem;
+        }
+        .section-title {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        .section-dark .pixel-label {
+            color: #5a92e6;
+        }
+        .section-features .pixel-label {
+            color: #ffc53d;
+        }
+        .section-features .section-sub {
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        /* ---------- 模组服卡：彻底移除 is-beta 发光效果（呼吸动画/紫阴影/drop-shadow/常驻浮起） ---------- */
+        .section-dark .feature-card.is-beta {
+            border-color: #dde6f5;
+            box-shadow: 0 4px 14px rgba(18, 58, 122, 0.06);
+            transform: none;
+            animation: none;
+        }
+        .section-dark .feature-card.is-beta:hover {
+            border-color: #cdd2c8;
+            box-shadow: 0 16px 36px rgba(18, 58, 122, 0.12);
+            transform: none;
+        }
+        .section-dark .feature-card.is-beta .feature-icon {
+            filter: none;
+            transform: none;
+        }
+        .section-dark .feature-card.is-beta:hover .feature-icon {
+            transform: none;
+        }
+
+        /* ---------- 简介特性标签（仿样例 intro-tags） ---------- */
+        .intro-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .intro-tags span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 13px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #2e6fdb;
+            background: rgba(46, 111, 219, 0.08);
+            border: 1px solid rgba(46, 111, 219, 0.2);
+        }
+        .intro-tags i {
+            color: #2e6fdb;
+            font-size: 12px;
+        }
+
+        /* ---------- 统计条上移：去掉 Hero 底部 40px 间距 ---------- */
+        .hero-banner {
+            margin-bottom: 0;
+        }
+    </style>
+
+    <link rel="preload" href="assets/img/1.webp" as="image">
+    <link rel="preload" href="assets/img/logo.webp" as="image">
+    <link rel="preload" href="assets/img/logo1.webp" as="image">
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+    <!-- 页面加载动画 -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-logo"><img src="assets/img/logo.webp" alt="万驹同源 Logo"></div>
+            <div class="loader-text"><img src="assets/img/logo1.webp" alt="万驹同源"></div>
+            <div class="loader-subtitle">精彩马上呈现~</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航栏组件 -->
+    <div id="app-navbar"></div>
+
+    <!-- 首页Banner -->
+    <section class="hero-banner">
+        <div class="hero-bg"></div>
+        <div class="hero-particles"></div>
+        <div class="danmaku-container" id="danmakuContainer"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+
+                    <!--<div class="loader-text"><img src="assets/img/logo.webp" alt="万驹同源Logo"></div>-->
+                    <span class="title-main">PonyConsanguinity</span>
+                    <span class="title-cn">万驹同源</span>
+                </h1>
+                <p class="hero-subtitle">一个完全公益的小马 Minecraft 服务器</p>
+                <div class="hero-actions">
+                    <a href="#server-intro" class="btn btn-primary">了解更多</a>
+                    <a href="#about-us" class="btn btn-outline">快速加入</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 统计条 -->
+    <section class="stats-bar">
+        <div class="container">
+            <div class="stats-grid reveal">
+                <div class="stat-item">
+                    <div class="stat-num"><span class="grad" id="players-registered-value">--</span></div>
+                    <div class="stat-label">已注册玩家</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num"><span class="grad" id="play-modes-value">6</span></div>
+                    <div class="stat-label">种核心玩法</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num"><span class="grad" id="uptime-value">--</span></div>
+                    <div class="stat-label">已运行时长</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num"><span class="grad" id="charity-value">100%</span></div>
+                    <div class="stat-label">公益运营</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服务器简介 -->
+    <section id="server-intro" class="section">
+        <div class="container">
+            <div class="pixel-label">About Server</div>
+            <h2 class="section-title">服务器简介</h2>
+            <p class="section-sub">稳定 · 公平 · 友好，欢迎每一位玩家</p>
+            <div class="section-content">
+                <div class="about-text">
+                    <div class="intro-tags">
+                        <span><i class="fa-solid fa-circle-check"></i>完全公益</span>
+                        <span><i class="fa-solid fa-cubes"></i>插件服</span>
+                        <span><i class="fa-solid fa-cube"></i>Java 1.12.x ~ 1.21.1</span>
+                        <span><i class="fa-solid fa-star"></i>推荐 1.20.1</span>
+                    </div>
+                    <p><strong>万驹同源（PonyConsanguinity）</strong>是一个完全公益的小马 Minecraft
+                        服务器。我们致力于为广大玩家提供优质的游戏体验，拥有稳定的基础设施、友好的社区氛围和丰富的游戏玩法。无论你是新手还是老玩家，都能在这里找到属于自己的乐趣。</p>
+                    <p><strong>服务器类型：</strong>插件服，拥有丰富多样的特色功能和玩法。由于服务器使用了多版本兼容插件，可以使版本覆盖范围在 <strong>Java 1.12.x ~
+                            1.21.1</strong>（推荐使用 1.20.1 版本），让更多玩家能够畅玩。当前服务器仅对 Java 版开放，后续将考虑推出基岩版适配，敬请期待！</p>
+                    <p>我们承诺提供公平公正的游戏环境，严禁任何作弊行为。所有玩家在规则面前人人平等，让我们一起创造一个和谐的游戏社区。万驹同源欢迎你的加入！</p>
+                </div>
+                <div class="about-image">
+                    <div class="video-card">
+                        <div class="video-card-header">
+
+                            <h3 class="video-card-title">视频：进服教程</h3>
+                        </div>
+                        <div class="video-card-body">
+                            <div class="video-container">
+                                <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=116079443580198&bvid=BV1TXZTBVE7L&cid=36101229255&p=1"
+                                    scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特色玩法 -->
+    <section class="section section-dark section-features"
+        style="background-image: url('assets/img/bg5.webp'); background-size: cover; background-position: center;">
+        <div class="container">
+            <div class="pixel-label">Gameplay Modes</div>
+            <h2 class="section-title">服务器玩法</h2>
+            <p class="section-sub">多种玩法持续扩充中，点击卡片了解更多</p>
+            <div class="features-grid">
+                <a href="pages/survival.html" class="feature-card fade-in-delay-1"
+                    style="text-decoration: none; color: inherit; display: block; position: relative;">
+                    <style>
+                        .feature-card.fade-in-delay-1::after {
+                            display: none !important;
+                        }
+                    </style>
+                    <div class="feature-icon survival"></div>
+                    <h3 class="feature-title">生存游戏 <span class="badge badge-hot">火爆</span></h3>
+                    <p class="feature-desc">万驹同源提供了一个自由的生存世界，玩家需要在白天搜集物资发展自身，以抵御夜晚怪物的攻击。</p>
+                </a>
+                <a href="https://www.bilibili.com/video/BV1JN4y1Y7pf/?vd_source=2ae35f299b5a9f754c695bb1e968e1bd"
+                    target="_blank" class="feature-card fade-in-delay-2"
+                    style="text-decoration: none; color: inherit; display: block; position: relative;">
+                    <style>
+                        .feature-card.fade-in-delay-2::after {
+                            display: none !important;
+                        }
+                    </style>
+                    <div class="feature-icon structure"></div>
+                    <h3 class="feature-title">自由创造</h3>
+                    <p class="feature-desc">是艺术家，只喜欢创造？没关系。万驹同源为您准备了一个自由创造的世界，你可以在此发挥您的创造思维，建造出你想要的一切。</p>
+                </a>
+                <a href="pages/announcement-detail.html?id=wmbt" class="feature-card fade-in-delay-3"
+                    style="text-decoration: none; color: inherit; display: block; position: relative;">
+                    <style>
+                        .feature-card.fade-in-delay-3::after {
+                            display: none !important;
+                        }
+                    </style>
+                    <div class="feature-icon party"></div>
+                    <h3 class="feature-title">活动中心</h3>
+                    <p class="feature-desc">用于举办各种特别活动，如节日庆典、建筑比赛、PVP竞技等，为玩家带来丰富多彩的游戏体验。</p>
+                </a>
+                <a href="pages/mod.html" class="feature-card is-beta fade-in-delay-4"
+                    style="text-decoration: none; color: inherit; display: block; position: relative;">
+                    <style>
+                        .feature-card.fade-in-delay-4::after {
+                            display: none !important;
+                        }
+                    </style>
+                    <div class="feature-icon space"></div>
+                    <h3 class="feature-title">模组服 <span class="badge badge-dev">内测中</span></h3>
+                    <p class="feature-desc">[测试中] 万驹同源的首个模组服，玩法有机械动力、车万女仆、航空学等。</p>
+                </a>
+                <div class="feature-card fade-in-delay-5">
+                    <div class="feature-icon rpg"></div>
+                    <h3 class="feature-title">RPG服 <span class="badge badge-soon">敬请期待</span></h3>
+                    <p class="feature-desc">[敬请期待] 沉浸式剧情体验，丰富多样的任务系统，独特的角色成长路径，带你探索神秘的世界。</p>
+                </div>
+                <div class="feature-card fade-in-delay-6">
+                    <div class="feature-icon game"></div>
+                    <h3 class="feature-title">小游戏服 <span class="badge badge-soon">敬请期待</span></h3>
+                    <p class="feature-desc">[敬请期待] 包含起床战争、空岛生存、跑酷竞速等多种经典小游戏，随时随地上线畅玩，轻松愉快的竞技体验。</p>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: center; margin-top: 30px;">
+                <div class="feature-card fade-in-delay-6" style="max-width: 300px;">
+                    <div class="feature-icon more"></div>
+                    <h3 class="feature-title">更多玩法</h3>
+                    <p class="feature-desc">更多精彩内容正在开发中，敬请期待...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服务器概况 -->
+    <section class="section">
+        <div class="container">
+            <div class="pixel-label">Server Overview</div>
+            <h2 class="section-title">服务器概况</h2>
+            <p class="section-sub">稳定运行的基石</p>
+
+
+            <div class="features-grid">
+                <div class="feature-card fade-in-delay-1">
+                    <div class="feature-icon internet"></div>
+                    <h3 class="feature-title">优质的网络</h3>
+                    <p class="feature-desc">服务器选用国内多节点，超大带宽，让游戏运行稳定不掉线。</p>
+                </div>
+                <div class="feature-card fade-in-delay-2">
+                    <div class="feature-icon server"></div>
+                    <h3 class="feature-title">强劲的服务器</h3>
+                    <p class="feature-desc">服务器采用双路志强处理器硬件架构，配合超大内存，让服务器更流畅。</p>
+                </div>
+                <div class="feature-card fade-in-delay-3">
+                    <div class="feature-icon system"></div>
+                    <h3 class="feature-title">安全稳定</h3>
+                    <p class="feature-desc">服务器使用自建的账户登录授权系统，让玩家玩的开心，玩的放心。</p>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: center; margin-top: 50px;">
+                <img src="assets\img\localhost.gif" alt="localhost" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <!-- 图片展示区 -->
+    <section class="section section-dark">
+        <!-- 浮动粒子 -->
+        <div class="floating-particles">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="container">
+            <div class="pixel-label">Server Gallery</div>
+            <h2 class="section-title">图片展示区</h2>
+            <p class="section-sub">来自玩家们的真实世界，点击图片可查看大图</p>
+            <div class="gallery-container">
+                <!-- 单行画廊 -->
+                <div class="gallery-row">
+                    <div class="gallery-track">
+                        <div class="gallery-item" data-title="生存服生存世界1" data-description="生存服生存世界1">
+                            <img src="assets/img/pc1.webp" alt="生存服生存世界1" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服生存世界1</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服生存世界2" data-description="生存服生存世界2">
+                            <img src="assets/img/pc2.webp" alt="生存服生存世界2" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服生存世界2</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服生存世界3" data-description="生存服生存世界3">
+                            <img src="assets/img/pc3.webp" alt="生存服生存世界3" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服生存世界3</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服玩家自建水下隧道" data-description="生存服玩家自建水下隧道">
+                            <img src="assets/img/2.webp" alt="生存服玩家自建水下隧道">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服玩家自建水下隧道</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服下界迷宫挑战起点" data-description="生存服下界迷宫挑战起点">
+                            <img src="assets/img/3.webp" alt="生存服下界迷宫挑战起点">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服下界迷宫挑战起点</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服金苹果派の小屋" data-description="生存服金苹果派の小屋">
+                            <img src="assets/img/4.webp" alt="生存服金苹果派の小屋">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服金苹果派の小屋</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="创造服大厅" data-description="创造服大厅">
+                            <img src="assets/img/5.webp" alt="创造服大厅" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">创造服大厅</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="躲猫猫活动地点实拍" data-description="躲猫猫活动地点实拍">
+                            <img src="assets/img/8.webp" alt="躲猫猫活动地点实拍" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">"躲猫猫"活动地点实拍</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服粘液科技工业区" data-description="生存服粘液科技工业区">
+                            <img src="assets/img/9.webp" alt="生存服粘液科技工业区" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服粘液科技工业区</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服玩家建筑1" data-description="生存服玩家建筑1">
+                            <img src="assets/img/10.webp" alt="生存服玩家建筑1" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服玩家建筑1</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="太空服图片1" data-description="太空服图片1">
+                            <img src="assets/img/11.webp" alt="太空服图片1" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">太空服图片1</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="太空服图片2" data-description="太空服图片2">
+                            <img src="assets/img/12.webp" alt="太空服图片2" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">太空服图片2</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服玩家建筑2" data-description="生存服玩家建筑2">
+                            <img src="assets/img/13.webp" alt="生存服玩家建筑2" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服玩家建筑2</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服末地之战实拍" data-description="生存服末地之战实拍">
+                            <img src="assets/img/14.webp" alt="生存服末地之战实拍" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服末地之战实拍</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="玩家合照" data-description="玩家合照">
+                            <img src="assets/img/players.webp" alt="玩家合照" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">玩家合照</div>
+                            </div>
+                        </div>
+                        <!-- 第二组图片（用于无缝循环） -->
+                        <div class="gallery-item" data-title="生存服生存世界1" data-description="生存服生存世界1">
+                            <img src="assets/img/pc1.webp" alt="生存服生存世界1" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服生存世界1</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服生存世界2" data-description="生存服生存世界2">
+                            <img src="assets/img/pc2.webp" alt="生存服生存世界2" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服生存世界2</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服生存世界3" data-description="生存服生存世界3">
+                            <img src="assets/img/pc3.webp" alt="生存服生存世界3" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服生存世界3</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服玩家自建水下隧道" data-description="生存服玩家自建水下隧道">
+                            <img src="assets/img/2.webp" alt="生存服玩家自建水下隧道">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服玩家自建水下隧道</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服下界迷宫挑战起点" data-description="生存服下界迷宫挑战起点">
+                            <img src="assets/img/3.webp" alt="生存服下界迷宫挑战起点">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服下界迷宫挑战起点</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服金苹果派の小屋" data-description="生存服金苹果派の小屋">
+                            <img src="assets/img/4.webp" alt="生存服金苹果派の小屋">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服金苹果派の小屋</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="创造服大厅" data-description="创造服大厅">
+                            <img src="assets/img/5.webp" alt="创造服大厅" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">创造服大厅</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="躲猫猫活动地点实拍" data-description="躲猫猫活动地点实拍">
+                            <img src="assets/img/8.webp" alt="躲猫猫活动地点实拍" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">"躲猫猫"活动地点实拍</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服粘液科技工业区" data-description="生存服粘液科技工业区">
+                            <img src="assets/img/9.webp" alt="生存服粘液科技工业区" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服粘液科技工业区</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服玩家建筑1" data-description="生存服玩家建筑1">
+                            <img src="assets/img/10.webp" alt="生存服玩家建筑1" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服玩家建筑1</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="太空服图片1" data-description="太空服图片1">
+                            <img src="assets/img/11.webp" alt="太空服图片1" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">太空服图片1</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="太空服图片2" data-description="太空服图片2">
+                            <img src="assets/img/12.webp" alt="太空服图片2" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">太空服图片2</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服玩家建造2" data-description="生存服玩家建造2">
+                            <img src="assets/img/13.webp" alt="生存服玩家建造2" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服玩家建造2</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="生存服末地之战实拍" data-description="生存服末地之战实拍">
+                            <img src="assets/img/14.webp" alt="生存服末地之战实拍" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">生存服末地之战实拍</div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-title="玩家合照" data-description="玩家合照">
+                            <img src="assets/img/players.webp" alt="玩家合照" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div class="gallery-item-description">玩家合照</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于万驹同源 -->
+    <section id="about-us" class="section">
+        <div class="container">
+            <div class="pixel-label">About Us</div>
+            <h2 class="section-title">关于万驹同源</h2>
+            <p class="section-sub">复制服务器地址，即刻加入</p>
+            <div class="section-content">
+                <div class="about-text">
+                    <p>万驹同源是一个充满活力和创造力的 Minecraft 服务器，旨在为玩家提供一个独特且愉快的体验。在这里，您将有机会和来自世界各地的玩家一起探索、建造和分享彼此的创意。</p>
+                    <p>我们的服务器拥有一个友好的社区，我们的玩家之间的互动和合作，无论是寻找刺激的冒险家，还是希望与朋友一起创造和分享成果的建筑师，都能在万驹同源找到属于自己的乐趣。</p>
+                    <p>万驹同源服务器有一个充满挑战的世界等待着你的探索，从神秘的地下洞穴到险峻的山脉，从茂密的森林到辽阔的海洋，这里充满了无尽的冒险和挑战。</p>
+                    <p>我们相信，通过你的参与和贡献，万驹同源，这个 Minecraft 服务器将成为一个充满活力和创造力的乐土。无论你是 Minecraft 的新手还是老手，万驹同源都欢迎你的加入！</p>
+                </div>
+                <div class="about-image">
+                    <!-- 服务器选择分段容器 -->
+                    <div class="server-stack">
+                        <!-- 服务器选择标签 -->
+                        <div class="server-tabs">
+                            <button class="server-tab active" data-server="vanilla">插件服</button>
+                            <button class="server-tab" data-server="mod">模组服</button>
+                        </div>
+
+                        <!-- 插件服地址卡片 -->
+                        <div class="server-address-card" id="server-card-vanilla">
+                            <div class="address-label">服务器地址</div>
+                            <div class="address-row">
+                                <div class="address-value">mc.eqmemory.cn</div>
+                                <button class="copy-btn" onclick="copyServerAddress('mc.eqmemory.cn','copyBtnVanilla')" id="copyBtnVanilla">
+                                    <span class="copy-text">复制地址</span>
+                                </button>
+                            </div>
+                            <div class="server-info-card">
+                                <div class="info-row">
+                                    <div class="info-item">
+                                        <span class="info-label">服务器版本</span>
+                                        <span class="info-value">Java 版 1.12.x~1.21.1 <span
+                                                class="info-recommend">（推荐：1.20.1）</span></span>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-item">
+                                        <span class="info-label">服务器类型</span>
+                                        <span class="info-value"><span class="tooltip-text"
+                                                data-tooltip="更多类型敬请期待~">插件服</span></span>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-item">
+                                        <span class="info-label">当前平台</span>
+                                        <span class="info-value"><span class="tooltip-text" data-tooltip="基岩版适配计划中">Java
+                                                版</span></span>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-item">
+                                        <span class="info-label">QQ 群</span>
+                                        <span class="info-value">
+                                            <a href="https://qm.qq.com/q/hp3fXsOGAg" target="_blank"
+                                                class="qq-link">569208814</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 模组服地址卡片 -->
+                        <div class="server-address-card" id="server-card-mod" style="display: none;">
+                            <div class="address-label">服务器地址</div>
+                            <div class="address-row">
+                                <div class="address-value">mc.goldenapplepie.xyz</div>
+                                <button class="copy-btn" onclick="copyServerAddress('mc.goldenapplepie.xyz','copyBtnMod')" id="copyBtnMod">
+                                    <span class="copy-text">复制地址</span>
+                                </button>
+                            </div>
+                            <div class="server-info-card">
+                                <div class="info-row">
+                                    <div class="info-item">
+                                        <span class="info-label">服务器版本</span>
+                                        <span class="info-value">Java 版 1.21.1 <span
+                                                class="info-recommend">（推荐：1.21.1）</span></span>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-item">
+                                        <span class="info-label">服务器类型</span>
+                                        <span class="info-value"><span class="tooltip-text"
+                                                data-tooltip="NeoForge 模组加载器">模组服</span></span>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-item">
+                                        <span class="info-label">模组核心</span>
+                                        <span class="info-value">NeoForge</span>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-item">
+                                        <span class="info-label">QQ 群</span>
+                                        <span class="info-value">
+                                            <a href="https://qm.qq.com/q/hp3fXsOGAg" target="_blank"
+                                                class="qq-link">569208814</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服务器团队 -->
+    <section class="section section-dark section-team">
+        <div class="container">
+            <div class="pixel-label">Our Team</div>
+            <h2 class="section-title"><a href="pages/recruit.html" class="section-title-link">服务器团队</a></h2>
+            <p class="section-sub">一群人，一匹马，一座城</p>
+            <div class="team-grid">
+                <div class="team-member fade-in-delay-1">
+                    <div class="member-avatar"><img src="assets/img/zz.webp" alt="Exist" class="team-avatar"></div>
+                    <h3 class="member-name">Exist</h3>
+                    <p class="member-role">服主 / 技术</p>
+                    <p class="member-desc">负责服务器的整体运营和技术指导</p>
+                    <div class="member-links">
+                        <a href="https://eqmemory.cn/author/1" class="member-link" target="_blank">EYPA</a>
+                        <a href="https://space.bilibili.com/306301833" class="member-link" target="_blank">BiliBili</a>
+                        <a href="pages/404.html" class="member-link ml-gh" target="_blank">GitHub</a>
+                    </div>
+                </div>
+                <div class="team-member fade-in-delay-2">
+                    <div class="member-avatar"><img src="assets/img/gap.webp" alt="金苹果派" class="team-avatar"></div>
+                    <h3 class="member-name">金苹果派</h3>
+                    <p class="member-role">服主 / 开发运维</p>
+                    <p class="member-desc">负责服务器开发、运维和日常管理</p>
+                    <div class="member-links">
+                        <a href="https://eqmemory.cn/author/61" class="member-link" target="_blank">EYPA</a>
+                        <a href="https://space.bilibili.com/399173069" class="member-link" target="_blank">BiliBili</a>
+                        <a href="https://github.com/GoldenApplePie404/" class="member-link" target="_blank">GitHub</a>
+                    </div>
+                </div>
+                <div class="team-member fade-in-delay-3">
+                    <div class="member-avatar"><img src="assets/img/lava.webp" alt="Lava" class="team-avatar"></div>
+                    <h3 class="member-name">Lava</h3>
+                    <p class="member-role">技术 / 网络</p>
+                    <p class="member-desc">负责服务器技术支持和问题排查</p>
+                    <div class="member-links">
+                        <a href="https://eqmemory.cn/author/2" class="member-link" target="_blank">EYPA</a>
+                        <a href="pages/404.html" class="member-link ml-bili" target="_blank">BiliBili</a>
+                        <a href="pages/404.html" class="member-link ml-gh" target="_blank">GitHub</a>
+                    </div>
+                </div>
+                <div class="team-member fade-in-delay-4">
+                    <div class="member-avatar"><img src="assets/img/xy.webp" alt="溪音" class="team-avatar"></div>
+                    <h3 class="member-name">溪音</h3>
+                    <p class="member-role">测试 / 管理</p>
+                    <p class="member-desc">负责服务器功能测试和玩家管理</p>
+                    <div class="member-links">
+                        <a href="https://eqmemory.cn/author/9" class="member-link" target="_blank">EYPA</a>
+                        <a href="https://space.bilibili.com/3494377238300999" class="member-link"
+                            target="_blank">BiliBili</a>
+                        <a href="pages/404.html" class="member-link ml-gh" target="_blank">GitHub</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚组件 -->
+    <div id="app-footer"></div>
+
+    <script src="js/main.js?v=3.3"></script>
+
+    <!-- 首页Banner背景轮换 -->
+    <script src="js/hero-banner.js?v=1.0"></script>
+
+    <!-- 回到顶部 -->
+    <div id="app-back-to-top"></div>
+    <script src="js/back-to-top.js?v=1.0"></script>
+
+    <!-- 音乐播放器 -->
+    <div id="app-sidebar-player"></div>
+    <script src="js/sidebar-player.js?v=3.0"></script>
+
+    <!-- 组件加载器 -->
+    <script src="components/loader.js?v=3.0"></script>
+
+    <!-- 导航栏 -->
+    <script src="js/navbar.js?v=1.3"></script>
+    <script src="js/birthday-easter-egg.js?v=1.0"></script>
+
+    <!-- 画廊交互脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            initNavbar();
+            const imageViewer = document.createElement('div');
+            imageViewer.className = 'image-viewer';
+            imageViewer.innerHTML = `
+                <div class="image-viewer-content">
+                    <img src="" alt="">
+                </div>
+                <button class="image-viewer-close" title="关闭">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="image-viewer-info"></div>
+                <div class="image-viewer-hint">滚轮缩放 | 拖拽移动 | 双击复位 | ESC关闭</div>
+                <div class="image-viewer-toolbar">
+                    <button class="viewer-btn-zoom-out" title="缩小">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            <line x1="8" y1="11" x2="14" y2="11"></line>
+                        </svg>
+                    </button>
+                    <span class="zoom-level">100%</span>
+                    <button class="viewer-btn-zoom-in" title="放大">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            <line x1="11" y1="8" x2="11" y2="14"></line>
+                            <line x1="8" y1="11" x2="14" y2="11"></line>
+                        </svg>
+                    </button>
+                    <div class="divider"></div>
+                    <button class="viewer-btn-reset" title="重置">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                    </button>
+                    <button class="viewer-btn-download" title="下载">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(imageViewer);
+
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const galleryTrack = document.querySelector('.gallery-track');
+            const viewerImg = imageViewer.querySelector('img');
+            const viewerInfo = imageViewer.querySelector('.image-viewer-info');
+            const closeBtn = imageViewer.querySelector('.image-viewer-close');
+            const viewerContent = imageViewer.querySelector('.image-viewer-content');
+            const zoomLevelEl = imageViewer.querySelector('.zoom-level');
+            const btnZoomIn = imageViewer.querySelector('.viewer-btn-zoom-in');
+            const btnZoomOut = imageViewer.querySelector('.viewer-btn-zoom-out');
+            const btnReset = imageViewer.querySelector('.viewer-btn-reset');
+            const btnDownload = imageViewer.querySelector('.viewer-btn-download');
+
+            let scale = 1;
+            let translateX = 0;
+            let translateY = 0;
+            let isDragging = false;
+            let startX = 0;
+            let startY = 0;
+            let startTranslateX = 0;
+            let startTranslateY = 0;
+            const minScale = 0.5;
+            const maxScale = 4;
+            const zoomStep = 0.2;
+
+            function updateTransform() {
+                viewerImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+                zoomLevelEl.textContent = Math.round(scale * 100) + '%';
+            }
+
+            function resetView() {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+            }
+
+            function zoomIn() {
+                scale = Math.min(scale + zoomStep, maxScale);
+                updateTransform();
+            }
+
+            function zoomOut() {
+                scale = Math.max(scale - zoomStep, minScale);
+                updateTransform();
+            }
+
+            galleryItems.forEach(item => {
+                item.addEventListener('mouseenter', function () {
+                    galleryTrack.classList.add('paused');
+                });
+
+                item.addEventListener('mouseleave', function () {
+                    galleryTrack.classList.remove('paused');
+                });
+
+                item.addEventListener('click', function () {
+                    const imgSrc = this.querySelector('img').src;
+                    const title = this.dataset.title;
+                    const description = this.dataset.description;
+
+                    viewerImg.src = imgSrc;
+                    viewerInfo.textContent = title;
+                    resetView();
+                    imageViewer.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            function closeViewer() {
+                imageViewer.classList.remove('show');
+                document.body.style.overflow = '';
+                resetView();
+            }
+
+            closeBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                closeViewer();
+            });
+
+            imageViewer.addEventListener('click', function (e) {
+                // 仅通过 ESC 或关闭按钮关闭，点击图片区域不做任何操作
+            });
+
+            btnZoomIn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                zoomIn();
+            });
+
+            btnZoomOut.addEventListener('click', function (e) {
+                e.stopPropagation();
+                zoomOut();
+            });
+
+            btnReset.addEventListener('click', function (e) {
+                e.stopPropagation();
+                resetView();
+            });
+
+            btnDownload.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const link = document.createElement('a');
+                link.href = viewerImg.src;
+                link.download = 'image.webp';
+                link.click();
+            });
+
+            viewerContent.addEventListener('wheel', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.deltaY < 0) {
+                    zoomIn();
+                } else {
+                    zoomOut();
+                }
+            }, { passive: false });
+
+            viewerContent.addEventListener('mousedown', function (e) {
+                if (e.target === viewerImg || e.target === viewerContent) {
+                    isDragging = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startTranslateX = translateX;
+                    startTranslateY = translateY;
+                    viewerImg.style.transition = 'none';
+                }
+            });
+
+            document.addEventListener('mousemove', function (e) {
+                if (!isDragging) return;
+                const deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+                translateX = startTranslateX + deltaX;
+                translateY = startTranslateY + deltaY;
+                updateTransform();
+            });
+
+            document.addEventListener('mouseup', function () {
+                if (isDragging) {
+                    isDragging = false;
+                    viewerImg.style.transition = 'transform 0.15s ease-out';
+                }
+            });
+
+            viewerContent.addEventListener('dblclick', function (e) {
+                e.stopPropagation();
+                resetView();
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (!imageViewer.classList.contains('show')) return;
+
+                if (e.key === 'Escape') {
+                    closeViewer();
+                } else if (e.key === '+' || e.key === '=') {
+                    zoomIn();
+                } else if (e.key === '-') {
+                    zoomOut();
+                } else if (e.key === '0') {
+                    resetView();
+                } else if (e.key === 'ArrowLeft') {
+                    translateX -= 50;
+                    updateTransform();
+                } else if (e.key === 'ArrowRight') {
+                    translateX += 50;
+                    updateTransform();
+                } else if (e.key === 'ArrowUp') {
+                    translateY -= 50;
+                    updateTransform();
+                } else if (e.key === 'ArrowDown') {
+                    translateY += 50;
+                    updateTransform();
+                }
+            });
+        });
+
+        // 服务器标签页切换（插件服 / 模组服）
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.server-tab');
+            const cards = {
+                vanilla: document.getElementById('server-card-vanilla'),
+                mod: document.getElementById('server-card-mod')
+            };
+
+            tabs.forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    const server = this.dataset.server;
+                    if (!cards[server]) return;
+
+                    tabs.forEach(function (t) { t.classList.remove('active'); });
+                    this.classList.add('active');
+
+                    Object.keys(cards).forEach(function (key) {
+                        cards[key].style.display = (key === server) ? 'flex' : 'none';
+                    });
+                });
+            });
+        });
+    </script>
+
+    <!-- 统计条：数字滚动动画通用函数（easeOutCubic 缓动，尊重 prefers-reduced-motion） -->
+    <script>
+        function animateCountUp(el, target, opts) {
+            if (!el) return;
+            opts = opts || {};
+            var duration = opts.duration || 1200;
+            var start = opts.start || 0;
+            var formatter = opts.formatter || function (v) { return v; };
+            // 无障碍：系统开启"减少动态效果"时直接显示最终值
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                el.textContent = formatter(target);
+                return;
+            }
+            var t0 = null;
+            function step(ts) {
+                if (t0 === null) t0 = ts;
+                var p = Math.min((ts - t0) / duration, 1);
+                var eased = 1 - Math.pow(1 - p, 3); // easeOutCubic 缓动
+                var val = Math.round(start + (target - start) * eased);
+                el.textContent = formatter(val);
+                if (p < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+        // 统计条是否已进入视口（进入后才播放动画，避免首绘前播完）
+        var statsRevealed = false;
+
+        // 统计条进入视口时统一触发所有数字动画（仅一次）
+        function statsRevealNow() {
+            if (statsRevealed) return;
+            statsRevealed = true;
+
+            // 静态项：核心玩法 6 / 公益运营 100%
+            var playEl = document.getElementById('play-modes-value');
+            var charityEl = document.getElementById('charity-value');
+            if (playEl && !playEl.dataset.animated) {
+                playEl.dataset.animated = '1';
+                animateCountUp(playEl, 6);
+            }
+            if (charityEl && !charityEl.dataset.animated) {
+                charityEl.dataset.animated = '1';
+                animateCountUp(charityEl, 100, { formatter: function (v) { return v + '%'; } });
+            }
+
+            // 已注册玩家：若数据已拉取到且尚未播过，从 0 滚动到实际人数
+            var playersEl = document.getElementById('players-registered-value');
+            if (playersEl && !playersEl.dataset.animated && playersEl.dataset.target !== undefined) {
+                playersEl.dataset.animated = '1';
+                animateCountUp(playersEl, parseInt(playersEl.dataset.target, 10) || 0);
+            }
+
+            // 运行时长：若已计算且尚未播过，天数从 0 滚动
+            var upEl = document.getElementById('uptime-value');
+            if (upEl && !upEl.dataset.animated && upEl.dataset.pending !== undefined) {
+                upEl.dataset.animated = '1';
+                animateCountUp(upEl, parseInt(upEl.dataset.pending, 10) || 0, {
+                    duration: 1500,
+                    formatter: function (v) { return v + '天'; }
+                });
+            }
+        }
+
+        // 加载动画是否已结束（#pageLoader 被移除或隐藏，由 js/main.js hidePageLoader 控制）
+        function loaderIsGone() {
+            var l = document.getElementById('pageLoader');
+            if (!l) return true;
+            if (l.classList.contains('hidden')) return true;
+            return getComputedStyle(l).display === 'none';
+        }
+
+        // 等加载动画结束再播放数字动画；最长等 6 秒兜底（避免加载动画异常时数字永不动画）
+        function revealWhenReady() {
+            if (loaderIsGone()) { statsRevealNow(); return; }
+            var waited = 0;
+            var t = setInterval(function () {
+                waited += 100;
+                if (loaderIsGone() || waited >= 6000) {
+                    clearInterval(t);
+                    statsRevealNow();
+                }
+            }, 100);
+        }
+
+        // 统计条进入视口 30% 才触发动画（若此时加载动画还盖着页面，等它结束再播）
+        var statsBar = document.querySelector('.stats-grid');
+        if (statsBar && 'IntersectionObserver' in window) {
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) {
+                    if (en.isIntersecting) {
+                        io.disconnect();
+                        revealWhenReady();
+                    }
+                });
+            }, { threshold: 0.3 });
+            io.observe(statsBar);
+        } else {
+            revealWhenReady();
+        }
+    </script>
+
+    <!-- 统计条：运行时长（开服 2020-05-06 起算，天格式，每10分钟刷新） -->
+    <script>
+        (function () {
+            var START = new Date(2020, 4, 6, 0, 0, 0);
+
+            function tick() {
+                var el = document.getElementById('uptime-value');
+                if (!el) return;
+                var now = new Date();
+                var diffSec = Math.floor((now.getTime() - START.getTime()) / 1000);
+                if (diffSec < 0) { el.textContent = '--'; return; }
+                var days = Math.floor(diffSec / 86400);
+                var hours = Math.floor((diffSec % 86400) / 3600);
+                // 先缓存目标值：动画由 statsRevealNow 在统计条进入视口时触发
+                el.dataset.pending = days;
+                if (statsRevealed && !el.dataset.animated) {
+                    el.dataset.animated = '1';
+                    animateCountUp(el, days, {
+                        duration: 1500,
+                        formatter: function (v) { return v + '天'; }
+                    });
+                } else if (el.dataset.animated) {
+                    // 已播过：轮询直接更新文本
+                    el.textContent = days + '天';
+                }
+            }
+            tick();
+            setInterval(tick, 600000);
+        })();
+    </script>
+
+    <!-- 统计条：已注册玩家数实时获取（api/golden-ticket.php，每60秒刷新） -->
+    <script>
+        (function () {
+            var playersEl = document.getElementById('players-registered-value');
+            if (!playersEl) return;
+
+            function loadPlayers() {
+                fetch('api/golden-ticket.php?action=get_ranking&page=1&limit=1')
+                    .then(function (res) { return res.json(); })
+                    .then(function (result) {
+                        if (result && result.success && result.data) {
+                            var n = result.data.total || 0;
+                            // 先缓存目标值：首次动画由 statsRevealNow 在统计条进入视口时触发
+                            playersEl.dataset.target = n;
+                            if (statsRevealed && !playersEl.dataset.animated) {
+                                // 首次：统计条已在视口，从 0 滚动到实际人数
+                                playersEl.dataset.animated = '1';
+                                animateCountUp(playersEl, n);
+                            } else if (playersEl.dataset.animated) {
+                                // 后续轮询：人数有变化时从当前显示值平滑滚到新值
+                                var cur = parseInt(playersEl.textContent.replace(/[^0-9]/g, ''), 10) || 0;
+                                if (cur !== n) {
+                                    animateCountUp(playersEl, n, { start: cur });
+                                }
+                            }
+                        }
+                    })
+                    .catch(function (err) {
+                        console.error('获取已注册玩家数失败:', err);
+                    });
+            }
+            loadPlayers();
+            setInterval(loadPlayers, 60000);
+        })();
+    </script>
+
+</body>
+
+</html>

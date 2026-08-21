@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开发日志 - 万驹同源</title>
+    <meta name="description" content="万驹同源服务器开发日志，记录每一次版本更新、功能迭代和 Bug 修复。">
+    <meta property="og:title" content="开发日志 - 万驹同源">
+    <meta property="og:description" content="万驹同源服务器开发日志，记录每一次版本更新、功能迭代和 Bug 修复。">
+    <meta property="og:image" content="https://mcpc.goldenapplepie.xyz/assets/img/m.webp">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="万驹同源">
+    <link rel="stylesheet" href="../css/style.css?v=4.12">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.1">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <style>
+        .logs-page {
+            padding: 60px 0;
+            background: #f0f2f5;
+        }
+
+        /* ===== 统计概览栏 ===== */
+        .logs-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            max-width: 880px;
+            margin: 0 auto 36px;
+        }
+
+        .stat-item {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .stat-num {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #667eea;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.82rem;
+            color: #8898aa;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== 筛选栏 ===== */
+        .logs-filter {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            max-width: 880px;
+            margin: 0 auto 40px;
+        }
+
+        .filter-btn {
+            padding: 6px 16px;
+            border: 1.5px solid rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            color: #667eea;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+        }
+
+        /* ===== 时间线 ===== */
+        .log-timeline {
+            position: relative;
+            padding-left: 48px;
+            max-width: 880px;
+            margin: 0 auto;
+        }
+
+        /* 背景线（浅色） */
+        .log-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: rgba(102, 126, 234, 0.12);
+            border-radius: 2px;
+        }
+
+        /* 前景线（渐变，随滚动填充） */
+        .log-timeline::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: var(--scroll-fill, 0%);
+            background: #667eea;
+            border-radius: 2px;
+            transition: height 0.15s ease-out;
+            z-index: 1;
+            box-shadow: 0 0 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .log-year {
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin: 44px 0 22px 0;
+            padding: 10px 20px;
+            color: #667eea;
+            border-left: 4px solid #667eea;
+            letter-spacing: 1px;
+        }
+
+        .log-year:first-child {
+            margin-top: 0;
+        }
+
+        .log-item {
+            position: relative;
+            padding-bottom: 28px;
+            margin-bottom: 28px;
+        }
+
+        .log-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        /* 时间线节点圆点 */
+        .log-item::before {
+            content: '';
+            position: absolute;
+            left: -57px;
+            top: 14px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid #667eea;
+            box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.08);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .log-item:hover::before {
+            background: #667eea;
+            border-color: #667eea;
+            box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.18), 0 0 24px rgba(102, 126, 234, 0.4);
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.18), 0 0 24px rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0.1), 0 0 32px rgba(102, 126, 234, 0.5); }
+        }
+
+        .log-date {
+            font-size: 0.88rem;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .log-date::before {
+            content: '\f073';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 400;
+            font-size: 0.78rem;
+            opacity: 0.6;
+        }
+
+        /* ===== 卡片 ===== */
+        .log-content {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            padding: 22px 26px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 左侧色条（hover 时显现） */
+        .log-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #667eea;
+            border-radius: 4px 0 0 4px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .log-content:hover {
+            transform: translateX(6px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.12);
+            border-color: rgba(102, 126, 234, 0.2);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .log-content:hover::before {
+            opacity: 1;
+        }
+
+        /* 标签容器 */
+        .log-tags {
+            margin-bottom: 8px;
+        }
+
+        .log-content h4 {
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 700;
+        }
+
+        .log-content p {
+            color: #4a5568;
+            line-height: 1.75;
+            margin: 6px 0;
+            font-size: 0.95rem;
+        }
+
+        /* ===== 标签 ===== */
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 5px;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .tag.survival { background: #e3f2fd; color: #1565c0; }
+        .tag.game { background: #fce4ec; color: #c2185b; }
+        .tag.space { background: #e8eaf6; color: #283593; }
+        .tag.rpg { background: #f3e5f5; color: #7b1fa2; }
+        .tag.ui { background: #fff3e0; color: #e65100; }
+        .tag.bugfix { background: #ffebee; color: #c62828; }
+        .tag.mod { background: #e0f7fa; color: #00838f; }
+        .tag.creative { background: #e8f5e9; color: #2e7d32; }
+        .tag.version { background: #fff8e1; color: #f57f17; }
+        .tag.event { background: #efebe9; color: #5d4037; }
+
+        /* ===== 空状态 ===== */
+        .logs-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8898aa;
+            display: none;
+        }
+
+        .logs-empty i {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        .logs-empty p {
+            font-size: 0.95rem;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .logs-stats {
+                gap: 20px;
+            }
+
+            .stat-num {
+                font-size: 1.6rem;
+            }
+
+            .log-timeline {
+                padding-left: 32px;
+            }
+
+            .log-item::before {
+                left: -41px;
+                width: 16px;
+                height: 16px;
+                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.08);
+            }
+
+            .log-year {
+                font-size: 1.4rem;
+            }
+
+            .log-content {
+                padding: 16px 18px;
+            }
+
+            .log-content h4 {
+                font-size: 1.05rem;
+            }
+        }
+
+        /* ===== 日志页 Banner 专属美化（仅作用于日志页，不影响其他子页） ===== */
+        .subpage-banner.logs-banner {
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
+            background:
+                linear-gradient(135deg, rgba(92, 184, 184, 0.85) 0%, rgba(69, 51, 183, 0.85) 100%);
+        }
+
+        /* 背景炫光（极光 / 光晕球 / 扫光）已按需移除，仅保留静态渐变 + 标题文字流光 */
+
+        /* 渐变流光标题 */
+        .logs-banner .subpage-banner-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            letter-spacing: 2px;
+            background: linear-gradient(100deg, #ffffff 0%, #ffe9b0 25%, #b8c6ff 50%, #ffffff 75%, #ffe9b0 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            text-shadow: none;
+            filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.25));
+            animation: logsTitleShine 5s linear infinite;
+        }
+
+        @keyframes logsTitleShine {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* 玻璃质感副标题 + 错落入场 */
+        .logs-banner .subpage-banner-content {
+            position: relative;
+            z-index: 3;
+        }
+
+        .logs-banner .subpage-banner-subtitle {
+            display: inline-block;
+            margin-top: 4px;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+            color: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.6s ease-out 0.6s, transform 0.6s ease-out 0.6s;
+        }
+
+        .logs-banner .subpage-banner-content.animate-in .subpage-banner-subtitle {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <div id="app-navbar"></div>
+
+    <section class="subpage-banner logs-banner">
+        <div class="subpage-banner-bg"></div>
+        <div class="subpage-banner-particles"></div>
+        <div class="container">
+            <div class="subpage-banner-content">
+                <h1 class="subpage-banner-title">开发日志</h1>
+                <p class="subpage-banner-subtitle">记录成长 · 分享技术 · 持续进化</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section logs-page">
+        <div class="container">
+
+            <!-- 统计概览 -->
+            <div class="logs-stats fade-in">
+                <div class="stat-item">
+                    <span class="stat-num" data-count="total">0</span>
+                    <span class="stat-label">总更新</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" data-count="bugfix">0</span>
+                    <span class="stat-label">Bug 修复</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" data-count="feature">0</span>
+                    <span class="stat-label">功能上线</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" data-count="years">0</span>
+                    <span class="stat-label">涵盖年份</span>
+                </div>
+            </div>
+
+            <!-- 筛选栏 -->
+            <div class="logs-filter fade-in">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="survival">生存服</button>
+                <button class="filter-btn" data-filter="game">小游戏</button>
+                <button class="filter-btn" data-filter="mod">模组服</button>
+                <button class="filter-btn" data-filter="creative">创造服</button>
+                <button class="filter-btn" data-filter="space">太空服</button>
+                <button class="filter-btn" data-filter="rpg">RPG 服</button>
+                <button class="filter-btn" data-filter="ui">网站 / UI</button>
+                <button class="filter-btn" data-filter="bugfix">Bug 修复</button>
+                <button class="filter-btn" data-filter="version">版本</button>
+                <button class="filter-btn" data-filter="event">活动</button>
+            </div>
+
+            <!-- 时间线 -->
+            <div class="log-timeline fade-in">
+
+                <div class="log-year">2026 年</div>
+
+                <div class="log-item slide-up" data-tags="mod,ui">
+                    <div class="log-date">2026.7.28</div>
+                    
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag mod">模组服</span></div>
+                        <h4>模组服玩法变更</h4>
+                        <p>服务器新增点歌功能。</p>
+                        <p>移除了语音功能。</p>
+                        <p>修复了万法皆通模组物品注册失败的问题。</p>
+                    </div>
+                </div>
+                <div class="log-item slide-up" data-tags="mod,ui">
+                    <div class="log-date">2026.7.17</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag mod">模组服</span><span class="tag ui">网站</span></div>
+                        <h4>模组服正式部署上线</h4>
+                        <p>服务器完成正式部署并上线运行。经多轮连接测试验证，客户端接入稳定，各项核心功能运转正常。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="mod">
+                    <div class="log-date">2026.7.13</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag mod">模组服</span></div>
+                        <h4>本地化部署测试通过</h4>
+                        <p>本地化环境部署测试通过。服务端各模块在本地运行环境下功能表现符合预期，具备上线条件。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="mod">
+                    <div class="log-date">2026.7.9</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag mod">模组服</span></div>
+                        <h4>确认核心玩法方向</h4>
+                        <p>正式确认模组服核心玩法方向，同步启动本地化测试流程，逐项验证各玩法模块的可用性与稳定性。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="mod">
+                    <div class="log-date">2026.6.21</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag mod">模组服</span></div>
+                        <h4>模组服初步搭建</h4>
+                        <p>基于 Minecraft 1.21.1 + NeoForge 框架完成模组服初步搭建，核心运行环境就绪，基础世界生成与模组加载验证通过。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2026.4.4</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>每日任务商店上架补签卡</h4>
+                        <p>生存服每日任务商店上架补签卡商品，玩家可消耗黄金券补签遗漏的每日签到记录。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="mod">
+                    <div class="log-date">2026.4.2</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag mod">模组服</span></div>
+                        <h4>模组服公开测试</h4>
+                        <p>模组服开启公开测试，邀请玩家体验新内容并收集反馈意见。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,ui">
+                    <div class="log-date">2026.2.16</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag ui">网站</span></div>
+                        <h4>卫星云图接入 & QQ 机器人互联</h4>
+                        <p>生存服接入 BlueMap 卫星云图，玩家可在网页端实时浏览服务器地图全貌。</p>
+                        <p>QQ 机器人与服务器互联功能上线测试，实现 QQ 群消息与游戏内消息的实时双向互通。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2026.2.7</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>点歌系统修复</h4>
+                        <p>修复生存服点歌系统因接口变更导致无法正常点播歌曲的问题，点歌功能恢复正常。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2026.2.3</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>垃圾桶回收异常修复</h4>
+                        <p>修复生存服垃圾桶插件无法自动回收掉落物的异常，物品清理机制恢复正常运作。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="ui,bugfix">
+                    <div class="log-date">2026.2.2</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag ui">网站</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>登录服迭代 & 数据包排查</h4>
+                        <p>登录服持续迭代完善，新增「无尽跑酷」等候小游戏，丰富玩家进服前的娱乐体验。</p>
+                        <p>暂时移除 SpecMobs、himboss、armorsetbonuses 三个数据包，排查兼容性问题。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="ui,bugfix">
+                    <div class="log-date">2026.1.30</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag ui">网站</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>登录服架构重构</h4>
+                        <p>登录服架构重构完成，搭载全新设计的菜单系统，交互体验与视觉表现全面升级。</p>
+                        <p>修复因服务端版本过低导致玩家无法进入登录服的兼容性问题。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2026.1.29</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>套装效果系统 & 商店调价</h4>
+                        <p>生存服上线套装效果系统——通过下界合金装备的特殊条纹装饰识别套装，穿戴齐全即可激活额外属性加成。</p>
+                        <p>生存服粘液科技兑换商店进行全面价格调整，平衡游戏内经济体系。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="creative">
+                    <div class="log-date">2026.1.28</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag creative">创造服</span></div>
+                        <h4>家园扩容商店上线</h4>
+                        <p>创造服家园扩容商店搭建完成，当前开放至 11 级扩容，后续等级将逐步解锁。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="creative,survival">
+                    <div class="log-date">2026.1.27</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag creative">创造服</span><span class="tag survival">生存服</span></div>
+                        <h4>黄金券跨服互通 & 网络优化</h4>
+                        <p>创造服与生存服黄金券数据跨服互通上线，玩家黄金券余额实现双服实时同步共享。</p>
+                        <p>优化服务器网络链路，修复部分玩家延迟过高的问题，连接稳定性显著提升。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="ui">
+                    <div class="log-date">2026.1.26</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag ui">网站</span></div>
+                        <h4>官方网站上线测试</h4>
+                        <p>万驹同源官方网站上线测试运行，首页、服务器状态查询等核心功能初步开放。</p>
+                    </div>
+                </div>
+
+                <div class="log-year">2025 年</div>
+
+                <div class="log-item slide-up" data-tags="event">
+                    <div class="log-date">2025.1.22</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag event">活动</span></div>
+                        <h4>新年烟花派对</h4>
+                        <p>万驹同源新年烟花派对活动圆满举行，全服玩家共同参与庆祝。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="event">
+                    <div class="log-date">2025.1.18</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag event">活动</span></div>
+                        <h4>烟花派对逻辑优化</h4>
+                        <p>烟花派对游戏逻辑细节调整优化，测试通过，活动流程更加顺畅。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="version">
+                    <div class="log-date">2025.1.1</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag version">版本</span></div>
+                        <h4>v3.4 版本发布</h4>
+                        <p>万驹同源 v3.4 版本正式发布，多项功能迭代与 Bug 修复随版本上线。</p>
+                    </div>
+                </div>
+
+                <div class="log-year">2024 年</div>
+
+                <div class="log-item slide-up" data-tags="space">
+                    <div class="log-date">2024.12.10</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag space">太空服</span></div>
+                        <h4>太空服限时回归</h4>
+                        <p>太空服限时回归开放，玩家可再次体验太空生存玩法。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2024.12.6</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>粘液科技附属修复</h4>
+                        <p>生存服：修复部分粘液科技附属插件因版本不兼容导致无法正常运行的问题。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2024.11.27</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>粘液科技附属异常</h4>
+                        <p>生存服：发现部分粘液科技附属插件存在运行异常，已记录并正在排查修复中。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="bugfix">
+                    <div class="log-date">2024.10.25</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag bugfix">Bug修复</span></div>
+                        <h4>登录服进入异常修复</h4>
+                        <p>修复玩家无法进入登录服的异常，登录流程恢复正常。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="game,event">
+                    <div class="log-date">2024.7.27</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag game">小游戏</span><span class="tag event">活动</span></div>
+                        <h4>躲猫猫挑战赛</h4>
+                        <p>「躲猫猫挑战赛」活动成功举办，参赛玩家热情高涨。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="game">
+                    <div class="log-date">2024.7.26</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag game">小游戏</span></div>
+                        <h4>躲猫猫活动服测试</h4>
+                        <p>躲猫猫游戏活动服开放测试，玩家可抢先体验新模式。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="game,bugfix">
+                    <div class="log-date">2024.7.18</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag game">小游戏</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>躲猫猫地图区块修复</h4>
+                        <p>修复小游戏服躲猫猫地图中出现的空置错误区块，消除地图异常区域。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="version">
+                    <div class="log-date">2024.7.10</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag version">版本</span></div>
+                        <h4>v3.3 正式上线</h4>
+                        <p>万驹同源 v3.3 版本正式上线，涵盖小游戏服、生存服等多项内容更新。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2024.7.9</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>主城交互异常修复</h4>
+                        <p>生存服（测试）：修复主城区域内无法使用食物、主手持有物品时无法与方块交互的问题。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2024.7.8</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>下界迷宫活动升级</h4>
+                        <p>生存服（测试）：下界迷宫活动升级版本测试完成，同步上线活动奖品兑换渠道。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2024.7.7</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>新增 BOSS Herobrine</h4>
+                        <p>生存服（测试）：新增 BOSS「Herobrine」，同时丰富末影龙战斗机制，增加战斗阶段与技能变化。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2024.7.6</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>怪物与武器扩充</h4>
+                        <p>生存服（测试）：在原版怪物体系基础上扩充 20+ 种新怪物类型，同步加入 15+ 种新武器装备。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="game,ui">
+                    <div class="log-date">2024.7.5</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag game">小游戏</span><span class="tag ui">UI</span></div>
+                        <h4>小游戏服大厅美化 & 系统 Demo</h4>
+                        <p>小游戏服：大厅视觉美化完成并部署全息引导文字；签到系统、经济系统、邮箱系统、趣味道具等功能 Demo 版上线。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="game">
+                    <div class="log-date">2024.6.30</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag game">小游戏</span></div>
+                        <h4>小游戏服基础设施完善</h4>
+                        <p>小游戏服基础设施完善——菜单框架、权限节点等核心配置就绪，同步完成首轮内部测试。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="game">
+                    <div class="log-date">2024.6.29</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag game">小游戏</span></div>
+                        <h4>新增：城堡躲猫猫</h4>
+                        <p>小游戏服新增游戏模式「城堡躲猫猫」，基于躲猫猫玩法融入城堡地图场景。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="game">
+                    <div class="log-date">2024.6.28</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag game">小游戏</span></div>
+                        <h4>新增：抢羊大赛</h4>
+                        <p>小游戏服新增游戏模式「抢羊大赛」，双方队伍争夺羊群归属。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="game">
+                    <div class="log-date">2024.6.27</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag game">小游戏</span></div>
+                        <h4>启动小游戏服开发</h4>
+                        <p>正式启动小游戏服开发工作，规划游戏模式与基础设施架构。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="ui,survival">
+                    <div class="log-date">2024.6.18</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag ui">网站</span><span class="tag survival">生存服</span></div>
+                        <h4>BlueMap 卫星云图构建</h4>
+                        <p>本地测试 BlueMap 插件通过，成功构建服务器卫星云图网站，实现网页端实时地图浏览。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="ui">
+                    <div class="log-date">2024.6.17</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag ui">网站</span></div>
+                        <h4>服务器状态查询界面上线</h4>
+                        <p>万驹同源服务器状态查询界面上线，玩家可实时查看各服在线人数与运行状态。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="creative,survival">
+                    <div class="log-date">2024.6.15</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag creative">创造服</span><span class="tag survival">生存服</span></div>
+                        <h4>黄金券跨服互通测试</h4>
+                        <p>服务器玩家数据互通测试——基于 PlayerPoints 插件实现创造服与生存服黄金券跨服同步，测试通过。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="ui">
+                    <div class="log-date">2024.6.8</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag ui">网站</span></div>
+                        <h4>QQ 机器人对接测试</h4>
+                        <p>QQ 机器人对接服务器测试在本地环境通过，群消息与游戏内消息互通功能验证成功。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2024.5.25</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>主城全息字恢复</h4>
+                        <p>生存服：主城全息文字因插件更新被意外清除，已重新部署恢复显示。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="version">
+                    <div class="log-date">2024.5.11</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag version">版本</span></div>
+                        <h4>版本兼容至 1.20.4</h4>
+                        <p>万驹同源服务端版本向上兼容至 Minecraft 1.20.4。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="space">
+                    <div class="log-date">2024.4.24</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag space">太空服</span></div>
+                        <h4>太空服内测结束</h4>
+                        <p>太空服内测阶段结束，后续将根据内测反馈的问题清单进行针对性修复与优化。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="space">
+                    <div class="log-date">2024.4.3</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag space">太空服</span></div>
+                        <h4>太空服玩法上线 & 内测</h4>
+                        <p>万驹同源新增太空服玩法，同步开展首轮内部测试。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2024.3.13</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>点歌功能修复</h4>
+                        <p>生存服：点歌功能异常已修复，歌曲点播恢复正常。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2024.3.7</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>梦幻卡池重设</h4>
+                        <p>生存服：梦幻卡池系统重新设定 6 种卡池类型，调整奖池结构与稀有度分布。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2024.3.5</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>星系移除 & 商店调价</h4>
+                        <p>生存服：移除粘液科技附属「星系」玩法模块；微调主城商店物品价格体系。</p>
+                    </div>
+                </div>
+
+                <div class="log-year">2023 年</div>
+
+                <div class="log-item slide-up" data-tags="rpg,survival,bugfix">
+                    <div class="log-date">2023.12.31</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag rpg">RPG服</span><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>RPG 资源包修复 & 生存服扩充</h4>
+                        <p>RPG 服：修复客户端资源包无法正常加载的问题。生存服：粘液科技商店扩充商品列表；每日任务新增更多任务类型；全面调整各类商店物品价格。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2023.12.20</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>资源世界 & 农作物修复</h4>
+                        <p>生存服：修复无法进入资源世界的传送异常；修复主城水流破坏周边农作物的物理问题。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="rpg">
+                    <div class="log-date">2023.12.12</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag rpg">RPG服</span></div>
+                        <h4>RPG 服更换方案</h4>
+                        <p>RPG 服：因原版 RPG 服游戏难度过高导致体验不佳，计划更换全新 RPG 服方案，新版本正挂载于小马梦幻城服务器内测中。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="rpg">
+                    <div class="log-date">2023.12.10</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag rpg">RPG服</span></div>
+                        <h4>RPG 服暂时关闭</h4>
+                        <p>RPG 服：因运行中出现未预期的问题，决定暂时关闭 RPG 服进行排查。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,ui">
+                    <div class="log-date">2023.12.7</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag ui">UI</span></div>
+                        <h4>NPC 金苹果派上线</h4>
+                        <p>生存服：主城新增 NPC「金苹果派」——除预设对话外，还搭载 AI 智能对话与商店交互功能。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="bugfix">
+                    <div class="log-date">2023.11.30</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag bugfix">Bug修复</span></div>
+                        <h4>已知问题记录</h4>
+                        <p>已知问题记录：生存服菜单界面后台报错；创造服进服时玩家掉入虚空；登录服玩家列表显示异常。三项问题已记录并排查中。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2023.11.29</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>梦幻卡池玩法上线</h4>
+                        <p>生存服：上线「梦幻卡池」抽卡玩法，玩家可消耗货币抽取稀有道具。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,ui">
+                    <div class="log-date">2023.11.28</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag ui">UI</span></div>
+                        <h4>可翻页全息公告</h4>
+                        <p>生存服：主城部署可翻页全息公告系统，支持多页信息展示与翻页交互。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2023.11.25</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>粘液科技兑换商店试运行</h4>
+                        <p>生存服：粘液科技兑换商店试运行上线，玩家可使用粘液科技产物兑换游戏资源。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2023.11.20</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>每日任务奖励修复 & 商店上线</h4>
+                        <p>生存服：修复每日任务完成后无法领取奖励的问题；同步上线每日任务商店，可用任务积分兑换物品。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2023.11.19</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>落地水伤害修复 & 充值移除</h4>
+                        <p>生存服：修复传送落地水时受到跌落伤害的问题；移除充值系统，经济体系调整。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="creative">
+                    <div class="log-date">2023.11.14</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag creative">创造服</span></div>
+                        <h4>创造服完工 & 核心升级</h4>
+                        <p>创造服：主体功能开发完成，服务端核心升级至 Minecraft 1.20 版本。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2023.11.13</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>重生点异常修复</h4>
+                        <p>生存服：修复玩家重生点位置异常的 Bug，重生逻辑恢复正常。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2023.11.11</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>VIP 调整 & 盔甲架编辑器</h4>
+                        <p>生存服：VIP 权限组调整——移除随身末影箱权限；新增盔甲架编辑器玩法，玩家可自由编辑盔甲架姿势。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2023.11.9</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>粘液科技拓展安装</h4>
+                        <p>生存服：粘液科技扩展安装——新增星系、量子光学、化学工程、无尽贪婪、网络、蓬松机器、异域花园等拓展玩法模块。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,ui">
+                    <div class="log-date">2023.11.8</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag ui">UI</span></div>
+                        <h4>药水拓展 & 主城美化</h4>
+                        <p>生存服：新增更多药水拓展配方；主城进行视觉美化，部署动态彩虹信标光柱。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,ui">
+                    <div class="log-date">2023.11.7</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag ui">UI</span></div>
+                        <h4>菜单系统升级 & 功能开放</h4>
+                        <p>生存服：菜单系统全面升级与视觉重设计，同步开放玩家举报、提议提交、公告查看功能。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2023.9.9</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>插件批量升级 & 修复</h4>
+                        <p>生存服：MyPet、LiteSignIn、QuickShop、AifadianPay 等插件升级至最新版本；修复死亡后出生点异常及每日礼包领取问题。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2023.9.7</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>兑换比例调整 & 全息字修复</h4>
+                        <p>生存服：调整兑换商店黄金券兑换比例；修复抽卡区全息文字点击无法触发指令的交互问题。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2023.9.6</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>多系统正式开放</h4>
+                        <p>生存服：兑换系统、邮箱系统、活动中心、宝箱抽卡区正式开放；礼包系统升级；每日抽奖展示模型更换。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2023.9.2</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>兑换商店开放 & 货币更名</h4>
+                        <p>生存服：兑换商店开放运营；货币体系更名——游戏币更名为「梦幻币」，点券更名为「黄金券」。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival">
+                    <div class="log-date">2023.9.1</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span></div>
+                        <h4>充值系统开通</h4>
+                        <p>生存服：充值系统正式开通，支持玩家获取黄金券。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,bugfix">
+                    <div class="log-date">2023.8.27</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag bugfix">Bug修复</span></div>
+                        <h4>点歌菜单 & 权限修复</h4>
+                        <p>生存服：点歌菜单上线；修复普通权限玩家可破坏主城方块的权限漏洞；暂时移除 QQ 管理机器人；新增管理员菜单面板。</p>
+                    </div>
+                </div>
+
+                <div class="log-item slide-up" data-tags="survival,ui">
+                    <div class="log-date">2023.8.23</div>
+                    <div class="log-content">
+                        <div class="log-tags"><span class="tag survival">生存服</span><span class="tag ui">UI</span></div>
+                        <h4>菜单系统 & 每日任务上线</h4>
+                        <p>生存服：菜单系统上线并完成界面优化；每日任务系统开放；修复掉落物清理及刷怪笼异常问题；Tab 玩家列表视觉美化。</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 空状态 -->
+            <div class="logs-empty" id="logsEmpty">
+                <i class="fa-solid fa-folder-open"></i>
+                <p>该分类下暂无日志记录</p>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.5"></script>
+    <script src="../js/navbar.js?v=1.3"></script>
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+    <script>
+    (function() {
+        'use strict';
+
+        var items = document.querySelectorAll('.log-item');
+        var yearHeaders = document.querySelectorAll('.log-year');
+        var emptyMsg = document.getElementById('logsEmpty');
+
+        /* ===== 统计数字 ===== */
+        var total = items.length;
+        var bugfixCount = 0;
+        var featureCount = 0;
+        var yearSet = {};
+
+        items.forEach(function(item) {
+            var tags = (item.dataset.tags || '').split(',');
+            if (tags.indexOf('bugfix') !== -1) {
+                bugfixCount++;
+            } else {
+                featureCount++;
+            }
+            var dateEl = item.querySelector('.log-date');
+            if (dateEl) {
+                var year = dateEl.textContent.trim().split('.')[0];
+                yearSet[year] = true;
+            }
+        });
+        var yearCount = Object.keys(yearSet).length;
+
+        /* 数字动画 */
+        function animateNum(el, target) {
+            var start = 0;
+            var duration = 1200;
+            var startTime = performance.now();
+            function step(now) {
+                var p = Math.min(1, (now - startTime) / duration);
+                var eased = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.floor(start + (target - start) * eased);
+                if (p < 1) requestAnimationFrame(step);
+                else el.textContent = target;
+            }
+            requestAnimationFrame(step);
+        }
+
+        var statEls = {
+            total: document.querySelector('[data-count="total"]'),
+            bugfix: document.querySelector('[data-count="bugfix"]'),
+            feature: document.querySelector('[data-count="feature"]'),
+            years: document.querySelector('[data-count="years"]')
+        };
+
+        /* 延迟启动数字动画，等页面加载器消失 */
+        setTimeout(function() {
+            animateNum(statEls.total, total);
+            animateNum(statEls.bugfix, bugfixCount);
+            animateNum(statEls.feature, featureCount);
+            animateNum(statEls.years, yearCount);
+        }, 600);
+
+        /* ===== 筛选 ===== */
+        var filterBtns = document.querySelectorAll('.filter-btn');
+
+        filterBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+
+                var filter = btn.dataset.filter;
+                var visibleCount = 0;
+
+                items.forEach(function(item) {
+                    var tags = (item.dataset.tags || '').split(',');
+                    var show = (filter === 'all' || tags.indexOf(filter) !== -1);
+                    item.style.display = show ? '' : 'none';
+                    if (show) visibleCount++;
+                });
+
+                /* 隐藏没有可见条目的年份标题 */
+                yearHeaders.forEach(function(year) {
+                    var next = year.nextElementSibling;
+                    var hasVisible = false;
+                    while (next && !next.classList.contains('log-year')) {
+                        if (next.style.display !== 'none' && next.classList.contains('log-item')) {
+                            hasVisible = true;
+                            break;
+                        }
+                        next = next.nextElementSibling;
+                    }
+                    year.style.display = hasVisible ? '' : 'none';
+                });
+
+                emptyMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+            });
+        });
+
+        /* ===== 时间线滚动填充 ===== */
+        var timeline = document.querySelector('.log-timeline');
+
+        function updateScrollFill() {
+            if (!timeline) return;
+            var rect = timeline.getBoundingClientRect();
+            var timelineHeight = rect.height;
+            if (timelineHeight <= 0) return;
+            var viewportCenter = window.innerHeight * 0.4;
+            var fillPct = Math.min(100, Math.max(0, ((viewportCenter - rect.top) / timelineHeight) * 100));
+            timeline.style.setProperty('--scroll-fill', fillPct + '%');
+        }
+
+        window.addEventListener('scroll', updateScrollFill, { passive: true });
+        window.addEventListener('resize', updateScrollFill);
+        updateScrollFill();
+
+    })();
+    </script>
+
+</body>
+
+</html>

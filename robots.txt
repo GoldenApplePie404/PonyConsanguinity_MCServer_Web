@@ -1,0 +1,26 @@
+# robots.txt - 万驹同源 Minecraft 服务器官网
+# https://mcpc.goldenapplepie.xyz/
+
+User-agent: *
+Allow: /
+
+# 禁止爬取后台和 API
+Disallow: /api/
+Disallow: /tools/
+Disallow: /data/
+Disallow: /config/
+Disallow: /includes/
+Disallow: /components/
+Disallow: /test/
+
+# 禁止爬取登录/注册相关页面
+Disallow: /pages/login.html
+Disallow: /pages/verify.html
+Disallow: /pages/complete_profile.html
+Disallow: /pages/register_success.html
+Disallow: /pages/eypa_login_success.html
+Disallow: /pages/db_test.html
+
+# Sitemap
+Sitemap: https://mcpc.goldenapplepie.xyz/sitemap.xml
+

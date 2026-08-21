@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- 主页 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/</loc>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- 生存服特色 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/survival.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 团队招募 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/recruit.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- 论坛 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/forum.html</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- 公告 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/announcement.html</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- 积分商城 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/shop.html</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- 资源站 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/resources.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- 皮肤站 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/skin.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- 开发日志 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/logs.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- 回忆廊 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/gallery-history.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <!-- 问卷系统 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/questionnaire.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <!-- 服务器状态 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/status.html</loc>
+        <changefreq>hourly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- 地图 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/map.html</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <!-- 登录 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/login.html</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.4</priority>
+    </url>
+
+    <!-- 服务器规则 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/rules.html</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.4</priority>
+    </url>
+
+    <!-- 法律文档 -->
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/user-agreement.html</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/privacy-policy.html</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    <url>
+        <loc>https://mcpc.goldenapplepie.xyz/pages/disclaimer.html</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+</urlset>

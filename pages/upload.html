@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片上传 - PonyConsanguinity</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .upload-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .upload-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .upload-area {
+            border: 3px dashed var(--primary-color);
+            border-radius: 10px;
+            padding: 50px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .upload-area:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--secondary-color);
+        }
+
+        .upload-area.dragover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--success-color);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        .upload-progress {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        .upload-status {
+            margin-top: 10px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .image-preview {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .preview-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .image-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .info-label {
+            font-weight: bold;
+        }
+
+        .upload-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h1 class="upload-title">图片上传</h1>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📤</div>
+            <div class="upload-text">点击或拖拽图片到此处上传</div>
+            <div class="upload-hint">支持 JPG、PNG、GIF、WEBP 格式，最大 5MB</div>
+            <input type="file" class="upload-input" id="fileInput" accept="image/*">
+        </div>
+
+        <div class="upload-progress" id="uploadProgress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="upload-status" id="uploadStatus">上传中...</div>
+        </div>
+
+        <div class="image-preview" id="imagePreview">
+            <div class="preview-title">图片预览</div>
+            <img class="preview-image" id="previewImage" src="" alt="预览">
+            <div class="image-info" id="imageInfo"></div>
+            <div class="upload-actions">
+                <button class="btn btn-primary" id="copyUrlBtn">复制链接</button>
+                <button class="btn btn-secondary" id="uploadAnotherBtn">上传另一张</button>
+            </div>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const progressFill = document.getElementById('progressFill');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImage = document.getElementById('previewImage');
+        const imageInfo = document.getElementById('imageInfo');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const copyUrlBtn = document.getElementById('copyUrlBtn');
+        const uploadAnotherBtn = document.getElementById('uploadAnotherBtn');
+
+        let currentImageUrl = '';
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showError('请选择图片文件');
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                showError('文件大小不能超过 5MB');
+                return;
+            }
+
+            uploadImage(file);
+        }
+
+        async function uploadImage(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+
+            uploadProgress.style.display = 'block';
+            progressFill.style.width = '0%';
+            uploadStatus.textContent = '上传中...';
+
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    throw new Error('请先登录');
+                }
+
+                const response = await fetch('../api/image_api/upload.php', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    progressFill.style.width = '100%';
+                    uploadStatus.textContent = '上传成功！';
+                    
+                    setTimeout(() => {
+                        showPreview(result.data);
+                    }, 500);
+                } else {
+                    showError(result.message || '上传失败');
+                    uploadProgress.style.display = 'none';
+                }
+            } catch (error) {
+                showError(error.message || '上传失败');
+                uploadProgress.style.display = 'none';
+            }
+        }
+
+        function showPreview(data) {
+            uploadProgress.style.display = 'none';
+            imagePreview.style.display = 'block';
+            uploadArea.style.display = 'none';
+
+            const fullUrl = window.location.origin + '/' + data.url;
+            currentImageUrl = fullUrl;
+
+            previewImage.src = fullUrl;
+
+            imageInfo.innerHTML = `
+                <div class="info-item">
+                    <span class="info-label">文件名：</span>
+                    <span>${data.filename}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">大小：</span>
+                    <span>${formatFileSize(data.size)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">尺寸：</span>
+                    <span>${data.width} x ${data.height}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">格式：</span>
+                    <span>${data.type.toUpperCase()}</span>
+                </div>
+            `;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+            
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+            
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        copyUrlBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(currentImageUrl);
+                showSuccess('链接已复制到剪贴板！');
+            } catch (error) {
+                showError('复制失败，请手动复制');
+            }
+        });
+
+        uploadAnotherBtn.addEventListener('click', () => {
+            imagePreview.style.display = 'none';
+            uploadArea.style.display = 'block';
+            fileInput.value = '';
+            currentImageUrl = '';
+        });
+    </script>
+</body>
+</html>

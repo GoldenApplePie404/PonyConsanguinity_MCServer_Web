@@ -1,0 +1,11 @@
+# 禁止所有外部 HTTP 访问
+# PHP 后端通过文件系统路径读取，不受此规则影响
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+# 兼容 Apache 2.2
+<IfModule !mod_authz_core.c>
+    Order Deny,Allow
+    Deny from all
+</IfModule>

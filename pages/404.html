@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - 页面未找到 | 万驹同源</title>
+    <link rel="stylesheet" href="../css/style.css?v=4.12">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.1">
+    <style>
+        * { box-sizing: border-box; }
+
+        /* ── 背景 ── */
+        .error-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #081229, #0d2347, #0a1a36);
+            overflow: hidden;
+            z-index: 0;
+        }
+        .error-bg::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(46,111,219,0.22) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(242,183,5,0.10) 0%, transparent 50%);
+        }
+
+        /* 背景网格 */
+        .error-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 30s linear infinite;
+            perspective: 500px;
+        }
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(55deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(55deg) translateY(60px); }
+        }
+
+        /* 浮动光点 */
+        .error-dots span {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            animation: dotFloat linear infinite;
+            pointer-events: none;
+        }
+        .error-dots span:nth-child(1)  { left:10%;  width:4px;  height:4px;  animation-duration:9s;  animation-delay:0s; }
+        .error-dots span:nth-child(2)  { left:25%;  width:6px;  height:6px;  animation-duration:11s; animation-delay:1.5s; }
+        .error-dots span:nth-child(3)  { left:40%;  width:3px;  height:3px;  animation-duration:7s;  animation-delay:3s; }
+        .error-dots span:nth-child(4)  { left:55%;  width:7px;  height:7px;  animation-duration:10s; animation-delay:0.8s; }
+        .error-dots span:nth-child(5)  { left:70%;  width:5px;  height:5px;  animation-duration:12s; animation-delay:2.2s; }
+        .error-dots span:nth-child(6)  { left:85%;  width:4px;  height:4px;  animation-duration:8s;  animation-delay:4s; }
+        .error-dots span:nth-child(7)  { left:50%;  width:8px;  height:8px;  animation-duration:14s; animation-delay:1s; }
+        .error-dots span:nth-child(8)  { left:90%;  width:3px;  height:3px;  animation-duration:6s;  animation-delay:3.5s; }
+        @keyframes dotFloat {
+            0%   { transform: translateY(100vh) scale(0); opacity:0; }
+            20%  { opacity:1; }
+            80%  { opacity:1; }
+            100% { transform: translateY(-30px) scale(1); opacity:0; }
+        }
+
+        /* 扫描线叠层（终端/错误屏氛围） */
+        .error-scan {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(180deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 3px);
+            opacity: .55;
+        }
+
+        /* ── 主内容 ── */
+        .error-page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px;
+        }
+        .error-container {
+            text-align: center;
+            max-width: 560px;
+            animation: containerIn 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        @keyframes containerIn {
+            from { opacity:0; transform: translateY(30px) scale(0.96); }
+            to   { opacity:1; transform: translateY(0) scale(1); }
+        }
+
+        /* 终端风 ERROR 徽章 */
+        .error-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            color: #f2b705;
+            border: 1px solid rgba(242,183,5,0.4);
+            background: rgba(242,183,5,0.08);
+            padding: 6px 16px;
+            border-radius: 999px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .error-badge i { color: #f2b705; font-size: 0.75rem; }
+
+        /* 404 数字大标题（品牌渐变 + 错位 glitch） */
+        .error-code-wrap {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .error-code {
+            position: relative;
+            font-size: clamp(7rem, 18vw, 10rem);
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, #2e6fdb 0%, #1d4fa0 45%, #f2b705 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -4px;
+            animation: errorPulse 4s ease-in-out infinite;
+        }
+        /* 蔚蓝 / 柠檬黄 双色错位 glitch 层
+           用纯色文字 + clip-path 切片错位，不用 background-clip:text，
+           避免浏览器在伪元素 content 上渲染成整块色块。 */
+        .error-code::before,
+        .error-code::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0; top: 0;
+            width: 100%;
+            opacity: .55;
+            pointer-events: none;
+        }
+        .error-code::before {
+            color: #2e6fdb;
+            animation: glitchTop 3s steps(2, end) infinite;
+        }
+        .error-code::after {
+            color: #f2b705;
+            animation: glitchBottom 2.6s steps(2, end) infinite;
+        }
+        @keyframes glitchTop {
+            0%, 100% { clip-path: inset(0 0 62% 0); transform: translate(-2px, -1px); }
+            50%      { clip-path: inset(12% 0 48% 0); transform: translate(2px, -2px); }
+        }
+        @keyframes glitchBottom {
+            0%, 100% { clip-path: inset(58% 0 0 0); transform: translate(2px, 1px); }
+            50%      { clip-path: inset(46% 0 8% 0); transform: translate(-2px, 2px); }
+        }
+        @keyframes errorPulse {
+            0%,100% { filter: drop-shadow(0 0 20px rgba(46,111,219,0.35)); }
+            50%     { filter: drop-shadow(0 0 38px rgba(242,183,5,0.45)); }
+        }
+
+        /* Minecraft 风格小方块装饰（蓝黄家族） */
+        .error-cubes {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .error-cubes span {
+            width: 10px; height: 10px;
+            border-radius: 2px;
+            animation: cubeBounce 1.5s ease-in-out infinite;
+        }
+        .error-cubes span:nth-child(1) { background: #2e6fdb; animation-delay: 0s; }
+        .error-cubes span:nth-child(2) { background: #1d4fa0; animation-delay: 0.15s; }
+        .error-cubes span:nth-child(3) { background: #f2b705; animation-delay: 0.3s; }
+        .error-cubes span:nth-child(4) { background: #ffc53d; animation-delay: 0.45s; }
+        .error-cubes span:nth-child(5) { background: #c99705; animation-delay: 0.6s; }
+        @keyframes cubeBounce {
+            0%,100% { transform: translateY(0); }
+            50%     { transform: translateY(-12px); }
+        }
+
+        .error-subtitle {
+            font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+            font-weight: 700;
+            color: rgba(255,255,255,0.92);
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        .error-404-img {
+            width: 100px; height: 100px;
+            object-fit: contain;
+            margin-bottom: 8px;
+            opacity: 0.7;
+            transition: opacity 0.3s, transform 0.3s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .error-404-img:hover {
+            opacity: 1;
+            transform: scale(1.05) rotate(2deg);
+        }
+        .error-desc {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.8;
+            margin-bottom: 36px;
+        }
+        .error-desc i {
+            color: rgba(46,111,219,0.75);
+            margin: 0 2px;
+        }
+
+        /* 按钮（纯蔚蓝主按钮 + 玻璃次按钮） */
+        .error-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-404 {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            cursor: pointer;
+            border: none;
+        }
+        .btn-404.primary {
+            background: linear-gradient(135deg, #2e6fdb, #1d4fa0);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(46,111,219,0.4);
+        }
+        .btn-404.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(46,111,219,0.55);
+        }
+        .btn-404.secondary {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+        }
+        .btn-404.secondary:hover {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        /* 小彩蛋 - 迷雾效果 */
+        .error-fog {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%; height: 150px;
+            background: linear-gradient(180deg, transparent, rgba(8,18,41,0.6));
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* MC 风格提示 */
+        .error-tip {
+            margin-top: 40px;
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            opacity: 0;
+            animation: tipIn 1s ease 1s forwards;
+        }
+        @keyframes tipIn { to { opacity: 1; } }
+        .error-tip i { font-size: 0.7rem; }
+
+        /* 底部兼容 */
+        .error-page + #app-footer { display: none; }
+
+        /* 降级动效：尊重系统「减少动态效果」偏好 */
+        @media (prefers-reduced-motion: reduce) {
+            .error-code,
+            .error-code::before,
+            .error-code::after,
+            .error-grid,
+            .error-dots span,
+            .error-cubes span {
+                animation: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .error-page { padding: 80px 20px; }
+            .error-desc { font-size: 0.88rem; }
+            .btn-404 { padding: 10px 22px; font-size: 13px; width: 100%; max-width: 260px; justify-content: center; }
+            .error-actions { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <!-- 背景层 -->
+    <div class="error-bg">
+        <div class="error-grid"></div>
+        <div class="error-dots">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </div>
+    <div class="error-scan"></div>
+    <div class="error-fog"></div>
+
+    <!-- 导航栏 -->
+    <div id="app-navbar"></div>
+
+    <!-- 404 内容 -->
+    <div class="error-page">
+        <div class="error-container">
+            <!-- 终端风 ERROR 徽章 -->
+            <div class="error-badge">
+                <i class="fas fa-triangle-exclamation"></i> ERROR 404 · 世界未找到
+            </div>
+
+            <!-- 小方块 -->
+            <div class="error-cubes">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+
+            <img src="../assets/img/404.webp" class="error-404-img" alt="404">
+
+            <!-- 404 大字（品牌渐变 + 错位 glitch） -->
+            <div class="error-code-wrap">
+                <div class="error-code" data-text="404">404</div>
+            </div>
+
+            <h1 class="error-subtitle">页面未找到</h1>
+            <p class="error-desc">
+                坐标越界 —— 你似乎掉出了这个世界。<br>
+                该区块尚未生成、已被移除，或通往它的传送门已关闭。<br>
+                <i class="fas fa-cube"></i> <i class="fas fa-cube"></i> <i class="fas fa-cube"></i>
+            </p>
+
+            <div class="error-actions">
+                <a href="../index.html" class="btn-404 primary"><i class="fas fa-home"></i> 返回首页</a>
+                <a href="javascript:history.back()" class="btn-404 secondary"><i class="fas fa-undo-alt"></i> 返回上一页</a>
+            </div>
+
+            <div class="error-tip">
+                <i class="fas fa-gamepad"></i> 如果你认为这是一个错误，请联系服务器管理员
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.4"></script>
+    <script src="../js/navbar.js?v=1.3"></script>
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+</body>
+</html>

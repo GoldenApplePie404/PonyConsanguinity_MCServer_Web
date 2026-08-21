@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器规则 - 万驹同源</title>
+    <meta name="description" content="万驹同源 Minecraft 服务器规则，涵盖基本规定、建筑规范、聊天礼仪、PVP 规则等。">
+    <meta property="og:title" content="服务器规则 - 万驹同源">
+    <meta property="og:description" content="万驹同源 Minecraft 服务器规则，涵盖基本规定、建筑规范、聊天礼仪、PVP 规则等。">
+    <meta property="og:image" content="https://mcpc.goldenapplepie.xyz/assets/img/m.webp">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="万驹同源">
+    <link rel="stylesheet" href="../css/style.css?v=4.12">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.1">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <style>
+        .rules-page {
+            padding: 60px 0;
+            background: #f0f2f5;
+        }
+
+        .rules-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 50px;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
+        }
+        .rules-content::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: #667eea;
+        }
+
+        .rules-section {
+            margin-bottom: 44px;
+        }
+        .rules-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .rules-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 22px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid transparent;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .rules-section h2 i {
+            font-size: 1.2rem;
+            color: #667eea;
+        }
+
+        .rules-section h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #4a5568;
+            margin-bottom: 14px;
+            margin-top: 26px;
+        }
+
+        .rules-section p {
+            line-height: 1.85;
+            margin-bottom: 16px;
+            color: #4a5568;
+            font-size: 0.97rem;
+        }
+
+        .rules-section ul {
+            margin: 0 0 18px 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .rules-section li {
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            border: 1px solid rgba(102,126,234,0.08);
+            border-left: 4px solid transparent;
+            color: #4a5568;
+            line-height: 1.7;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            font-size: 0.95rem;
+        }
+        .rules-section li:hover {
+            transform: translateX(6px);
+            border-left-color: #667eea;
+            background: rgba(255,255,255,0.88);
+            box-shadow: 0 4px 16px rgba(102,126,234,0.06);
+        }
+        .rules-section li strong {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .rules-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 26px;
+            background: #667eea;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 4px 16px rgba(102,126,234,0.3);
+            border: none;
+            margin-bottom: 28px;
+        }
+        .rules-back-btn:hover {
+            background: #5566d4;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 28px rgba(102,126,234,0.45);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .rules-legal-links {
+            background: #667eea;
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-top: 10px;
+            color: #fff;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .rules-legal-links::before {
+            content: '';
+            position: absolute;
+            top: -60%; right: -20%;
+            width: 250px; height: 250px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 50%;
+        }
+        .rules-legal-links h3 {
+            color: #fff;
+            margin: 0 0 18px 0;
+            font-size: 1.15rem;
+            position: relative;
+            z-index: 1;
+        }
+        .rules-legal-links ul {
+            list-style: none;
+            margin: 0; padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        .rules-legal-links a {
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 22px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(6px);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.92rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .rules-legal-links a:hover {
+            background: rgba(255,255,255,0.28);
+            transform: translateY(-2px);
+            color: #fff;
+            text-decoration: none;
+        }
+        .rules-legal-links a::after { content: none !important; }
+
+        @media (max-width: 768px) {
+            .rules-content {
+                padding: 30px 20px;
+                border-radius: 14px;
+            }
+            .rules-section h2 {
+                font-size: 1.3rem;
+            }
+            .rules-legal-links ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            .rules-legal-links a {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <div id="app-navbar"></div>
+
+    <section class="subpage-banner">
+        <div class="subpage-banner-bg"></div>
+        <div class="subpage-banner-particles"></div>
+        <div class="container">
+            <div class="subpage-banner-content">
+                <h1 class="subpage-banner-title">服务器规则</h1>
+                <p class="subpage-banner-subtitle">遵守规则 · 维护秩序 · 共创和谐</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container rules-page">
+        <a href="forum.html" class="rules-back-btn">
+            <i class="fas fa-arrow-left"></i> 返回论坛
+        </a>
+
+        <div class="rules-content fade-in">
+
+            <div class="rules-section">
+                <h2><i class="fas fa-gavel"></i> 一、总则</h2>
+                <p>本规则旨在维护万驹同源 Minecraft 服务器的良好秩序，保障所有玩家的合法权益，营造和谐友好的游戏环境。所有玩家在注册账号并进入服务器时，即视为已阅读、理解并同意遵守本规则。</p>
+                <p>服务器管理组保留对本规则的最终解释权和修改权。规则的更新将在论坛公告区公布，请玩家及时关注最新版本。</p>
+            </div>
+
+            <div class="rules-section">
+                <h2><i class="fas fa-book"></i> 二、基本规定</h2>
+                <p>为确保服务器的正常运营和玩家的良好体验，所有玩家应遵守以下基本规定：</p>
+                <ul>
+                    <li><strong>平等原则</strong> -- 服务器内所有玩家享有平等的权利，任何玩家不得因游戏时长、贡献度等因素享有特权。</li>
+                    <li><strong>民主决策</strong> -- 服务器采用民主议会制度进行决策，任何玩家均有权参与讨论和投票，但不得破坏或干扰决策过程。</li>
+                    <li><strong>所有权归属</strong> -- 服务器及其所有相关资源归服主所有，玩家仅获得游戏使用权。</li>
+                    <li><strong>禁止作弊</strong> -- 严禁使用任何形式的作弊程序、外挂、客户端修改器等，除非获得管理组的特别批准。</li>
+                    <li><strong>保护服务器</strong> -- 禁止任何可能导致服务器崩溃、卡顿或影响其他玩家游戏体验的行为。</li>
+                    <li><strong>避免跑图</strong> -- 请尽量不要在生存服中长时间跑图（探索未加载的区块），以免给服务器造成不必要的压力。</li>
+                    <li><strong>维护声誉</strong> -- 禁止宣扬反动思想、传播违法信息或进行有损服务器声誉的行为。</li>
+                    <li><strong>禁止广告</strong> -- 禁止在服务器内进行任何形式的商业广告、推广或引流行为。</li>
+                </ul>
+            </div>
+
+            <div class="rules-section">
+                <h2><i class="fas fa-hammer"></i> 三、建筑规定</h2>
+                <p>为维护服务器整体美观和玩家的游戏体验，建筑活动需遵守以下规定：</p>
+                <ul>
+                    <li><strong>禁止违规建筑</strong> -- 禁止建造包含违禁品、低俗内容、政治敏感信息或其他不当内容的建筑。</li>
+                    <li><strong>尊重他人</strong> -- 禁止在他人建筑区域附近建造影响他人体验或破坏景观的建筑，如需靠近建造应征得对方同意。</li>
+                    <li><strong>大型建筑申请</strong> -- 占地面积较大或影响范围较广的建筑项目，需提前向管理组提交申请，获得批准后方可建造。</li>
+                    <li><strong>风格协调</strong> -- 建筑应尽量符合服务器整体风格，与周围环境保持协调，避免突兀或不协调的建筑。</li>
+                    <li><strong>定期维护</strong> -- 玩家应定期维护自己的建筑，避免长期无人维护的建筑影响服务器美观。</li>
+                </ul>
+            </div>
+
+            <div class="rules-section">
+                <h2><i class="fas fa-comments"></i> 四、聊天规定</h2>
+                <p>良好的聊天环境需要每一位玩家的共同维护，请遵守以下聊天规定：</p>
+                <ul>
+                    <li><strong>禁止刷屏</strong> -- 禁止连续发送相同或相似内容、恶意刷屏、频繁发送无意义信息等行为。</li>
+                    <li><strong>文明用语</strong> -- 禁止辱骂、人身攻击、种族歧视、性别歧视等不当言论，尊重其他玩家。</li>
+                    <li><strong>禁止广告</strong> -- 禁止在聊天频道发布任何形式的广告、推广信息或引流链接。</li>
+                    <li><strong>避免敏感话题</strong> -- 禁止讨论政治、宗教等敏感话题，避免引发争议。</li>
+                    <li><strong>尊重隐私</strong> -- 禁止泄露其他玩家的个人信息，包括但不限于真实姓名、联系方式、住址等。</li>
+                    <li><strong>合理使用表情</strong> -- 避免过度使用表情符号或特殊字符，影响他人阅读体验。</li>
+                </ul>
+            </div>
+
+            <div class="rules-section">
+                <h2><i class="fas fa-crosshairs"></i> 五、PVP 与红石规定</h2>
+                <p>为确保公平竞争和服务器稳定运行，PVP 和红石活动需遵守以下规定：</p>
+                <ul>
+                    <li><strong>PVP 需同意</strong> -- PVP（玩家对战）需双方明确同意，禁止恶意攻击未同意 PVP 的玩家。</li>
+                    <li><strong>禁止恶意 PVP</strong> -- 禁止在出生点、传送点等安全区域进行 PVP，禁止利用漏洞或 BUG 进行 PVP。</li>
+                    <li><strong>红石装置限制</strong> -- 禁止使用红石装置刷屏、造成服务器卡顿或影响其他玩家。</li>
+                    <li><strong>禁止卡服装置</strong> -- 禁止制造任何形式的卡服装置、刷物品机器或利用 BUG 获取不当利益。</li>
+                    <li><strong>定期清理</strong> -- 红石装置应定期清理和优化，避免造成服务器负担。</li>
+                    <li><strong>管理组审批</strong> -- 复杂的红石装置或大型自动化装置需提前向管理组申请，获得批准后方可建造。</li>
+                </ul>
+            </div>
+
+            <div class="rules-section">
+                <h2><i class="fas fa-coins"></i> 六、经济与交易规定</h2>
+                <p>为维护服务器经济秩序，所有经济活动需遵守以下规定：</p>
+                <ul>
+                    <li><strong>公平交易</strong> -- 禁止欺诈、诈骗等不正当交易行为，交易双方应诚实守信。</li>
+                    <li><strong>禁止黑市</strong> -- 禁止进行任何形式的黑市交易或非法物品交易。</li>
+                    <li><strong>价格合理</strong> -- 交易价格应合理，禁止恶意哄抬物价或进行价格欺诈。</li>
+                    <li><strong>保护财产</strong> -- 禁止盗窃、破坏他人财产或利用 BUG 获取他人物品。</li>
+                    <li><strong>遵守规则</strong> -- 所有交易活动需遵守服务器经济规则，禁止利用规则漏洞谋取不当利益。</li>
+                </ul>
+            </div>
+
+            <div class="rules-section">
+                <h2><i class="fas fa-shield-haltered"></i> 七、违规处理</h2>
+                <p>对于违反本规则的玩家，管理组将根据违规情节的轻重给予相应处罚：</p>
+                <ul>
+                    <li><strong>警告</strong> -- 对于轻微违规，管理组将给予口头警告或书面警告，要求立即整改。</li>
+                    <li><strong>短期封禁</strong> -- 对于一般违规，将给予 1-7 天的短期封禁，情节严重者延长封禁时间。</li>
+                    <li><strong>长期封禁</strong> -- 对于严重违规或屡教不改者，将给予 7-30 天的长期封禁。</li>
+                    <li><strong>永久封禁</strong> -- 对于严重违规、恶意破坏服务器或触犯法律法规的行为，将永久禁止进入服务器。</li>
+                    <li><strong>物品清除</strong> -- 对于违规获得的物品或建筑，管理组有权进行清除或回档处理。</li>
+                    <li><strong>法律追究</strong> -- 对于触犯法律法规的行为，服务器保留追究法律责任的权利。</li>
+                </ul>
+                <p>玩家如对处罚有异议，可在封禁后 3 日内向管理组提出申诉，管理组将在收到申诉后 7 个工作日内给予答复。</p>
+            </div>
+
+            <div class="rules-section">
+                <h2><i class="fas fa-clipboard-check"></i> 八、附则</h2>
+                <p>本规则自发布之日起生效，管理组有权根据服务器运营情况对本规则进行修改。规则的修改将在论坛公告区公布，自公布之日起生效。</p>
+                <p>对于因规则修改而产生的争议，以最新版规则为准。本规则未明确规定的事项，由管理组根据实际情况酌情处理。</p>
+                <p>感谢各位玩家的理解与配合，让我们一起维护一个和谐、友好、公平的游戏环境！</p>
+            </div>
+
+            <div class="rules-legal-links">
+                <h3><i class="fas fa-file-contract" style="margin-right:6px;"></i>相关法律文档</h3>
+                <ul>
+                    <li><a href="user-agreement.html"><i class="fas fa-file-alt"></i> 用户协议</a></li>
+                    <li><a href="privacy-policy.html"><i class="fas fa-lock"></i> 隐私政策</a></li>
+                    <li><a href="disclaimer.html"><i class="fas fa-exclamation-triangle"></i> 免责声明</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.4"></script>
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+    <script src="../js/navbar.js?v=1.3"></script>
+
+</body>
+</html>

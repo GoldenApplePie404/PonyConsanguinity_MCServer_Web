@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/m.webp">
+    <link rel="shortcut icon" href="../assets/img/m.webp">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团队招募 - 万驹同源</title>
+    <meta name="description" content="万驹同源团队正在招募建筑师、开发者、美术师、运营助理等多个方向的伙伴，志愿参与，热爱驱动。">
+    <meta property="og:title" content="团队招募 - 万驹同源">
+    <meta property="og:description" content="万驹同源团队正在招募建筑师、开发者、美术师、运营助理等多个方向的伙伴，志愿参与，热爱驱动。">
+    <meta property="og:image" content="https://mcpc.goldenapplepie.xyz/assets/img/m.webp">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="万驹同源">
+    <link rel="stylesheet" href="../css/style.css?v=4.12">
+    <link rel="stylesheet" href="../css/sidebar-player.css?v=2.1">
+    <link rel="stylesheet" href="../css/font-awesome/all.min.css">
+    <style>
+        /* ── Hero ── */
+        .recruit-hero {
+            min-height: 420px;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        .recruit-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 15% 25%, rgba(102,126,234,0.18) 0%, transparent 45%),
+                radial-gradient(circle at 85% 75%, rgba(118,75,162,0.14) 0%, transparent 45%),
+                radial-gradient(circle at 50% 10%, rgba(167,139,250,0.06) 0%, transparent 50%);
+        }
+        .recruit-hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridDrift 40s linear infinite;
+        }
+        @keyframes gridDrift { 0%{transform:translate(0,0)} 100%{transform:translate(-60px,-60px)} }
+        .recruit-hero-inner {
+            position: relative; z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            width: 100%;
+        }
+        .hero-left { flex: 1; }
+        .recruit-hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 7px 18px;
+            background: rgba(102,126,234,0.12);
+            border: 1px solid rgba(102,126,234,0.25);
+            border-radius: 20px;
+            color: #a78bfa;
+            font-size: 0.82rem; font-weight: 600;
+            margin-bottom: 18px;
+            backdrop-filter: blur(10px);
+        }
+        .recruit-hero h1 {
+            font-size: clamp(2rem,5vw,2.8rem);
+            font-weight: 800; color: #fff;
+            margin-bottom: 16px; line-height: 1.25; letter-spacing: 1px;
+        }
+        .recruit-hero h1 span {
+            background: linear-gradient(90deg, #a78bfa, #667eea, #60a5fa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .recruit-hero .hero-desc {
+            color: rgba(255,255,255,0.55);
+            font-size: 1.05rem; line-height: 1.75;
+            max-width: 460px;
+        }
+        .hero-right {
+            display: flex; gap: 14px; flex-shrink: 0;
+        }
+        .hero-stat-card {
+            padding: 22px 20px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            text-align: center;
+            min-width: 100px;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+        .hero-stat-card:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-3px);
+        }
+        .hero-stat-num {
+            font-size: 1.8rem; font-weight: 800;
+            color: #a78bfa; display: block; line-height: 1;
+        }
+        .hero-stat-label {
+            font-size: 0.75rem; color: rgba(255,255,255,0.35);
+            margin-top: 6px; letter-spacing: 1px;
+        }
+
+        /* ── Page ── */
+        .recruit-page {
+            padding: 40px 0 60px;
+            background: #f0f2f5;
+        }
+
+        /* ── Intro ── */
+        .recruit-intro {
+            max-width: 820px;
+            margin: -60px auto 56px;
+            padding: 40px 48px;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 12px 48px rgba(0,0,0,0.07);
+            position: relative; z-index: 3;
+            text-align: center;
+        }
+        .recruit-intro h2 {
+            font-size: 1.6rem; font-weight: 800; color: #2d3748; margin-bottom: 14px;
+        }
+        .recruit-intro p {
+            color: #4a5568; font-size: 1.02rem; line-height: 1.9; margin-bottom: 10px;
+        }
+        .recruit-intro p:last-child { margin-bottom: 0; }
+
+        /* ── Section title ── */
+        .section-heading {
+            text-align: center; margin-bottom: 36px;
+        }
+        .section-heading h2 {
+            font-size: 1.5rem; font-weight: 800; color: #2d3748; margin-bottom: 6px;
+        }
+        .section-heading p { color: #718096; font-size: 0.95rem; }
+
+        /* ── Values strip ── */
+        .values-strip {
+            display: flex; gap: 16px;
+            max-width: 1100px; margin: 0 auto 60px;
+            overflow-x: auto; padding: 4px 0 12px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .values-strip::-webkit-scrollbar { display: none; }
+        .value-chip {
+            flex: 1 1 220px;
+            max-width: 260px;
+            display: flex; align-items: center; gap: 12px;
+            padding: 18px 24px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            min-width: 200px;
+            transition: all 0.3s ease;
+        }
+        .value-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102,126,234,0.1);
+        }
+        .value-chip-icon {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; color: #667eea; flex-shrink: 0;
+        }
+        .value-chip-text h4 {
+            font-size: 0.92rem; font-weight: 700; color: #2d3748; margin-bottom: 2px;
+        }
+        .value-chip-text p {
+            font-size: 0.78rem; color: #718096; line-height: 1.4;
+        }
+
+        /* ── Position cards (grid) ── */
+        .positions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 22px;
+            max-width: 1060px;
+            margin: 0 auto;
+        }
+        .pos-card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(14px);
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+        }
+        .pos-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 40px rgba(102,126,234,0.12), 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .pos-card-head {
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        .pos-card-head::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.06;
+        }
+        .pos-card-head .pci {
+            width: 46px; height: 46px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+        }
+        .pos-card-head .pc-title {
+            font-size: 1.15rem; font-weight: 700; color: #2d3748;
+        }
+        .pos-card-head .pc-sub {
+            font-size: 0.8rem; color: #a0aec0; font-weight: 500;
+        }
+        .pc-theme-pink .pos-card-head   { background: linear-gradient(135deg, rgba(240,147,251,0.12), rgba(245,87,108,0.06)); }
+        .pc-theme-pink .pci             { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .pc-theme-purple .pos-card-head { background: linear-gradient(135deg, rgba(102,126,234,0.12), rgba(118,75,162,0.06)); }
+        .pc-theme-purple .pci           { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .pc-theme-green .pos-card-head  { background: linear-gradient(135deg, rgba(67,233,123,0.12), rgba(56,249,215,0.06)); }
+        .pc-theme-green .pci            { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a5c35; }
+        .pc-theme-orange .pos-card-head { background: linear-gradient(135deg, rgba(252,182,159,0.12), rgba(238,90,36,0.06)); }
+        .pc-theme-orange .pci           { background: linear-gradient(135deg, #fcb69f, #ee5a24); }
+
+        .pos-card-body {
+            padding: 18px 24px 22px;
+        }
+        .pos-card-body .pc-desc {
+            font-size: 0.9rem; color: #4a5568; line-height: 1.7; margin-bottom: 14px;
+        }
+        .pc-section-label {
+            font-size: 0.75rem; font-weight: 700; color: #a0aec0;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 6px; margin-top: 12px;
+        }
+        .pc-section-label:first-of-type { margin-top: 0; }
+        .pc-detail {
+            font-size: 0.84rem; color: #718096; line-height: 1.65; margin-bottom: 10px;
+        }
+        .pc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+        .pc-tag {
+            padding: 4px 10px; border-radius: 7px;
+            font-size: 0.76rem; font-weight: 600;
+            background: rgba(102,126,234,0.05); color: #667eea;
+            border: 1px solid rgba(102,126,234,0.1);
+        }
+        .pc-level {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 11px; border-radius: 7px;
+            font-size: 0.76rem; font-weight: 600;
+        }
+        .pc-lv-beginner { background: #e6fffa; color: #234e52; }
+        .pc-lv-mid      { background: #fefce8; color: #713f12; }
+
+        /* ── Process timeline (horizontal) ── */
+        .timeline-section {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+            position: relative;
+            padding-top: 32px;
+        }
+        .timeline-section::before {
+            content: '';
+            position: absolute;
+            left: 0; right: 0;
+            top: 9px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        .timeline-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 36px 12px 0;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid #667eea;
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+            z-index: 1;
+        }
+        .timeline-item .tl-step {
+            font-size: 0.72rem; font-weight: 700; color: #667eea;
+            letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;
+        }
+        .timeline-item h4 {
+            font-size: 0.95rem; font-weight: 700; color: #2d3748; margin-bottom: 4px;
+        }
+        .timeline-item p {
+            font-size: 0.82rem; color: #718096; line-height: 1.5;
+        }
+
+        /* ── Contact ── */
+        .contact-section {
+            max-width: 780px;
+            margin: 50px auto 0;
+            position: relative;
+        }
+        .contact-card {
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 22px;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 12px 48px rgba(102,126,234,0.1), 0 2px 8px rgba(0,0,0,0.04);
+            padding: 48px 44px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #a78bfa, #764ba2);
+        }
+        .contact-card::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; right: -60px;
+            width: 220px; height: 220px;
+            background: radial-gradient(circle, rgba(102,126,234,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .contact-icon {
+            width: 64px; height: 64px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.6rem; color: #fff;
+            box-shadow: 0 8px 24px rgba(102,126,234,0.3);
+            position: relative; z-index: 1;
+        }
+        .contact-card h2 {
+            font-size: 1.6rem; font-weight: 800; color: #2d3748;
+            margin-bottom: 8px; position: relative; z-index: 1;
+        }
+        .contact-card .contact-desc {
+            color: #718096; font-size: 0.95rem; line-height: 1.7;
+            margin-bottom: 28px; max-width: 500px; margin-left: auto; margin-right: auto;
+            position: relative; z-index: 1;
+        }
+        .contact-channels {
+            display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+            position: relative; z-index: 1;
+        }
+        .contact-ch {
+            flex: 1; min-width: 200px; max-width: 260px;
+            padding: 22px 20px;
+            background: rgba(102,126,234,0.04);
+            border-radius: 16px;
+            border: 1px solid rgba(102,126,234,0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .contact-ch:hover {
+            background: rgba(102,126,234,0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(102,126,234,0.1);
+            color: inherit; text-decoration: none;
+        }
+        .contact-ch::after { content: none !important; }
+        .contact-ch i {
+            font-size: 1.5rem; color: #667eea;
+            display: block; margin-bottom: 10px;
+        }
+        .contact-ch .ch-label {
+            font-weight: 700; color: #2d3748; font-size: 0.92rem; margin-bottom: 2px;
+        }
+        .contact-ch .ch-value {
+            color: #718096; font-size: 0.88rem; user-select: all;
+        }
+        .contact-note {
+            margin-top: 22px; color: #a0aec0; font-size: 0.82rem;
+            position: relative; z-index: 1;
+        }
+            color: #fff; text-decoration: none;
+        }
+        .contact-link::after { content: none !important; }
+        .contact-link .cl-val { user-select: all; }
+
+        @media (max-width: 768px) {
+            .recruit-hero-inner { flex-direction: column; text-align: center; padding: 40px 20px; }
+            .recruit-hero .hero-desc { max-width: 100%; }
+            .hero-right { justify-content: center; }
+            .recruit-intro { padding: 28px 20px; }
+            .positions-grid { grid-template-columns: 1fr; }
+            .contact-card { padding: 36px 24px; }
+            .contact-channels { flex-direction: column; align-items: center; }
+            .timeline-section { flex-direction: column; padding-top: 0; align-items: center; }
+            .timeline-section::before { display: none; }
+            .timeline-item { padding: 16px 0 0; }
+            .timeline-item::before { display: none; }
+        }
+    </style>
+</head>
+
+<body data-components="sidebarPlayer,backToTop,navbar,footer">
+
+    <div id="app-navbar"></div>
+
+    <!-- ── Hero ── -->
+    <section class="recruit-hero">
+        <div class="recruit-hero-grid"></div>
+        <div class="recruit-hero-inner">
+            <div class="hero-left">
+                <div class="recruit-hero-badge"><i class="fas fa-users"></i> 万驹同源团队</div>
+                <h1>加入我们，<span>共建世界</span></h1>
+                <p class="hero-desc">我们是一群热爱 Minecraft 的创作者、开发者和梦想家。如果你也是，欢迎归队。</p>
+            </div>
+            <div class="hero-right">
+                <div class="hero-stat-card">
+                    <span class="hero-stat-num">9</span>
+                    <div class="hero-stat-label">招募方向</div>
+                </div>
+                <div class="hero-stat-card">
+                    <span class="hero-stat-num">4</span>
+                    <div class="hero-stat-label">核心成员</div>
+                </div>
+                <div class="hero-stat-card">
+                    <span class="hero-stat-num">2023</span>
+                    <div class="hero-stat-label">成立年份</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Content ── -->
+    <div class="section recruit-page">
+        <div class="container">
+
+            <!-- Intro -->
+            <div class="recruit-intro fade-in">
+                <h2>我们在找这样的你</h2>
+                <p>万驹同源是一个由热爱驱动的 Minecraft 社区服务器。我们不看学历、不看年龄，只看你是否热爱创造、愿意为社区付出。如果你也想参与一个有温度、有技术深度的项目，这里就是你的舞台。</p>
+                <p>所有岗位均为<strong>志愿性质</strong>，无硬性工时要求，按照自己的节奏参与即可。</p>
+            </div>
+
+            <!-- Values -->
+            <div class="section-heading fade-in">
+                <h2>我们珍视的价值</h2>
+                <p>这些不是口号，是我们筛选同伴的标准</p>
+            </div>
+            <div class="values-strip fade-in">
+                <div class="value-chip">
+                    <div class="value-chip-icon"><i class="fas fa-heart"></i></div>
+                    <div class="value-chip-text"><h4>热爱驱动</h4><p>真正热爱 Minecraft 和社区</p></div>
+                </div>
+                <div class="value-chip">
+                    <div class="value-chip-icon"><i class="fas fa-handshake"></i></div>
+                    <div class="value-chip-text"><h4>协作为先</h4><p>愿意沟通、互相尊重</p></div>
+                </div>
+                <div class="value-chip">
+                    <div class="value-chip-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="value-chip-text"><h4>持续学习</h4><p>好奇心和主动学习不可或缺</p></div>
+                </div>
+                <div class="value-chip">
+                    <div class="value-chip-icon"><i class="fas fa-star"></i></div>
+                    <div class="value-chip-text"><h4>品质意识</h4><p>宁缺毋滥，追求精品</p></div>
+                </div>
+            </div>
+
+            <!-- Positions -->
+            <div class="section-heading fade-in">
+                <h2>正在招募的岗位</h2>
+                <p>我们正在寻找 9 个方向的伙伴，涵盖建造、开发、美术、运营、视频、文案等多个领域</p>
+            </div>
+
+            <div class="positions-grid fade-in">
+
+                <div class="pos-card pc-theme-pink">
+                    <div class="pos-card-head">
+                        <div class="pci"><i class="fas fa-building"></i></div>
+                        <div><div class="pc-title">建筑师</div><div class="pc-sub">Builder</div></div>
+                    </div>
+                    <div class="pos-card-body">
+                        <p class="pc-desc">负责服务器内各类建筑的设计与建造。你的作品将成为所有玩家日常游玩的舞台。</p>
+                        <div class="pc-section-label">你会参与</div>
+                        <p class="pc-detail">主城规划与建造、公共设施设计、活动场景搭建、地形改造与美化</p>
+                        <div class="pc-section-label">需要的能力</div>
+                        <div class="pc-tags">
+                            <span class="pc-tag">建筑审美</span><span class="pc-tag">比例与配色</span><span class="pc-tag">WorldEdit</span><span class="pc-tag">创世神</span>
+                        </div>
+                        <span class="pc-level pc-lv-beginner"><i class="fas fa-seedling"></i> 新手友好</span>
+                    </div>
+                </div>
+
+                <div class="pos-card pc-theme-purple">
+                    <div class="pos-card-head">
+                        <div class="pci"><i class="fas fa-code"></i></div>
+                        <div><div class="pc-title">开发者</div><div class="pc-sub">Developer</div></div>
+                    </div>
+                    <div class="pos-card-body">
+                        <p class="pc-desc">负责模组、插件、数据包的开发与维护。你写的每一行代码都会直接影响数千玩家的游戏体验。</p>
+                        <div class="pc-section-label">你会参与</div>
+                        <p class="pc-detail">自定义插件开发、数据包与命令方块、NeoForge 模组、网站与 API 维护</p>
+                        <div class="pc-section-label">技术栈</div>
+                        <div class="pc-tags">
+                            <span class="pc-tag">Java</span><span class="pc-tag">Spigot / Paper</span><span class="pc-tag">数据包</span><span class="pc-tag">Forge / Fabric</span>
+                        </div>
+                        <span class="pc-level pc-lv-mid"><i class="fas fa-bolt"></i> 需一定基础</span>
+                    </div>
+                </div>
+
+                <div class="pos-card pc-theme-green">
+                    <div class="pos-card-head">
+                        <div class="pci"><i class="fas fa-palette"></i></div>
+                        <div><div class="pc-title">美术师</div><div class="pc-sub">Artist</div></div>
+                    </div>
+                    <div class="pos-card-body">
+                        <p class="pc-desc">负责资源包、材质、模型的制作与优化。你的作品将赋予游戏世界独一无二的视觉语言。</p>
+                        <div class="pc-section-label">你会参与</div>
+                        <p class="pc-detail">武器皮肤与特效材质、生物/方块模型制作、资源包整体风格设计、光影适配与优化</p>
+                        <div class="pc-section-label">创作工具</div>
+                        <div class="pc-tags">
+                            <span class="pc-tag">材质绘制</span><span class="pc-tag">3D 模型</span><span class="pc-tag">资源包</span><span class="pc-tag">Blockbench</span>
+                        </div>
+                        <span class="pc-level pc-lv-beginner"><i class="fas fa-seedling"></i> 新手友好</span>
+                    </div>
+                </div>
+
+                <div class="pos-card pc-theme-orange">
+                    <div class="pos-card-head">
+                        <div class="pci"><i class="fas fa-users"></i></div>
+                        <div><div class="pc-title">运营助理</div><div class="pc-sub">Community Assistant</div></div>
+                    </div>
+                    <div class="pos-card-body">
+                        <p class="pc-desc">负责社区运营、玩家引导、活动策划和日常管理。你是服务器和玩家之间的桥梁。</p>
+                        <div class="pc-section-label">你会参与</div>
+                        <p class="pc-detail">QQ 群日常管理、玩家问题解答、线上线下活动策划、公告与内容撰写</p>
+                        <div class="pc-section-label">需要的特质</div>
+                        <div class="pc-tags">
+                            <span class="pc-tag">社群管理</span><span class="pc-tag">活动策划</span><span class="pc-tag">玩家反馈</span><span class="pc-tag">公告撰写</span>
+                        </div>
+                        <span class="pc-level pc-lv-beginner"><i class="fas fa-seedling"></i> 新手友好</span>
+                    </div>
+                </div>
+
+                <div class="pos-card pc-theme-purple">
+                    <div class="pos-card-head">
+                        <div class="pci"><i class="fas fa-bug"></i></div>
+                        <div><div class="pc-title">测试员</div><div class="pc-sub">QA Tester</div></div>
+                    </div>
+                    <div class="pos-card-body">
+                        <p class="pc-desc">新功能上线前的最后一道防线。发现并记录 Bug，确保玩家获得稳定流畅的游戏体验。</p>
+                        <div class="pc-section-label">你会参与</div>
+                        <p class="pc-detail">新版本功能测试、Bug 复现与报告撰写、性能与兼容性观察、回归验证</p>
+                        <div class="pc-section-label">需要的特质</div>
+                        <div class="pc-tags">
+                            <span class="pc-tag">功能测试</span><span class="pc-tag">回归测试</span><span class="pc-tag">Bug 报告</span><span class="pc-tag">性能观察</span>
+                        </div>
+                        <span class="pc-level pc-lv-beginner"><i class="fas fa-seedling"></i> 新手友好</span>
+                    </div>
+                </div>
+
+                <div class="pos-card pc-theme-green">
+                    <div class="pos-card-head">
+                        <div class="pci"><i class="fas fa-pen-nib"></i></div>
+                        <div><div class="pc-title">内容策划</div><div class="pc-sub">Content Designer</div></div>
+                    </div>
+                    <div class="pos-card-body">
+                        <p class="pc-desc">你决定玩家"玩什么"和"怎么玩"。从玩法机制到活动方案，创意从你开始。</p>
+                        <div class="pc-section-label">你会参与</div>
+                        <p class="pc-detail">新玩法机制设计、活动方案策划、数值平衡与经济系统、剧情文案与世界观搭建</p>
+                        <div class="pc-section-label">需要的特质</div>
+                        <div class="pc-tags">
+                            <span class="pc-tag">玩法机制</span><span class="pc-tag">活动策划</span><span class="pc-tag">数值平衡</span><span class="pc-tag">剧情文案</span>
+                        </div>
+                        <span class="pc-level pc-lv-mid"><i class="fas fa-bolt"></i> 需一定经验</span>
+                    </div>
+                </div>
+
+                <div class="pos-card pc-theme-orange">
+                    <div class="pos-card-head">
+                        <div class="pci"><i class="fas fa-video"></i></div>
+                        <div><div class="pc-title">视频创作</div><div class="pc-sub">Video Creator</div></div>
+                    </div>
+                    <div class="pos-card-body">
+                        <p class="pc-desc">用镜头和剪辑讲述万驹同源的故事。一部好的宣传片，胜过千言万语。</p>
+                        <div class="pc-section-label">你会参与</div>
+                        <p class="pc-detail">服务器宣传片制作、建筑与场景展示视频、活动记录与剪辑、B站/短视频平台投稿</p>
+                        <div class="pc-section-label">需要的能力</div>
+                        <div class="pc-tags">
+                            <span class="pc-tag">视频剪辑</span><span class="pc-tag">录屏工具</span><span class="pc-tag">镜头语言</span><span class="pc-tag">B站投稿</span>
+                        </div>
+                        <span class="pc-level pc-lv-beginner"><i class="fas fa-seedling"></i> 新手友好</span>
+                    </div>
+                </div>
+
+                <div class="pos-card pc-theme-pink">
+                    <div class="pos-card-head">
+                        <div class="pci"><i class="fas fa-calendar-check"></i></div>
+                        <div><div class="pc-title">活动策划</div><div class="pc-sub">Event Organizer</div></div>
+                    </div>
+                    <div class="pos-card-body">
+                        <p class="pc-desc">策划和执行服务器内外的各类活动，让玩家有期待、有参与感、有归属感。</p>
+                        <div class="pc-section-label">你会参与</div>
+                        <p class="pc-detail">节日主题活动、小游戏赛事、建筑比赛、新版本首发活动、线上线下联动</p>
+                        <div class="pc-section-label">需要的特质</div>
+                        <div class="pc-tags">
+                            <span class="pc-tag">活动策划</span><span class="pc-tag">流程设计</span><span class="pc-tag">奖品协调</span><span class="pc-tag">现场执行</span>
+                        </div>
+                        <span class="pc-level pc-lv-beginner"><i class="fas fa-seedling"></i> 新手友好</span>
+                    </div>
+                </div>
+
+                <div class="pos-card pc-theme-green">
+                    <div class="pos-card-head">
+                        <div class="pci"><i class="fas fa-feather-alt"></i></div>
+                        <div><div class="pc-title">文案编辑</div><div class="pc-sub">Copywriter</div></div>
+                    </div>
+                    <div class="pos-card-body">
+                        <p class="pc-desc">用文字传递万驹同源的温度。从公告到推文，从新手指南到世界观设定。</p>
+                        <div class="pc-section-label">你会参与</div>
+                        <p class="pc-detail">更新公告撰写、B站/公众号推文、新手引导文案、服务器世界观与剧情设定</p>
+                        <div class="pc-section-label">需要的能力</div>
+                        <div class="pc-tags">
+                            <span class="pc-tag">文案写作</span><span class="pc-tag">排版审美</span><span class="pc-tag">新媒体运营</span><span class="pc-tag">创意策划</span>
+                        </div>
+                        <span class="pc-level pc-lv-beginner"><i class="fas fa-seedling"></i> 新手友好</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Process -->
+            <div style="height: 20px;"></div>
+            <div class="section-heading fade-in">
+                <h2>申请流程</h2>
+                <p>从联系到加入，只需四步</p>
+            </div>
+            <div class="timeline-section fade-in">
+                <div class="timeline-item">
+                    <div class="tl-step">Step 01</div>
+                    <h4>联系本人</h4>
+                    <p>通过 QQ 或邮箱联系服主，说明意向岗位和自我介绍</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="tl-step">Step 02</div>
+                    <h4>提交作品</h4>
+                    <p>附上你的作品集（截图、视频、仓库链接均可）</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="tl-step">Step 03</div>
+                    <h4>简单沟通</h4>
+                    <p>一次轻松的线上聊天，互相了解，确认方向</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="tl-step">Step 04</div>
+                    <h4>欢迎加入</h4>
+                    <p>通过审核后获得团队身份，正式开工</p>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="contact-section fade-in">
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-paper-plane"></i></div>
+                    <h2>准备好加入了吗？</h2>
+                    <p class="contact-desc">备注"团队招募 + 申请岗位"，附上你的作品集或自我介绍，我们会尽快回复</p>
+                    <div class="contact-channels">
+                        <a class="contact-ch" href="https://wpa.qq.com/msgrd?v=3&uin=2522576044&site=qq&menu=yes" target="_blank">
+                            <i class="fab fa-qq"></i>
+                            <div class="ch-label">QQ</div>
+                            <div class="ch-value">2522576044</div>
+                        </a>
+                        <a class="contact-ch" href="mailto:czhdqqyx6044@qq.com">
+                            <i class="fas fa-envelope"></i>
+                            <div class="ch-label">邮箱</div>
+                            <div class="ch-value">czhdqqyx6044@qq.com</div>
+                        </a>
+                        <a class="contact-ch" href="https://qm.qq.com/q/569208814" target="_blank">
+                            <i class="fas fa-users"></i>
+                            <div class="ch-label">QQ 群</div>
+                            <div class="ch-value">569208814</div>
+                        </a>
+                    </div>
+                    <p class="contact-note">服务器地址：mc.eqmemory.cn</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="app-footer"></div>
+
+    <script src="../js/main.js?v=3.5"></script>
+    <script src="../js/navbar.js?v=1.3"></script>
+    <div id="app-sidebar-player"></div>
+    <script src="../js/sidebar-player.js?v=3.0"></script>
+    <script src="../components/loader.js?v=3.0"></script>
+</body>
+</html>

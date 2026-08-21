@@ -1,0 +1,89 @@
+{
+    "conversations": {
+        "g_1786203383_1180": {
+            "type": "group",
+            "name": "eypa",
+            "participants": [
+                "ゴールデンアップルパイ",
+                "GoldenApplePie",
+                "Streamvolume平安小马国",
+                "Exist",
+                "叨叨jess",
+                "金苹果派"
+            ],
+            "created_at": "2026-08-08 15:36:23",
+            "created_by": "金苹果派",
+            "last_message": {
+                "text": "你好",
+                "from": "GoldenApplePie"
+            },
+            "last_time": "2026-08-08 15:37:35",
+            "unread": {
+                "ゴールデンアップルパイ": 0,
+                "GoldenApplePie": 0,
+                "Streamvolume平安小马国": 2,
+                "Exist": 2,
+                "叨叨jess": 2,
+                "金苹果派": 0
+            }
+        },
+        "p_ゴールデンアップルパイ_金苹果派": {
+            "type": "private",
+            "participants": [
+                "金苹果派",
+                "ゴールデンアップルパイ"
+            ],
+            "created_at": "2026-08-08 15:36:42",
+            "last_message": {
+                "text": "你好",
+                "from": "金苹果派"
+            },
+            "last_time": "2026-08-08 15:36:49",
+            "unread": {
+                "金苹果派": 0,
+                "ゴールデンアップルパイ": 0
+            }
+        }
+    },
+    "messages": {
+        "g_1786203383_1180": [
+            {
+                "id": "1786203383_sys",
+                "from": "",
+                "content": "群「",
+                "time": "2026-08-08 15:36:23",
+                "type": "system"
+            },
+            {
+                "id": "1786203393_5571",
+                "from": "金苹果派",
+                "content": "你好",
+                "time": "2026-08-08 15:36:33",
+                "type": "text"
+            },
+            {
+                "id": "1786203455_1427",
+                "from": "GoldenApplePie",
+                "content": "你好",
+                "time": "2026-08-08 15:37:35",
+                "type": "text"
+            }
+        ],
+        "p_ゴールデンアップルパイ_金苹果派": [
+            {
+                "id": "1786203402_sys",
+                "from": "",
+                "content": "会话已创建",
+                "time": "2026-08-08 15:36:42",
+                "type": "system"
+            },
+            {
+                "id": "1786203409_6057",
+                "from": "金苹果派",
+                "content": "你好",
+                "time": "2026-08-08 15:36:49",
+                "type": "text"
+            }
+        ]
+    }
+}
